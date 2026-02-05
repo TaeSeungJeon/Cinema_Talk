@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.first.group</groupId>
-    <artifactId>cinema-talk</artifactId>
+    <artifactId>Cinema_Talk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -21,7 +21,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j2.version>2.23.1</log4j2.version>
     </properties>
-
+	
+	
     <dependencies>
 
         <!-- ========================= -->
@@ -57,6 +58,7 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>3.0.1</version>
         </dependency>
+        
 
         <!-- ========================= -->
         <!-- Lombok -->

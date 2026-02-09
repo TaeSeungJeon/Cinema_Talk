@@ -1,29 +1,15 @@
-CREATE TABLE "MOVIE" (
-	"movie_id"	VARCHAR(50)		NOT NULL,
-	"movie_title"	VARCHAR(255)		NULL,
-	"movie_original_title"	VARCHAR(255)		NULL,
-	"movie_overview"	CLOB		NULL,
-	"movie_release_date"	DATE		NULL,
-	"movie_runtime"	NUMBER(50)		NULL,
-	"movie_poster_path"	VARCHAR(255)		NULL,
-	"movie_backdrop_path"	VARCHAR(255)		NULL,
-	"movie_rating_average"	NUMBER(5,2)		NULL,
-	"movie_rating_count"	NUMBER(50)		NULL,
-	"movie_created_at"	DATE		NULL
+CREATE TABLE MOVIE (
+    MOVIE_ID VARCHAR2(50) NOT NULL,
+    MOVIE_TITLE VARCHAR2(255),
+    MOVIE_ORIGINAL_TITLE VARCHAR2(255),
+    MOVIE_OVERVIEW CLOB,
+    MOVIE_RELEASE_DATE DATE,
+    MOVIE_RUNTIME NUMBER,
+    MOVIE_POSTER_PATH VARCHAR2(255),
+    MOVIE_BACKDROP_PATH VARCHAR2(255),
+    MOVIE_RATING_AVERAGE NUMBER(5,2),
+    MOVIE_RATING_COUNT NUMBER,
+    MOVIE_CREATED_AT DATE,
+    MOVIE_RECOMMEND_COUNT NUMBER DEFAULT 0, 
+    CONSTRAINT PK_MOVIE PRIMARY KEY (MOVIE_ID)
 );
-
-ALTER TABLE "MOVIE" 
-ADD CONSTRAINT "PK_MOVIE" PRIMARY KEY ("movie_id");
-
--- CHECK 제약 조건: 데이터 검증
-ALTER TABLE "MOVIE"
-ADD CONSTRAINT "CK_MOVIE_RUNTIME"
-CHECK ("movie_runtime" IS NULL OR ("movie_runtime" > 0 AND "movie_runtime" <= 500));
-
-ALTER TABLE "MOVIE"
-ADD CONSTRAINT "CK_MOVIE_RATING_AVG"
-CHECK ("movie_rating_average" IS NULL OR ("movie_rating_average" >= 0 AND "movie_rating_average" <= 10));
-
-ALTER TABLE "MOVIE"
-ADD CONSTRAINT "CK_MOVIE_RATING_COUNT"
-CHECK ("movie_rating_count" IS NULL OR "movie_rating_count" >= 0);

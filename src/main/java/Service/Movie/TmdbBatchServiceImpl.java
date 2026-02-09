@@ -26,7 +26,6 @@ import DTO.Movie.MovieCastDTO;
 import DTO.Movie.MovieCrewDTO;
 import DTO.Movie.MovieDTO;
 import DTO.Movie.MovieGenreDTO;
-import DTO.Movie.MovieSimilarDTO;
 import DTO.Movie.PersonDTO;
 import mybatis.BatchDBService;
 

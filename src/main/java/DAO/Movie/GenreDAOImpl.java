@@ -9,61 +9,91 @@ import DTO.Movie.GenreDTO;
 import mybatis.DBService;
 
 public class GenreDAOImpl implements GenreDAO {
-	private SqlSessionFactory factory = DBService.getFactory();
+	public static GenreDAOImpl instance = null;
+	
+	public GenreDAOImpl() {}
+	
+	public static GenreDAOImpl getInstance() {
+		if(instance == null) {
+			instance = new GenreDAOImpl();
+			return instance;
+		} else {
+			return instance;
+		}
+	}
+	
+	private SqlSession getSqlSession() {		
+		return DBService.getFactory().openSession(false);
+	}
 	
 	@Override
 	public void insertGenre(GenreDTO genre) {
-		SqlSession session = factory.openSession();
+		SqlSession session = null;
 		try {
+			session = getSqlSession();
 			session.insert("DAO.Movie.GenreDAO.insertGenre", genre);
 			session.commit();
 		} finally {
-			session.close();
+			if(session != null) {
+				session.close();
+			}
 		}
 	}
 	
 	@Override
 	public void insertGenreBatch(List<GenreDTO> genres) {
-		SqlSession session = factory.openSession();
+		SqlSession session = null;
 		try {
+			session = getSqlSession();
 			for (GenreDTO genre : genres) {
 				session.insert("DAO.Movie.GenreDAO.insertGenre", genre);
 			}
 			session.commit();
 		} finally {
-			session.close();
+			if(session != null) {
+				session.close();
+			}
 		}
 	}
 
 	@Override
 	public void mergeGenre(GenreDTO genre) {
-		SqlSession session = factory.openSession();
+		SqlSession session = null;
 		try {
+			session = getSqlSession();
 			session.insert("DAO.Movie.GenreDAO.mergeGenre", genre);
 			session.commit();
 		} finally {
-			session.close();
+			if(session != null) {
+				session.close();
+			}
 		}
 	}
 
 	@Override
 	public boolean existsGenre(String genreId) {
-		SqlSession session = factory.openSession();
+		SqlSession session = null;
 		try {
+			session = getSqlSession();
 			GenreDTO genre = session.selectOne("DAO.Movie.GenreDAO.selectGenreById", genreId);
 			return genre != null;
 		} finally {
-			session.close();
+			if(session != null) {
+				session.close();
+			}
 		}
 	}
 
 	@Override
 	public GenreDTO getGenreById(String genreId) {
-		SqlSession session = factory.openSession();
+		SqlSession session = null;
 		try {
+			session = getSqlSession();
 			return session.selectOne("DAO.Movie.GenreDAO.selectGenreById", genreId);
 		} finally {
-			session.close();
+			if(session != null) {
+				session.close();
+			}
 		}
 	}
 }

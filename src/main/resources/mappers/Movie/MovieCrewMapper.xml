@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.MovieCrewDAO">
+	<insert id="insertMovieCrew" parameterType="moviecrew">
+		INSERT INTO MOVIE_CREW (
+			person_id, movie_id, crew_job
+		) VALUES (
+			#{personId}, #{movieId}, #{crewJob}
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeMovieCrew" parameterType="moviecrew">
+		MERGE INTO MOVIE_CREW mc
+		USING (SELECT #{personId} AS person_id, #{movieId} AS movie_id FROM DUAL) src
+		ON (mc.person_id = src.person_id AND mc.movie_id = src.movie_id)
+		WHEN MATCHED THEN
+			UPDATE SET mc.crew_job = #{crewJob}
+		WHEN NOT MATCHED THEN
+			INSERT (person_id, movie_id, crew_job)
+			VALUES (#{personId}, #{movieId}, #{crewJob})
+	</insert>
+	
+	<select id="countMovieCrew" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM MOVIE_CREW
+		WHERE person_id = #{personId} AND movie_id = #{movieId}
+	</select>
+</mapper>

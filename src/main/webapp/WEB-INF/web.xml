@@ -1,4 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-         version="6.0">
+<web-app 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+	id="WebApp_ID" version="5.0">
+	
+	
+	<display-name>Cinema_Talk</display-name>
+
+	<welcome-file-list>
+		<welcome-file>home.jsp</welcome-file>						<!-- 서버가 시작될 때 처음 띄울 페이지 명단 -->
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>FrontController</servlet-name> 		 		<!-- 서블릿 클래스명 -->
+		<servlet-class>Controller.FrontController</servlet-class> 	<!-- 서블릿 클래스 풀패키지 경로 (fixed to match Java package) -->
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>FrontController</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>RequestEncoding</filter-name>
+		<filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>RequestEncoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
 </web-app>

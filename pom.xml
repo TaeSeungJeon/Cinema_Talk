@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.first.group</groupId>
-    <artifactId>cinema-talk</artifactId>
+    <artifactId>Cinema_Talk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -21,9 +21,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j2.version>2.23.1</log4j2.version>
     </properties>
-
+	
     <dependencies>
-
         <!-- ========================= -->
         <!-- Servlet / JSP (Tomcat 제공) -->
         <!-- ========================= -->
@@ -56,6 +55,17 @@
             <groupId>org.glassfish.web</groupId>
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>3.0.1</version>
+        </dependency>
+        
+
+        <!-- ========================= -->
+        <!-- JSON Processing -->
+        <!-- ========================= -->
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240205</version>
         </dependency>
 
         <!-- ========================= -->
@@ -115,5 +125,21 @@
         </dependency>
 
     </dependencies>
-
+	
+	
+	<!-- Maven 빌드 설정 -->
+	<build>
+    <plugins>
+		<!-- 배치 실행을 위한 exec-maven-plugin -->
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>3.1.0</version>
+			<configuration>
+				<mainClass>batch.TmdbBatchMain</mainClass>
+			</configuration>
+		</plugin>
+    </plugins>
+	</build>
+	
 </project>

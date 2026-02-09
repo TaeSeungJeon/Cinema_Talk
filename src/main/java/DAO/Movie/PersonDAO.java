@@ -1,0 +1,12 @@
+package DAO.Movie;
+
+import DTO.Movie.PersonDTO;
+import java.util.List;
+
+public interface PersonDAO {
+	void insertPerson(PersonDTO person);
+	void insertPersonBatch(List<PersonDTO> persons);
+	void mergePerson(PersonDTO person);
+	boolean existsPerson(String personId);
+	PersonDTO getPersonById(String personId);
+}

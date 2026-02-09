@@ -1,0 +1,8 @@
+CREATE TABLE "GENRE" (
+	"genre_id"	VARCHAR(50)	NOT NULL,
+	"genre_name" VARCHAR(50) NOT NULL
+);
+
+ALTER TABLE "GENRE" ADD CONSTRAINT "PK_GENRE" PRIMARY KEY (
+	"genre_id"
+);

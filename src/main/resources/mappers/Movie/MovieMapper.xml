@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.MovieDAO">
+	<insert id="insertMovie" parameterType="movie">
+		INSERT INTO MOVIE (
+			movie_id, movie_title, movie_original_title, movie_overview,
+			movie_release_date, movie_runtime, movie_poster_path, movie_backdrop_path,
+			movie_rating_average, movie_rating_count, movie_created_at
+		) VALUES (
+			#{movieId}, #{movieTitle}, #{movieOriginalTitle}, #{movieOverview},
+			#{movieReleaseDate}, #{movieRuntime}, #{moviePosterPath}, #{movieBackdropPath},
+			#{movieRatingAverage}, #{movieRatingCount}, SYSDATE
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeMovie" parameterType="movie">
+		MERGE INTO MOVIE m
+		USING (SELECT #{movieId} AS movie_id FROM DUAL) src
+		ON (m.movie_id = src.movie_id)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				m.movie_title = #{movieTitle},
+				m.movie_original_title = #{movieOriginalTitle},
+				m.movie_overview = #{movieOverview},
+				m.movie_release_date = #{movieReleaseDate},
+				m.movie_runtime = #{movieRuntime},
+				m.movie_poster_path = #{moviePosterPath},
+				m.movie_backdrop_path = #{movieBackdropPath},
+				m.movie_rating_average = #{movieRatingAverage},
+				m.movie_rating_count = #{movieRatingCount}
+		WHEN NOT MATCHED THEN
+			INSERT (movie_id, movie_title, movie_original_title, movie_overview,
+				movie_release_date, movie_runtime, movie_poster_path, movie_backdrop_path,
+				movie_rating_average, movie_rating_count, movie_created_at)
+			VALUES (#{movieId}, #{movieTitle}, #{movieOriginalTitle}, #{movieOverview},
+				#{movieReleaseDate}, #{movieRuntime}, #{moviePosterPath}, #{movieBackdropPath},
+				#{movieRatingAverage}, #{movieRatingCount}, SYSDATE)
+	</insert>
+	
+	<select id="selectMovieById" parameterType="string" resultType="movie">
+		SELECT movie_id, movie_title, movie_original_title, movie_overview,
+			   movie_release_date, movie_runtime, movie_poster_path, movie_backdrop_path,
+			   movie_rating_average, movie_rating_count, movie_created_at
+		FROM MOVIE
+		WHERE movie_id = #{movieId}
+	</select>
+</mapper>

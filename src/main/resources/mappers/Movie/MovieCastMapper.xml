@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.MovieCastDAO">
+	<insert id="insertMovieCast" parameterType="moviecast">
+		INSERT INTO MOVIE_CAST (
+			person_id, movie_id, character_name, cast_order
+		) VALUES (
+			#{personId}, #{movieId}, #{characterName}, #{castOrder}
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeMovieCast" parameterType="moviecast">
+		MERGE INTO MOVIE_CAST mc
+		USING (SELECT #{personId} AS person_id, #{movieId} AS movie_id FROM DUAL) src
+		ON (mc.person_id = src.person_id AND mc.movie_id = src.movie_id)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				mc.character_name = #{characterName},
+				mc.cast_order = #{castOrder}
+		WHEN NOT MATCHED THEN
+			INSERT (person_id, movie_id, character_name, cast_order)
+			VALUES (#{personId}, #{movieId}, #{characterName}, #{castOrder})
+	</insert>
+	
+	<select id="countMovieCast" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM MOVIE_CAST
+		WHERE person_id = #{personId} AND movie_id = #{movieId}
+	</select>
+</mapper>

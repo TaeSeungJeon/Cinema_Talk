@@ -1,4 +1,4 @@
-package batch.service;
+package Service.Movie;
 
 /**
  * TMDB 배치 처리 서비스 인터페이스

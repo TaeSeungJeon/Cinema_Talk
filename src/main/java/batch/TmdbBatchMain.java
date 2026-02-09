@@ -1,7 +1,7 @@
 package batch;
 
-import batch.service.TmdbBatchService;
-import batch.service.TmdbBatchServiceImpl;
+import Service.Movie.TmdbBatchService;
+import Service.Movie.TmdbBatchServiceImpl;
 
 public class TmdbBatchMain {
 	

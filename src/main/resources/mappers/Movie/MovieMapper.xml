@@ -48,4 +48,9 @@
 		FROM MOVIE
 		WHERE movie_id = #{movieId}
 	</select>
+	
+	<select id="selectMovieOverview">
+		select movie_overview from MOVIE where movie_id = #{movieId}
+	</select>
+	
 </mapper>

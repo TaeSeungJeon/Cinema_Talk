@@ -1,0 +1,189 @@
+/* =========================
+   1. FONT
+========================= */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Pretendard", -apple-system, system-ui, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* =========================
+   2. THEME (LIGHT / DARK)
+========================= */
+:root {
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --hover: #f3f4f6;
+  --text: #111827;
+  --subtext: #6b7280;
+  --border: #e5e7eb;
+  --primary: #ff4d4f;
+  --blue: #3b82f6;
+}
+
+[data-theme="dark"] {
+  --bg: #121212;
+  --card: #1e1e1e;
+  --hover: #2a2a2a;
+  --text: #e5e7eb;
+  --subtext: #9ca3af;
+  --border: #2f2f2f;
+}
+
+/* =========================
+   3. LAYOUT
+========================= */
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+.header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+}
+
+/* =========================
+   4. CARD (게시글 / 영화 공통)
+========================= */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+  transition: 0.2s;
+}
+
+.card:hover {
+  background: var(--hover);
+}
+
+/* =========================
+   5. BUTTON
+========================= */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-blue {
+  background: var(--blue);
+  color: white;
+}
+
+.btn-outline {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+/* =========================
+   6. INPUT
+========================= */
+.input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+/* =========================
+   7. BOARD LIST
+========================= */
+.board-item {
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.board-item:hover {
+  background: var(--hover);
+}
+
+.board-title {
+  font-weight: 500;
+}
+
+.board-meta {
+  font-size: 13px;
+  color: var(--subtext);
+}
+
+/* =========================
+   8. COMMENT
+========================= */
+.comment {
+  border-top: 1px solid var(--border);
+  padding: 10px 0;
+}
+
+.comment-user {
+  font-weight: 500;
+}
+
+.comment-text {
+  color: var(--text);
+  margin-top: 4px;
+}
+
+/* =========================
+   9. MOVIE CARD
+========================= */
+.movie-card {
+  display: flex;
+  gap: 14px;
+}
+
+.movie-poster {
+  width: 80px;
+  border-radius: 6px;
+}
+
+.movie-info {
+  flex: 1;
+}
+
+/* =========================
+   10. DARK MODE TOGGLE 준비
+========================= */
+.theme-toggle {
+  cursor: pointer;
+}

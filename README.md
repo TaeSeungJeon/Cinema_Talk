@@ -10,9 +10,9 @@
 
 ### 💻 Backend
  * **Java** : Oracle OpenJDK 21 
- * **Framework** : Jakarta EE 11 
+ * **Framework** : Jakarta EE 10
  * **Build Tool** : Maven 
- * **Server** : Apache Tomcat 11.0 
+ * **Server** : Apache Tomcat 10
 
 ---
 

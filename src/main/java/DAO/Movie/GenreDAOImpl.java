@@ -71,7 +71,7 @@ public class GenreDAOImpl implements GenreDAO {
 	}
 
 	@Override
-	public boolean existsGenre(String genreId) {
+	public boolean existsGenre(int genreId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
@@ -85,7 +85,7 @@ public class GenreDAOImpl implements GenreDAO {
 	}
 
 	@Override
-	public GenreDTO getGenreById(String genreId) {
+	public GenreDTO getGenreById(int genreId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();

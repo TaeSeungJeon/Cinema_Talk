@@ -7,6 +7,6 @@ public interface PersonDAO {
 	void insertPerson(PersonDTO person);
 	void insertPersonBatch(List<PersonDTO> persons);
 	void mergePerson(PersonDTO person);
-	boolean existsPerson(String personId);
-	PersonDTO getPersonById(String personId);
+	boolean existsPerson(int personId);
+	PersonDTO getPersonById(int pid);
 }

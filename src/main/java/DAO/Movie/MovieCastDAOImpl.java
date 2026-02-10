@@ -1,13 +1,13 @@
 package DAO.Movie;
 
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 
 import DTO.Movie.MovieCastDTO;
+import DTO.Movie.MovieDetailDTO.CastInfoDTO;
 import mybatis.DBService;
 
 public class MovieCastDAOImpl implements MovieCastDAO {
@@ -73,15 +73,41 @@ public class MovieCastDAOImpl implements MovieCastDAO {
 	}
 
 	@Override
-	public boolean existsMovieCast(String personId, String movieId) {
+	public boolean existsMovieCast(int personId, int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			Map<String, String> params = new HashMap<>();
+			Map<String, Integer> params = new HashMap<>();
 			params.put("personId", personId);
 			params.put("movieId", movieId);
 			Integer count = session.selectOne("DAO.Movie.MovieCastDAO.countMovieCast", params);
 			return count != null && count > 0;
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public List<Integer> getPersonIdByMovieId(int movie_id) {
+		SqlSession session = null;
+		try {
+			session = getSqlSession();
+			return session.selectList("DAO.Movie.MovieCastDAO.getPersonIdsByMovieId", movie_id);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public List<CastInfoDTO> getCastInfoByMovieId(int movie_id) {
+		SqlSession session = null;
+		try {
+			session = getSqlSession();
+			return session.selectList("DAO.Movie.MovieCastDAO.getCastInfoByMovieId", movie_id);
 		} finally {
 			if(session != null) {
 				session.close();

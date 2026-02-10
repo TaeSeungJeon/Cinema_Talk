@@ -315,8 +315,15 @@
 <header>
     <a href="Cinema_Talk.jsp" class="glass-panel" style="padding: 10px 25px; font-weight: bold; color: var(--accent-color);">영화 로고</a>
     <div class="search-bar">
-        <form action="searchResult.jsp" method="get">
-            <input type="text" name="query" placeholder="영화 제목, 배우, 리뷰를 검색해보세요">
+        <form action="search_movie.do" method="get">
+        	<select name="search_option">
+			    <option value="0" selected>제목</option>
+			    <option value="1">감독</option>
+			    <option value="2">배우</option>
+			    <option value="3">장르</option>
+			</select>
+            <input type="text" name="search_words" placeholder="영화 제목, 감독, 배우, 장르를 검색해보세요">
+            <input type="submit" value="검색" style="display:none;">
         </form>
     </div>
     <div style="display: flex; gap: 10px;">

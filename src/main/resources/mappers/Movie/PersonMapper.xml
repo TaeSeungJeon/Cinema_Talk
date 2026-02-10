@@ -8,28 +8,28 @@
 		INSERT INTO PERSON (
 			person_id, person_name, biography, profile_path
 		) VALUES (
-			#{personId}, #{personName}, #{biography}, #{profilePath}
+			#{person_id}, #{person_name}, #{biography}, #{profile_path}
 		)
 	</insert>
 	
 	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
 	<insert id="mergePerson" parameterType="person">
 		MERGE INTO PERSON p
-		USING (SELECT #{personId} AS person_id FROM DUAL) src
+		USING (SELECT #{person_id} AS person_id FROM DUAL) src
 		ON (p.person_id = src.person_id)
 		WHEN MATCHED THEN
 			UPDATE SET 
-				p.person_name = #{personName},
+				p.person_name = #{person_name},
 				p.biography = #{biography},
-				p.profile_path = #{profilePath}
+				p.profile_path = #{profile_path}
 		WHEN NOT MATCHED THEN
 			INSERT (person_id, person_name, biography, profile_path)
-			VALUES (#{personId}, #{personName}, #{biography}, #{profilePath})
+			VALUES (#{person_id}, #{person_name}, #{biography}, #{profile_path})
 	</insert>
 	
-	<select id="selectPersonById" parameterType="string" resultType="person">
+	<select id="selectPersonById" parameterType="int" resultType="person">
 		SELECT person_id, person_name, biography, profile_path
 		FROM PERSON
-		WHERE person_id = #{personId}
+		WHERE person_id = #{person_id}
 	</select>
 </mapper>

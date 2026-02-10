@@ -127,7 +127,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			List<MovieCastDTO> casts = new CopyOnWriteArrayList<>();
 			List<MovieCrewDTO> crews = new CopyOnWriteArrayList<>();
 			List<MovieGenreDTO> movieGenres = new CopyOnWriteArrayList<>();
-			Set<String> personIds = Collections.synchronizedSet(new HashSet<>());
+			Set<Integer> personIds = Collections.synchronizedSet(new HashSet<>());
 			
 			processMoviesInParallel(movieIds, movies, casts, crews, movieGenres, personIds);
 			
@@ -191,7 +191,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 	 */
 	private void processMoviesInParallel(List<Integer> movieIds, List<MovieDTO> movies, 
 			List<MovieCastDTO> casts, List<MovieCrewDTO> crews, List<MovieGenreDTO> movieGenres,
-			Set<String> personIds) throws Exception {
+			Set<Integer> personIds) throws Exception {
 		
 		ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE_MOVIES);
 		List<Future<?>> futures = new ArrayList<>();
@@ -211,7 +211,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 						List<MovieCastDTO> movieCasts = fetchMovieCasts(movieId);
 						casts.addAll(movieCasts);
 						for (MovieCastDTO cast : movieCasts) {
-							personIds.add(cast.getPersonId());
+							personIds.add(cast.getPerson_id());
 						}
 						System.out.println("    - 출연진 " + movieCasts.size() + "명 수집");
 						
@@ -219,7 +219,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 						List<MovieCrewDTO> movieCrews = fetchMovieCrews(movieId);
 						crews.addAll(movieCrews);
 						for (MovieCrewDTO crew : movieCrews) {
-							personIds.add(crew.getPersonId());
+							personIds.add(crew.getPerson_id());
 						}
 						System.out.println("    - 크루 " + movieCrews.size() + "명 수집");
 						
@@ -252,7 +252,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 	/**
 	 * 출연인물을 병렬로 처리
 	 */
-	private void processPersonsInParallel(Set<String> personIds, List<PersonDTO> persons) throws Exception {
+	private void processPersonsInParallel(Set<Integer> personIds, List<PersonDTO> persons) throws Exception {
 		if (personIds.isEmpty()) {
 			System.out.println("수집할 출연인물이 없습니다.");
 			return;
@@ -262,7 +262,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		List<Future<?>> futures = new ArrayList<>();
 		int personCount = 0;
 		
-		for (String personId : personIds) {
+		for (Integer personId : personIds) {
 			personCount++;
 			final int currentCount = personCount;
 			
@@ -408,8 +408,8 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		for (int i = 0; i < genreArray.length(); i++) {
 			JSONObject genreJson = genreArray.getJSONObject(i);
 			GenreDTO genre = new GenreDTO();
-			genre.setGenreId(String.valueOf(genreJson.getInt("id")));
-			genre.setGenreName(genreJson.getString("name"));
+			genre.setGenre_id(genreJson.getInt("id"));
+			genre.setGenre_name(genreJson.getString("name"));
 			genres.add(genre);
 		}
 		
@@ -464,16 +464,16 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		JSONObject json = new JSONObject(jsonResponse);
 		
 		MovieDTO movie = new MovieDTO();
-		movie.setMovieId(String.valueOf(json.getInt("id")));
-		movie.setMovieTitle(json.optString("title", ""));
-		movie.setMovieOriginalTitle(json.optString("original_title", ""));
-		movie.setMovieOverview(json.optString("overview", ""));
-		movie.setMovieReleaseDate(json.optString("release_date", null));
-		movie.setMovieRuntime(json.optInt("runtime", 0));
-		movie.setMoviePosterPath(json.optString("poster_path", null));
-		movie.setMovieBackdropPath(json.optString("backdrop_path", null));
-		movie.setMovieRatingAverage(json.optDouble("vote_average", 0.0));
-		movie.setMovieRatingCount(json.optInt("vote_count", 0));
+		movie.setMovie_id(json.getInt("id"));
+		movie.setMovie_title(json.optString("title", ""));
+		movie.setMovie_original_title(json.optString("original_title", ""));
+		movie.setMovie_overview(json.optString("overview", ""));
+		movie.setMovie_release_date(json.optString("release_date", null));
+		movie.setMovie_runtime(json.optInt("runtime", 0));
+		movie.setMovie_poster_path(json.optString("poster_path", null));
+		movie.setMovie_backdrop_path(json.optString("backdrop_path", null));
+		movie.setMovie_rating_average(json.optDouble("vote_average", 0.0));
+		movie.setMovie_rating_count(json.optInt("vote_count", 0));
 		
 		return movie;
 	}
@@ -494,10 +494,10 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		for (int i = 0; i < limit; i++) {
 			JSONObject castJson = castArray.getJSONObject(i);
 			MovieCastDTO cast = new MovieCastDTO();
-			cast.setPersonId(String.valueOf(castJson.getInt("id")));
-			cast.setMovieId(String.valueOf(movieId));
-			cast.setCharacterName(castJson.optString("character", ""));
-			cast.setCastOrder(castJson.optInt("order", i));
+			cast.setPerson_id(castJson.getInt("id"));
+			cast.setMovie_id(movieId);
+			cast.setCharacter_name(castJson.optString("character", ""));
+			cast.setCast_order(castJson.optInt("order", i));
 			casts.add(cast);
 		}
 		
@@ -527,9 +527,9 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			
 			if (roles.contains(job)) {
 				MovieCrewDTO crew = new MovieCrewDTO();
-				crew.setPersonId(String.valueOf(crewJson.getInt("id")));
-				crew.setMovieId(String.valueOf(movieId));
-				crew.setCrewJob(job);
+				crew.setPerson_id(crewJson.getInt("id"));
+				crew.setMovie_id(movieId);
+				crew.setCrew_job(job);
 				crews.add(crew);
 			}
 		}
@@ -555,8 +555,8 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			for (int i = 0; i < genreArray.length(); i++) {
 				JSONObject genreJson = genreArray.getJSONObject(i);
 				MovieGenreDTO movieGenre = new MovieGenreDTO();
-				movieGenre.setGenreId(String.valueOf(genreJson.getInt("id")));
-				movieGenre.setMovieId(String.valueOf(movieId));
+				movieGenre.setGenre_id(genreJson.getInt("id"));
+				movieGenre.setMovie_id(movieId);
 				genres.add(movieGenre);
 			}
 		}
@@ -567,17 +567,17 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 	/**
 	 * 인물의 상세 정보 수집
 	 */
-	private PersonDTO fetchPersonDetails(String personId) throws Exception {
+	private PersonDTO fetchPersonDetails(int personId) throws Exception {
 		String url = BASE_URL + "/person/" + personId + "?language=ko-KR";
 		String jsonResponse = makeHttpRequest(url);
 		
 		JSONObject json = new JSONObject(jsonResponse);
 		
 		PersonDTO person = new PersonDTO();
-		person.setPersonId(String.valueOf(json.getInt("id")));
-		person.setPersonName(json.optString("name", ""));
+		person.setPerson_id(json.getInt("id"));
+		person.setPerson_name(json.optString("name", ""));
 		person.setBiography(json.optString("biography", ""));
-		person.setProfilePath(json.optString("profile_path", null));
+		person.setProfile_path(json.optString("profile_path", null));
 		
 		return person;
 	}

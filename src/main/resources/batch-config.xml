@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Movie.MovieCrewDTO" alias="moviecrew" />
 		<typeAlias type="DTO.Movie.MovieDTO" alias="movie" />
 		<typeAlias type="DTO.Movie.MovieGenreDTO" alias="moviegenre" />
-		<typeAlias type="DTO.Movie.MovieSimilarDTO" alias="moviesimilar" />
+		
 		<typeAlias type="DTO.Movie.PersonDTO" alias="person" />
 	</typeAliases>
 
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Movie/MovieCastMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieCrewMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieGenreMapper.xml"/>
-		<mapper resource="mappers/Movie/MovieSimilarMapper.xml"/>
+		
 	</mappers>
 
 </configuration>

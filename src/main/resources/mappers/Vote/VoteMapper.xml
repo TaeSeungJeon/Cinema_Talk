@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Vote.VoteDAO">
+	<insert id="vrec_in" parameterType="voterecord">
+		INSERT INTO vote_record
+		values(record_id_seq.nextval, sysdate, #{mem_no}, #{vote_id},
+		#{movie_id}, #{vote_comment_text})
+	</insert>
+
+	<select id="vrec_result" resultType="voteresult"
+		parameterType="int">
+		SELECT
+		#{vote_id} as vote_id,
+		movie_id,
+		count,
+		total_voter_count,
+		ROUND(count * 100.0 / total_count, 1) AS percentage,
+		RANK() OVER (ORDER BY count DESC) AS rank
+		FROM (
+		SELECT
+		movie_id,
+		count,
+		SUM(count) OVER() AS total_count,
+		SUM(voter_cnt) OVER() AS total_voter_count
+		FROM (
+		SELECT
+		movie_id,
+		COUNT(*) AS count,
+		COUNT(DISTINCT mem_no) AS voter_cnt
+		FROM vote_record
+		WHERE vote_id = #{vote_id}
+		GROUP BY movie_id
+		)
+		)
+
+
+	</select>
+	
+	<select id="vreg_list" resultType="voteregister">
+	select * from vote_register
+	
+	</select>
+	
+	<select id ="vreg_one" resultType="voteregister">
+	select * from vote_register where vote_id=#{vote_id}
+	
+	</select>
+	
+	<select id="vrec_record_all" resultType="voterecord">
+	select * from vote_record
+	</select>
+	
+	<select id="vrec_record_memno" resultType="voterecord">
+	select * from vote_record where mem_no=#{mem_no}
+	</select>
+	
+	<update id="vrec_update">
+	 update vote_record set record_created_date=sysdate, vote_comment_text=#{vote_comment_text} where mem_no=#{mem_no}
+	</update>
+
+
+</mapper>

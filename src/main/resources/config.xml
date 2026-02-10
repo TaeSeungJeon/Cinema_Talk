@@ -25,8 +25,11 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Movie.MovieCrewDTO" alias="moviecrew" />
 		<typeAlias type="DTO.Movie.MovieDTO" alias="movie" />
 		<typeAlias type="DTO.Movie.MovieGenreDTO" alias="moviegenre" />
-		<typeAlias type="DTO.Movie.MovieSimilarDTO" alias="moviesimilar" />
+		
 		<typeAlias type="DTO.Movie.PersonDTO" alias="person" />
+		<typeAlias type="DTO.Vote.VoteRecordDTO" alias="voterecord" />
+		<typeAlias type="DTO.Vote.VoteResultDTO" alias="voteresult" />
+		<typeAlias type="DTO.Vote.VoteRegisterDTO" alias="voteregister" />
 	</typeAliases>
 
 	<!-- 마이바티스의 실행 환경을 세팅한 구간 특히 이 구간에서는 마이바티스가 JDBC 수준에서 트랜잭션을 관리(transactionManager)하게 
@@ -76,7 +79,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Movie/MovieCastMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieCrewMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieGenreMapper.xml"/>
-		<mapper resource="mappers/Movie/MovieSimilarMapper.xml"/>
+		
+		<mapper resource="mappers/Vote/VoteMapper.xml"/>
 	</mappers>
 
 </configuration>

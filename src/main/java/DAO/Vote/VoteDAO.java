@@ -18,8 +18,10 @@ public interface VoteDAO {
 
 	List<VoteRecordDTO> getVoteRecordList();
 
-	VoteRecordDTO getVoteRecordByMemNo(int mem_no);
+	VoteRecordDTO getVoteRecordByMemNo(VoteRecordDTO vrdto);
 
 	void updateVoteRecord(VoteRecordDTO voteRecord);
+
+	List<VoteRegisterDTO> getVoteRegFullList();
 
 }

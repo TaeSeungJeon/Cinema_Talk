@@ -4,6 +4,30 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="DAO.Vote.VoteDAO">
+
+	<resultMap id="voteRegisterMap" type="voteregister">
+
+		<id property="vote_id" column="vote_id" />
+		<result property="vote_title" column="vote_title" />
+		<result property="vote_content" column="vote_content" />
+		<result property="vote_start_date" column="vote_start_date" />
+		<result property="vote_end_date" column="vote_end_date" />
+		<result property="vote_status" column="vote_status" />
+
+		<collection property="optionList" ofType="voteoption">
+
+			<id property="movie_id" column="movie_id" />
+			<result property="vote_id" column="vote_id" />
+
+			<result property="movie_title" column="movie_title" />
+			<result property="movie_release_date"
+				column="movie_release_date" />
+			<result property="movie_poster_path"
+				column="movie_poster_path" />
+
+		</collection>
+
+	</resultMap>
 	<insert id="vrec_in" parameterType="voterecord">
 		INSERT INTO vote_record
 		values(record_id_seq.nextval, sysdate, #{mem_no}, #{vote_id},
@@ -24,42 +48,74 @@
 		movie_id,
 		count,
 		SUM(count) OVER() AS total_count,
-		SUM(voter_cnt) OVER() AS total_voter_count
+		SUM(voter_cnt) OVER() AS
+		total_voter_count
 		FROM (
 		SELECT
 		movie_id,
 		COUNT(*) AS count,
 		COUNT(DISTINCT mem_no) AS voter_cnt
 		FROM vote_record
-		WHERE vote_id = #{vote_id}
+		WHERE vote_id =
+		#{vote_id}
 		GROUP BY movie_id
 		)
 		)
 
 
 	</select>
-	
+
 	<select id="vreg_list" resultType="voteregister">
-	select * from vote_register
-	
+		select * from vote_register
+
 	</select>
-	
-	<select id ="vreg_one" resultType="voteregister">
-	select * from vote_register where vote_id=#{vote_id}
-	
+
+	<select id="vreg_one" resultType="voteregister">
+		select * from vote_register
+		where vote_id=#{vote_id}
+
 	</select>
-	
+
 	<select id="vrec_record_all" resultType="voterecord">
-	select * from vote_record
+		select * from
+		vote_record
 	</select>
-	
+
 	<select id="vrec_record_memno" resultType="voterecord">
-	select * from vote_record where mem_no=#{mem_no}
+		select * from
+		vote_record where mem_no=#{mem_no} and vote_id=#{vote_id}
 	</select>
-	
+
 	<update id="vrec_update">
-	 update vote_record set record_created_date=sysdate, vote_comment_text=#{vote_comment_text} where mem_no=#{mem_no}
+		update vote_record set record_created_date=sysdate,
+		vote_comment_text=#{vote_comment_text} where mem_no=#{mem_no}
 	</update>
+
+	<select id="vreg_full_list" resultMap="voteRegisterMap">
+
+		SELECT
+		vr.vote_id,
+		vr.vote_title,
+		vr.vote_content,
+		TO_CHAR(vr.vote_start_date,'YYYY-MM-DD') AS vote_start_date,
+		TO_CHAR(vr.vote_end_date,'YYYY-MM-DD') AS vote_end_date,
+		vr.vote_status,
+
+		vo.movie_id,
+
+		m.movie_title,
+		TO_CHAR(m.movie_release_date,'YYYY-MM-DD') AS movie_release_date,
+		m.movie_poster_path
+
+		FROM vote_register vr
+		JOIN vote_option vo ON vr.vote_id = vo.vote_id
+		JOIN movie m ON vo.movie_id = m.movie_id
+
+		ORDER BY vr.vote_id, vo.movie_id
+
+	</select>
+
+
 
 
 </mapper>

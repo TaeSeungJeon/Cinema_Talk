@@ -43,15 +43,25 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public VoteRecordDTO getVoteRecordByMemNo(int mem_no) {
+	public VoteRecordDTO getVoteRecordByMemNo(VoteRecordDTO vrdto) {
 		
-		return this.vdao.getVoteRecordByMemNo(mem_no);
+		return this.vdao.getVoteRecordByMemNo(vrdto);
 	}
 
 	@Override
 	public void updateVoteRecord(VoteRecordDTO voteRecord) {
 		this.vdao.updateVoteRecord(voteRecord);
 		
+	}
+
+	@Override
+	public List<VoteRegisterDTO> getVoteRegFullList() {
+		return this.vdao.getVoteRegFullList();
+	}
+
+	@Override
+	public List<VoteRegisterDTO> getVoteRegActiveForMem() {
+		return null;
 	}
 
 }

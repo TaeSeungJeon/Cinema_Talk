@@ -1,7 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<fmt:parseDate value="${vote.vote_start_date}" pattern="yyyy-MM-dd"
+	var="startDate" />
+
+<fmt:parseDate value="${vote.vote_end_date}" pattern="yyyy-MM-dd"
+	var="endDate" />
+
+<jsp:useBean id="now" class="java.util.Date" />
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -32,7 +40,6 @@ body {
 	padding: 25px;
 }
 
-/* 공통 글래스 패널 */
 .glass-panel {
 	background: var(--glass-bg);
 	backdrop-filter: blur(15px);
@@ -60,87 +67,156 @@ header {
 }
 
 .main-layout {
-	display: grid;
-	grid-template-columns: 1fr 320px;
+	display: flex;
 	gap: 30px;
+	align-items: flex-start;
 	max-width: 1200px;
 	margin: 0 auto;
 }
 
-/* --- 왼쪽: 투표 카드 영역 --- */
+/* 슬라이더 핵심 컨테이너 */
 .vote-card-container {
+	flex: 2;
+	height: 750px; /* 고정 높이 */
+	display: flex;
+	flex-direction: row; /* 버튼 - 윈도우 - 버튼 배치 */
+	align-items: center;
+	gap: 15px;
+	padding: 20px;
+	overflow: hidden;
+}
+
+/* 슬라이드가 보이는 창 */
+.vote-window {
+	flex: 1;
+	height: 100%;
+	overflow: hidden; /* 영역 밖 슬라이드 숨김 */
+	position: relative;
+}
+
+/* 실제 움직이는 트랙 */
+.vote-track {
+	display: flex;
+	height: 100%;
+	transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	/* 부드러운 슬라이딩 */
+}
+
+/* 개별 투표 카드 */
+.vote-content {
+	min-width: 100%; /* 한 페이지에 하나씩 */
+	height: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	box-sizing: border-box;
+	padding: 0 10px;
 }
 
 .vote-header {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 	font-size: 0.9rem;
 	color: var(--text-muted);
+	flex-shrink: 0;
 }
 
 .vote-title {
 	font-size: 1.5rem;
 	font-weight: 700;
-	margin-bottom: 25px;
+	margin-bottom: 20px;
 	text-align: center;
+	flex-shrink: 0;
 }
 
-.movie-option {
-	display: flex;
-	align-items: center;
-	background: white;
-	border-radius: 15px;
-	padding: 15px;
+/* 옵션 리스트 내부 스크롤 */
+.vote-options-list {
+	flex: 1;
+	overflow-y: auto;
+	padding-right: 10px;
 	margin-bottom: 15px;
-	border: 2px solid transparent;
-	transition: 0.3s;
-	cursor: pointer;
+	scrollbar-width: thin;
+	scrollbar-color: var(--accent-color) transparent;
 }
+
+.vote-options-list::-webkit-scrollbar {
+	width: 5px;
+}
+
+.vote-options-list::-webkit-scrollbar-thumb {
+	background: var(--accent-color);
+	border-radius: 10px;
+}
+
+/* 영화 옵션 카드 스타일 */
+ .movie-option { 
+ 	display: flex; 
+ 	align-items: center;
+ 	background: white; 
+ 	border-radius: 15px; 
+ 	padding: 12px; 
+ 	margin-bottom: 12px; 
+ 	border: 2px solid transparent;
+ 	transition: 0.2s; 
+ 	cursor: pointer; 
+ } 
+
+.movie-option{
+    position: relative;
+    overflow: hidden;
+    border-radius:12px;
+
+    background:
+        linear-gradient(to right, rgba(108,124,255,0.18), rgba(108,124,255,0.18)) no-repeat,
+        #ffffff;
+
+    background-size:0% 100%; /* 처음 0% */
+    transition:background-size 0.7s cubic-bezier(.4,0,.2,1);
+}
+
 
 .movie-option:hover {
 	border-color: var(--accent-color);
 }
 
 .movie-option input[type="radio"] {
-	margin-right: 20px;
-	width: 20px;
-	height: 20px;
+	margin-right: 15px;
+	width: 18px;
+	height: 18px;
 	accent-color: var(--accent-color);
 }
 
 .movie-thumb {
-	width: 80px;
-	height: 100px;
+	width: 60px;
+	height: 80px;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-right: 15px;
 	background: #eee;
-	border-radius: 10px;
-	margin-right: 20px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 0.8rem;
-	color: #999;
+	flex-shrink: 0;
+}
+
+.movie-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .movie-info .m-title {
 	font-weight: 700;
-	font-size: 1.1rem;
-	margin-bottom: 5px;
+	font-size: 1rem;
+	margin-bottom: 3px;
 }
 
 .movie-info .m-meta {
-	font-size: 0.85rem;
+	font-size: 0.8rem;
 	color: var(--text-muted);
 }
 
 .vote-actions {
-	display: grid;
-	grid-template-columns:  1fr;
-	gap: 15px;
-	margin-top: 20px;
+	flex-shrink: 0;
+	padding-top: 10px;
+	border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .btn {
@@ -150,6 +226,7 @@ header {
 	font-weight: 600;
 	cursor: pointer;
 	transition: 0.3s;
+	width: 100%;
 }
 
 .btn-primary {
@@ -161,24 +238,37 @@ header {
 	background: var(--accent-hover);
 }
 
-.btn-secondary {
-	background: #e2e8f0;
-	color: #475569;
+/* 네비게이션 버튼 */
+.nav-btn {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	background: var(--glass-bg);
+	backdrop-filter: blur(10px);
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 1.2rem;
+	transition: 0.3s;
+	z-index: 10;
 }
 
-/* --- 오른쪽: 예정된 투표 --- */
-.sidebar-title {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-	font-weight: 700;
+.nav-btn:hover {
+	background: white;
+	color: var(--accent-color);
+	transform: scale(1.1);
 }
 
-.view-all {
-	font-size: 0.8rem;
-	color: var(--text-muted);
-	text-decoration: none;
+.nav-btn.disabled {
+	opacity: 0.2;
+	cursor: default;
+}
+
+/* 사이드바 및 히스토리 */
+aside.glass-panel {
+	flex: 1;
+	height: 750px;
+	overflow-y: auto;
 }
 
 .upcoming-item {
@@ -186,20 +276,8 @@ header {
 	padding: 15px;
 	border-radius: 15px;
 	margin-bottom: 15px;
-	border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.upcoming-item .u-title {
-	font-weight: 600;
-	margin-bottom: 5px;
-}
-
-.upcoming-item .u-date {
-	font-size: 0.75rem;
-	color: var(--accent-color);
-}
-
-/* --- 하단: 지난 투표 결과 --- */
 .history-section {
 	max-width: 1200px;
 	margin: 50px auto 0;
@@ -220,7 +298,7 @@ header {
 
 .winner-box {
 	margin-top: 15px;
-	padding: 15px;
+	padding: 10px;
 	background: #f8fafc;
 	border-radius: 12px;
 	display: flex;
@@ -234,54 +312,100 @@ header {
 	font-weight: 700;
 }
 
-.vote-nav {
-	display: flex;
-	align-items: center;
-	gap: 15px;
-}
-
-.vote-content {
-	flex: 1;
-}
-
-/* glass 네비 버튼 */
-.nav-btn {
-	width: 50px;
-	height: 50px;
-	border-radius: 16px;
-	border: 1px solid rgba(255, 255, 255, 0.5);
-	background: var(--glass-bg);
-	backdrop-filter: blur(12px);
-	box-shadow: var(--shadow-subtle);
-	font-size: 22px;
+.status-badge {
+	padding: 4px 12px;
+	border-radius: 20px;
+	font-size: 0.85rem;
 	font-weight: 700;
-	color: var(--text-main);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: 0.25s;
 }
 
-/* hover 효과 */
-.nav-btn:hover {
-	background: white;
-	color: var(--accent-color);
-	transform: translateY(-2px);
+/* 1. 예정: 차분한 그레이/블루 */
+.status-upcoming {
+	background-color: #e2e8f0;
+	color: #475569;
 }
 
-/* 눌렀을때 */
-.nav-btn:active {
-	transform: scale(0.95);
+/* 2. 진행중: 생동감 있는 그린 (혹은 강조색) */
+.status-ongoing {
+	background-color: #dcfce7;
+	color: #166534;
+	border: 1px solid #bbf7d0;
 }
 
-/* disabled 상태 */
-.nav-btn.disabled {
-	opacity: 0.3;
-	cursor: default;
-	pointer-events: none;
+/* 3. 완료: 가독성 좋은 레드/핑크 */
+.status-completed {
+	background-color: #fee2e2;
+	color: #991b1b;
 }
+
+.status-ongoing::before {
+	content: "●";
+	margin-right: 4px;
+	animation: blink 1.5s infinite;
+}
+
+@
+keyframes blink { 0% {
+	opacity: 1;
+}
+
+50
+%
+{
+opacity
+:
+0.3;
+}
+100
+%
+{
+opacity
+:
+1;
+}
+}
+.vote-description {
+	text-align: center;
+	color: var(--text-muted);
+	font-size: 0.95rem;
+	line-height: 1.6;
+	margin-bottom: 25px; /* 옵션 리스트와의 간격 */
+	padding: 0 20px;
+	word-break: keep-all; /* 단어 단위 줄바꿈으로 깔끔하게 */
+	/* 혹시 내용이 너무 길어질 경우를 대비한 최대 높이 설정 (선택사항) */
+	max-height: 60px;
+	overflow-y: auto;
+}
+
+/* 스크롤바가 생길 경우 대비 (옵션 리스트와 동일한 스타일) */
+.vote-description::-webkit-scrollbar {
+	width: 4px;
+}
+
+.vote-description::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+}
+
+.result-bar{
+    width:100%;
+    height:6px;
+    background:#eee;
+    border-radius:4px;
+    margin-top:6px;
+    overflow:hidden;
+}
+
+.result-fill{
+    width:0%;
+    height:100%;
+    background:#6c7cff;
+    transition:width 0.8s ease;
+}
+
 </style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 
@@ -289,80 +413,104 @@ header {
 		<h1 class="page-title">오늘의 영화 픽</h1>
 		<p class="page-desc">마음에 드는 영화에 한 표. 순위는 커뮤니티가 만듭니다.</p>
 	</header>
+<c:forEach var="vote" items="${vote_register_all}">
+    vote_id: ${vote.vote_id} <br>
+    title: ${vote.vote_title} <br>
+    status: ${vote.vote_status} <br>
+    status: ${vote.voted} <br>
+    ----------------------<br>
+</c:forEach>
 
-	<c:forEach var="vote" items="${vote_register}">
-
-    투표ID : ${vote.vote_id} <br>
-    제목 : ${vote.vote_title} <br>
-    내용 : ${vote.vote_content} <br>
-    시작일 : ${vote.vote_start_date} <br>
-    종료일 : ${vote.vote_end_date} <br>
-    상태 : ${vote.vote_status} <br>
-
-		<hr>
-
-	</c:forEach>
-
-
-
-
-	<c:forEach var="rec" items="${vote_records}">
-
-    투표ID : ${rec.record_id} <br>
-    제목 : ${rec.record_created_date} <br>
-    내용 : ${rec.mem_no} <br>
-    시작일 : ${rec.vote_id} <br>
-    종료일 : ${rec.movie_id} <br>
-    상태 : ${rec.vote_comment_text} <br>
-
-		<hr>
-
-	</c:forEach>
 	<main class="main-layout">
 		<section class="glass-panel vote-card-container">
+			<button class="nav-btn" id="prevBtn">&lt;</button>
 
-			<div class="vote-nav">
-				<button class="nav-btn" id="prevBtn">&lt;</button>
+			<div class="vote-window">
+				<div class="vote-track">
+					<c:forEach var="vote" items="${vote_register_active}">
+						<fmt:parseDate value="${vote.vote_start_date}"
+							pattern="yyyy-MM-dd" var="startDate" />
+						<fmt:parseDate value="${vote.vote_end_date}" pattern="yyyy-MM-dd"
+							var="endDate" />
 
-				<div class="vote-content">
-					<div class="vote-header">
-						<span>● 진행 상태: <strong id="voteStatus">투표중</strong></span> <span>종료
-							날짜: <span id="voteEndDate">2026.02.15</span>
-						</span>
-					</div>
+						<div class="vote-content">
+							<div class="vote-header">
 
-					<h2 class="vote-title" id="voteTitle">이번 주말, 가장 기대되는 개봉작은?</h2>
 
-					<div class="vote-options-list" id="voteOptions">
-						<!-- JS로 옵션 렌더링 -->
-					</div>
+								<c:choose>
+									<c:when test="${now.time lt startDate.time}">
+										<strong class="status-badge status-upcoming">예정</strong>
+									</c:when>
+									<c:when test="${now.time gt endDate.time}">
+										<strong class="status-badge status-completed">완료</strong>
+									</c:when>
+									<c:otherwise>
+										<strong class="status-badge status-ongoing">진행중</strong>
+									</c:otherwise>
+								</c:choose>
 
-					<div class="vote-actions">
-						<button class="btn btn-primary">투표하기</button>
-					</div>
+
+								<span>종료: <span id="voteEndDate">${vote.vote_end_date}</span></span>
+							</div>
+
+							<h2 class="vote-title">${vote.vote_title}</h2>
+							<div class="vote-description">${vote.vote_content}</div>
+
+							<div class="vote-options-list">
+								<c:forEach var="opt" items="${vote.optionList}">
+									<label class="movie-option" data-movie-id="${opt.movie_id}">
+
+										<input type="radio" name="movie-vote-${vote.vote_id}"
+										value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
+
+										<div class="movie-thumb">
+											<img
+												src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
+												alt="${opt.movie_title}">
+										</div>
+
+										<div class="movie-info">
+											<div class="m-title">${opt.movie_title}</div>
+											<div class="m-meta">
+												${opt.movie_release_date.substring(0,4)}</div>
+
+											<!-- ⭐ 결과 영역 추가 -->
+											<div class="m-result" style="display:none;">
+     <span class="res-count">0</span>표 
+    (<span class="res-pct">0</span>%)
+
+    
+</div>
+
+										</div>
+
+									</label>
+								</c:forEach>
+							</div>
+
+							<div class="vote-actions">
+								<button class="btn btn-primary submit-vote-btn"
+									data-vote-id="${vote.vote_id}">투표하기</button>
+							</div>
+						</div>
+					</c:forEach>
 				</div>
-
-				<button class="nav-btn" id="nextBtn">&gt;</button>
 			</div>
 
+			<button class="nav-btn" id="nextBtn">&gt;</button>
 		</section>
 
 		<aside class="glass-panel">
-			<div class="sidebar-title">
-				예정된 투표 <a href="#" class="view-all">전체보기 ></a>
-			</div>
-
-			<div class="upcoming-item">
-				<div class="u-title">최고의 명대사 투표</div>
-				<div class="u-date">시작일: 02.16</div>
+			<div class="sidebar-title"
+				style="font-weight: 700; margin-bottom: 20px;">
+				예정된 투표 <a href="#"
+					style="float: right; font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">전체보기
+					></a>
 			</div>
 			<div class="upcoming-item">
-				<div class="u-title">다시 보고 싶은 재개봉작</div>
-				<div class="u-date">시작일: 02.20</div>
-			</div>
-			<div class="upcoming-item">
-				<div class="u-title">2026 오스카 수상 예측</div>
-				<div class="u-date">시작일: 03.01</div>
+				<div style="font-weight: 600;">최고의 명대사 투표</div>
+				<div style="font-size: 0.8rem; color: var(--accent-color);">시작일:
+					02.16</div>
 			</div>
 		</aside>
 	</main>
@@ -394,6 +542,6 @@ header {
 			</div>
 		</div>
 	</section>
-
+	<script src="${pageContext.request.contextPath}/js/vote.js"></script>
 </body>
 </html>

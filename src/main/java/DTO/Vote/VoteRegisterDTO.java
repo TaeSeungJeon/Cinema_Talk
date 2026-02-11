@@ -16,4 +16,7 @@ public class VoteRegisterDTO {
 	private String vote_status;
 	
 	private List<VoteOptionDTO> optionList;
+	
+	private boolean voted; // 내가 투표했는지
+	private List<VoteResultDTO> resultList; // 결과
 }

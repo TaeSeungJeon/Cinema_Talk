@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.MovieCastDAO">
+	<insert id="insertMovieCast" parameterType="moviecast">
+		INSERT INTO MOVIE_CAST (
+			person_id, movie_id, character_name, cast_order
+		) VALUES (
+			#{person_id}, #{movie_id}, #{character_name}, #{cast_order}
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeMovieCast" parameterType="moviecast">
+		MERGE INTO MOVIE_CAST mc
+		USING (SELECT #{person_id} AS person_id, #{movie_id} AS movie_id FROM DUAL) src
+		ON (mc.person_id = src.person_id AND mc.movie_id = src.movie_id)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				mc.character_name = #{character_name},
+				mc.cast_order = #{cast_order}
+		WHEN NOT MATCHED THEN
+			INSERT (person_id, movie_id, character_name, cast_order)
+			VALUES (#{person_id}, #{movie_id}, #{character_name}, #{cast_order})
+	</insert>
+	
+	<select id="countMovieCast" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM MOVIE_CAST
+		WHERE person_id = #{person_id} AND movie_id = #{movie_id}
+	</select>
+	
+	<select id="getMovieCastById" parameterType="int" resultType="moviecast">
+        SELECT person_id
+        FROM MOVIE_CAST
+        WHERE movie_id = #{movie_id}
+    </select>
+
+    <select id="getPersonIdsByMovieId" parameterType="int" resultType="int">
+        SELECT person_id
+        FROM MOVIE_CAST
+        WHERE movie_id = #{movie_id}
+        ORDER BY cast_order
+    </select>
+    
+    <select id="getCastInfoByMovieId" parameterType="int" resultType="DTO.Movie.MovieDetailDTO$CastInfoDTO">
+        SELECT 
+            p.person_id,
+            p.person_name,
+            p.profile_path,
+            mc.character_name,
+            mc.cast_order
+        FROM MOVIE_CAST mc
+        JOIN PERSON p ON mc.person_id = p.person_id
+        WHERE mc.movie_id = #{movie_id}
+        ORDER BY mc.cast_order
+    </select>
+</mapper>

@@ -26,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Movie.MovieDTO" alias="movie" />
 		<typeAlias type="DTO.Movie.MovieGenreDTO" alias="moviegenre" />
 		<typeAlias type="DTO.Movie.PersonDTO" alias="person" />
+		<typeAlias type="DTO.Member.MemberDTO" alias="member" />
 		<typeAlias type="DTO.Movie.Recommend.MovieRecResponse" alias="MovieRecResponse" />
 		<typeAlias type="DTO.Vote.VoteRecordDTO" alias="voterecord" />
 		<typeAlias type="DTO.Vote.VoteResultDTO" alias="voteresult" />
@@ -56,11 +57,17 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
              
          2. dataSource: 데이터베이스에 연결하기 위한 설정을 담고 있는 요소.
        -->
-       			<property name="driver" value="oracle.jdbc.OracleDriver" />
+        <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
 				<property name="username" value="week" />
 				<property name="password" value="week" />
+        
+       	<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
+				<property name="url"
+					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
+				<property name="username" value="C##test1" />
+				<property name="password" value="test1" /> -->
 				
 				<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
@@ -80,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Movie/MovieCastMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieCrewMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieGenreMapper.xml"/>
+		<mapper resource="mappers/Member/MemberMapper.xml"/>
 		<mapper resource="mappers/Movie/Recommend/MovieRec.xml"/>
 		<mapper resource="mappers/Vote/VoteMapper.xml"/>
 	</mappers>

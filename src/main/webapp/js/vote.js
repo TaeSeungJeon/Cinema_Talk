@@ -45,9 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
 		});
 		
 		$(".submit-vote-btn").on("click", function() {
+const voteId = $(this).data("vote-id"); 
+			if($(this).hasClass("go-to-votecont")){
+location.href = "vote_cont.do?vote_id=" + voteId;
+			}else{
+  // 2. 클릭한 버튼의 data-vote-id 값을 가져옴
 		        
-		        // 2. 클릭한 버튼의 data-vote-id 값을 가져옴
-		        const voteId = $(this).data("vote-id"); 
 		        
 		        // 3. 해당 투표 그룹(name="movie-vote-번호")에서 체크된 라디오 버튼 찾기
 		        const $selectedOption = $("input[name='movie-vote-" + voteId + "']:checked");
@@ -79,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 						    if (data.status === "SUCCESS") {
 						        const results = data.results;
-								console.log(results)
+								
 								results.forEach(function(item) {
 								            // 1. 해당 영화 ID를 가진 카드를 찾음
 											const $input = $(`input[data-movie-id="${item.movie_id}"]`);
@@ -97,14 +100,21 @@ document.addEventListener("DOMContentLoaded", function() {
 											    },50);
 											}
 								        });
-
-								        alert("투표가 성공적으로 기록되었습니다!");
+								$(".submit-vote-btn").text("댓글 보러 가기");	
+								$(".submit-vote-btn").addClass("go-to-votecont")	
+								alert("투표가 성공적으로 기록되었습니다!");
 						    }
 
 		            },	error: function(err) {
-	        console.error("Error:", err);
-	        alert("통신 중 오류가 발생했습니다.");
-	    }
-		        });
+							console.error("Error:", err);
+							alert("통신 중 오류가 발생했습니다.");
+							}
+								});
+			}
+		        
+		      
 		    });
+
+			
+		
     });

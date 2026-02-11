@@ -49,6 +49,24 @@ body {
 	box-shadow: var(--shadow-subtle);
 }
 
+.glass-panel2 {
+	background: var(--glass-bg);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: var(--radius-soft);
+	padding: 25px;
+	box-shadow: var(--shadow-subtle);
+}
+.aside.glass-panel {
+	background: var(--glass-bg);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: var(--radius-soft);
+	padding: 25px;
+	box-shadow: var(--shadow-subtle);
+	display: block;
+}
+
 .header {
 	max-width: 1200px;
 	margin: 0 auto 30px;
@@ -455,8 +473,8 @@ opacity
 	<%-- </c:forEach> --%>
 
  
-	<main class="main-layout">
-		<section class="glass-panel vote-card-container">
+	<main class="main-layout" style="width:100%">
+		<section class="glass-panel vote-card-container" style="width:60%">
 			<button class="nav-btn" id="prevBtn">&lt;</button>
 
 			<div class="vote-window">
@@ -610,10 +628,10 @@ opacity
 
 								<c:otherwise>
 									<div class="glass-panel no-active-vote"
-										style="text-align: center; padding: 40px;">
+										style="text-align: center; padding: 40px; width:100%; display:flex;flex-direction:column;">
 										<h3 style="margin-bottom: 10px;">현재 참여할 수 있는 투표가 없습니다</h3>
 										<a href="vote_list.do" class="btn btn-primary"
-											style="margin-top: 15px; display: inline-block;"> 전체 투표
+											style="margin-top: 15px; display: inline-block;width: auto; align-self: center;"> 전체 투표
 											보러가기 </a>
 									</div>
 								</c:otherwise>
@@ -630,50 +648,87 @@ opacity
 			<button class="nav-btn" id="nextBtn">&gt;</button>
 		</section>
 
-		<aside class="glass-panel">
-			<div class="sidebar-title"
-				style="font-weight: 700; margin-bottom: 20px;">
-				예정된 투표 <a href="#"
-					style="float: right; font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">전체보기
-					></a>
-			</div>
+		<aside class="aside " style="width: 30%;">
+		<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px;">
+<div class="sidebar-title" 
+     style="width:100%;font-weight: 700; 
+            margin-bottom: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;"> <span>예정된 투표</span>
+    
+    <a href="vote_list.do" 
+       style="font-size: 0.8rem; 
+              color: var(--text-muted); 
+              text-decoration: none;">
+       전체보기 >
+    </a>
+</div>
+
 
 			<c:forEach var="vote" items="${vote_register_ready}">
-				<div class="upcoming-item">
+				<div class="upcoming-item" style="width:100%;">
 					<div style="font-weight: 600;">${vote.vote_title}</div>
 					<div style="font-size: 0.8rem; color: var(--accent-color);">시작일:
 						${vote.vote_start_date}</div>
 				</div>
 			</c:forEach>
+		</div>
+<br><br>
+			<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px;">
+<div class="sidebar-title" 
+     style="width:100%;font-weight: 700; 
+            margin-bottom: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;"> <span>지난 투표 결과</span>
+    
+    <a href="vote_list.do" 
+       style="font-size: 0.8rem; 
+              color: var(--text-muted); 
+              text-decoration: none;">
+       전체보기 >
+    </a>
+</div>
+
+
+			<c:forEach var="vote" items="${vote_register_closed}">
+				<div class="glass-panel2 history-card" style="width:100%">
+					<div style="font-weight: 700;">${vote.vote_title}</div>
+					<div
+						style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">종료:
+						${vote.vote_end_date} | 참여 
+						<c:set var="done" value="false" />
+<c:forEach var="res" items="${vote.resultList}">
+    <c:if test="${not done}">
+        <c:if test="${res.rank == 1}">
+            <span style="font-weight: 600;"> ${res.count} </span>
+            <c:set var="done" value="true" /> </c:if>
+    </c:if>
+</c:forEach>
+						
+						
+						명</div>
+					<div class="winner-box">
+						<span class="winner-label">최다 득표</span>
+
+						<c:set var="done" value="false" />
+<c:forEach var="res" items="${vote.resultList}">
+    <c:if test="${not done}">
+        <c:if test="${res.rank == 1}">
+            <span style="font-weight: 600;"> ${res.movie_title} </span>
+            <c:set var="done" value="true" /> </c:if>
+    </c:if>
+</c:forEach>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
+			
 
 		</aside>
 	</main>
 
-	<section class="history-section">
-		<div class="sidebar-title">
-			지난 투표 결과 <a href="#" class="view-all">전체보기 ></a>
-		</div>
-		<div class="history-grid">
-			<c:forEach var="vote" items="${vote_register_closed}">
-				<div class="glass-panel history-card">
-					<div style="font-weight: 700;">${vote.vote_title}</div>
-					<div
-						style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">종료:
-						${vote.vote_end_date} | 참여 1,240명</div>
-					<div class="winner-box">
-						<span class="winner-label">최다 득표</span>
-
-						<c:forEach var="res" items="${vote.resultList}">
-							<c:if test="${res.rank == 1}">
-								<span style="font-weight: 600;"> ${res.movie_title} </span>
-							</c:if>
-						</c:forEach>
-					</div>
-				</div>
-			</c:forEach>
-
-		</div>
-	</section>
 	<script src="${pageContext.request.contextPath}/js/vote.js"></script>
 </body>
 </html>

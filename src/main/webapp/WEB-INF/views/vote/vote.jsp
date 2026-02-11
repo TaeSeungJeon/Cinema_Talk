@@ -403,6 +403,10 @@ opacity
     transition:width 0.8s ease;
 }
 
+.glass-panel.no-active-vote{
+
+width:100%;
+}
 </style>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -413,13 +417,24 @@ opacity
 		<h1 class="page-title">오늘의 영화 픽</h1>
 		<p class="page-desc">마음에 드는 영화에 한 표. 순위는 커뮤니티가 만듭니다.</p>
 	</header>
-<c:forEach var="vote" items="${vote_register_all}">
-    vote_id: ${vote.vote_id} <br>
-    title: ${vote.vote_title} <br>
-    status: ${vote.vote_status} <br>
-    status: ${vote.voted} <br>
-    ----------------------<br>
-</c:forEach>
+
+<%-- <c:forEach var="vote" items="${vote_register_all}"> --%>
+<%--     <h3>${vote.vote_title}</h3> --%>
+<%--     <h3>${vote.vote_id}</h3> --%>
+<%--     <h3>${vote.vote_status}</h3> --%>
+
+<%--     <c:forEach var="opt" items="${vote.optionList}"> --%>
+<%--         movie_id : ${opt.movie_id} <br> --%>
+<%--         title : ${opt.movie_title} <br> --%>
+<%--     </c:forEach> --%>
+<%--      <h3>${vote.voted}</h3> --%>
+<%--     <h3>${vote.vote_status}</h3> --%>
+<%--      <h3>${vote.vote_title}</h3> --%>
+
+<!--     <hr> -->
+<%-- </c:forEach> --%>
+
+
 
 	<main class="main-layout">
 		<section class="glass-panel vote-card-container">
@@ -427,7 +442,84 @@ opacity
 
 			<div class="vote-window">
 				<div class="vote-track">
-					<c:forEach var="vote" items="${vote_register_active}">
+				<c:choose>
+				<c:when test="${id == null}">
+				<p>id null</p>
+				<c:forEach var="vote" items="${vote_register_all}">
+				<fmt:parseDate value="${vote.vote_start_date}"
+							pattern="yyyy-MM-dd" var="startDate" />
+						<fmt:parseDate value="${vote.vote_end_date}" pattern="yyyy-MM-dd"
+							var="endDate" />
+
+						<div class="vote-content">
+							<div class="vote-header">
+
+
+								<c:choose>
+									<c:when test="${now.time lt startDate.time}">
+										<strong class="status-badge status-upcoming">예정</strong>
+									</c:when>
+									<c:when test="${now.time gt endDate.time}">
+										<strong class="status-badge status-completed">완료</strong>
+									</c:when>
+									<c:otherwise>
+										<strong class="status-badge status-ongoing">진행중</strong>
+									</c:otherwise>
+								</c:choose>
+
+
+								<span>종료: <span id="voteEndDate">${vote.vote_end_date}</span></span>
+							</div>
+
+							<h2 class="vote-title">${vote.vote_title}</h2>
+							<div class="vote-description">${vote.vote_content}</div>
+
+							<div class="vote-options-list">
+								<c:forEach var="opt" items="${vote.optionList}">
+									<label class="movie-option" data-movie-id="${opt.movie_id}">
+
+										<input type="radio" name="movie-vote-${vote.vote_id}"
+										value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
+
+										<div class="movie-thumb">
+											<img
+												src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
+												alt="${opt.movie_title}">
+										</div>
+
+										<div class="movie-info">
+											<div class="m-title">${opt.movie_title}</div>
+											<div class="m-meta">
+												${opt.movie_release_date.substring(0,4)}</div>
+
+											<!-- ⭐ 결과 영역 추가 -->
+											<div class="m-result" style="display:none;">
+     <span class="res-count">0</span>표 
+    (<span class="res-pct">0</span>%)
+
+    
+</div>
+
+										</div>
+
+									</label>
+								</c:forEach>
+							</div>
+
+							<div class="vote-actions">
+								<button class="btn btn-primary submit-vote-btn"
+									data-vote-id="${vote.vote_id}">투표하기</button>
+							</div>
+						</div>
+				</c:forEach>
+				</c:when>
+				<c:otherwise>
+<%-- 				<p>id not null ${id}</p> --%>
+
+<c:choose>
+<c:when test="${not empty active_not_voted}">
+<c:forEach var="vote" items="${active_not_voted}">
+					
 						<fmt:parseDate value="${vote.vote_start_date}"
 							pattern="yyyy-MM-dd" var="startDate" />
 						<fmt:parseDate value="${vote.vote_end_date}" pattern="yyyy-MM-dd"
@@ -493,7 +585,29 @@ opacity
 									data-vote-id="${vote.vote_id}">투표하기</button>
 							</div>
 						</div>
+						
+						 
+						 
 					</c:forEach>
+</c:when>
+
+<c:otherwise>
+ <div class="glass-panel no-active-vote" style="text-align:center; padding:40px;">
+            <h3 style="margin-bottom:10px;">현재 참여할 수 있는 투표가 없습니다</h3>
+            <a href="vote_list.do"
+       class="btn btn-primary"
+       style="margin-top:15px; display:inline-block;">
+        전체 투표 보러가기
+    </a>
+        </div>
+</c:otherwise>
+</c:choose>
+
+					
+				
+				</c:otherwise>
+				</c:choose>
+				
 				</div>
 			</div>
 
@@ -507,11 +621,15 @@ opacity
 					style="float: right; font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">전체보기
 					></a>
 			</div>
-			<div class="upcoming-item">
-				<div style="font-weight: 600;">최고의 명대사 투표</div>
+			
+			<c:forEach var="vote" items="${vote_register_ready}">
+				<div class="upcoming-item">
+				<div style="font-weight: 600;">${vote.vote_title}</div>
 				<div style="font-size: 0.8rem; color: var(--accent-color);">시작일:
-					02.16</div>
+					${vote.vote_start_date}</div>
 			</div>
+			</c:forEach>
+		
 		</aside>
 	</main>
 
@@ -520,26 +638,26 @@ opacity
 			지난 투표 결과 <a href="#" class="view-all">전체보기 ></a>
 		</div>
 		<div class="history-grid">
-			<div class="glass-panel history-card">
-				<div style="font-weight: 700;">2026년 1월 최고의 기대작</div>
+		<c:forEach var="vote" items="${vote_register_closed}">
+		<div class="glass-panel history-card">
+				<div style="font-weight: 700;">${vote.vote_title}</div>
 				<div
 					style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">종료:
-					01.31 | 참여 1,240명</div>
+					${vote.vote_end_date} | 참여 1,240명</div>
 				<div class="winner-box">
-					<span class="winner-label">최다 득표</span> <span
-						style="font-weight: 600;">아바타: 물의 길</span>
+					<span class="winner-label">최다 득표</span> 
+
+<c:forEach var="res" items="${vote.resultList}">
+                <c:if test="${res.rank == 1}">
+                    <span style="font-weight:600;">
+                        ${res.movie_title}
+                    </span>
+                </c:if>
+            </c:forEach>
 				</div>
 			</div>
-			<div class="glass-panel history-card">
-				<div style="font-weight: 700;">겨울에 어울리는 애니메이션</div>
-				<div
-					style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">종료:
-					01.15 | 참여 890명</div>
-				<div class="winner-box">
-					<span class="winner-label">최다 득표</span> <span
-						style="font-weight: 600;">겨울왕국 3</span>
-				</div>
-			</div>
+		</c:forEach>
+			
 		</div>
 	</section>
 	<script src="${pageContext.request.contextPath}/js/vote.js"></script>

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -154,6 +155,22 @@
 </nav>
 
 <main class="vote-list-container">
+
+<c:forEach var="vote" items="${vote_register_all}">
+    <h3>${vote.vote_title}</h3>
+    <h3>${vote.vote_id}</h3>
+    <h3>${vote.vote_status}</h3>
+
+    <c:forEach var="opt" items="${vote.optionList}">
+        movie_id : ${opt.movie_id} <br>
+        title : ${opt.movie_title} <br>
+    </c:forEach>
+     <h3>${vote.voted}</h3>
+    <h3>${vote.vote_status}</h3>
+     <h3>${vote.vote_title}</h3>
+
+    <hr>
+</c:forEach>
 
     <section class="glass-panel vote-card">
         <div class="vote-status-bar">

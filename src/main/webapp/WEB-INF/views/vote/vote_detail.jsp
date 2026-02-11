@@ -144,30 +144,7 @@
 
 <main class="vote-section">
 
-    <section class="glass-panel vote-card">
-        <div class="status-badge">진행중</div>
-        <div class="end-date">종료날짜</div>
-        <h2 class="vote-title">투표 제목</h2>
-        <span class="vote-desc-label">투표 내용</span>
-
-        <div class="vote-item selected">
-            <div class="radio-btn"></div>
-            <div class="movie-img">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-title">영화 제목</div>
-                <div class="m-meta">개봉년 . genre</div>
-            </div>
-        </div>
-        <div class="vote-item">
-            <div class="radio-btn"></div>
-            <div class="movie-img">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-title">영화 제목</div>
-                <div class="m-meta">개봉년 . genre</div>
-            </div>
-        </div>
-        <button class="action-btn">투표하기</button>
-    </section>
+   
 
     <section class="glass-panel vote-card">
         <div class="status-badge">종료</div>

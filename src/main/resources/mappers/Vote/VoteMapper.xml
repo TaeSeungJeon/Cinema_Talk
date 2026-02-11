@@ -37,31 +37,34 @@
 	<select id="vrec_result" resultType="voteresult"
 		parameterType="int">
 		SELECT
-		#{vote_id} as vote_id,
-		movie_id,
-		count,
-		total_voter_count,
-		ROUND(count * 100.0 / total_count, 1) AS percentage,
-		RANK() OVER (ORDER BY count DESC) AS rank
-		FROM (
-		SELECT
-		movie_id,
-		count,
-		SUM(count) OVER() AS total_count,
-		SUM(voter_cnt) OVER() AS
-		total_voter_count
-		FROM (
-		SELECT
-		movie_id,
-		COUNT(*) AS count,
-		COUNT(DISTINCT mem_no) AS voter_cnt
-		FROM vote_record
-		WHERE vote_id =
-		#{vote_id}
-		GROUP BY movie_id
-		)
-		)
+    #{vote_id} as vote_id,
+    r.movie_id,
+    
+    r.count,
+    r.total_voter_count,
+    ROUND(r.count * 100.0 / r.total_count, 1) AS percentage,
+    RANK() OVER (ORDER BY r.count DESC) AS rank,
+    m.movie_title as movie_title
 
+FROM (
+    SELECT
+        movie_id,
+        count,
+        SUM(count) OVER() AS total_count,
+        SUM(voter_cnt) OVER() AS total_voter_count
+    FROM (
+        SELECT
+            movie_id,
+            COUNT(*) AS count,
+            COUNT(DISTINCT mem_no) AS voter_cnt
+        FROM vote_record
+        WHERE vote_id = #{vote_id}
+        GROUP BY movie_id
+    )
+) r
+
+JOIN movie m
+ON r.movie_id = m.movie_id
 
 	</select>
 

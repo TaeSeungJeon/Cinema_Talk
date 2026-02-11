@@ -99,23 +99,23 @@ public class MovieDAOImpl implements MovieDAO {
 	}
 
 	@Override
-	public List<MovieDTO> getMovieDTOList(List<String> search_words, int search_option, int startrow, int endrow) {
+	public List<MovieDTO> getMovieDTOList(List<String> searchWords, int searchOption, int startrow, int endrow) {
 		SqlSession session = null;
 		List<MovieDTO> movies = null;
 		
 		// 빈 리스트 검사
-		if(search_words == null || search_words.isEmpty()) {
+		if(searchWords == null || searchWords.isEmpty()) {
 			return null;
 		}
 		
 		try {
 			session = getSqlSession();
 			Map<String, Object> paramMap = new HashMap<>();
-			paramMap.put("wordList", search_words);
+			paramMap.put("wordList", searchWords);
 			paramMap.put("startrow", startrow);
 			paramMap.put("endrow", endrow);
 			
-			switch(search_option) {
+			switch(searchOption) {
 				case 0:
 					movies = session.selectList("searchByTitle", paramMap); 
 					break;
@@ -139,13 +139,13 @@ public class MovieDAOImpl implements MovieDAO {
 	}
 
 	@Override
-	public int getRowCount(List<String> words, int search_option) {
+	public int getRowCount(List<String> words, int searchOption) {
 		SqlSession sqlSession = null;
 		try {
 			sqlSession = getSqlSession();
 			Map<String, Object> paramMap = new HashMap<>();
 			paramMap.put("wordList", words);
-			paramMap.put("search_option", search_option);
+			paramMap.put("searchOption", searchOption);
 			
 			return sqlSession.selectOne("movie_count", paramMap);
 		} finally {
@@ -156,11 +156,11 @@ public class MovieDAOImpl implements MovieDAO {
 	}
 
 	@Override
-	public MovieDTO getMovieDetail(int movie_id) {
+	public MovieDTO getMovieDetail(int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			return session.selectOne("selectMovieById", movie_id);
+			return session.selectOne("selectMovieById", movieId);
 
 		} finally {
 			if(session != null) {

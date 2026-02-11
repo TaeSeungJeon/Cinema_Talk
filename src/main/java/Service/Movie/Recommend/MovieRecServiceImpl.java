@@ -12,8 +12,8 @@ public class MovieRecServiceImpl implements MovieRecService {
 	private MovieRecDAO movieRecDAO = MovieRecDAOImpl.getInstance();
 
 	@Override
-	public Map<Integer, List<MovieRecResponse>> getGenreRecList(int mem_no) {
-		return movieRecDAO.getGenreRecList(mem_no);
+	public Map<Integer, List<MovieRecResponse>> getGenreRecList(int memNo) {
+		return movieRecDAO.getGenreRecList(memNo);
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class MovieRecServiceImpl implements MovieRecService {
 	}
 
 	@Override
-	public List<MovieRecResponse> getLikeRecList(int mem_no) {
-		return movieRecDAO.getLikeRecList(mem_no);
+	public List<MovieRecResponse> getLikeRecList(int memNo) {
+		return movieRecDAO.getLikeRecList(memNo);
 	}
 }

@@ -8,7 +8,7 @@ import lombok.Setter;
 public class MovieRecRequest {
 	
 	private String type; //장르별, 선호별, 인기별
-	private String genre_id; //장르 번호
-	private String movie_rating_average; //평점
-	private String movie_recommend_count; //좋아요 수
+	private String genreId; //장르 번호
+	private String movieRatingAverage; //평점
+	private String movieRecommendCount; //좋아요 수
 }

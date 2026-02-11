@@ -11,9 +11,9 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 	private MovieDAO movieDAO = MovieDAOImpl.getInstance();
 
 	@Override
-	public List<MovieDTO> getMovieDTOList(MovieDTO movieDTO, int search_option) {
+	public List<MovieDTO> getMovieDTOList(MovieDTO movieDTO, int searchOption) {
 		// 검색어를 공백으로 분리하고, 2글자 이상인 단어만 필터링
-		List<String> words = Arrays.stream(movieDTO.getSearch_words().trim().split("\\s+"))
+		List<String> words = Arrays.stream(movieDTO.getSearchWords().trim().split("\\s+"))
 				.filter(w -> w.length() >= 2)
 				.toList();
 		
@@ -22,13 +22,13 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 			return null;
 		}
 		
-		return movieDAO.getMovieDTOList(words, search_option, movieDTO.getStartrow(), movieDTO.getEndrow());
+		return movieDAO.getMovieDTOList(words, searchOption, movieDTO.getStartrow(), movieDTO.getEndrow());
 	}
 
 	@Override
-	public int getRowCount(MovieDTO movie, int search_option) {
+	public int getRowCount(MovieDTO movie, int searchOption) {
 		// 검색어를 공백으로 분리하고, 2글자 이상인 단어만 필터링
-		List<String> words = Arrays.stream(movie.getSearch_words().trim().split("\\s+"))
+		List<String> words = Arrays.stream(movie.getSearchWords().trim().split("\\s+"))
 				.filter(w -> w.length() >= 2)
 				.toList();
 		
@@ -37,6 +37,6 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 			return 0;
 		}
 		
-		return movieDAO.getRowCount(words, search_option);
+		return movieDAO.getRowCount(words, searchOption);
 	}
 }

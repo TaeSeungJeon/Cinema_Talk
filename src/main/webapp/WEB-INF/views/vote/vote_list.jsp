@@ -134,6 +134,70 @@
         }
 
         .action-btn:hover { background: var(--accent-color); color: white; }
+        
+        .movie-option { 
+ 	display: flex; 
+ 	align-items: center;
+ 	background: white; 
+ 	border-radius: 15px; 
+ 	padding: 12px; 
+ 	margin-bottom: 12px; 
+ 	border: 2px solid transparent;
+ 	transition: 0.2s; 
+ 	cursor: pointer; 
+ } 
+
+.movie-option{
+    position: relative;
+    overflow: hidden;
+    border-radius:12px;
+
+    background:
+        linear-gradient(to right, rgba(108,124,255,0.18), rgba(108,124,255,0.18)) no-repeat,
+        #ffffff;
+
+    background-size:0% 100%; /* 처음 0% */
+    transition:background-size 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+
+.movie-option:hover {
+	border-color: var(--accent-color);
+}
+
+.movie-option input[type="radio"] {
+	margin-right: 15px;
+	width: 18px;
+	height: 18px;
+	accent-color: var(--accent-color);
+}
+
+.movie-thumb {
+	width: 60px;
+	height: 80px;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-right: 15px;
+	background: #eee;
+	flex-shrink: 0;
+}
+
+.movie-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.movie-info .m-title {
+	font-weight: 700;
+	font-size: 1rem;
+	margin-bottom: 3px;
+}
+
+.movie-info .m-meta {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+}
 
     </style>
 </head>
@@ -172,46 +236,105 @@
     <hr>
 </c:forEach>
 
-    <section class="glass-panel vote-card">
+<c:forEach var="vote" items="${vote_register_all}">
+
+<c:choose>
+<c:when test="${vote.vote_status eq 'ACTIVE'}">
+ <section class="glass-panel vote-card">
         <div class="vote-status-bar">
             <span class="status-tag ongoing">진행중</span>
-            <span style="color: var(--text-muted)">종료날짜: 2026.02.28</span>
+            <span style="color: var(--text-muted)">종료날짜: ${vote.vote_end_date}</span>
         </div>
-        <h2 class="vote-title">이번 달 가장 기대되는 블록버스터는?</h2>
+        <h2 class="vote-title">${vote.vote_title}</h2>
         
-        <div class="vote-item selected">
-            <div class="radio-circle"></div>
-            <div class="movie-img-placeholder">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-name">영화 제목</div>
-                <div class="m-meta">개봉년 · genre</div>
-            </div>
-        </div>
-        <div class="vote-item">
-            <div class="radio-circle"></div>
-            <div class="movie-img-placeholder">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-name">영화 제목</div>
-                <div class="m-meta">개봉년 · genre</div>
-            </div>
-        </div>
-        <div class="vote-item">
-            <div class="radio-circle"></div>
-            <div class="movie-img-placeholder">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-name">영화 제목</div>
-                <div class="m-meta">개봉년 · genre</div>
-            </div>
-        </div>
+        <c:forEach var="opt" items="${vote.optionList}">
+									<label class="movie-option" data-movie-id="${opt.movie_id}">
+
+										<input type="radio" name="movie-vote-${vote.vote_id}"
+										value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
+
+										<div class="movie-thumb">
+											<img
+												src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
+												alt="${opt.movie_title}">
+										</div>
+
+										<div class="movie-info">
+											<div class="m-title">${opt.movie_title}</div>
+											<div class="m-meta">
+												${opt.movie_release_date.substring(0,4)}</div>
+
+											<!-- ⭐ 결과 영역 추가 -->
+											<div class="m-result" style="display:none;">
+     <span class="res-count">0</span>표 
+    (<span class="res-pct">0</span>%)
+
+    
+</div>
+
+										</div>
+
+									</label>
+								</c:forEach>
         <button class="action-btn">투표하기</button>
     </section>
+
+</c:when>
+
+
+
+
+<c:when test="${vote.vote_status eq 'READY'}">
 
     <section class="glass-panel vote-card">
         <div class="vote-status-bar">
             <span class="status-tag upcoming">예정된 투표</span>
-            <span style="color: var(--text-muted)">시작날짜: 2026.03.05</span>
+            <span style="color: var(--text-muted)">시작날짜: ${vote.vote_start_date}</span>
         </div>
-        <h2 class="vote-title">다시 보고 싶은 인생 명작 투표</h2>
+        <h2 class="vote-title">${vote.vote_title}</h2>
+        
+         
+        <c:forEach var="opt" items="${vote.optionList}">
+									<label class="movie-option" data-movie-id="${opt.movie_id}">
+
+										<input type="radio" name="movie-vote-${vote.vote_id}"
+										value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
+
+										<div class="movie-thumb">
+											<img
+												src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
+												alt="${opt.movie_title}">
+										</div>
+
+										<div class="movie-info">
+											<div class="m-title">${opt.movie_title}</div>
+											<div class="m-meta">
+												${opt.movie_release_date.substring(0,4)}</div>
+
+											<!-- ⭐ 결과 영역 추가 -->
+											<div class="m-result" style="display:none;">
+     <span class="res-count">0</span>표 
+    (<span class="res-pct">0</span>%)
+
+    
+</div>
+
+										</div>
+
+									</label>
+								</c:forEach>
+    </section>
+
+</c:when>
+
+<c:when test="${vote.vote_status eq 'CLOSED'}">
+
+    <section class="glass-panel vote-card">
+        <div class="vote-status-bar">
+            <span class="status-tag upcoming">종료</span>
+            <span style="color: var(--text-muted)">종료날짜: ${vote.vote_end_date}</span>
+        </div>
+        <h2 class="vote-title"> ${vote.vote_title}</h2>
         
         <div class="vote-item">
             <div class="radio-circle"></div>
@@ -230,6 +353,15 @@
             </div>
         </div>
     </section>
+
+</c:when>
+</c:choose>
+</c:forEach>
+
+
+
+   
+
 
 </main>
 

@@ -151,25 +151,6 @@ public class VoteController implements Action {
 		
 		System.out.println("===============================================");
 
-for (VoteRegisterDTO vote : closedReg) {
-
-    System.out.println("=== vote_id : " + vote.getVote_id());
-
-    List<VoteResultDTO> results = vote.getResultList();
-
-    if(results != null){
-        for (VoteResultDTO r : results) {
-            System.out.println(
-                "movie_id=" + r.getMovie_id()
-                + ", title=" + r.getMovie_title()
-                + ", count=" + r.getCount()
-                + ", pct=" + r.getPercentage()
-            );
-        }
-    } else {
-        System.out.println("resultList is null");
-    }
-}
 
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

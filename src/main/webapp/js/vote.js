@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
             track.style.transform = `translateX(-${index * 100}%)`;
             
             // 버튼 활성화 상태
-            prevBtn.classList.toggle('disabled', index === 0);
-            nextBtn.classList.toggle('disabled', index === slideCount - 1);
+        //    prevBtn.classList.toggle('disabled', index === 0);
+          //  nextBtn.classList.toggle('disabled', index === slideCount - 1);
             
             currentIndex = index;
         }
@@ -28,13 +28,21 @@ document.addEventListener("DOMContentLoaded", function() {
             nextBtn.style.display = 'none';
         }
 
-        nextBtn.addEventListener('click', () => {
-            if (currentIndex < slideCount - 1) moveSlide(currentIndex + 1);
-        });
+		nextBtn.addEventListener('click', () => {
+		    if (currentIndex >= slideCount - 1) {
+		        moveSlide(0); // 마지막이면 처음으로
+		    } else {
+		        moveSlide(currentIndex + 1);
+		    }
+		});
 
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) moveSlide(currentIndex - 1);
-        });
+		prevBtn.addEventListener('click', () => {
+		    if (currentIndex <= 0) {
+		        moveSlide(slideCount - 1); // 처음이면 마지막으로
+		    } else {
+		        moveSlide(currentIndex - 1);
+		    }
+		});
 		
 		$(".submit-vote-btn").on("click", function() {
 		        

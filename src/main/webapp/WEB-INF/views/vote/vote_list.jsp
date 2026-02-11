@@ -220,21 +220,21 @@
 
 <main class="vote-list-container">
 
-<c:forEach var="vote" items="${vote_register_all}">
-    <h3>${vote.vote_title}</h3>
-    <h3>${vote.vote_id}</h3>
-    <h3>${vote.vote_status}</h3>
+<%-- <c:forEach var="vote" items="${vote_register_all}"> --%>
+<%--     <h3>${vote.vote_title}</h3> --%>
+<%--     <h3>${vote.vote_id}</h3> --%>
+<%--     <h3>${vote.vote_status}</h3> --%>
 
-    <c:forEach var="opt" items="${vote.optionList}">
-        movie_id : ${opt.movie_id} <br>
-        title : ${opt.movie_title} <br>
-    </c:forEach>
-     <h3>${vote.voted}</h3>
-    <h3>${vote.vote_status}</h3>
-     <h3>${vote.vote_title}</h3>
+<%--     <c:forEach var="opt" items="${vote.optionList}"> --%>
+<%--         movie_id : ${opt.movie_id} <br> --%>
+<%--         title : ${opt.movie_title} <br> --%>
+<%--     </c:forEach> --%>
+<%--      <h3>${vote.voted}</h3> --%>
+<%--     <h3>${vote.vote_status}</h3> --%>
+<%--      <h3>${vote.vote_title}</h3> --%>
 
-    <hr>
-</c:forEach>
+<!--     <hr> -->
+<%-- </c:forEach> --%>
 
 <c:forEach var="vote" items="${vote_register_all}">
 

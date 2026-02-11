@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8"%>
     <aside>
         <div class="side-widget">
             <div class="widget-title">

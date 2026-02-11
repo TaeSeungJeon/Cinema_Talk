@@ -31,7 +31,6 @@ public class MyPageController implements Action {
 		// 세션에서 mem_id 꺼내기
 		Object memIdObj = session.getAttribute("mem_id");
 		if (!(memIdObj instanceof String)) {
-			// 세션 값 이상(혹은 세션 탈취 의심) -> 로그아웃 처리/리다이렉트
 			session.invalidate();
 			forward.setRedirect(true);
 			forward.setPath("/WEB-INF/views/member/login.do");

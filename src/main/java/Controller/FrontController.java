@@ -28,7 +28,7 @@ public class FrontController extends HttpServlet {
 		Action action = null;
 
 		Properties prop = new Properties();// 컬렉션 클래스로 키,값 쌍으로 저장하는 자료구조
-		
+		System.out.println("여기는 프로퍼티 있기전");
 		FileInputStream fis = new FileInputStream(
 				request.getSession().getServletContext().getRealPath("WEB-INF/classes/daum.properties"));
 		// 프로퍼티 파일을 읽어들임.=>톰캣 WAS서버에 의해서 변경된 실제 톰캣프로젝트 경로의 해당파일을 읽어들임.

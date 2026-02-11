@@ -320,7 +320,7 @@
         </form>
     </div>
     <div style="display: flex; gap: 10px;">
-        <a href="login.jsp" class="glass-panel" style="padding: 10px 20px; cursor: pointer; color: inherit;">로그인</a>
+        <a href="member_login.do" class="glass-panel" style="padding: 10px 20px; cursor: pointer; color: inherit;">로그인</a>
         <a href="myPage.jsp" class="glass-panel" style="padding: 10px 20px; cursor: pointer; color: inherit;">마이페이지</a>
     </div>
 </header>

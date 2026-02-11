@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="Member"> <!-- 매퍼네임 스페이스명을 Member로 설정 -->
+  
+  <!-- 회원 정보 저장 -->
+  <insert id="register_in" parameterType="DTO.Member.MemberDTO">
+    insert into member (mem_no, mem_id, mem_pwd, mem_name, mem_phone, mem_email, mem_role, mem_state, mem_date) 
+     values(mem_no_seq.nextval, #{mem_id}, #{mem_pwd}, #{mem_name}, #{mem_phone}, #{mem_email}, 2, 1, sysdate)
+  </insert>
+  
+  <!-- 중복 아이디 검색 -->
+  <select id="idCheck" parameterType="String" resultType="DTO.Member.MemberDTO">
+   select * from member where mem_id=#{id}
+  </select>
+  
+  </mapper>

@@ -182,7 +182,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${likeRecList}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/Movie/Recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -212,7 +212,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${popularRecList}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/Movie/Recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -243,7 +243,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${entry.value}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/Movie/Recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -358,12 +358,9 @@
       const idEl = card.querySelector(".movie-id-val");
       if (!idEl) return;
       const id = idEl.value;
-
-      // 뒤집힌 상태에서 클릭했을 때만 이동하도록 유지
+      
       if (card.classList.contains("is-flipped")) {
-        // TODO: 실제 상세로 연결
-        // location.href = "<%=request.getContextPath()%>/movie_detail.do?movie_id=" + encodeURIComponent(id);
-        alert("영화 상세 페이지로 이동: ID " + id);
+        location.href = "${pageContext.request.contextPath}/movie_detail.do?id=" + id;
       }
     });
   });

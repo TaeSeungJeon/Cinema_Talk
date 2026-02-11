@@ -456,21 +456,21 @@ opacity
 		<p class="page-desc">마음에 드는 영화에 한 표. 순위는 커뮤니티가 만듭니다.</p>
 	</div>
 
-	<%-- <c:forEach var="vote" items="${vote_register_all}"> --%>
-	<%--     <h3>${vote.vote_title}</h3> --%>
-	<%--     <h3>${vote.vote_id}</h3> --%>
-	<%--     <h3>${vote.vote_status}</h3> --%>
+	<%-- <c:forEach var="vote" items="${vote_register_active}"> 
+	     <h3>${vote.vote_title}</h3> 
+	    <h3>${vote.vote_id}</h3> 
+	     <h3>${vote.vote_status}</h3> 
 
-	<%--     <c:forEach var="opt" items="${vote.optionList}"> --%>
-	<%--         movie_id : ${opt.movie_id} <br> --%>
-	<%--         title : ${opt.movie_title} <br> --%>
-	<%--     </c:forEach> --%>
-	<%--      <h3>${vote.voted}</h3> --%>
-	<%--     <h3>${vote.vote_status}</h3> --%>
-	<%--      <h3>${vote.vote_title}</h3> --%>
+	     <c:forEach var="opt" items="${vote.optionList}">
+	        movie_id : ${opt.movie_id} <br> 
+	        title : ${opt.movie_title} <br> 
+	     </c:forEach> 
+	      <h3>${vote.voted}</h3> 
+	     <h3>${vote.vote_status}</h3> 
+	      <h3>${vote.vote_title}</h3> 
 
-	<!--     <hr> -->
-	<%-- </c:forEach> --%>
+    <hr> 
+	</c:forEach> --%>
 
  
 	<main class="main-layout" style="width:100%">
@@ -479,30 +479,14 @@ opacity
 
 			<div class="vote-window">
 				<div class="vote-track">
-					<c:choose>
-						<c:when test="${id == null}">
-							<p>id null</p>
-							<c:forEach var="vote" items="${vote_register_all}">
-								<fmt:parseDate value="${vote.vote_start_date}"
-									pattern="yyyy-MM-dd" var="startDate" />
-								<fmt:parseDate value="${vote.vote_end_date}"
-									pattern="yyyy-MM-dd" var="endDate" />
-
-								<div class="vote-content">
+				<c:choose>
+								<c:when test="${not empty vote_register_active}">
+								<c:forEach var="vote" items="${vote_register_active}">
+<div class="vote-content">
 									<div class="vote-header">
 
-
-										<c:choose>
-											<c:when test="${now.time lt startDate.time}">
-												<strong class="status-badge status-upcoming">예정</strong>
-											</c:when>
-											<c:when test="${now.time gt endDate.time}">
-												<strong class="status-badge status-completed">완료</strong>
-											</c:when>
-											<c:otherwise>
-												<strong class="status-badge status-ongoing">진행중</strong>
-											</c:otherwise>
-										</c:choose>
+<strong class="status-badge status-ongoing">진행중</strong>
+										
 
 
 										<span>종료: <span id="voteEndDate">${vote.vote_end_date}</span></span>
@@ -546,88 +530,13 @@ opacity
 										<button class="btn btn-primary submit-vote-btn"
 											data-vote-id="${vote.vote_id}">투표하기</button>
 									</div>
+									
 								</div>
-							</c:forEach>
-						</c:when>
-						<c:otherwise>
-							<%-- 				<p>id not null ${id}</p> --%>
-
-							<c:choose>
-								<c:when test="${not empty active_not_voted}">
-									<c:forEach var="vote" items="${active_not_voted}">
-
-										<fmt:parseDate value="${vote.vote_start_date}"
-											pattern="yyyy-MM-dd" var="startDate" />
-										<fmt:parseDate value="${vote.vote_end_date}"
-											pattern="yyyy-MM-dd" var="endDate" />
-
-										<div class="vote-content">
-											<div class="vote-header">
-
-
-												<c:choose>
-													<c:when test="${now.time lt startDate.time}">
-														<strong class="status-badge status-upcoming">예정</strong>
-													</c:when>
-													<c:when test="${now.time gt endDate.time}">
-														<strong class="status-badge status-completed">완료</strong>
-													</c:when>
-													<c:otherwise>
-														<strong class="status-badge status-ongoing">진행중</strong>
-													</c:otherwise>
-												</c:choose>
-
-
-												<span>종료: <span id="voteEndDate">${vote.vote_end_date}</span></span>
-											</div>
-
-											<h2 class="vote-title">${vote.vote_title}</h2>
-											<div class="vote-description">${vote.vote_content}</div>
-
-											<div class="vote-options-list">
-												<c:forEach var="opt" items="${vote.optionList}">
-													<label class="movie-option" data-movie-id="${opt.movie_id}">
-
-														<input type="radio" name="movie-vote-${vote.vote_id}"
-														value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
-
-														<div class="movie-thumb">
-															<img
-																src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
-																alt="${opt.movie_title}">
-														</div>
-
-														<div class="movie-info">
-															<div class="m-title">${opt.movie_title}</div>
-															<div class="m-meta">
-																${opt.movie_release_date.substring(0,4)}</div>
-
-															<!-- ⭐ 결과 영역 추가 -->
-															<div class="m-result" style="display: none;">
-																<span class="res-count">0</span>표 (<span class="res-pct">0</span>%)
-
-
-															</div>
-
-														</div>
-
-													</label>
-												</c:forEach>
-											</div>
-
-											<div class="vote-actions">
-												<button class="btn btn-primary submit-vote-btn"
-													data-vote-id="${vote.vote_id}">투표하기</button>
-											</div>
-										</div>
-
-
-
-									</c:forEach>
+								</c:forEach>
 								</c:when>
 
 								<c:otherwise>
-									<div class="glass-panel no-active-vote"
+<div class="glass-panel no-active-vote"
 										style="text-align: center; padding: 40px; width:100%; display:flex;flex-direction:column;">
 										<h3 style="margin-bottom: 10px;">현재 참여할 수 있는 투표가 없습니다</h3>
 										<a href="vote_list.do" class="btn btn-primary"
@@ -635,15 +544,14 @@ opacity
 											보러가기 </a>
 									</div>
 								</c:otherwise>
-							</c:choose>
 
-
-
-						</c:otherwise>
-					</c:choose>
+								</c:choose>
 
 				</div>
-			</div>
+
+				</div>
+
+			
 
 			<button class="nav-btn" id="nextBtn">&gt;</button>
 		</section>
@@ -702,7 +610,7 @@ opacity
 <c:forEach var="res" items="${vote.resultList}">
     <c:if test="${not done}">
         <c:if test="${res.rank == 1}">
-            <span style="font-weight: 600;"> ${res.count} </span>
+            <span style="font-weight: 600;"> ${res.total_voter_count} </span>
             <c:set var="done" value="true" /> </c:if>
     </c:if>
 </c:forEach>

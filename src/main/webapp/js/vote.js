@@ -100,8 +100,8 @@ location.href = "vote_cont.do?vote_id=" + voteId;
 											    },50);
 											}
 								        });
-								$(".submit-vote-btn").text("댓글 보러 가기");	
-								$(".submit-vote-btn").addClass("go-to-votecont")	
+								$(`.submit-vote-btn[data-vote-id="${voteId}"]`).text("댓글 보러 가기");	
+								$(`.submit-vote-btn[data-vote-id="${voteId}"]`).addClass("go-to-votecont")	
 								alert("투표가 성공적으로 기록되었습니다!");
 						    }
 

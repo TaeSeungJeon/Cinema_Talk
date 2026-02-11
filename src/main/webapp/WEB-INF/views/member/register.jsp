@@ -163,7 +163,7 @@
 
         <div class="input-group">
             <label>비밀번호 확인</label>
-            <input type="password" id="mem_confirm" name="mem_pwd_confirm" required>
+            <input type="password" id="mem_pwd_confirm" name="mem_pwd_confirm" required>
         </div>
 
         <div class="input-group">

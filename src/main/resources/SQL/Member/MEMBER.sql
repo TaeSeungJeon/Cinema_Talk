@@ -18,3 +18,5 @@ select * from MEMBER;
 --mem_no컬럼 정수 숫자 레코드 값으로 활용할 mem_no_seq 시퀀스 생성
 create sequence mem_no_seq
 nocache; --임시메모리 사용 안 함
+
+select mem_no_seq.nextval as "다음 시퀀스 번호값" from dual;

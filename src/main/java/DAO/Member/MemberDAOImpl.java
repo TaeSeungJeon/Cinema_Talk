@@ -33,7 +33,7 @@ public class MemberDAOImpl implements MemberDAO {
 		
 		try {
 			sqlSession.insert("Member.register_in", member);
-			sqlSession.commit(); //수통 커밋
+			sqlSession.commit(); //수동 커밋
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();
@@ -53,8 +53,21 @@ public class MemberDAOImpl implements MemberDAO {
 				sqlSession.close();
 			}
 		}
-		
 	}//idCheck() -> 아이디 중복 검색
+
+	@Override
+	public MemberDTO loginCheck(String id) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("Member.loginCheck", id);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//loginCheck() -> 입력한 아이디로 로그인 인증 
 	
 	
 }

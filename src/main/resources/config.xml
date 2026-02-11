@@ -25,8 +25,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Movie.MovieCrewDTO" alias="moviecrew" />
 		<typeAlias type="DTO.Movie.MovieDTO" alias="movie" />
 		<typeAlias type="DTO.Movie.MovieGenreDTO" alias="moviegenre" />
-		<typeAlias type="DTO.Movie.MovieSimilarDTO" alias="moviesimilar" />
 		<typeAlias type="DTO.Movie.PersonDTO" alias="person" />
+		<typeAlias type="DTO.Member.MemberDTO" alias="member" />
+		
 	</typeAliases>
 
 	<!-- 마이바티스의 실행 환경을 세팅한 구간 특히 이 구간에서는 마이바티스가 JDBC 수준에서 트랜잭션을 관리(transactionManager)하게 
@@ -55,8 +56,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
        			<property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
-				<property name="username" value="week" />
-				<property name="password" value="week" />
+				<property name="username" value="C##test1" />
+				<property name="password" value="test1" />
 				
 				<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
@@ -76,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Movie/MovieCastMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieCrewMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieGenreMapper.xml"/>
-		<mapper resource="mappers/Movie/MovieSimilarMapper.xml"/>
+		<mapper resource="mappers/Member/MemberMapper.xml"/>
 	</mappers>
 
 </configuration>

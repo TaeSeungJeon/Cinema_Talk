@@ -8,4 +8,6 @@ public interface MemberDAO {
 
 	MemberDTO idCheck(String mem_id);
 
+	MemberDTO loginCheck(String id);
+
 }

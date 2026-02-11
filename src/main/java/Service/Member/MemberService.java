@@ -8,4 +8,6 @@ public interface MemberService {
 
 	MemberDTO idCheck(String mem_id);
 
+	MemberDTO loginCheck(String id);
+
 }

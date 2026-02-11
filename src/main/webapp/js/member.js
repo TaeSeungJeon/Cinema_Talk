@@ -54,9 +54,11 @@ function join_check() {
 	//이메일 입력확인
 	if(mem_email == ""){
 		alert("이메일을 입력하세요.");
-		$("#mem_email").focuse();
+		$("#mem_email").focus();
 		return false;
 	}
+	
+	return true;
 }
 
 //중복 아이디 검색 (1. 프론트 검사)

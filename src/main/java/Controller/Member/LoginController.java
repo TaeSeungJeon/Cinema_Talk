@@ -13,8 +13,6 @@ public class LoginController implements Action {
 			HttpServletResponse response) throws Exception {
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);
-		
-		System.out.println("여기는 로그인 컨트롤러");
 		forward.setPath("/WEB-INF/views/member/login.jsp");
 		return forward;
 	}

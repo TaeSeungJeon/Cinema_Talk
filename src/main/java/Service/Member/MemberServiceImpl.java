@@ -31,4 +31,9 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDTO idCheck(String mem_id) {
 		return this.mdao.idCheck(mem_id);
 	}//아이디 중복체크
+
+	@Override
+	public MemberDTO loginCheck(String id) {
+		return this.mdao.loginCheck(id);
+	}//아이디로 로그인 인증
 }

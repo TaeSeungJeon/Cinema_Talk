@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MovieGenreDTO {
-	private String genreId;
-	private String movieId;
+	private int genre_id;
+	private int movie_id;
 }

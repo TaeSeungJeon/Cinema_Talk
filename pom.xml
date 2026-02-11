@@ -123,8 +123,16 @@
             <artifactId>log4j-slf4j2-impl</artifactId>
             <version>${log4j2.version}</version>
         </dependency>
-
+	
+		<!-- 비밀번호 암호화 BCrypt -->
+		<dependency>
+  			<groupId>org.mindrot</groupId>
+  			<artifactId>jbcrypt</artifactId>
+  			<version>0.4</version>
+		</dependency>
+		
     </dependencies>
+	
 	
 	
 	<!-- Maven 빌드 설정 -->
@@ -141,5 +149,6 @@
 		</plugin>
     </plugins>
 	</build>
+	
 	
 </project>

@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PersonDTO {
-	private String personId;
-	private String personName;
+	private int person_id;
+	private String person_name;
 	private String biography;
-	private String profilePath;
+	private String profile_path;
 }

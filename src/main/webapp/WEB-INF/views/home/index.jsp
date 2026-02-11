@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
     
     <!-- sample페이지 전용 스타일시트 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sample/sample.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home/home.css" />
   </head>
 
   <body class="page-home" data-context-path="${pageContext.request.contextPath}">
@@ -21,9 +21,9 @@
     <div class="container">
       
 
-      <%@ include file="sample_main.jsp"%>
-      <%@ include file="sample_sidebar.jsp"%>
-<%--       <%@ include file="sample_sidebar2.jsp"%> --%>
+      <%@ include file="home_main.jsp"%>
+      <%@ include file="home_sidebar.jsp"%>
+<%--       <%@ include file="home_sidebar2.jsp"%> --%>
     </div>
  <script src="${pageContext.request.contextPath}/js/home.js"></script>
   </body>

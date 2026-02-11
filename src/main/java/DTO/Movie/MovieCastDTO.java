@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MovieCastDTO {
-	private String personId;
-	private String movieId;
-	private String characterName;
-	private int castOrder;
+	private int person_id;
+	private int movie_id;
+	private String character_name;
+	private int cast_order;
 }

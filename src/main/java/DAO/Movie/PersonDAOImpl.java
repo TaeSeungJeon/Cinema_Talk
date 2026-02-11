@@ -71,7 +71,7 @@ public class PersonDAOImpl implements PersonDAO {
 	}
 
 	@Override
-	public boolean existsPerson(String personId) {
+	public boolean existsPerson(int personId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
@@ -85,15 +85,16 @@ public class PersonDAOImpl implements PersonDAO {
 	}
 
 	@Override
-	public PersonDTO getPersonById(String personId) {
+	public PersonDTO getPersonById(int pid) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			return session.selectOne("DAO.Movie.PersonDAO.selectPersonById", personId);
+			return session.selectOne("DAO.Movie.PersonDAO.selectPersonById", pid);
 		} finally {
 			if(session != null) {
 				session.close();
 			}
 		}
 	}
+
 }

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MovieCrewDTO {
-	private String personId;
-	private String movieId;
-	private String crewJob;
+	private int person_id;
+	private int movie_id;
+	private String crew_job;
 }

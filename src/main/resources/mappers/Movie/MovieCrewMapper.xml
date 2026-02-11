@@ -8,25 +8,37 @@
 		INSERT INTO MOVIE_CREW (
 			person_id, movie_id, crew_job
 		) VALUES (
-			#{personId}, #{movieId}, #{crewJob}
+			#{person_id}, #{movie_id}, #{crew_job}
 		)
 	</insert>
 	
 	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
 	<insert id="mergeMovieCrew" parameterType="moviecrew">
 		MERGE INTO MOVIE_CREW mc
-		USING (SELECT #{personId} AS person_id, #{movieId} AS movie_id FROM DUAL) src
+		USING (SELECT #{person_id} AS person_id, #{movie_id} AS movie_id FROM DUAL) src
 		ON (mc.person_id = src.person_id AND mc.movie_id = src.movie_id)
 		WHEN MATCHED THEN
-			UPDATE SET mc.crew_job = #{crewJob}
+			UPDATE SET mc.crew_job = #{crew_job}
 		WHEN NOT MATCHED THEN
 			INSERT (person_id, movie_id, crew_job)
-			VALUES (#{personId}, #{movieId}, #{crewJob})
+			VALUES (#{person_id}, #{movie_id}, #{crew_job})
 	</insert>
 	
 	<select id="countMovieCrew" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM MOVIE_CREW
-		WHERE person_id = #{personId} AND movie_id = #{movieId}
+		WHERE person_id = #{person_id} AND movie_id = #{movie_id}
 	</select>
+	
+	<select id="getDirectorsByMovieId" parameterType="int" resultType="DTO.Movie.MovieDetailDTO$CrewInfoDTO">
+        SELECT 
+            p.person_id,
+            p.person_name,
+            p.profile_path,
+            mc.crew_job
+        FROM MOVIE_CREW mc
+        JOIN PERSON p ON mc.person_id = p.person_id
+        WHERE mc.movie_id = #{movie_id}
+        AND mc.crew_job = 'Director'
+    </select>
 </mapper>

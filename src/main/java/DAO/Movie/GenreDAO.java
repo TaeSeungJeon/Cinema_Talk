@@ -7,6 +7,6 @@ public interface GenreDAO {
 	void insertGenre(GenreDTO genre);
 	void insertGenreBatch(List<GenreDTO> genres);
 	void mergeGenre(GenreDTO genre);
-	boolean existsGenre(String genreId);
-	GenreDTO getGenreById(String genreId);
+	boolean existsGenre(int genreId);
+	GenreDTO getGenreById(int genreId);
 }

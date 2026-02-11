@@ -1,5 +1,6 @@
 package DAO.Movie;
 
+import DTO.Movie.GenreDTO;
 import DTO.Movie.MovieGenreDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -71,15 +72,28 @@ public class MovieGenreDAOImpl implements MovieGenreDAO {
 	}
 
 	@Override
-	public boolean existsMovieGenre(String genreId, String movieId) {
+	public boolean existsMovieGenre(int genreId, int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			Map<String, String> params = new HashMap<>();
+			Map<String, Integer> params = new HashMap<>();
 			params.put("genreId", genreId);
 			params.put("movieId", movieId);
 			Integer count = session.selectOne("DAO.Movie.MovieGenreDAO.countMovieGenre", params);
 			return count != null && count > 0;
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public List<Integer> getGenreIdsByMovieId(int movie_id) {
+		SqlSession session = null;
+		try {
+			session = getSqlSession();
+			return session.selectList("DAO.Movie.MovieGenreDAO.getGenreIdsByMovieId", movie_id);
 		} finally {
 			if(session != null) {
 				session.close();

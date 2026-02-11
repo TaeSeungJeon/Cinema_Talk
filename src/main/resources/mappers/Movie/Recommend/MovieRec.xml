@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="MovieRecommend">
+  
+  	<!-- MovieRecResponse ResultMap 정의 -->
+  	<resultMap id="MovieRecResultMap" type="MovieRecResponse">
+  		<id column="movie_id" property="movie_id" />
+  		<result column="movie_title" property="movie_title" />
+  		<result column="movie_overview" property="movie_overview" />
+  		<result column="movie_release_date" property="movie_release_date" />
+  		<result column="movie_runtime" property="movie_runtime" />
+  		<result column="movie_poster_path" property="movie_poster_path" />
+  		<result column="genre_name" property="genre_name" />
+  	</resultMap>
+  
+	<!-- 평점 20% + 회원 추천 80%로 인기 영화 List 반환 -->  
+  	<select id="popular_rec" resultMap="MovieRecResultMap">
+  		WITH stats AS (
+	    	SELECT
+		      	MIN(movie_rating_average)  AS min_avg,
+			    MAX(movie_rating_average)  AS max_avg,
+			    MIN(movie_recommend_count) AS min_rec,
+			    MAX(movie_recommend_count) AS max_rec
+	    	FROM movie
+	  	),
+	  	scored AS (
+	    	SELECT
+			    m.movie_id,
+			    m.movie_title,
+			    m.movie_overview,
+			    m.movie_release_date,
+			    m.movie_runtime,
+			    m.movie_poster_path,
+	    		(
+	        		0.2 * (m.movie_rating_average - s.min_avg) / NULLIF(s.max_avg - s.min_avg, 0)
+	        		+ 0.8 * (m.movie_recommend_count - s.min_rec) / NULLIF(s.max_rec - s.min_rec, 0)
+	      		) AS popular_score
+	    	FROM movie m
+	    	CROSS JOIN stats s
+	  	),
+	  	one_genre AS (
+	    	SELECT movie_id, genre_id
+	    	FROM (
+	      		SELECT
+			        mg.movie_id,
+			        mg.genre_id,
+			        ROW_NUMBER() OVER (PARTITION BY mg.movie_id ORDER BY mg.genre_id) AS rn
+	      	FROM movie_genre mg
+	    )
+	    WHERE rn = 1
+	  )
+	  SELECT
+	    sc.movie_id,
+	    sc.movie_title,
+	    sc.movie_overview,
+	    sc.movie_release_date,
+	    sc.movie_runtime,
+	    sc.movie_poster_path,
+	    g.genre_name AS genre_name
+	  FROM scored sc
+	  LEFT JOIN one_genre og ON og.movie_id = sc.movie_id
+	  LEFT JOIN genre g ON g.genre_id = og.genre_id
+	  ORDER BY sc.popular_score DESC
+	  FETCH FIRST #{MOVIESELECT} ROWS ONLY
+  	</select>
+  	
+  	<!-- 회원의 선호 장르 아이디 추출 -->
+	<select id="mem_like_genre" resultType="Integer">
+  		SELECT mg.genre_id
+  		FROM member_genre mg
+  		WHERE mg.mem_no = #{mem_no}
+  		ORDER BY mg.genre_id
+	</select>
+	
+	<!-- 회원 선호 장르를 제외한 장르 추출 -->
+	<select id="sel_genre" parameterType="map" resultType="Integer">
+  		SELECT genre_id
+  		FROM (
+	    	SELECT g.genre_id
+	    	FROM genre g
+	    	<where>
+	      		<if test="likeGenre != null and likeGenre.size() > 0">
+	        		g.genre_id NOT IN
+	        		<foreach collection="likeGenre" item="id" open="(" separator="," close=")">
+	          			#{id}
+	        		</foreach>
+	      		</if>
+	    	</where>
+	    	ORDER BY DBMS_RANDOM.VALUE
+	  		)
+  		WHERE ROWNUM &lt;= #{genreLimit}
+	</select>
+
+	<!-- 입력된 장르를 기반으로 영화 선정 -->
+  	<select id="genre_rec" resultMap="MovieRecResultMap">
+  		SELECT
+		    t.movie_id,
+		    t.movie_title,
+		    t.movie_overview,
+		    t.movie_release_date,
+		    t.movie_runtime,
+		    t.movie_poster_path,
+		    t.genre_name
+  		FROM (
+    		SELECT
+      			m.movie_id,
+      			m.movie_title,
+      			m.movie_overview,
+      			m.movie_release_date,
+      			m.movie_runtime,
+      			m.movie_poster_path,
+      			g.genre_name AS genre_name
+      		FROM movie m
+      		JOIN movie_genre mg ON mg.movie_id = m.movie_id
+      		JOIN genre g ON g.genre_id = mg.genre_id
+      		WHERE mg.genre_id = #{genreId}
+      		ORDER BY m.movie_rating_count DESC
+    		) t
+    	WHERE ROWNUM &lt;= #{movieLimit}
+  	</select>
+  	<select id="user_like_rec" resultMap="MovieRecResultMap">
+  		SELECT
+		    t.movie_id,
+		    t.movie_title,
+		    t.movie_overview,
+		    t.movie_release_date,
+		    t.movie_runtime,
+		    t.movie_poster_path,
+		    t.genre_name
+    	FROM (
+    		SELECT
+			    m.movie_id,
+			    m.movie_title,
+			    m.movie_overview,
+			    m.movie_release_date,
+			    m.movie_runtime,
+			    m.movie_poster_path,
+      			(
+			        SELECT g.genre_name
+			        FROM movie_genre mg2
+			        JOIN genre g ON g.genre_id = mg2.genre_id
+			        WHERE mg2.movie_id = m.movie_id
+			        ORDER BY mg2.genre_id
+			        FETCH FIRST 1 ROWS ONLY
+      			) AS genre_name
+    		FROM movie m
+    		WHERE EXISTS (
+      			SELECT 1
+			    FROM movie_genre mg
+			    WHERE mg.movie_id = m.movie_id
+        		AND mg.genre_id IN
+        		<foreach collection="likeGenreIds" item="gid" open="(" separator="," close=")">
+          			#{gid}
+        		</foreach>
+    		)
+    		ORDER BY DBMS_RANDOM.VALUE
+  		) t
+  		WHERE ROWNUM &lt;= #{movieLimit}
+  	</select>
+  	
+  	
+  	
+  </mapper>

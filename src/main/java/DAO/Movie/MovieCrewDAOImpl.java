@@ -1,6 +1,7 @@
 package DAO.Movie;
 
 import DTO.Movie.MovieCrewDTO;
+import DTO.Movie.MovieDetailDTO.CrewInfoDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import java.util.HashMap;
@@ -71,15 +72,28 @@ public class MovieCrewDAOImpl implements MovieCrewDAO {
 	}
 
 	@Override
-	public boolean existsMovieCrew(String personId, String movieId) {
+	public boolean existsMovieCrew(int personId, int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			Map<String, String> params = new HashMap<>();
+			Map<String, Integer> params = new HashMap<>();
 			params.put("personId", personId);
 			params.put("movieId", movieId);
 			Integer count = session.selectOne("DAO.Movie.MovieCrewDAO.countMovieCrew", params);
 			return count != null && count > 0;
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public List<CrewInfoDTO> getDirectorsByMovieId(int movie_id) {
+		SqlSession session = null;
+		try {
+			session = getSqlSession();
+			return session.selectList("DAO.Movie.MovieCrewDAO.getDirectorsByMovieId", movie_id);
 		} finally {
 			if(session != null) {
 				session.close();

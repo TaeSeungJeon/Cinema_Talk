@@ -13,8 +13,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<setting name="logImpl" value="STDOUT_LOGGING" />
 		<!-- mybatis null 피라미터값 insert ,update시 에러가 발생하는 것을 방지한다. -->
 		<setting name="jdbcTypeForNull" value="NULL" /> 
-		<!-- DB 컬럼명과 Java 필드명이 동일하므로 false로 설정 -->
-		<setting name="mapUnderscoreToCamelCase" value="false" />
 	</settings>
 
 	<typeAliases>
@@ -28,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Movie.MovieDTO" alias="movie" />
 		<typeAlias type="DTO.Movie.MovieGenreDTO" alias="moviegenre" />
 		<typeAlias type="DTO.Movie.PersonDTO" alias="person" />
+		<typeAlias type="DTO.Movie.Recommend.MovieRecResponse" alias="MovieRecResponse" />
 	</typeAliases>
 
 	<!-- 마이바티스의 실행 환경을 세팅한 구간 특히 이 구간에서는 마이바티스가 JDBC 수준에서 트랜잭션을 관리(transactionManager)하게 
@@ -77,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Movie/MovieCastMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieCrewMapper.xml"/>
 		<mapper resource="mappers/Movie/MovieGenreMapper.xml"/>
+		<mapper resource="mappers/Movie/Recommend/MovieRec.xml"/>
 	</mappers>
 
 </configuration>

@@ -32,8 +32,8 @@ public class VoteOkController implements Action {
 
 		VoteService voteService = new VoteServiceImpl();
 		//TODO  memberservice loginCheck
-		//Integer id = (Integer)session.getAttribute("id");
-		Integer id=17;
+		Integer id = (Integer)session.getAttribute("id");
+		
 		if(id==null) {
 			JSONObject error = new JSONObject();
 		    error.put("status", "LOGIN_REQUIRED");
@@ -46,7 +46,7 @@ public class VoteOkController implements Action {
 			int movie_id = Integer.parseInt(request.getParameter("movie_id")); 
 			String cmnt = request.getParameter("comment");
 
-			//TODO: vote_id로 vote_register를 조회해서 반환받은다음에 현재와 종료날짜 비교하여 지났으면 return 하고, 현재와 시작날짜 비교하여 시작전이면 return함
+			//vote_id로 vote_register를 조회해서 반환받은다음에 현재와 종료날짜 비교하여 지났으면 return 하고, 현재와 시작날짜 비교하여 시작전이면 return함
 
 			//vote_register 조회
 			VoteRegisterDTO voteReg = voteService.getVoteRegById(vote_id);
@@ -96,11 +96,7 @@ public class VoteOkController implements Action {
 					//사용자의 투표를 수정한다
 					voteService.updateVoteRecord(voteRecord);
 				}
-				
-				
-				
-		
-
+			
 				// 영화별 투표 결과 가져오기
 				List<VoteResultDTO> resultList = voteService.getVoteResult(vote_id);
 				
@@ -117,7 +113,7 @@ public class VoteOkController implements Action {
 				}
 				JSONObject success = new JSONObject();
 				success.put("status", "SUCCESS");
-				success.put("results", jsonArray); // 아까 만든 투표 결과 배열
+				success.put("results", jsonArray); //  투표 결과 배열
 				out.print(success.toString());
 
 				// request에 담아서 jsp로 전달
@@ -131,7 +127,7 @@ public class VoteOkController implements Action {
 			    out.flush();
 			    out.close();
 			} catch (Exception e) {
-				e.printStackTrace(); // 로그는 반드시 남겨라
+				e.printStackTrace(); 
 
 				out.print("ERROR");
 				out.flush();

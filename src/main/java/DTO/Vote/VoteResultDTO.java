@@ -13,4 +13,5 @@ public class VoteResultDTO {
     private int total_voter_count;
     private double percentage;
     private int rank;
+    private String movie_title;
 }

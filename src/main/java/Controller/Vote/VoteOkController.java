@@ -61,7 +61,7 @@ public class VoteOkController implements Action {
 			
 			int voteId = Integer.parseInt(request.getParameter("voteId")); 	
 			int movieId = Integer.parseInt(request.getParameter("movieId")); 
-			String cmnt = request.getParameter("comment");
+			String cmnt = request.getParameter("voteCommentText");
 
 			//vote_id로 vote_register를 조회해서 반환받은다음에 현재와 종료날짜 비교하여 지났으면 return 하고, 현재와 시작날짜 비교하여 시작전이면 return함
 
@@ -109,12 +109,7 @@ public class VoteOkController implements Action {
 				if(existingRecord == null) {
 					//사용자의 투표를 기록한다
 					voteService.insertVoteRecord(voteRecord);
-				}else {
-					//사용자의 투표를 수정한다
-					voteService.updateVoteRecord(voteRecord);
-				}
-			
-				// 영화별 투표 결과 가져오기
+					// 영화별 투표 결과 가져오기
 				List<VoteResultDTO> resultList = voteService.getVoteResult(voteId);
 				
 				JSONArray jsonArray = new JSONArray();
@@ -135,14 +130,22 @@ public class VoteOkController implements Action {
 
 				// request에 담아서 jsp로 전달
 //				request.setAttribute("vote_result", resultList);
-//				ActionForward forward = new ActionForward();
-//				forward.setRedirect(false);
-//				forward.setPath("/WEB-INF/views/vote/vote.jsp");
+
 //				out.print("SUCCESS");
 //				System.out.println("suces");
 				
 			    out.flush();
 			    out.close();
+				}else {
+					//사용자의 투표를 수정한다
+					voteService.updateVoteRecord(voteRecord);
+			ActionForward forward = new ActionForward();
+		forward.setRedirect(true);
+forward.setPath("voteCont.do?voteId=" + voteId); 
+return forward;
+				}
+			
+				
 			} catch (Exception e) {
 				e.printStackTrace(); 
 

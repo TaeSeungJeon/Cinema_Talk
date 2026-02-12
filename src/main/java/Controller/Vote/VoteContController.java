@@ -45,7 +45,7 @@ public class VoteContController implements Action {
 				memNo = memDto.getMemNo();
 			}else {
 				out.println("<script>");
-				out.println("alert('관리자로 다시 로그인 하세요!');");
+				out.println("alert('다시 로그인 하세요!');");
 				out.println("location='memberLogin.do';");
 				out.println("</script>");
 				return null;

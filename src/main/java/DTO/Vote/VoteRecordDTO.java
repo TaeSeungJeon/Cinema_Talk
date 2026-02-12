@@ -13,6 +13,7 @@ public class VoteRecordDTO {
 	private int voteId;
 	private int movieId;
 	private String voteCommentText;
+	private String memName;
 	
 	
 	

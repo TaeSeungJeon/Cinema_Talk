@@ -5,8 +5,8 @@
 <mapper namespace="Board">
     
     <insert id="boardIn" parameterType="bdto">
-        insert into BOARD (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo, movieId)
-            values(boardIdSeq.nextval, 2, boardTitle=#boardTitle, boardContent=#boardContent, )
+        insert into BOARD (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo)
+            values(boardIdSeq.nextval, #boardType, #boardTitle, #boardContent, #boardName, SYSDATE, #memNo)
     </insert>
     
 </mapper>

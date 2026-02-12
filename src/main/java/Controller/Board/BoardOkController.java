@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.PrintWriter;
 
-public class BoardOKController implements Action {
+public class BoardOkController implements Action {
 
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -45,9 +45,11 @@ public class BoardOKController implements Action {
 
             bdto.setBoardTitle(boardTitle);
             bdto.setBoardContent(boardCont);
+            bdto.setMemNo(memNo);
+            bdto.setBoardType(2);
+            bdto.setBoardName(mdto.getMemName());
 
             boardService.boardIn(bdto);
-
 
         }
 

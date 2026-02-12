@@ -451,7 +451,7 @@
         </form>
     </div>
     <div style="display: flex; gap: 10px;">
-        <a href="webapp/login.jsp" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a>
+        <a href="${pageContext.request.contextPath}/memberLogin.do" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a>
         <a href="myPage.jsp" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a>
     </div>
 </header>

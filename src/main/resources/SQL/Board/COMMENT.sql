@@ -13,6 +13,8 @@ create table comments
 
     constraint pk_comments primary key (commentsId, boardId, boardType)
 );
+alter table comments add constraint fk_memNo foreign key (memNo)
+    references MEMBER (memNo);
 
 
 /* mem_no, parent_board_no, parent_board_id fk 해야함*/

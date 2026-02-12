@@ -526,7 +526,8 @@
     <div class="write-modal">
         <h2 style="margin-top:0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">새 게시글
             작성</h2>
-        <form class="write-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;" onsubmit="writeBoard()" >
+        <form method="post" action="freeOkBoard.do" class="write-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;" >
+
             <div style="display: flex; gap: 10px;">
                 <select style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-weight: 600;">
                     <option>장르 선택</option>
@@ -571,7 +572,8 @@
                         style="padding:12px 30px; border:none; cursor:pointer; font-weight: 600;"
                         onclick="closeModal()">취소
                 </button>
-                <button type="submit" class="btn-write-submit" style="padding:12px 40px;">등록하기</button>
+                <button type="submit" class="btn-write-submit" style="padding:12px 40px;"
+                >등록하기</button>
             </div>
         </form>
     </div>
@@ -607,6 +609,21 @@
     function closeModal() {
         document.getElementById('writeModal').style.display = 'none';
         document.body.style.overflow = 'auto';
+    }
+
+    function gotofreeBoard() {
+        const form = document.getElementById("boardForm"); // form 태그에 id="boardForm"이 있어야 함
+
+        // 유효성 검사 (예: 제목이 비어있는지 확인)
+        if(form.boardTitle && form.boardTitle.value === "") {
+            alert("제목을 입력해주세요.");
+            return;
+        }
+
+        // 경로 설정: contextPath가 /Cinema_Talk 이므로 상대 경로로 지정
+        form.action = "freeOkBoard.do";
+        form.method = "post";
+        form.submit();
     }
 </script>
 

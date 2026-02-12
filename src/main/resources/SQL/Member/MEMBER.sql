@@ -13,6 +13,8 @@ create table member(
 	, memDate date not null					--등록 날짜
 );
 
+
+
 select * from MEMBER;
 
 --mem_no컬럼 정수 숫자 레코드 값으로 활용할 mem_no_seq 시퀀스 생성

@@ -44,7 +44,7 @@
         <div class="cat-title">커뮤니티 ▾</div>
         <ul class="sub-menu">
             <li><a href="community.jsp?tab=best">인기 리뷰</a></li>
-            <li><a href="boardFree.jsp?tab=free">자유 게시판</a></li>
+            <li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">

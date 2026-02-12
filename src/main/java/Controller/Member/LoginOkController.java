@@ -18,8 +18,8 @@ public class LoginOkController implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		//로그인 창에서 입력받은 아이디, 비번 변수에 저장
-		String id = request.getParameter("memId");
-		String pwd = request.getParameter("memPwd");
+		String id = request.getParameter("mem-id");
+		String pwd = request.getParameter("mem-pwd");
 		
 		MemberService memberService = new MemberServiceImpl();
 		

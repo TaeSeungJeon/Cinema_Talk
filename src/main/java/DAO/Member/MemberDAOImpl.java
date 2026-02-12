@@ -32,7 +32,7 @@ public class MemberDAOImpl implements MemberDAO {
 		SqlSession sqlSession = getSqlSession();
 		
 		try {
-			sqlSession.insert("Member.register_in", member);
+			sqlSession.insert("Member.registerIn", member);
 			sqlSession.commit(); //수동 커밋
 		}finally {
 			if(sqlSession != null) {
@@ -42,12 +42,12 @@ public class MemberDAOImpl implements MemberDAO {
 	}//insertMember() -> 회원정보 저장
 
 	@Override
-	public MemberDTO idCheck(String mem_id) {
+	public MemberDTO idCheck(String memId) {
 		SqlSession sqlSession = null;
 		
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectOne("Member.idCheck", mem_id);
+			return sqlSession.selectOne("Member.idCheck", memId);
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();

@@ -89,11 +89,11 @@ public class MovieCrewDAOImpl implements MovieCrewDAO {
 	}
 
 	@Override
-	public List<CrewInfoDTO> getDirectorsByMovieId(int movie_id) {
+	public List<CrewInfoDTO> getDirectorsByMovieId(int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			return session.selectList("DAO.Movie.MovieCrewDAO.getDirectorsByMovieId", movie_id);
+			return session.selectList("DAO.Movie.MovieCrewDAO.getDirectorsByMovieId", movieId);
 		} finally {
 			if(session != null) {
 				session.close();

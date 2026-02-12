@@ -46,13 +46,13 @@ public class MovieRecDAOImpl implements MovieRecDAO {
 	}
 	
 	@Override
-	public List<MovieRecResponse> getLikeRecList(int mem_no) {
+	public List<MovieRecResponse> getLikeRecList(int memNo) {
 		SqlSession sqlSession = null;
 
 		try {
 			sqlSession = getSqlSession();
 				
-			List<Integer> likeGenreIds = sqlSession.selectList("MovieRecommend.mem_like_genre", mem_no);
+			List<Integer> likeGenreIds = sqlSession.selectList("MovieRecommend.mem_like_genre", memNo);
 			Map<String, Object> selLikeGenre = new HashMap<>();
 			selLikeGenre.put("likeGenreIds", likeGenreIds);
 			selLikeGenre.put("movieLimit", MOVIESELECT);
@@ -68,7 +68,7 @@ public class MovieRecDAOImpl implements MovieRecDAO {
 	}
 	
 	@Override
-	public Map<Integer, List<MovieRecResponse>> getGenreRecList(int mem_no) {
+	public Map<Integer, List<MovieRecResponse>> getGenreRecList(int memNo) {
 		SqlSession sqlSession = null;
 	    Map<Integer, List<MovieRecResponse>> genreRecMap = new HashMap<>();
 
@@ -78,8 +78,8 @@ public class MovieRecDAOImpl implements MovieRecDAO {
 			List<Integer> genreIds;
 			Map<String, Object> selGenre = new HashMap<>();
 			    
-		    if (mem_no != -1) {
-		    	List<Integer> likeGenreIds = sqlSession.selectList("MovieRecommend.mem_like_genre", mem_no);
+		    if (memNo != -1) {
+		    	List<Integer> likeGenreIds = sqlSession.selectList("MovieRecommend.mem_like_genre", memNo);
 
 		    	selGenre.put("likeGenre", likeGenreIds);
 		    }

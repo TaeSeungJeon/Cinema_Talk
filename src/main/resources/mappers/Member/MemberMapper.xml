@@ -7,19 +7,19 @@
   <mapper namespace="Member"> <!-- 매퍼네임 스페이스명을 Member로 설정 -->
   
   <!-- 회원 정보 저장 -->
-  <insert id="register_in" parameterType="member">
-    insert into member (mem_no, mem_id, mem_pwd, mem_name, mem_phone, mem_email, mem_role, mem_state, mem_date) 
-     values(mem_no_seq.nextval, #{mem_id}, #{mem_pwd}, #{mem_name}, #{mem_phone}, #{mem_email}, 2, 1, sysdate)
+  <insert id="registerIn" parameterType="member">
+    insert into member (memNo, memId, memPwd, memName, memPhone, memEmail, memRole, memState, memDate) 
+     values(memNoSeq.nextval, #{memId}, #{memPwd}, #{memName}, #{memPhone}, #{memEmail}, 2, 1, sysdate)
   </insert>
   
   <!-- 중복 아이디 검색 -->
   <select id="idCheck" parameterType="String" resultType="member">
-   select * from member where mem_id=#{id}
+   select * from member where memId=#{id}
   </select>
   
   <!-- 입력받은 아이디로 로그인 인증 -->
   <select id="loginCheck" parameterType="String" resultType="member">
-  	select * from member where mem_id = #{id} and mem_role=2 and mem_state=1
+  	select * from member where memId = #{id} and memRole=2 and memState=1
   </select>
 
   <!-- 글쓰기 입력할 유저 조회 (?) -->

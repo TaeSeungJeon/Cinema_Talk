@@ -25,11 +25,11 @@ public class MovieDetailController implements Action {
 			return forward;
 		}
 		
-		int movie_id = Integer.parseInt(idParam);
+		int movieId = Integer.parseInt(idParam);
 		
 		// 2. 영화 상세 정보 조회
 		MovieDetailService movieDetailService = new MovieDetailServiceImpl();
-		MovieDetailDTO movieDetail = movieDetailService.getMovieDetail(movie_id);
+		MovieDetailDTO movieDetail = movieDetailService.getMovieDetail(movieId);
 		
 		// 3. 영화가 없으면 에러 페이지로 이동
 		if (movieDetail == null) {
@@ -48,7 +48,7 @@ public class MovieDetailController implements Action {
 		
 		// 5. 영화 상세 페이지로 포워딩
 		ActionForward forward = new ActionForward();
-		forward.setPath("/WEB-INF/views/Movie/movie_detail.jsp");
+		forward.setPath("/WEB-INF/views/movie/movieDetail.jsp");
 		forward.setRedirect(false);
 		
 		return forward;

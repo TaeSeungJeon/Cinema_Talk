@@ -211,7 +211,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 						List<MovieCastDTO> movieCasts = fetchMovieCasts(movieId);
 						casts.addAll(movieCasts);
 						for (MovieCastDTO cast : movieCasts) {
-							personIds.add(cast.getPerson_id());
+							personIds.add(cast.getPersonId());
 						}
 						System.out.println("    - 출연진 " + movieCasts.size() + "명 수집");
 						
@@ -219,7 +219,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 						List<MovieCrewDTO> movieCrews = fetchMovieCrews(movieId);
 						crews.addAll(movieCrews);
 						for (MovieCrewDTO crew : movieCrews) {
-							personIds.add(crew.getPerson_id());
+							personIds.add(crew.getPersonId());
 						}
 						System.out.println("    - 크루 " + movieCrews.size() + "명 수집");
 						
@@ -408,8 +408,8 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		for (int i = 0; i < genreArray.length(); i++) {
 			JSONObject genreJson = genreArray.getJSONObject(i);
 			GenreDTO genre = new GenreDTO();
-			genre.setGenre_id(genreJson.getInt("id"));
-			genre.setGenre_name(genreJson.getString("name"));
+			genre.setGenreId(genreJson.getInt("id"));
+			genre.setGenreName(genreJson.getString("name"));
 			genres.add(genre);
 		}
 		
@@ -464,16 +464,16 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		JSONObject json = new JSONObject(jsonResponse);
 		
 		MovieDTO movie = new MovieDTO();
-		movie.setMovie_id(json.getInt("id"));
-		movie.setMovie_title(json.optString("title", ""));
-		movie.setMovie_original_title(json.optString("original_title", ""));
-		movie.setMovie_overview(json.optString("overview", ""));
-		movie.setMovie_release_date(json.optString("release_date", null));
-		movie.setMovie_runtime(json.optInt("runtime", 0));
-		movie.setMovie_poster_path(json.optString("poster_path", null));
-		movie.setMovie_backdrop_path(json.optString("backdrop_path", null));
-		movie.setMovie_rating_average(json.optDouble("vote_average", 0.0));
-		movie.setMovie_rating_count(json.optInt("vote_count", 0));
+		movie.setMovieId(json.getInt("id"));
+		movie.setMovieTitle(json.optString("title", ""));
+		movie.setMovieOriginalTitle(json.optString("original_title", ""));
+		movie.setMovieOverview(json.optString("overview", ""));
+		movie.setMovieReleaseDate(json.optString("release_date", null));
+		movie.setMovieRuntime(json.optInt("runtime", 0));
+		movie.setMoviePosterPath(json.optString("poster_path", null));
+		movie.setMovieBackdropPath(json.optString("backdrop_path", null));
+		movie.setMovieRatingAverage(json.optDouble("vote_average", 0.0));
+		movie.setMovieRatingCount(json.optInt("vote_count", 0));
 		
 		return movie;
 	}
@@ -494,10 +494,10 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		for (int i = 0; i < limit; i++) {
 			JSONObject castJson = castArray.getJSONObject(i);
 			MovieCastDTO cast = new MovieCastDTO();
-			cast.setPerson_id(castJson.getInt("id"));
-			cast.setMovie_id(movieId);
-			cast.setCharacter_name(castJson.optString("character", ""));
-			cast.setCast_order(castJson.optInt("order", i));
+			cast.setPersonId(castJson.getInt("id"));
+			cast.setMovieId(movieId);
+			cast.setCharacterName(castJson.optString("character", ""));
+			cast.setCastOrder(castJson.optInt("order", i));
 			casts.add(cast);
 		}
 		
@@ -527,9 +527,9 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			
 			if (roles.contains(job)) {
 				MovieCrewDTO crew = new MovieCrewDTO();
-				crew.setPerson_id(crewJson.getInt("id"));
-				crew.setMovie_id(movieId);
-				crew.setCrew_job(job);
+				crew.setPersonId(crewJson.getInt("id"));
+				crew.setMovieId(movieId);
+				crew.setCrewJob(job);
 				crews.add(crew);
 			}
 		}
@@ -555,8 +555,8 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			for (int i = 0; i < genreArray.length(); i++) {
 				JSONObject genreJson = genreArray.getJSONObject(i);
 				MovieGenreDTO movieGenre = new MovieGenreDTO();
-				movieGenre.setGenre_id(genreJson.getInt("id"));
-				movieGenre.setMovie_id(movieId);
+				movieGenre.setGenreId(genreJson.getInt("id"));
+				movieGenre.setMovieId(movieId);
 				genres.add(movieGenre);
 			}
 		}
@@ -574,10 +574,10 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		JSONObject json = new JSONObject(jsonResponse);
 		
 		PersonDTO person = new PersonDTO();
-		person.setPerson_id(json.getInt("id"));
-		person.setPerson_name(json.optString("name", ""));
+		person.setPersonId(json.getInt("id"));
+		person.setPersonName(json.optString("name", ""));
 		person.setBiography(json.optString("biography", ""));
-		person.setProfile_path(json.optString("profile_path", null));
+		person.setProfilePath(json.optString("profile_path", null));
 		
 		return person;
 	}

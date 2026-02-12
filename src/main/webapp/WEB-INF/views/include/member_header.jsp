@@ -5,16 +5,22 @@
 <header>
     <a href="Cinema_Talk.jsp" class="glass-panel" style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema Talk</a>
     <div class="search-bar">
-        <form action="searchResult.jsp" method="get">
-            <input type="text" name="query" placeholder="영화 제목, 배우, 리뷰를 검색해보세요">
+        <form action="search_movie.do" method="get">
+        	<select name="search-option">
+        		<option value="0">제목</option>
+        		<option value="1">감독</option>
+        		<option value="2">배우</option>
+        		<option value="3">장르</option>
+        	</select>
+            <input type="text" name="search-words" placeholder="영화 제목, 감독, 배우, 장르를 검색해보세요">
         </form>
     </div>
     <div style="display: flex; gap: 10px;">         
-    	<c:if test="${not empty sessionScope.mem_id}"><a href="login.jsp" 
+    	<c:if test="${not empty sessionScope.memId}"><a href="memberLogout.do" 
     		class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
     				<a href="myPage.jsp" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a></c:if>
-		<c:if test="${empty sessionScope.mem_id}">
-		<a href="login.jsp" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a></c:if>
+		<c:if test="${empty sessionScope.memId}">
+		<a href="memberLogin.do" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a></c:if>
     </div>
 </header>
 
@@ -22,8 +28,8 @@
     <div class="category-bubble" onclick="toggleMenu(this)">
         <div class="cat-title">인기 영화 ▾</div>
         <ul class="sub-menu">
-            <li><a href="movies_now.jsp?cat=current">현재 상영작</a></li>
-            <li><a href="movies_yet.jsp?cat=yet">개봉 예정작</a></li>
+            <li><a href="moviesNow.jsp?cat=current">현재 상영작</a></li>
+            <li><a href="moviesYet.jsp?cat=yet">개봉 예정작</a></li>
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">

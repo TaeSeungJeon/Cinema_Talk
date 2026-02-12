@@ -6,62 +6,62 @@
 <mapper namespace="DAO.Movie.MovieDAO">
 	<insert id="insertMovie" parameterType="movie">
 		INSERT INTO MOVIE (
-			movie_id, movie_title, movie_original_title, movie_overview,
-			movie_release_date, movie_runtime, movie_poster_path, movie_backdrop_path,
-			movie_rating_average, movie_rating_count, movie_created_at
+			movieId, movieTitle, movieOriginalTitle, movieOverview,
+			movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+			movieRatingAverage, movieRatingCount, movieCreatedAt
 		) VALUES (
-			#{movie_id}, #{movie_title}, #{movie_original_title}, #{movie_overview},
-			#{movie_release_date}, #{movie_runtime}, #{movie_poster_path}, #{movie_backdrop_path},
-			#{movie_rating_average}, #{movie_rating_count}, SYSDATE)
+			#{movieId}, #{movieTitle}, #{movieOriginalTitle}, #{movieOverview},
+			#{movieReleaseDate}, #{movieRuntime}, #{moviePosterPath}, #{movieBackdropPath},
+			#{movieRatingAverage}, #{movieRatingCount}, SYSDATE)
 		)
 	</insert>
 	
 	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
 	<insert id="mergeMovie" parameterType="movie">
 		MERGE INTO MOVIE m
-		USING (SELECT #{movie_id} AS movie_id FROM DUAL) src
-		ON (m.movie_id = src.movie_id)
+		USING (SELECT #{movieId} AS movieId FROM DUAL) src
+		ON (m.movieId = src.movieId)
 		WHEN MATCHED THEN
 			UPDATE SET 
-				m.movie_title = #{movie_title},
-				m.movie_original_title = #{movie_original_title},
-				m.movie_overview = #{movie_overview},
-				m.movie_release_date = #{movie_release_date},
-				m.movie_runtime = #{movie_runtime},
-				m.movie_poster_path = #{movie_poster_path},
-				m.movie_backdrop_path = #{movie_backdrop_path},
-				m.movie_rating_average = #{movie_rating_average},
-				m.movie_rating_count = #{movie_rating_count}
+				m.movieTitle = #{movieTitle},
+				m.movieOriginalTitle = #{movieOriginalTitle},
+				m.movieOverview = #{movieOverview},
+				m.movieReleaseDate = #{movieReleaseDate},
+				m.movieRuntime = #{movieRuntime},
+				m.moviePosterPath = #{moviePosterPath},
+				m.movieBackdropPath = #{movieBackdropPath},
+				m.movieRatingAverage = #{movieRatingAverage},
+				m.movieRatingCount = #{movieRatingCount}
 		WHEN NOT MATCHED THEN
-			INSERT (movie_id, movie_title, movie_original_title, movie_overview,
-				movie_release_date, movie_runtime, movie_poster_path, movie_backdrop_path,
-				movie_rating_average, movie_rating_count, movie_created_at)
-			VALUES (#{movie_id}, #{movie_title}, #{movie_original_title}, #{movie_overview},
-				#{movie_release_date}, #{movie_runtime}, #{movie_poster_path}, #{movie_backdrop_path},
-				#{movie_rating_average}, #{movie_rating_count}, SYSDATE)
+			INSERT (movieId, movieTitle, movieOriginalTitle, movieOverview,
+				movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+				movieRatingAverage, movieRatingCount, movieCreatedAt)
+			VALUES (#{movieId}, #{movieTitle}, #{movieOriginalTitle}, #{movieOverview},
+				#{movieReleaseDate}, #{movieRuntime}, #{moviePosterPath}, #{movieBackdropPath},
+				#{movieRatingAverage}, #{movieRatingCount}, SYSDATE)
 	</insert>
 	
 	<select id="selectMovieById" parameterType="int" resultType="movie">
-		SELECT movie_id, movie_title, movie_original_title, movie_overview,
-			   movie_release_date, movie_runtime, movie_poster_path, movie_backdrop_path,
-			   movie_rating_average, movie_rating_count, movie_created_at
+		SELECT movieId, movieTitle, movieOriginalTitle, movieOverview,
+			   movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+			   movieRatingAverage, movieRatingCount, movieCreatedAt
 		FROM MOVIE
-		WHERE movie_id = #{movie_id}
+		WHERE movieId = #{movieId}
 	</select>
 	
 	<!-- Title로 영화 검색 (부분 일치, 대소문자 구분 없음, 페이징)-->
 	<select id="searchByTitle" parameterType="map" resultType="movie">
         SELECT * FROM (
             SELECT ROWNUM AS rnum, sub.* FROM (
-                SELECT movie_id, movie_title, movie_original_title, movie_overview,
-                       movie_release_date, movie_runtime, movie_poster_path, movie_backdrop_path,
-                       movie_rating_average, movie_rating_count, movie_created_at
+                SELECT movieId, movieTitle, movieOriginalTitle, movieOverview,
+                       movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+                       movieRatingAverage, movieRatingCount, movieCreatedAt
                 FROM MOVIE
                 WHERE 
                       <foreach collection="wordList" item="word" separator="OR">
-                          LOWER(movie_title) LIKE '%' || LOWER(#{word}) || '%'
+                          LOWER(movieTitle) LIKE '%' || LOWER(#{word}) || '%'
                       </foreach>	
-                ORDER BY movie_title ASC
+                ORDER BY movieTitle ASC
             ) sub
             WHERE ROWNUM &lt; = #{endrow}
         )
@@ -72,22 +72,22 @@
     <select id="searchByDirector" parameterType="map" resultType="movie">
         SELECT * FROM (
             SELECT ROWNUM AS rnum, sub.* FROM (
-                SELECT m.movie_id, m.movie_title, m.movie_original_title, m.movie_overview,
-                       m.movie_release_date, m.movie_runtime, m.movie_poster_path, m.movie_backdrop_path,
-                       m.movie_rating_average, m.movie_rating_count, m.movie_created_at
+                SELECT m.movieId, m.movieTitle, m.movieOriginalTitle, m.movieOverview,
+                       m.movieReleaseDate, m.movieRuntime, m.moviePosterPath, m.movieBackdropPath,
+                       m.movieRatingAverage, m.movieRatingCount, m.movieCreatedAt
                 FROM MOVIE m
                 WHERE EXISTS (
                     SELECT 1 FROM MOVIE_CREW mc
-                    JOIN PERSON p ON mc.person_id = p.person_id
-                    WHERE mc.movie_id = m.movie_id
-                    AND LOWER(mc.crew_job) LIKE '%director%'
+                    JOIN PERSON p ON mc.personId = p.personId
+                    WHERE mc.movieId = m.movieId
+                    AND LOWER(mc.crewJob) LIKE '%director%'
                     AND (
                         <foreach collection="wordList" item="word" separator="OR">
-                            LOWER(p.person_name) LIKE '%' || LOWER(#{word}) || '%'
+                            LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
                         </foreach>
                     )
                 )
-                ORDER BY m.movie_title ASC
+                ORDER BY m.movieTitle ASC
             ) sub
             WHERE ROWNUM &lt; = #{endrow}
         )
@@ -98,21 +98,21 @@
     <select id="searchByActor" parameterType="map" resultType="movie">
         SELECT * FROM (
             SELECT ROWNUM AS rnum, sub.* FROM (
-                SELECT m.movie_id, m.movie_title, m.movie_original_title, m.movie_overview,
-                       m.movie_release_date, m.movie_runtime, m.movie_poster_path, m.movie_backdrop_path,
-                       m.movie_rating_average, m.movie_rating_count, m.movie_created_at
+                SELECT m.movieId, m.movieTitle, m.movieOriginalTitle, m.movieOverview,
+                       m.movieReleaseDate, m.movieRuntime, m.moviePosterPath, m.movieBackdropPath,
+                       m.movieRatingAverage, m.movieRatingCount, m.movieCreatedAt
                 FROM MOVIE m
                 WHERE EXISTS (
                     SELECT 1 FROM MOVIE_CAST mc
-                    JOIN PERSON p ON mc.person_id = p.person_id
-                    WHERE mc.movie_id = m.movie_id
+                    JOIN PERSON p ON mc.personId = p.personId
+                    WHERE mc.movieId = m.movieId
                     AND (
                         <foreach collection="wordList" item="word" separator="OR">
-                            LOWER(p.person_name) LIKE '%' || LOWER(#{word}) || '%'
+                            LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
                         </foreach>
                     )
                 )
-                ORDER BY m.movie_title ASC
+                ORDER BY m.movieTitle ASC
             ) sub
             WHERE ROWNUM &lt; = #{endrow}
         )
@@ -124,22 +124,22 @@
         SELECT * FROM (
             	SELECT ROWNUM AS rnum, sub.* 
             	  FROM (
-                	SELECT m.movie_id, m.movie_title, m.movie_original_title, m.movie_overview,
-                       m.movie_release_date, m.movie_runtime, m.movie_poster_path, m.movie_backdrop_path,
-                       m.movie_rating_average, m.movie_rating_count, m.movie_created_at
+                	SELECT m.movieId, m.movieTitle, m.movieOriginalTitle, m.movieOverview,
+                       m.movieReleaseDate, m.movieRuntime, m.moviePosterPath, m.movieBackdropPath,
+                       m.movieRatingAverage, m.movieRatingCount, m.movieCreatedAt
                 	  FROM MOVIE m
                 	 WHERE EXISTS (
                     	SELECT 1 
                     	  FROM MOVIE_GENRE mg
-                    	  JOIN GENRE g ON mg.genre_id = g.genre_id
-                    	 WHERE mg.movie_id = m.movie_id
+                    	  JOIN GENRE g ON mg.genreId = g.genreId
+                    	 WHERE mg.movieId = m.movieId
                        AND (
                         	<foreach collection="wordList" item="word" separator="OR">
-                            	LOWER(g.genre_name) LIKE '%' || LOWER(#{word}) || '%'
+                            	LOWER(g.genreName) LIKE '%' || LOWER(#{word}) || '%'
                         	</foreach>
                     	   )
                 )
-                ORDER BY m.movie_title ASC
+                ORDER BY m.movieTitle ASC
             ) sub
             WHERE ROWNUM &lt; = #{endrow}
         )
@@ -149,55 +149,55 @@
     <!-- 검색 전후 레코드 개수 -->
     <select id="movie_count" parameterType="map" resultType="int">
     	<choose>
-    		<when test="search_option == 0">
+    		<when test="searchOption == 0">
     			<!-- Title 검색 -->
-    			SELECT COUNT(MOVIE_ID) FROM MOVIE
+    			SELECT COUNT(movieId) FROM MOVIE
     			WHERE 
     			(
     				<foreach collection="wordList" item="word" separator="OR">
-    					LOWER(movie_title) LIKE '%' || LOWER(#{word}) || '%'
+    					LOWER(movieTitle) LIKE '%' || LOWER(#{word}) || '%'
     				</foreach>
     			)
     		</when>
-    		<when test="search_option == 1">
+    		<when test="searchOption == 1">
     			<!-- Director 검색 -->
-    			SELECT COUNT(DISTINCT m.MOVIE_ID) FROM MOVIE m
+    			SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
     			WHERE EXISTS (
     				SELECT 1 FROM MOVIE_CREW mc
-    				JOIN PERSON p ON mc.person_id = p.person_id
-    				WHERE mc.movie_id = m.movie_id
-    				AND LOWER(mc.crew_job) LIKE '%director%'
+    				JOIN PERSON p ON mc.personId = p.personId
+    				WHERE mc.movieId = m.movieId
+    				AND LOWER(mc.crewJob) LIKE '%director%'
     				AND (
     					<foreach collection="wordList" item="word" separator="OR">
-    						LOWER(p.person_name) LIKE '%' || LOWER(#{word}) || '%'
+    						LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
     					</foreach>
     				)
     			)
     		</when>
-    		<when test="search_option == 2">
+    		<when test="searchOption == 2">
     			<!-- Actor 검색 -->
-    			SELECT COUNT(DISTINCT m.MOVIE_ID) FROM MOVIE m
+    			SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
     			WHERE EXISTS (
     				SELECT 1 FROM MOVIE_CAST mc
-    				JOIN PERSON p ON mc.person_id = p.person_id
-    				WHERE mc.movie_id = m.movie_id
+    				JOIN PERSON p ON mc.personId = p.personId
+    				WHERE mc.movieId = m.movieId
     				AND (
     					<foreach collection="wordList" item="word" separator="OR">
-    						LOWER(p.person_name) LIKE '%' || LOWER(#{word}) || '%'
+    						LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
     					</foreach>
     				)
     			)
     		</when>
-    		<when test="search_option == 3">
+    		<when test="searchOption == 3">
     			<!-- Genre 검색 -->
-    			SELECT COUNT(DISTINCT m.MOVIE_ID) FROM MOVIE m
+    			SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
     			WHERE EXISTS (
     				SELECT 1 FROM MOVIE_GENRE mg
-    				JOIN GENRE g ON mg.genre_id = g.genre_id
-    				WHERE mg.movie_id = m.movie_id
+    				JOIN GENRE g ON mg.genreId = g.genreId
+    				WHERE mg.movieId = m.movieId
     				AND (
     					<foreach collection="wordList" item="word" separator="OR">
-    						LOWER(g.genre_name) LIKE '%' || LOWER(#{word}) || '%'
+    						LOWER(g.genreName) LIKE '%' || LOWER(#{word}) || '%'
     					</foreach>
     				)
     			)

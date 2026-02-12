@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <fmt:parseDate value="${vote.vote_start_date}" pattern="yyyy-MM-dd"
@@ -359,44 +359,16 @@ aside.glass-panel {
 	animation: blink 1.5s infinite;
 }
 
-@
-keyframes blink { 0% {
-	opacity: 1;
-}
-
-50
-
-
-%
-{
-opacity
-
-
-:
-
-
-0
-.3
-;
-
-
-}
-100
-
-
-%
-{
-opacity
-
-
-:
-
-
-1
-;
-
-
-}
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 .vote-description {
 	text-align: center;
@@ -448,7 +420,7 @@ opacity
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-	<%@ include file="../include/member_header.jsp"%>
+	<%@ include file="../include/memberHeader.jsp"%>
 
 
 	<div class="header">
@@ -456,7 +428,7 @@ opacity
 		<p class="page-desc">마음에 드는 영화에 한 표. 순위는 커뮤니티가 만듭니다.</p>
 	</div>
 
-	<%-- <c:forEach var="vote" items="${vote_register_active}"> 
+	<%-- <c:forEach var="vote" items="${voteRegisterActive}"> 
 	     <h3>${vote.vote_title}</h3> 
 	    <h3>${vote.vote_id}</h3> 
 	     <h3>${vote.vote_status}</h3> 
@@ -480,8 +452,8 @@ opacity
 			<div class="vote-window">
 				<div class="vote-track">
 				<c:choose>
-								<c:when test="${not empty vote_register_active}">
-								<c:forEach var="vote" items="${vote_register_active}">
+								<c:when test="${not empty voteRegisterActive}">
+								<c:forEach var="vote" items="${voteRegisterActive}">
 <div class="vote-content">
 									<div class="vote-header">
 
@@ -489,29 +461,29 @@ opacity
 										
 
 
-										<span>종료: <span id="voteEndDate">${vote.vote_end_date}</span></span>
+										<span>종료: <span id="voteEndDate">${vote.voteEndDate}</span></span>
 									</div>
 
-									<h2 class="vote-title">${vote.vote_title}</h2>
-									<div class="vote-description">${vote.vote_content}</div>
+									<h2 class="vote-title">${vote.voteTitle}</h2>
+									<div class="vote-description">${vote.voteContent}</div>
 
 									<div class="vote-options-list">
 										<c:forEach var="opt" items="${vote.optionList}">
-											<label class="movie-option" data-movie-id="${opt.movie_id}">
+											<label class="movie-option" data-movie-id="${opt.movieId}">
 
-												<input type="radio" name="movie-vote-${vote.vote_id}"
-												value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
+												<input type="radio" name="movie-vote-${vote.voteId}"
+												value="${opt.movieId}" data-movie-id="${opt.movieId}">
 
 												<div class="movie-thumb">
 													<img
-														src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
-														alt="${opt.movie_title}">
+														src="https://image.tmdb.org/t/p/w500${opt.moviePosterPath}"
+														alt="${opt.movieTitle}">
 												</div>
 
 												<div class="movie-info">
-													<div class="m-title">${opt.movie_title}</div>
+													<div class="m-title">${opt.movieTitle}</div>
 													<div class="m-meta">
-														${opt.movie_release_date.substring(0,4)}</div>
+														${opt.movieReleaseDate.substring(0,4)}</div>
 
 													<!-- ⭐ 결과 영역 추가 -->
 													<div class="m-result" style="display: none;">
@@ -528,7 +500,7 @@ opacity
 
 									<div class="vote-actions">
 										<button class="btn btn-primary submit-vote-btn"
-											data-vote-id="${vote.vote_id}">투표하기</button>
+											data-vote-id="${vote.voteId}">투표하기</button>
 									</div>
 									
 								</div>
@@ -539,7 +511,7 @@ opacity
 <div class="glass-panel no-active-vote"
 										style="text-align: center; padding: 40px; width:100%; display:flex;flex-direction:column;">
 										<h3 style="margin-bottom: 10px;">현재 참여할 수 있는 투표가 없습니다</h3>
-										<a href="vote_list.do" class="btn btn-primary"
+										<a href="voteList.do" class="btn btn-primary"
 											style="margin-top: 15px; display: inline-block;width: auto; align-self: center;"> 전체 투표
 											보러가기 </a>
 									</div>
@@ -557,7 +529,7 @@ opacity
 		</section>
 
 		<aside class="aside " style="width: 30%;">
-		<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px;">
+		<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px;min-height:200px;justify-content:start;">
 <div class="sidebar-title" 
      style="width:100%;font-weight: 700; 
             margin-bottom: 20px; 
@@ -565,7 +537,7 @@ opacity
             justify-content: space-between; 
             align-items: center;"> <span>예정된 투표</span>
     
-    <a href="vote_list.do" 
+    <a href="voteList.do" 
        style="font-size: 0.8rem; 
               color: var(--text-muted); 
               text-decoration: none;">
@@ -573,17 +545,29 @@ opacity
     </a>
 </div>
 
-
-			<c:forEach var="vote" items="${vote_register_ready}">
+<c:choose>
+<c:when test="${not empty voteRegisterReady}">
+<c:forEach var="vote" items="${voteRegisterReady}">
 				<div class="upcoming-item" style="width:100%;">
-					<div style="font-weight: 600;">${vote.vote_title}</div>
+					<div style="font-weight: 600;">${vote.voteTitle}</div>
 					<div style="font-size: 0.8rem; color: var(--accent-color);">시작일:
-						${vote.vote_start_date}</div>
+						${vote.voteStartDate}</div>
 				</div>
 			</c:forEach>
+</c:when>
+
+<c:otherwise>
+<div class="upcoming-item" style="width:100%;">
+예정된 투표가 없습니다.
+</div>
+
+</c:otherwise>
+
+</c:choose>
+			
 		</div>
 <br><br>
-			<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px;">
+			<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px; min-height:200px;justify-content:start;">
 <div class="sidebar-title" 
      style="width:100%;font-weight: 700; 
             margin-bottom: 20px; 
@@ -591,7 +575,7 @@ opacity
             justify-content: space-between; 
             align-items: center;"> <span>지난 투표 결과</span>
     
-    <a href="vote_list.do" 
+    <a href="voteList.do" 
        style="font-size: 0.8rem; 
               color: var(--text-muted); 
               text-decoration: none;">
@@ -599,18 +583,19 @@ opacity
     </a>
 </div>
 
-
-			<c:forEach var="vote" items="${vote_register_closed}">
+<c:choose>
+<c:when test="${not empty voteRegisterReady}">
+<c:forEach var="vote" items="${voteRegisterClosed}">
 				<div class="glass-panel2 history-card" style="width:100%">
-					<div style="font-weight: 700;">${vote.vote_title}</div>
+					<div style="font-weight: 700;">${vote.voteTitle}</div>
 					<div
 						style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">종료:
-						${vote.vote_end_date} | 참여 
+						${vote.voteEndDate} | 참여 
 						<c:set var="done" value="false" />
 <c:forEach var="res" items="${vote.resultList}">
     <c:if test="${not done}">
         <c:if test="${res.rank == 1}">
-            <span style="font-weight: 600;"> ${res.total_voter_count} </span>
+            <span style="font-weight: 600;"> ${res.totalVoterCount} </span>
             <c:set var="done" value="true" /> </c:if>
     </c:if>
 </c:forEach>
@@ -624,13 +609,23 @@ opacity
 <c:forEach var="res" items="${vote.resultList}">
     <c:if test="${not done}">
         <c:if test="${res.rank == 1}">
-            <span style="font-weight: 600;"> ${res.movie_title} </span>
+            <span style="font-weight: 600;"> ${res.movieTitle} </span>
             <c:set var="done" value="true" /> </c:if>
     </c:if>
 </c:forEach>
 					</div>
 				</div>
 			</c:forEach>
+</c:when>
+
+<c:otherwise>
+<div class="upcoming-item" style="width:100%;">
+예정된 투표가 없습니다.
+</div>
+</c:otherwise>
+</c:choose>
+
+			
 		</div>
 			
 

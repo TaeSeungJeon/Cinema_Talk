@@ -80,7 +80,7 @@
         .vote-card { position: relative; padding: 40px 30px 30px; }
         
         .status-badge {
-            position: absolute; top: 20px; left: 20px;
+             top: 20px; left: 20px;
             padding: 5px 15px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; background: #e5e7eb;
         }
         .end-date { position: absolute; top: 20px; left: 100px; font-size: 0.8rem; color: var(--text-muted); }
@@ -138,29 +138,163 @@
 	object-fit: cover;
 }
 
+/* 옵션 리스트 내부 스크롤 */
+.vote-options-list {
+	flex: 1;
+	overflow-y: auto;
+	padding-right: 10px;
+	margin-bottom: 15px;
+	scrollbar-width: thin;
+	scrollbar-color: var(--accent-color) transparent;
+}
+
+.vote-options-list::-webkit-scrollbar {
+	width: 5px;
+}
+
+.vote-options-list::-webkit-scrollbar-thumb {
+	background: var(--accent-color);
+	border-radius: 10px;
+}
+
+/* 영화 옵션 카드 스타일 */
+.movie-option {
+	display: flex;
+	align-items: center;
+	background: white;
+	border-radius: 15px;
+	padding: 12px;
+	margin-bottom: 12px;
+	border: 2px solid transparent;
+	transition: 0.2s;
+	cursor: pointer;
+}
+
+.movie-option {
+	position: relative;
+	overflow: hidden;
+	border-radius: 12px;
+	background: linear-gradient(to right, rgba(108, 124, 255, 0.18),
+		rgba(108, 124, 255, 0.18)) no-repeat, #ffffff;
+	background-size: 0% 100%; /* 처음 0% */
+	transition: background-size 0.7s cubic-bezier(.4, 0, .2, 1);
+}
+
+.movie-option:hover {
+	border-color: var(--accent-color);
+}
+
+.movie-option input[type="radio"] {
+	margin-right: 15px;
+	width: 18px;
+	height: 18px;
+	accent-color: var(--accent-color);
+}
+
+.vote-header {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 15px;
+	font-size: 0.9rem;
+	color: var(--text-muted);
+	flex-shrink: 0;
+}
+
+.vote-header {
+    display: flex;            /* Flexbox 레이아웃 적용 */
+    justify-content: space-between; /* 양 끝으로 배치 */
+    align-items: center;      /* 세로 중앙 정렬 */
+    padding: 10px 0;          /* 위아래 간격 (필요시) */
+}
+
+
+.vote-title {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin-bottom: 20px;
+	text-align: center;
+	flex-shrink: 0;
+}
+
+.status-ongoing {
+	background-color: #dcfce7;
+	color: #166534;
+	border: 1px solid #bbf7d0;
+}
+
+.movie-option {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+    transition: background-size 0.5s ease; /* 부드러운 애니메이션 */
+    
+    /* 배경 그래프를 위한 설정 */
+    background-image: linear-gradient(to right, rgba(231, 76, 60, 0.2) 100%, transparent 0);
+    background-repeat: no-repeat;
+    background-size: 0% 100%; /* 처음엔 0% */
+}
+
+
     </style>
     <!-- 공통스타일시트 -->
 <!-- <link rel="stylesheet" -->
 <%-- 	href="${pageContext.request.contextPath}/css/common.css" /> --%>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    // 1. 서버에서 받은 resultList를 JS 배열로 변환
+    // (JSTL의 c:forEach를 사용하여 JS 객체 배열을 만듭니다)
+    const data = {
+        results: [
+            <c:forEach var="res" items="${voteInfo.resultList}" varStatus="status">
+                {
+                    movieId: ${res.movieId},
+                    count: ${res.count},
+                    percentage: ${res.percentage}
+                }${!status.last ? ',' : ''}
+            </c:forEach>
+        ]
+    };
+    console.log(data)
+
+    // 2. 데이터가 있을 때만 실행하는 함수 정의
+    function displayVoteResults(data) {
+        if (!data || !data.results) return;
+
+        data.results.forEach(function(item) {
+            // 해당 영화 ID를 가진 input 찾기
+            const $input = $(`input[data-movie-id="${item.movieId}"]`);
+            const $label = $input.closest('.movie-option');
+console.log($input)
+console.log($label)
+            if ($label.length > 0) {
+            	console.log("test")
+                // 결과 영역 보여주기 및 데이터 세팅
+                $label.find(".m-result").fadeIn();
+                $label.find(".res-count").text(item.count);
+                $label.find(".res-pct").text(Math.round(item.percentage));
+
+                // 배경 그래프 애니메이션
+                setTimeout(() => {
+                    $label.css("background-size", `${item.percentage}% 100%`);
+                }, 50);
+            }
+        });
+    }
+
+    // 3. 페이지 로드 시 바로 실행
+    displayVoteResults(data);
+});
+</script>
 </head>
 <body>
 <%-- 	<%@ include file="../include/member_header.jsp"%> --%>
 
 
-
-	     <h3>${voteInfo.vote_title}</h3> 
-	    <h3>${voteInfo.vote_id}</h3> 
-	     <h3>${voteInfo.vote_status}</h3> 
-
-	     <c:forEach var="opt" items="${voteInfo.optionList}">
-	        movie_id : ${opt.movie_id} <br> 
-	        title : ${opt.movie_title} <br> 
-	     </c:forEach> 
-	      <h3>${voteInfo.voted}</h3> 
-	    
-
-    <hr> 
-	
 	
 	
 <nav class="filter-container">
@@ -172,7 +306,7 @@
 
 <main class="vote-section">
 
-<section class="glass-panel vote-card-container" style="width:60%">
+<section class="glass-panel vote-card-container" style="width:100%">
 			
 
 			<div class="vote-window">
@@ -185,29 +319,29 @@
 										
 
 
-										<span>종료: <span id="voteEndDate">${voteInfo.vote_end_date}</span></span>
+										<span>종료: <span id="voteEndDate">${voteInfo.voteEndDate}</span></span>
 									</div>
 
-									<h2 class="vote-title">${voteInfo.vote_title}</h2>
-									<div class="vote-description">${voteInfo.vote_content}</div>
+									<h2 class="vote-title">${voteInfo.voteTitle}</h2>
+									<div class="vote-description">${voteInfo.voteContent}</div>
 
 									<div class="vote-options-list">
 										<c:forEach var="opt" items="${voteInfo.optionList}">
-											<label class="movie-option" data-movie-id="${opt.movie_id}">
+											<label class="movie-option" data-movie-id="${opt.movieId}">
 
-												<input type="radio" name="movie-vote-${voteInfo.vote_id}"
-												value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
+												<input type="radio" name="movie-vote-${voteInfo.voteId}"
+												value="${opt.movieId}" data-movie-id="${opt.movieId}">
 
 												<div class="movie-thumb">
 													<img
-														src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
-														alt="${opt.movie_title}">
+														src="https://image.tmdb.org/t/p/w500${opt.moviePosterPath}"
+														alt="${opt.movieTitle}">
 												</div>
 
 												<div class="movie-info">
-													<div class="m-title">${opt.movie_title}</div>
+													<div class="m-title">${opt.movieTitle}</div>
 													<div class="m-meta">
-														${opt.movie_release_date.substring(0,4)}</div>
+														${opt.movieReleaseDate.substring(0,4)}</div>
 
 													<!-- ⭐ 결과 영역 추가 -->
 													<div class="m-result" style="display: none;">
@@ -224,7 +358,7 @@
 
 									<div class="vote-actions">
 										<button class="btn btn-primary submit-vote-btn"
-											data-vote-id="${vote.vote_id}">토론 보기</button>
+											data-vote-id="${vote.voteId}">토론 보기</button>
 									</div>
 									
 								</div>

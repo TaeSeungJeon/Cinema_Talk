@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class VoteResultDTO {
 
-	private int vote_id;
-	private int movie_id;
+	private int voteId;
+	private int movieId;
     private int count;
-    private int total_voter_count;
+    private int totalVoterCount;
     private double percentage;
     private int rank;
-    private String movie_title;
+    private String movieTitle;
 }

@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		$(".submit-vote-btn").on("click", function() {
 const voteId = $(this).data("vote-id"); 
 			if($(this).hasClass("go-to-votecont")){
-location.href = "vote_cont.do?vote_id=" + voteId;
+location.href = "voteCont.do?voteId=" + voteId;
 			}else{
   // 2. 클릭한 버튼의 data-vote-id 값을 가져옴
 		        
@@ -65,10 +65,10 @@ location.href = "vote_cont.do?vote_id=" + voteId;
 		        // 4. AJAX 전송
 		        $.ajax({
 		            type: "POST",
-		            url: "vote_ok.do", 
+		            url: "voteOk.do", 
 		            data: {
-		                "vote_id": voteId,
-		                "movie_id": movieId,
+		                "voteId": voteId,
+		                "movieId": movieId,
 						"comment": ""
 		            },
 		            success: function(response) {
@@ -76,7 +76,7 @@ location.href = "vote_cont.do?vote_id=" + voteId;
 						if (data.status === "LOGIN_REQUIRED") {
 							console.log("login")
 						        alert("로그인이 필요합니다.");
-						        location.href = "login.do";
+						        location.href = "memberLogin.do";
 						        return;
 						    }
 
@@ -85,7 +85,7 @@ location.href = "vote_cont.do?vote_id=" + voteId;
 								
 								results.forEach(function(item) {
 								            // 1. 해당 영화 ID를 가진 카드를 찾음
-											const $input = $(`input[data-movie-id="${item.movie_id}"]`);
+											const $input = $(`input[data-movie-id="${item.movieId}"]`);
 											const $label = $input.closest('.movie-option');
 
 											if ($label.length > 0) {

@@ -171,4 +171,20 @@ public class VoteDAOImpl implements VoteDAO {
 			}
 		}
 	}
+
+	@Override
+	public VoteRegisterDTO getVoteRegFullById(int voteId) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("vregFullByVoteId", voteId);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
 }

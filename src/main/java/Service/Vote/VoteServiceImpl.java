@@ -69,4 +69,9 @@ public class VoteServiceImpl implements VoteService {
 		return this.vdao.getVoteRecordByVoteId(voteId);
 	}
 
+	@Override
+	public VoteRegisterDTO getVoteRegFullById(int voteId) {
+		return this.vdao.getVoteRegFullById(voteId);
+	}
+
 }

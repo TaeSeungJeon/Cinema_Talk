@@ -26,4 +26,6 @@ public interface VoteDAO {
 
     List<VoteRecordDTO> getVoteRecordByVoteId(int voteId);
 
+	VoteRegisterDTO getVoteRegFullById(int voteId);
+
 }

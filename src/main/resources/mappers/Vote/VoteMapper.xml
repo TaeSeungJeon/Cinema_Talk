@@ -121,6 +121,27 @@ ON r.movie_id = m.movie_id
 	<select id="vrec_list_voteId" resultType="voterecord">
 	select * from vote_record where vote_id=#{vote_id}
 	</select>
+	
+	<select id="vregFullByVoteId" resultMap="voteRegisterMap">
+
+		SELECT
+    vr.vote_id,
+    vr.vote_title,
+    vr.vote_content,
+    TO_CHAR(vr.vote_start_date,'YYYY-MM-DD') AS vote_start_date,
+    TO_CHAR(vr.vote_end_date,'YYYY-MM-DD') AS vote_end_date,
+    vr.vote_status,
+    vo.movie_id,
+    m.movie_title,
+    TO_CHAR(m.movie_release_date,'YYYY-MM-DD') AS movie_release_date,
+    m.movie_poster_path
+FROM vote_register vr
+JOIN vote_option vo ON vr.vote_id = vo.vote_id
+JOIN movie m ON vo.movie_id = m.movie_id
+WHERE vr.vote_id = #{vote_id}
+ORDER BY vr.vote_id, vo.movie_id
+
+	</select>
 
 
 

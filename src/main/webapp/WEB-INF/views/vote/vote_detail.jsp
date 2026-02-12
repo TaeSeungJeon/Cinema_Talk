@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -121,20 +122,47 @@
         .username { font-weight: bold; font-size: 0.9rem; }
         .timestamp { font-size: 0.75rem; color: #94a3b8; }
         .comment-content { background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.95rem; text-align: center; }
+.movie-thumb {
+	width: 60px;
+	height: 80px;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-right: 15px;
+	background: #eee;
+	flex-shrink: 0;
+}
+
+.movie-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
 
     </style>
+    <!-- 공통스타일시트 -->
+<!-- <link rel="stylesheet" -->
+<%-- 	href="${pageContext.request.contextPath}/css/common.css" /> --%>
 </head>
 <body>
+<%-- 	<%@ include file="../include/member_header.jsp"%> --%>
 
-<header>
-    <div class="glass-panel" style="padding: 10px 25px; font-weight: bold; color: var(--accent-color);">로고</div>
-    <div class="search-bar">검색</div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <span style="font-size: 0.85rem; cursor: pointer;">추가</span>
-        <div class="glass-panel" style="padding: 8px 18px; cursor: pointer;">계정</div>
-    </div>
-</header>
 
+
+	     <h3>${voteInfo.vote_title}</h3> 
+	    <h3>${voteInfo.vote_id}</h3> 
+	     <h3>${voteInfo.vote_status}</h3> 
+
+	     <c:forEach var="opt" items="${voteInfo.optionList}">
+	        movie_id : ${opt.movie_id} <br> 
+	        title : ${opt.movie_title} <br> 
+	     </c:forEach> 
+	      <h3>${voteInfo.voted}</h3> 
+	    
+
+    <hr> 
+	
+	
+	
 <nav class="filter-container">
     <button class="filter-btn active">전체</button>
     <button class="filter-btn">진행중인 투표</button>
@@ -144,24 +172,64 @@
 
 <main class="vote-section">
 
-   
+<section class="glass-panel vote-card-container" style="width:60%">
+			
 
-    <section class="glass-panel vote-card">
-        <div class="status-badge">종료</div>
-        <div class="end-date">종료날짜</div>
-        <h2 class="vote-title">투표 제목</h2>
-        
-        <div class="vote-item selected">
-            <div class="radio-btn"></div>
-            <div class="movie-img">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-title">영화 제목</div>
-                <div class="m-meta">개봉년 . genre</div>
-            </div>
-            <div class="vote-stats">2,924 표 <strong>38%</strong></div>
-        </div>
-        
-        <button class="action-btn">토론 보기</button>
+			<div class="vote-window">
+				<div class="vote-track">
+				
+<div class="vote-content">
+									<div class="vote-header">
+
+<strong class="status-badge status-ongoing">진행중</strong>
+										
+
+
+										<span>종료: <span id="voteEndDate">${voteInfo.vote_end_date}</span></span>
+									</div>
+
+									<h2 class="vote-title">${voteInfo.vote_title}</h2>
+									<div class="vote-description">${voteInfo.vote_content}</div>
+
+									<div class="vote-options-list">
+										<c:forEach var="opt" items="${voteInfo.optionList}">
+											<label class="movie-option" data-movie-id="${opt.movie_id}">
+
+												<input type="radio" name="movie-vote-${voteInfo.vote_id}"
+												value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
+
+												<div class="movie-thumb">
+													<img
+														src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
+														alt="${opt.movie_title}">
+												</div>
+
+												<div class="movie-info">
+													<div class="m-title">${opt.movie_title}</div>
+													<div class="m-meta">
+														${opt.movie_release_date.substring(0,4)}</div>
+
+													<!-- ⭐ 결과 영역 추가 -->
+													<div class="m-result" style="display: none;">
+														<span class="res-count">0</span>표 (<span class="res-pct">0</span>%)
+
+
+													</div>
+
+												</div>
+
+											</label>
+										</c:forEach>
+									</div>
+
+									<div class="vote-actions">
+										<button class="btn btn-primary submit-vote-btn"
+											data-vote-id="${vote.vote_id}">토론 보기</button>
+									</div>
+									
+								</div>
+								
+								  <button class="action-btn">토론 보기</button>
 
         <div class="comment-section">
             <div class="comment-count">댓글 10개</div>
@@ -189,7 +257,62 @@
                 </div>
             </div>
         </div>
-    </section>
+								
+
+				</div>
+
+				</div>
+
+			
+
+			
+		</section>
+
+<!--     <section class="glass-panel vote-card"> -->
+  
+<!--         <div class="status-badge">진행중</div> -->
+<!--         <div class="end-date">종료날짜</div> -->
+<!--         <h2 class="vote-title">투표 제목</h2> -->
+        
+<!--         <div class="vote-item selected"> -->
+<!--             <div class="radio-btn"></div> -->
+<!--             <div class="movie-img">영화 이미지</div> -->
+<!--             <div class="movie-info"> -->
+<!--                 <div class="m-title">영화 제목</div> -->
+<!--                 <div class="m-meta">개봉년 . genre</div> -->
+<!--             </div> -->
+<!--             <div class="vote-stats">2,924 표 <strong>38%</strong></div> -->
+<!--         </div> -->
+        
+<!--         <button class="action-btn">토론 보기</button> -->
+
+<!--         <div class="comment-section"> -->
+<!--             <div class="comment-count">댓글 10개</div> -->
+<!--             <div class="comment-input-box"> -->
+<!--                 <textarea placeholder="댓글 입력창"></textarea> -->
+<!--                 <button class="submit-btn">등록</button> -->
+<!--             </div> -->
+
+<!--             <div class="comment-list"> -->
+<!--                 <div class="comment-item"> -->
+<!--                     <div class="user-meta"> -->
+<!--                         <div class="user-avatar"></div> -->
+<!--                         <span class="username">username</span> -->
+<!--                         <span class="timestamp">작성시간</span> -->
+<!--                     </div> -->
+<!--                     <div class="comment-content">내용</div> -->
+<!--                 </div> -->
+<!--                 <div class="comment-item"> -->
+<!--                     <div class="user-meta"> -->
+<!--                         <div class="user-avatar"></div> -->
+<!--                         <span class="username">username</span> -->
+<!--                         <span class="timestamp">작성시간</span> -->
+<!--                     </div> -->
+<!--                     <div class="comment-content">내용</div> -->
+<!--                 </div> -->
+<!--             </div> -->
+<!--         </div> -->
+<!--     </section> -->
 
 </main>
 

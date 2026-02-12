@@ -19,4 +19,7 @@ public class VoteRegisterDTO {
 	
 	private boolean voted; // 내가 투표했는지
 	private List<VoteResultDTO> resultList; // 결과
+
+	//사용자가 선택한 투표선택지 
+	private int userChoice;
 }

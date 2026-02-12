@@ -49,7 +49,7 @@ public class LoginOkController implements Action {
 		session.setAttribute("memId", id); // 세션에 저장할 키이름 : memId, 저장할 값 : id
 		
 		forward.setRedirect(true);
-		forward.setPath("/WEB-INF/views/home/index.jsp"); //메인페이지로 이동
+		forward.setPath("index.do"); //메인페이지로 이동
 		return forward;
 	}
 

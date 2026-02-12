@@ -1,5 +1,5 @@
 --member 테이블 생성
-create table member(
+create table MEMBER(
 	memNo number(38) primary key 				--회원 번호
 	, memId varchar2(50) not null unique		--회원 아이디 (unique 제약조건 : 중복 방지)
 	, memPwd varchar2(255) not null 			--회원 비밀번호 (BCrypt 기준 해시 길이 = 고정 60자)

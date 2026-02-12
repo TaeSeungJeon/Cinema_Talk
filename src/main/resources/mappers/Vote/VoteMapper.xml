@@ -118,6 +118,10 @@ ON r.movie_id = m.movie_id
 
 	</select>
 
+	<select id="vrec_list_voteId" resultType="voterecord">
+	select * from vote_record where vote_id=#{vote_id}
+	</select>
+
 
 
 

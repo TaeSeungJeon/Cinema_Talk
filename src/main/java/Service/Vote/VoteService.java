@@ -26,4 +26,6 @@ public interface VoteService {
 
 	List<VoteRegisterDTO> getVoteRegActiveForMem();
 
+	List<VoteRecordDTO> getVoteRecordByVoteId(int voteId);
+
 }

@@ -155,4 +155,20 @@ public class VoteDAOImpl implements VoteDAO {
 			}
 		}
 	}
+
+	@Override
+	public List<VoteRecordDTO> getVoteRecordByVoteId(int voteId) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("vrec_list_voteId", voteId);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
 }

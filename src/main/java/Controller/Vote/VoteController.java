@@ -38,7 +38,7 @@ public class VoteController implements Action {
 		HttpSession session = request.getSession();
 
 		//TODO
-		session.setAttribute("id", null);
+		session.setAttribute("id", 2);
 		Integer mem_no = (Integer) session.getAttribute("id");
 		//Integer mem_no=17;
 

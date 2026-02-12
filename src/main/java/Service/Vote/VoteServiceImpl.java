@@ -64,4 +64,9 @@ public class VoteServiceImpl implements VoteService {
 		return null;
 	}
 
+	@Override
+	public List<VoteRecordDTO> getVoteRecordByVoteId(int voteId) {
+		return this.vdao.getVoteRecordByVoteId(voteId);
+	}
+
 }

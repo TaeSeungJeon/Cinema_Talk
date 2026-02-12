@@ -6,27 +6,27 @@
 <mapper namespace="DAO.Movie.GenreDAO">
 	<insert id="insertGenre" parameterType="genre">
 		INSERT INTO GENRE (
-			genre_id, genre_name
+			genreId, genreName
 		) VALUES (
-			#{genre_id}, #{genre_name}
+			#{genreId}, #{genreName}
 		)
 	</insert>
 	
 	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
 	<insert id="mergeGenre" parameterType="genre">
 		MERGE INTO GENRE g
-		USING (SELECT #{genre_id} AS genre_id FROM DUAL) src
-		ON (g.genre_id = src.genre_id)
+		USING (SELECT #{genreId} AS genreId FROM DUAL) src
+		ON (g.genreId = src.genreId)
 		WHEN MATCHED THEN
-			UPDATE SET g.genre_name = #{genre_name}
+			UPDATE SET g.genreName = #{genreName}
 		WHEN NOT MATCHED THEN
-			INSERT (genre_id, genre_name)
-			VALUES (#{genre_id}, #{genre_name})
+			INSERT (genreId, genreName)
+			VALUES (#{genreId}, #{genreName})
 	</insert>
 	
 	<select id="selectGenreById" parameterType="int" resultType="genre">
-		SELECT genre_id, genre_name
+		SELECT genreId, genreName
 		FROM GENRE
-		WHERE genre_id = #{genre_id}
+		WHERE genreId = #{genreId}
 	</select>
 </mapper>

@@ -6,7 +6,7 @@ public interface MemberDAO {
 
 	void insertMember(MemberDTO member);
 
-	MemberDTO idCheck(String mem_id);
+	MemberDTO idCheck(String memId);
 
 	MemberDTO loginCheck(String id);
 

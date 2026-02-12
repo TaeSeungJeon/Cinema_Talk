@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8"%>
    <aside>
         <div class="side-widget">
             <div style="font-weight:700; display:flex; justify-content:space-between; margin-bottom:15px;">

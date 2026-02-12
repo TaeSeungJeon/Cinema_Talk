@@ -67,7 +67,21 @@ public class MemberDAOImpl implements MemberDAO {
 				sqlSession.close();
 			}
 		}
-	}//loginCheck() -> 입력한 아이디로 로그인 인증 
-	
-	
+	}//loginCheck() -> 입력한 아이디로 로그인 인증
+
+	@Override
+	public MemberDTO getMemberInfo(Integer memNo) {
+		SqlSession sqlSession = null;
+
+		try{
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("Member.getMemberInfo", memNo);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+	}
+
 }

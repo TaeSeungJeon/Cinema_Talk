@@ -18,8 +18,8 @@ public class LoginOkController implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		//로그인 창에서 입력받은 아이디, 비번 변수에 저장
-		String id = request.getParameter("mem_id");
-		String pwd = request.getParameter("mem_pwd");
+		String id = request.getParameter("memId");
+		String pwd = request.getParameter("memPwd");
 		
 		MemberService memberService = new MemberServiceImpl();
 		
@@ -37,7 +37,7 @@ public class LoginOkController implements Action {
 		}
 		
 		//비밀번호 검증(BCrypt)
-		if(!BCrypt.checkpw(pwd, mdto.getMem_pwd())) {
+		if(!BCrypt.checkpw(pwd, mdto.getMemPwd())) {
 			request.setAttribute("msg", "비밀번호가 다릅니다.");
 			forward.setRedirect(false);
 			forward.setPath("/WEB-INF/views/member/login.jsp");
@@ -46,7 +46,7 @@ public class LoginOkController implements Action {
 		
 		//로그인 성공 -> 세션 저장 후 redirect
 		HttpSession session = request.getSession();
-		session.setAttribute("mem_id", id); // 세션에 저장할 키이름 : mem_id, 저장할 값 : id
+		session.setAttribute("memId", id); // 세션에 저장할 키이름 : memId, 저장할 값 : id
 		
 		forward.setRedirect(true);
 		forward.setPath("Cinema_Talk.jsp"); //메인페이지로 이동

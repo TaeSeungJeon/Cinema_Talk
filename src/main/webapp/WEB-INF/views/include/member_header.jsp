@@ -10,11 +10,11 @@
         </form>
     </div>
     <div style="display: flex; gap: 10px;">         
-    	<c:if test="${not empty sessionScope.mem_id}"><a href="login.jsp" 
+    	<c:if test="${not empty sessionScope.memId}"><a href="memberLogout.do" 
     		class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
     				<a href="myPage.jsp" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a></c:if>
-		<c:if test="${empty sessionScope.mem_id}">
-		<a href="login.jsp" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a></c:if>
+		<c:if test="${empty sessionScope.memId}">
+		<a href="memberLogin.do" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a></c:if>
     </div>
 </header>
 
@@ -22,8 +22,8 @@
     <div class="category-bubble" onclick="toggleMenu(this)">
         <div class="cat-title">인기 영화 ▾</div>
         <ul class="sub-menu">
-            <li><a href="movies_now.jsp?cat=current">현재 상영작</a></li>
-            <li><a href="movies_yet.jsp?cat=yet">개봉 예정작</a></li>
+            <li><a href="moviesNow.jsp?cat=current">현재 상영작</a></li>
+            <li><a href="moviesYet.jsp?cat=yet">개봉 예정작</a></li>
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">

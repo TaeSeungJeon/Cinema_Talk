@@ -11,7 +11,7 @@ function toggleMenu(element) {
            document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
        }
    });
-
+   
    document.addEventListener('DOMContentLoaded', function () {
        let heroPage = 1;
        const movies = [

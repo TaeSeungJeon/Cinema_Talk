@@ -48,7 +48,7 @@ public class MovieDetailController implements Action {
 		
 		// 5. 영화 상세 페이지로 포워딩
 		ActionForward forward = new ActionForward();
-		forward.setPath("/WEB-INF/views/Movie/movie_detail.jsp");
+		forward.setPath("/WEB-INF/views/movie/movie_detail.jsp");
 		forward.setRedirect(false);
 		
 		return forward;

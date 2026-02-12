@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <div class="quick-booking-aside" id="floatingMenu">
         <div class="booking-box">
@@ -32,7 +32,7 @@
                 <button class="nav-btn" id="nextBtn">&#10095;</button>
             </div>
         </section>
-
+<!--  
         <section class="movie-list-container">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                 <h3 style="margin:0;">추천 영화 리스트</h3>
@@ -52,6 +52,47 @@
                 <button class="list-nav-btn" id="listNext">&#10095;</button>
             </div>
         </section>
+-->
+<section class="movie-list-container">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+    <h3 style="margin:0;">추천 영화 리스트</h3>
+    <span style="font-size:0.8rem; color:#94a3b8;">포스터를 클릭하면 상세 페이지로 이동합니다.</span>
+  </div>
+
+  <div class="movie-slider-wrapper" data-movie-slider>
+    <button class="list-nav-btn" id="listPrev" type="button">&#10094;</button>
+
+    <div class="movie-track-container">
+      <div class="movie-grid" id="movieTrack">
+
+        <c:if test="${empty homeGenreMovieList}">
+          <div style="padding:12px; color:#64748b;">추천 영화가 없습니다.</div>
+        </c:if>
+
+        <c:forEach var="m" items="${homeGenreMovieList}">
+          <a href="${pageContext.request.contextPath}/movie_detail.do?id=${m.movie_id}" class="movie-card-small">
+            <div class="poster-area" style="border-radius:12px; overflow:hidden; background:#e5e7eb;">
+              <img
+                src="https://images.tmdb.org/t/p/w300/${m.movie_poster_path}"
+                alt="${m.movie_title}"
+                onerror="this.onerror=null; this.src='https://via.placeholder.com/230x330?text=No+Image';"
+                style="width:100%; height:100%; object-fit:cover; display:block;"
+              />
+            </div>
+            <div class="movie-title-area">
+              <c:out value="${m.movie_title}" />
+            </div>
+          </a>
+        </c:forEach>
+
+      </div>
+    </div>
+
+    <button class="list-nav-btn" id="listNext" type="button">&#10095;</button>
+  </div>
+</section>
+
+
 
         <div class="board-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">

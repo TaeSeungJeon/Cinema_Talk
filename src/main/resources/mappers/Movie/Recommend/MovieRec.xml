@@ -122,6 +122,7 @@
     		) t
     	WHERE ROWNUM &lt;= #{movieLimit}
   	</select>
+  	
   	<select id="user_like_rec" resultMap="MovieRecResultMap">
   		SELECT
 		    t.movie_id,
@@ -162,6 +163,44 @@
   		WHERE ROWNUM &lt;= #{movieLimit}
   	</select>
   	
+  	<select id="index_genre_movie" resultType="MovieRecResponse">
+  		WITH picked_genres AS (
+    SELECT genre_id
+    FROM (
+      SELECT g.genre_id
+      FROM genre g
+      ORDER BY DBMS_RANDOM.VALUE
+    )
+    WHERE ROWNUM &lt;= 7
+  ),
+  one_movie AS (
+    SELECT
+      pg.genre_id,
+      m.movie_id,
+      m.movie_title,
+      m.movie_overview,
+      m.movie_release_date,
+      m.movie_runtime,
+      m.movie_poster_path,
+      ROW_NUMBER() OVER (PARTITION BY pg.genre_id ORDER BY DBMS_RANDOM.VALUE) rn
+    FROM picked_genres pg
+    JOIN movie_genre mg ON mg.genre_id = pg.genre_id
+    JOIN movie m ON m.movie_id = mg.movie_id
+    WHERE m.movie_poster_path IS NOT NULL
+      AND m.movie_rating_count &gt;= 10
+  )
+  SELECT
+    om.movie_id,
+    om.movie_title,
+    om.movie_overview,
+    om.movie_release_date,
+    om.movie_runtime,
+    om.movie_poster_path,
+    g.genre_name AS genre_name
+  FROM one_movie om
+  JOIN genre g ON g.genre_id = om.genre_id
+  WHERE om.rn = 1
+  	</select>
   	
   	
   </mapper>

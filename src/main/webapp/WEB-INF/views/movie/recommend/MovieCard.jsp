@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <style>
   /* 카드 내부(앞/뒤) */
@@ -43,7 +43,7 @@
   /* 뒤면: 흰 카드 정보 (스크린샷의 중앙 카드 정보 느낌) */
   .movie-card .back{
     transform: rotateY(180deg);
-    background: #ffffff;
+    background: #F8FAFC;
     border: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 14px 30px rgba(0,0,0,0.10);
     padding: 18px 16px;
@@ -69,7 +69,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    color: #444;
+    color: #666666;
     font-size: 13px;
   }
   .movie-card .meta-row{
@@ -94,7 +94,7 @@
   .movie-card .movie-overview{
     margin: 0;
     font-size: 12px;
-    color: #666;
+    color: #555555;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 6;

@@ -151,19 +151,19 @@
 
     <div class="title">로그인</div>
 
-    <form action="member_login_ok.do" method="post">
+    <form action="memberLoginOk.do" method="post">
         <div class="input-group">
-            <input type="text" name="mem_id" placeholder="Username" required>
+            <input type="text" name="mem-id" placeholder="Username" required>
         </div>
         <div class="input-group">
-            <input type="password" name="mem_pwd" placeholder="Password" required>
+            <input type="password" name="mem-pwd" placeholder="Password" required>
         </div>
         <button type="submit" class="btn-submit">로그인</button>
     </form>
 
     <div class="footer-link">
-        <a href="find_account.jsp">아이디/비밀번호 찾기</a>
-        <a href="member_register.do" class="register">회원가입</a>  <!-- 회원가입 글자를 누르면 -> 회원가입 뷰페이지 이동 컨트롤러로 이동 -->
+        <a href="findAccount.jsp">아이디/비밀번호 찾기</a>
+        <a href="memberRegister.do" class="register">회원가입</a>  <!-- 회원가입 글자를 누르면 -> 회원가입 뷰페이지 이동 컨트롤러로 이동 -->
     </div>
 </div>
 

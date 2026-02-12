@@ -7,11 +7,11 @@ import DTO.Movie.Recommend.MovieRecResponse;
 
 public interface MovieRecDAO {
 
-	Map<Integer, List<MovieRecResponse>> getGenreRecList(int mem_no);
+	Map<Integer, List<MovieRecResponse>> getGenreRecList(int memNo);
 
 	List<MovieRecResponse> getPopularRecList();
 
-	List<MovieRecResponse> getLikeRecList(int mem_no);
+	List<MovieRecResponse> getLikeRecList(int memNo);
 
 	List<MovieRecResponse> getIndexGenreList(int memNo);
 

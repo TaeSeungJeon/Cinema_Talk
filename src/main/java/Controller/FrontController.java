@@ -26,7 +26,7 @@ public class FrontController extends HttpServlet {
 			return;
 		}
 
-		ActionForward forward 	= null;
+		ActionForward forward = null;
 		Action action = null;
 
 		Properties prop = new Properties();// 컬렉션 클래스로 키,값 쌍으로 저장하는 자료구조

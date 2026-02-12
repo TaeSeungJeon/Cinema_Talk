@@ -89,11 +89,11 @@ public class MovieGenreDAOImpl implements MovieGenreDAO {
 	}
 
 	@Override
-	public List<Integer> getGenreIdsByMovieId(int movie_id) {
+	public List<Integer> getGenreIdsByMovieId(int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			return session.selectList("DAO.Movie.MovieGenreDAO.getGenreIdsByMovieId", movie_id);
+			return session.selectList("DAO.Movie.MovieGenreDAO.getGenreIdsByMovieId", movieId);
 		} finally {
 			if(session != null) {
 				session.close();

@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>검색 결과 - "${find_name}"</title>
+<title>검색 결과 - "${findName}"</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
     :root {
@@ -338,13 +338,13 @@
         <a href="${pageContext.request.contextPath}/Cinema_Talk.jsp" class="logo">영화 로고</a>
         <div class="search-bar">
             <form action="${pageContext.request.contextPath}/search_movie.do" method="get" style="display: flex; align-items: center; width: 100%; gap: 10px;">
-                <select name="search_option">
-                    <option value="0" <c:if test="${find_field == 0}">selected</c:if>>제목</option>
-                    <option value="1" <c:if test="${find_field == 1}">selected</c:if>>감독</option>
-                    <option value="2" <c:if test="${find_field == 2}">selected</c:if>>배우</option>
-                    <option value="3" <c:if test="${find_field == 3}">selected</c:if>>장르</option>
+                <select name="search-option">
+                    <option value="0" <c:if test="${findField == 0}">selected</c:if>>제목</option>
+                    <option value="1" <c:if test="${findField == 1}">selected</c:if>>감독</option>
+                    <option value="2" <c:if test="${findField == 2}">selected</c:if>>배우</option>
+                    <option value="3" <c:if test="${findField == 3}">selected</c:if>>장르</option>
                 </select>
-                <input type="text" name="search_words" value="${find_name}" placeholder="영화 제목, 감독, 배우, 장르를 검색해보세요">
+                <input type="text" name="search-words" value="${findName}" placeholder="영화 제목, 감독, 배우, 장르를 검색해보세요">
                 <input type="submit" value="검색">
             </form>
         </div>
@@ -357,12 +357,12 @@
     <div class="search-info">
         <h2>
             <c:choose>
-                <c:when test="${find_field == 0}">제목</c:when>
-                <c:when test="${find_field == 1}">감독</c:when>
-                <c:when test="${find_field == 2}">배우</c:when>
-                <c:when test="${find_field == 3}">장르</c:when>
+                <c:when test="${findField == 0}">제목</c:when>
+                <c:when test="${findField == 1}">감독</c:when>
+                <c:when test="${findField == 2}">배우</c:when>
+                <c:when test="${findField == 3}">장르</c:when>
             </c:choose>
-            검색: "<span class="highlight">${find_name}</span>"
+            검색: "<span class="highlight">${findName}</span>"
         </h2>
         <p>총 <span class="highlight">${listcount}</span>개의 영화를 찾았습니다. (${page} / ${maxpage} 페이지)</p>
     </div>
@@ -372,12 +372,12 @@
         <c:when test="${not empty movies}">
             <div class="movie-list">
                 <c:forEach var="movie" items="${movies}">
-                    <a href="${pageContext.request.contextPath}/movie_detail.do?id=${movie.movie_id}" class="movie-item">
+                    <a href="${pageContext.request.contextPath}/movie_detail.do?id=${movie.movieId}" class="movie-item">
                         <div class="movie-poster">
                             <c:choose>
-                                <c:when test="${not empty movie.movie_poster_path}">
-                                    <img src="https://image.tmdb.org/t/p/w300${movie.movie_poster_path}" 
-                                         alt="${movie.movie_title} 포스터"
+                                <c:when test="${not empty movie.moviePosterPath}">
+                                    <img src="https://image.tmdb.org/t/p/w300${movie.moviePosterPath}" 
+                                         alt="${movie.movieTitle} 포스터"
                                          onerror="this.parentElement.innerHTML='포스터 없음'">
                                 </c:when>
                                 <c:otherwise>
@@ -386,24 +386,24 @@
                             </c:choose>
                         </div>
                         <div class="movie-info">
-                            <h3>${movie.movie_title}</h3>
-                            <c:if test="${not empty movie.movie_original_title && movie.movie_original_title != movie.movie_title}">
-                                <p class="original-title">${movie.movie_original_title}</p>
+                            <h3>${movie.movieTitle}</h3>
+                            <c:if test="${not empty movie.movieOriginalTitle && movie.movieOriginalTitle != movie.movieTitle}">
+                                <p class="original-title">${movie.movieOriginalTitle}</p>
                             </c:if>
-                            <c:if test="${not empty movie.movie_backdrop_path}">
-                                <img class="backdrop-thumb" src="https://image.tmdb.org/t/p/w300${movie.movie_backdrop_path}" 
-                                         alt="${movie.movie_title} 포스터"
+                            <c:if test="${not empty movie.movieBackdropPath}">
+                                <img class="backdrop-thumb" src="https://image.tmdb.org/t/p/w300${movie.movieBackdropPath}" 
+                                         alt="${movie.movieTitle} 포스터"
                                          onerror="this.parentElement.removeChild(this);">
                             </c:if>
                             <div class="movie-meta">
-                                <c:if test="${not empty movie.movie_release_date}">
-                                    <span>📅 ${movie.movie_release_date}</span>
+                                <c:if test="${not empty movie.movieReleaseDate}">
+                                    <span>📅 ${movie.movieReleaseDate}</span>
                                 </c:if>
-                                <c:if test="${movie.movie_runtime > 0}">
-                                    <span>⏱️ ${movie.movie_runtime}분</span>
+                                <c:if test="${movie.movieRuntime > 0}">
+                                    <span>⏱️ ${movie.movieRuntime}분</span>
                                 </c:if>
-                                <c:if test="${movie.movie_rating_average != null && movie.movie_rating_average > 0}">
-                                    <span class="rating">⭐ ${movie.movie_rating_average}</span>
+                                <c:if test="${movie.movieRatingAverage != null && movie.movieRatingAverage > 0}">
+                                    <span class="rating">⭐ ${movie.movieRatingAverage}</span>
                                 </c:if>
                             </div>
                         </div>
@@ -416,7 +416,7 @@
                 <!-- 이전 버튼 -->
                 <c:choose>
                     <c:when test="${page > 1}">
-                        <a href="${pageContext.request.contextPath}/search_movie.do?search_option=${find_field}&search_words=${find_name}&page=${page - 1}" 
+                        <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${page - 1}" 
                            class="nav-btn">← 이전</a>
                     </c:when>
                     <c:otherwise>
@@ -431,7 +431,7 @@
                             <span class="current">${i}</span>
                         </c:when>
                         <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/search_movie.do?search_option=${find_field}&search_words=${find_name}&page=${i}">${i}</a>
+                            <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${i}">${i}</a>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
@@ -439,7 +439,7 @@
                 <!-- 다음 버튼 -->
                 <c:choose>
                     <c:when test="${page < maxpage}">
-                        <a href="${pageContext.request.contextPath}/search_movie.do?search_option=${find_field}&search_words=${find_name}&page=${page + 1}" 
+                        <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${page + 1}" 
                            class="nav-btn">다음 →</a>
                     </c:when>
                     <c:otherwise>

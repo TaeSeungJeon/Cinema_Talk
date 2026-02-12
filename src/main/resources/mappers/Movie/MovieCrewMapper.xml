@@ -6,39 +6,39 @@
 <mapper namespace="DAO.Movie.MovieCrewDAO">
 	<insert id="insertMovieCrew" parameterType="moviecrew">
 		INSERT INTO MOVIE_CREW (
-			person_id, movie_id, crew_job
+			personId, movieId, crewJob
 		) VALUES (
-			#{person_id}, #{movie_id}, #{crew_job}
+			#{personId}, #{movieId}, #{crewJob}
 		)
 	</insert>
 	
 	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
 	<insert id="mergeMovieCrew" parameterType="moviecrew">
 		MERGE INTO MOVIE_CREW mc
-		USING (SELECT #{person_id} AS person_id, #{movie_id} AS movie_id FROM DUAL) src
-		ON (mc.person_id = src.person_id AND mc.movie_id = src.movie_id)
+		USING (SELECT #{personId} AS personId, #{movieId} AS movieId FROM DUAL) src
+		ON (mc.personId = src.personId AND mc.movieId = src.movieId)
 		WHEN MATCHED THEN
-			UPDATE SET mc.crew_job = #{crew_job}
+			UPDATE SET mc.crewJob = #{crewJob}
 		WHEN NOT MATCHED THEN
-			INSERT (person_id, movie_id, crew_job)
-			VALUES (#{person_id}, #{movie_id}, #{crew_job})
+			INSERT (personId, movieId, crewJob)
+			VALUES (#{personId}, #{movieId}, #{crewJob})
 	</insert>
 	
 	<select id="countMovieCrew" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM MOVIE_CREW
-		WHERE person_id = #{person_id} AND movie_id = #{movie_id}
+		WHERE personId = #{personId} AND movieId = #{movieId}
 	</select>
 	
 	<select id="getDirectorsByMovieId" parameterType="int" resultType="DTO.Movie.MovieDetailDTO$CrewInfoDTO">
         SELECT 
-            p.person_id,
-            p.person_name,
-            p.profile_path,
-            mc.crew_job
+            p.personId,
+            p.personName,
+            p.profilePath,
+            mc.crewJob
         FROM MOVIE_CREW mc
-        JOIN PERSON p ON mc.person_id = p.person_id
-        WHERE mc.movie_id = #{movie_id}
-        AND mc.crew_job = 'Director'
+        JOIN PERSON p ON mc.personId = p.personId
+        WHERE mc.movieId = #{movieId}
+        AND mc.crewJob = 'Director'
     </select>
 </mapper>

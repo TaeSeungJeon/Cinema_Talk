@@ -6,31 +6,31 @@
 <mapper namespace="DAO.Movie.MovieGenreDAO">
 	<insert id="insertMovieGenre" parameterType="moviegenre">
 		INSERT INTO MOVIE_GENRE (
-			genre_id, movie_id
+			genreId, movieId
 		) VALUES (
-			#{genre_id}, #{movie_id}
+			#{genreId}, #{movieId}
 		)
 	</insert>
 	
 	<!-- Oracle MERGE (UPSERT) - 연결 테이블이므로 UPDATE 없이 INSERT만 수행 -->
 	<insert id="mergeMovieGenre" parameterType="moviegenre">
 		MERGE INTO MOVIE_GENRE mg
-		USING (SELECT #{genre_id} AS genre_id, #{movie_id} AS movie_id FROM DUAL) src
-		ON (mg.genre_id = src.genre_id AND mg.movie_id = src.movie_id)
+		USING (SELECT #{genreId} AS genreId, #{movieId} AS movieId FROM DUAL) src
+		ON (mg.genreId = src.genreId AND mg.movieId = src.movieId)
 		WHEN NOT MATCHED THEN
-			INSERT (genre_id, movie_id)
-			VALUES (#{genre_id}, #{movie_id})
+			INSERT (genreId, movieId)
+			VALUES (#{genreId}, #{movieId})
 	</insert>
 	
 	<select id="countMovieGenre" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM MOVIE_GENRE
-		WHERE genre_id = #{genre_id} AND movie_id = #{movie_id}
+		WHERE genreId = #{genreId} AND movieId = #{movieId}
 	</select>
 	
 	<select id="getGenreIdsByMovieId" parameterType="int" resultType="int">
-        SELECT genre_id
+        SELECT genreId
         FROM MOVIE_GENRE
-        WHERE movie_id = #{movie_id}
+        WHERE movieId = #{movieId}
     </select>
 </mapper>

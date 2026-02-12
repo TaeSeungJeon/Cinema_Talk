@@ -21,7 +21,7 @@ public class LogoutController implements Action {
 	
 		ActionForward forward = new ActionForward();	
 		forward.setRedirect(true);
-		forward.setPath("Cinema_Talk.jsp"); //메인화면으로 이동
+		forward.setPath("index.do"); //메인화면으로 이동
 		return forward;
 	}
 

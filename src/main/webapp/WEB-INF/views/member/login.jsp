@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -162,7 +162,7 @@
     </form>
 
     <div class="footer-link">
-        <a href="findAccount.jsp">아이디/비밀번호 찾기</a>
+        <a href="memberIdFind.do">아이디/비밀번호 찾기</a>
         <a href="memberRegister.do" class="register">회원가입</a>  <!-- 회원가입 글자를 누르면 -> 회원가입 뷰페이지 이동 컨트롤러로 이동 -->
     </div>
 </div>

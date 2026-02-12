@@ -70,17 +70,17 @@
         </c:if>
 
         <c:forEach var="m" items="${homeGenreMovieList}">
-          <a href="${pageContext.request.contextPath}/movie_detail.do?id=${m.movie_id}" class="movie-card-small">
+          <a href="${pageContext.request.contextPath}/movie_detail.do?id=${m.movieId}" class="movie-card-small">
             <div class="poster-area" style="border-radius:12px; overflow:hidden; background:#e5e7eb;">
               <img
-                src="https://images.tmdb.org/t/p/w300/${m.movie_poster_path}"
-                alt="${m.movie_title}"
+                src="https://images.tmdb.org/t/p/w300/${m.moviePosterPath}"
+                alt="${m.movieTitle}"
                 onerror="this.onerror=null; this.src='https://via.placeholder.com/230x330?text=No+Image';"
                 style="width:100%; height:100%; object-fit:cover; display:block;"
               />
             </div>
             <div class="movie-title-area">
-              <c:out value="${m.movie_title}" />
+              <c:out value="${m.movieTitle}" />
             </div>
           </a>
         </c:forEach>

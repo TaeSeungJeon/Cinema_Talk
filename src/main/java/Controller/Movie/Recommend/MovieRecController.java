@@ -38,7 +38,7 @@ public class MovieRecController implements Action {
 	    
 	    ActionForward forward = new ActionForward();
 	    forward.setRedirect(false);
-	    forward.setPath("/WEB-INF/views/movie/recommend/MovieRecList.jsp");//뷰페이지 경로 설정
+	    forward.setPath("/WEB-INF/views/movie/recommend/movieRecList.jsp");//뷰페이지 경로 설정
 	    
 	    return forward;            
 	}

@@ -114,8 +114,8 @@
     <!-- FRONT -->
     <div class="card-face front">
       <img
-        src="https://images.tmdb.org/t/p/w300/${movie.movie_poster_path}"
-        alt="${movie.movie_title}"
+        src="https://images.tmdb.org/t/p/w300/${movie.moviePosterPath}"
+        alt="${movie.movieTitle}"
         onerror="this.onerror=null; this.src='https://via.placeholder.com/230x330?text=No+Image';" />
       <div class="shade"></div>
     </div>
@@ -123,28 +123,28 @@
     <!-- BACK -->
     <div class="card-face back">
       <div>
-        <h3 class="movie-title-text">${movie.movie_title}</h3>
+        <h3 class="movie-title-text">${movie.movieTitle}</h3>
 
         <div class="meta" style="margin-top:10px;">
           <div class="meta-row">
-            <span class="pill">📅 <span>${movie.movie_release_date}</span></span>
+            <span class="pill">📅 <span>${movie.movieReleaseDate}</span></span>
           </div>
 
           <div class="meta-row">
-            <span class="pill">⏱ <span>${movie.movie_runtime}분</span></span>
+            <span class="pill">⏱ <span>${movie.movieRuntime}분</span></span>
           </div>
 
           <div class="meta-row">
             <span class="label">장르:</span>
-            <span>${movie.genre_name}</span>
+            <span>${movie.genreName}</span>
           </div>
         </div>
       </div>
 
-      <p class="movie-overview">${movie.movie_overview}</p>
+      <p class="movie-overview">${movie.movieOverview}</p>
     </div>
   </div>
 
-  <input type="hidden" class="movie-id-val" value="${movie.movie_id}" />
-  <input type="hidden" class="movie-title-val" value="${movie.movie_title}" />
+  <input type="hidden" class="movie-id-val" value="${movie.movieId}" />
+  <input type="hidden" class="movie-title-val" value="${movie.movieTitle}" />
 </div>

@@ -163,7 +163,7 @@
 
 <body>
 
-  <%@ include file="/WEB-INF/views/include/member_header.jsp"%>
+  <%@ include file="/WEB-INF/views/include/memberHeader.jsp"%>
 
   <div class="page">
 
@@ -186,7 +186,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${likeRecList}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/movieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -216,7 +216,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${popularRecList}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/movieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -232,13 +232,13 @@
       <!-- 장르별 추천 (스크린샷의 여러 줄 캐러셀 느낌) -->
       <c:forEach var="entry" items="${genreRecMap}">
         <div class="carousel-wrap" data-carousel>
-          <h2 class="carousel-title">${entry.value[0].genre_name} 장르 추천</h2>
+          <h2 class="carousel-title">${entry.value[0].genreName} 장르 추천</h2>
 
           <div class="carousel-pad">
             <span class="fade left"></span>
             <span class="fade right"></span>
 
-            <button class="arrow left" type="button" data-left aria-label="left">
+            <button class="arrow-left" type="button" data-left aria-label="left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"/>
               </svg>
@@ -247,7 +247,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${entry.value}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/movieCard.jsp" />
               </c:forEach>
             </div>
 

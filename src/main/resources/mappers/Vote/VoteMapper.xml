@@ -7,139 +7,139 @@
 
 	<resultMap id="voteRegisterMap" type="voteregister">
 
-		<id property="vote_id" column="vote_id" />
-		<result property="vote_title" column="vote_title" />
-		<result property="vote_content" column="vote_content" />
-		<result property="vote_start_date" column="vote_start_date" />
-		<result property="vote_end_date" column="vote_end_date" />
-		<result property="vote_status" column="vote_status" />
+		<id property="voteId" column="voteId" />
+		<result property="voteTitle" column="voteTitle" />
+		<result property="voteContent" column="voteContent" />
+		<result property="voteStartDate" column="voteStartDate" />
+		<result property="voteEndDate" column="voteEndDate" />
+		<result property="voteStatus" column="voteStatus" />
 
 		<collection property="optionList" ofType="voteoption">
 
-			<id property="movie_id" column="movie_id" />
-			<result property="vote_id" column="vote_id" />
+			<id property="movieId" column="movieId" />
+			<result property="voteId" column="voteId" />
 
-			<result property="movie_title" column="movie_title" />
-			<result property="movie_release_date"
-				column="movie_release_date" />
-			<result property="movie_poster_path"
-				column="movie_poster_path" />
+			<result property="movieTitle" column="movieTitle" />
+			<result property="movieReleaseDate"
+				column="movieReleaseDate" />
+			<result property="moviePosterPath"
+				column="moviePosterPath" />
 
 		</collection>
 
 	</resultMap>
-	<insert id="vrec_in" parameterType="voterecord">
+	<insert id="vrecIn" parameterType="voterecord">
 		INSERT INTO vote_record
-		values(record_id_seq.nextval, sysdate, #{mem_no}, #{vote_id},
-		#{movie_id}, #{vote_comment_text})
+		values(recordIdSeq.nextval, sysdate, #{memNo}, #{voteId},
+		#{movieId}, #{voteCommentText})
 	</insert>
 
-	<select id="vrec_result" resultType="voteresult"
+	<select id="vrecResult" resultType="voteresult"
 		parameterType="int">
 		SELECT
-    #{vote_id} as vote_id,
-    r.movie_id,
+    #{voteId} as voteId,
+    r.movieId,
     
     r.count,
-    r.total_voter_count,
-    ROUND(r.count * 100.0 / r.total_count, 1) AS percentage,
+    r.totalVoterCount,
+    ROUND(r.count * 100.0 / r.totalCount, 1) AS percentage,
     RANK() OVER (ORDER BY r.count DESC) AS rank,
-    m.movie_title as movie_title
+    m.movieTitle as movieTitle
 
 FROM (
     SELECT
-        movie_id,
+        movieId,
         count,
-        SUM(count) OVER() AS total_count,
-        SUM(voter_cnt) OVER() AS total_voter_count
+        SUM(count) OVER() AS totalCount,
+        SUM(voterCnt) OVER() AS totalVoterCount
     FROM (
         SELECT
-            movie_id,
+            movieId,
             COUNT(*) AS count,
-            COUNT(DISTINCT mem_no) AS voter_cnt
+            COUNT(DISTINCT memNo) AS voterCnt
         FROM vote_record
-        WHERE vote_id = #{vote_id}
-        GROUP BY movie_id
+        WHERE voteId = #{voteId}
+        GROUP BY movieId
     )
 ) r
 
 JOIN movie m
-ON r.movie_id = m.movie_id
+ON r.movieId = m.movieId
 
 	</select>
 
-	<select id="vreg_list" resultType="voteregister">
+	<select id="vregList" resultType="voteregister">
 		select * from vote_register
 
 	</select>
 
-	<select id="vreg_one" resultType="voteregister">
+	<select id="vregOne" resultType="voteregister">
 		select * from vote_register
-		where vote_id=#{vote_id}
+		where voteId=#{voteId}
 
 	</select>
 
-	<select id="vrec_record_all" resultType="voterecord">
+	<select id="vrecRecordAll" resultType="voterecord">
 		select * from
 		vote_record
 	</select>
 
-	<select id="vrec_record_memno" resultType="voterecord">
+	<select id="vrecRecordMemno" resultType="voterecord">
 		select * from
-		vote_record where mem_no=#{mem_no} and vote_id=#{vote_id}
+		vote_record where memNo=#{memNo} and voteId=#{voteId}
 	</select>
 
-	<update id="vrec_update">
-		update vote_record set record_created_date=sysdate,
-		vote_comment_text=#{vote_comment_text} where mem_no=#{mem_no}
+	<update id="vrecUpdate">
+		update vote_record set recordCreatedDate=sysdate,
+		voteCommentText=#{voteCommentText} where memNo=#{memNo}
 	</update>
 
-	<select id="vreg_full_list" resultMap="voteRegisterMap">
+	<select id="vregFullList" resultMap="voteRegisterMap">
 
 		SELECT
-		vr.vote_id,
-		vr.vote_title,
-		vr.vote_content,
-		TO_CHAR(vr.vote_start_date,'YYYY-MM-DD') AS vote_start_date,
-		TO_CHAR(vr.vote_end_date,'YYYY-MM-DD') AS vote_end_date,
-		vr.vote_status,
+		vr.voteId,
+		vr.voteTitle,
+		vr.voteContent,
+		TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
+		TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
+		vr.voteStatus,
 
-		vo.movie_id,
+		vo.movieId,
 
-		m.movie_title,
-		TO_CHAR(m.movie_release_date,'YYYY-MM-DD') AS movie_release_date,
-		m.movie_poster_path
+		m.movieTitle,
+		TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
+		m.moviePosterPath
 
 		FROM vote_register vr
-		JOIN vote_option vo ON vr.vote_id = vo.vote_id
-		JOIN movie m ON vo.movie_id = m.movie_id
+		JOIN vote_option vo ON vr.voteId = vo.voteId
+		JOIN movie m ON vo.movieId = m.movieId
 
-		ORDER BY vr.vote_id, vo.movie_id
+		ORDER BY vr.voteId, vo.movieId
 
 	</select>
 
-	<select id="vrec_list_voteId" resultType="voterecord">
-	select * from vote_record where vote_id=#{vote_id}
+	<select id="vrecListVoteId" resultType="voterecord">
+	select * from vote_record where voteId=#{voteId}
 	</select>
 	
 	<select id="vregFullByVoteId" resultMap="voteRegisterMap">
 
 		SELECT
-    vr.vote_id,
-    vr.vote_title,
-    vr.vote_content,
-    TO_CHAR(vr.vote_start_date,'YYYY-MM-DD') AS vote_start_date,
-    TO_CHAR(vr.vote_end_date,'YYYY-MM-DD') AS vote_end_date,
-    vr.vote_status,
-    vo.movie_id,
-    m.movie_title,
-    TO_CHAR(m.movie_release_date,'YYYY-MM-DD') AS movie_release_date,
-    m.movie_poster_path
+    vr.voteId,
+    vr.voteTitle,
+    vr.voteContent,
+    TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
+    TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
+    vr.voteStatus,
+    vo.movieId,
+    m.movieTitle,
+    TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
+    m.moviePosterPath
 FROM vote_register vr
-JOIN vote_option vo ON vr.vote_id = vo.vote_id
-JOIN movie m ON vo.movie_id = m.movie_id
-WHERE vr.vote_id = #{vote_id}
-ORDER BY vr.vote_id, vo.movie_id
+JOIN vote_option vo ON vr.voteId = vo.voteId
+JOIN movie m ON vo.movieId = m.movieId
+WHERE vr.voteId = #{voteId}
+ORDER BY vr.voteId, vo.movieId
 
 	</select>
 

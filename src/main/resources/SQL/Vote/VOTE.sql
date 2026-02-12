@@ -3,7 +3,7 @@ CREATE TABLE VOTE_REGISTER (
 	voteId	NUMBER		NOT NULL,
 	voteTitle	VARCHAR2(100)		NULL,
 	voteContent	VARCHAR2(4000)		NULL,
-	voteStart_date	DATE		NULL,
+	voteStartDate	DATE		NULL,
 	voteEndDate	DATE		NULL,
 	voteStatus	VARCHAR2(20)		NULL
 );

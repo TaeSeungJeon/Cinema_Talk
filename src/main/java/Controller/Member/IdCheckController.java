@@ -21,9 +21,9 @@ public class IdCheckController implements Action {
 		PrintWriter out = response.getWriter();
 		MemberService memberService = new MemberServiceImpl(); //서비스 안에서 dao호출하고 db 접근했을테니까 dao를 호출하지 않아도 되겠구나
 		
-		String mem_id = request.getParameter("mem_id"); 
+		String memId = request.getParameter("mem-id"); 
 		
-		MemberDTO db_id = memberService.idCheck(mem_id);
+		MemberDTO db_id = memberService.idCheck(memId);
 		
 		int re = -1; //중복 없음
 		

@@ -14,13 +14,13 @@ public class MemberServiceImpl implements MemberService {
 	public void insertMember(MemberDTO member) {
 		
 		// 사용자가 입력한 비밀번호
-		String mem_pwd = member.getMem_pwd();
+		String memPwd = member.getMemPwd();
 		
 		// BCrypt로 암호화
-		String mem_password = BCrypt.hashpw(mem_pwd, BCrypt.gensalt(12));
+		String memPassword = BCrypt.hashpw(memPwd, BCrypt.gensalt(12));
 		
 		// DTO에 암호화된 비밀번호 다시 저장
-		member.setMem_pwd(mem_password);
+		member.setMemPwd(memPassword);
 		
 		// DAO 호출 (DB저장)
 		this.mdao.insertMember(member);
@@ -28,8 +28,8 @@ public class MemberServiceImpl implements MemberService {
 	}//입력받은 회원정보 저장
 
 	@Override
-	public MemberDTO idCheck(String mem_id) {
-		return this.mdao.idCheck(mem_id);
+	public MemberDTO idCheck(String memId) {
+		return this.mdao.idCheck(memId);
 	}//아이디 중복체크
 
 	@Override

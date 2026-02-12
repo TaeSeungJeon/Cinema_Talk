@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -88,7 +90,6 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="logo-area"><div class="logo-box">영화 로고</div></div>
 
@@ -101,14 +102,14 @@
         <div id="id-content" class="find-content active">
             <div class="title">Find My ID</div>
             <p class="description">이름과 전화번호가 일치하면<br>화면에 아이디가 표시됩니다.</p>
-            <form action="FindIdController" method="post">
+            <form action="memberIdFindOk.do" method="post" onsubmit="return findAccount();">
                 <div class="input-wrapper">
                     <label>이름</label>
-                    <input type="text" class="input-field" name="mem-name" placeholder="이름을 입력하세요" required>
+                    <input type="text" id="mem-name" class="input-field" name="mem-name" placeholder="이름을 입력하세요" required>
                 </div>
                 <div class="input-wrapper">
                     <label>전화번호</label>
-                    <input type="tel" class="input-field" name="mem-phone" placeholder="010-0000-0000" required>
+                    <input type="tel" id="mem-phone" class="input-field" name="mem-phone" placeholder="010-0000-0000" required>
                 </div>
                 <button type="submit" class="btn-submit">아이디 확인</button>
             </form>
@@ -132,6 +133,20 @@
 
         <div class="back-link"><a href="memberLogin.do">로그인</a></div>
     </div>
+    
+</div>
+
+<!-- 아이디 찾기 결과 모달 -->
+<div id="idResultModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);">
+  <div style="width:350px; margin:15vh auto; background:white; padding:20px; border-radius:12px;">
+    <h3 style="margin:0 0 12px;">아이디 찾기 결과</h3>
+    <p style="margin:0 0 18px;">회원님의 아이디는 <b id="foundIdText"></b> 입니다.</p>
+
+    <button type="button" class="btn-submit"
+      onclick="document.getElementById('idResultModal').style.display='none'">
+      확인
+    </button>
+  </div>
 </div>
 
 <script>
@@ -142,6 +157,15 @@
         event.currentTarget.classList.add('active');
     }
 </script>
+
+<c:if test="${not empty findId}">
+<script>
+    window.onload = function(){
+        document.getElementById("foundIdText").innerText = "${findId}";
+        document.getElementById("idResultModal").style.display = "block";
+    }
+</script>
+</c:if>
 
 </body>
 </html>

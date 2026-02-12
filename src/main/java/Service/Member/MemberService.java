@@ -10,4 +10,6 @@ public interface MemberService {
 
 	MemberDTO loginCheck(String id);
 
+	MemberDTO findId(MemberDTO mdto);
+
 }

@@ -1,5 +1,7 @@
 package Controller.Member;
 
+import java.io.PrintWriter;
+
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
@@ -16,6 +18,7 @@ public class IdFindOkController implements Action {
 			HttpServletResponse response) throws Exception {
 		
 		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
 		MemberService memberService = new MemberServiceImpl();
 		MemberDTO mdto = new MemberDTO();
 		
@@ -23,12 +26,28 @@ public class IdFindOkController implements Action {
 		String memName = request.getParameter("mem-name");
 		String memPhone = request.getParameter("mem-phone");  
 		
-		//DTO 변수에 저장
-		mdto.setMemName(memName); mdto.setMemPhone(memPhone);
+		//DTO에 담기
+		mdto.setMemName(memName.trim()); mdto.setMemPhone(memPhone.trim());
 		
-		//이름과 전화번호를 기준으로 DB로부터 회원정보 검색
-	
-		return null;
+		//이름과 전화번호를 기준으로 DB로부터 회원정보 검색 (서비스 호출)
+		MemberDTO pm = memberService.findId(mdto);
+		
+		//일치하는 회원 정보가 없을 때 반환할 내용
+		if(pm == null) {
+			 out.println("<script>");
+			 out.println("alert('일치하는 회원정보가 없습니다.');");
+			 out.println("history.back();");
+			 out.println("</script>");
+			return null;
+		}
+		
+		// 아이디 찾기 성공 했다면
+		request.setAttribute("findId", pm.getMemId());
+		
+		ActionForward forward = new ActionForward();
+		forward.setRedirect(false);
+		forward.setPath("/WEB-INF/views/member/findAccount.jsp"); // 아이디/비번찾기페이지로 이동
+		return forward;
 	}
 
 }

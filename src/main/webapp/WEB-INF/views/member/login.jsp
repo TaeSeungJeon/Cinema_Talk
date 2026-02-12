@@ -151,7 +151,7 @@
 
     <div class="title">로그인</div>
 
-    <form action="memberloginOk.do" method="post">
+    <form action="memberLoginOk.do" method="post">
         <div class="input-group">
             <input type="text" name="mem-id" placeholder="Username" required>
         </div>

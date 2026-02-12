@@ -39,6 +39,14 @@ public class BoardOkController implements Action {
             String boardTitle = request.getParameter("board-Title"); //글제목
             String boardCont = request.getParameter("board-Cont"); // 글 내용
 
+            // 유효성 검사
+            if (boardTitle == null || boardTitle.trim().isEmpty()
+                || boardCont == null || boardCont.trim().isEmpty()){
+                out.println("<script>");
+                out.println("alert('제목과 게시글을 입력하세요.');");
+                out.println("location='/Board';");
+                out.println("</script>");
+            }
             // 회원 dao 로그인한 회원 정보에서 이름 가져오기
             MemberService memberService = new MemberServiceImpl();
             MemberDTO mdto = memberService.getMemberInfo(memNo);

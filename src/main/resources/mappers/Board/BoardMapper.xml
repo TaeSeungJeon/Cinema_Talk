@@ -3,10 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="Board">
-    
+
     <insert id="boardIn" parameterType="bdto">
         insert into BOARD (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo)
-            values(boardIdSeq.nextval, #boardType, #boardTitle, #boardContent, #boardName, SYSDATE, #memNo)
+            values(boardIdSeq.nextval, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
     </insert>
-    
+
+    <select id="boardList" resultType="DTO.Board.BoardDTO">
+        SELECT * FROM BOARD ORDER BY boardId DESC
+    </select>
+
+
+
 </mapper>

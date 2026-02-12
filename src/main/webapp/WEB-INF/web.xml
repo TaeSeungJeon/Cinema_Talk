@@ -6,10 +6,10 @@
 	id="WebApp_ID" version="5.0">
 	
 	
-	<display-name>Cinema_Talk.jsp</display-name>
+	<display-name>Cinema_Talk</display-name>
 
 	<welcome-file-list>
-		<welcome-file>Cinema_Talk.jsp</welcome-file>						<!-- 서버가 시작될 때 처음 띄울 페이지 명단 -->
+		<welcome-file>index.jsp</welcome-file>						<!-- 서버가 시작될 때 처음 띄울 페이지 명단 -->
 	</welcome-file-list>
 
 	<servlet>

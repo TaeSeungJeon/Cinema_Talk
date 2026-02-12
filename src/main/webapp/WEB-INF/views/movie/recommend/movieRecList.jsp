@@ -1,10 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MovieRecList</title>
   <style>
     :root{
@@ -16,7 +17,7 @@
     body {
       margin: 0;
       font-family: 'Pretendard', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #ffffff;
+      background: #f0f2f5;
       color: #111;
     }
     a { text-decoration: none; color: inherit; }
@@ -52,6 +53,9 @@
     /* ===== 섹션 ===== */
     .page{
       padding: 6px 0 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
     }
     .section{
       margin-top: 22px;
@@ -66,14 +70,15 @@
       font-size: 20px;
       font-weight: 800;
       margin: 0 0 14px;
-      padding: 0 var(--page-pad);
+      padding: 0;
       color: #111;
     }
 
     .carousel-pad{
       position: relative;
-      padding: 0 var(--page-pad);
-      overflow: hidden; /* 양쪽 페이드/화살표 깔끔하게 */
+      padding: 0;
+      overflow-x: clip;
+      overflow-y: visible;
     }
 
     .scroll{
@@ -81,6 +86,7 @@
       gap: 14px;
       overflow-x: auto;
       scrollbar-width: none;
+      padding-top: 10px;
       padding-bottom: 14px;
       scroll-behavior: smooth;
       user-select: none;
@@ -101,11 +107,11 @@
     }
     .fade.left{
       left: 0;
-      background: linear-gradient(to right, #fff 20%, rgba(255,255,255,0));
+      background: linear-gradient(to right, #f0f2f5 20%, rgba(240,242,245,0));
     }
     .fade.right{
       right: 0;
-      background: linear-gradient(to left, #fff 20%, rgba(255,255,255,0));
+      background: linear-gradient(to left, #f0f2f5 20%, rgba(240,242,245,0));
     }
 
     /* ===== 화살표 ===== */
@@ -129,8 +135,8 @@
     }
     .carousel-wrap:hover .arrow{ opacity: 1; }
     .arrow:hover{ transform: translateY(-50%) scale(1.05); }
-    .arrow.left{ left: calc(var(--page-pad) - 20px); }
-    .arrow.right{ right: calc(var(--page-pad) - 20px); }
+    .arrow.left{ left: 10px; }
+    .arrow.right{ right: 10px; }
     .arrow svg{ width: 22px; height: 22px; }
 
     /* ===== 카드 공통 ===== */
@@ -148,18 +154,16 @@
       transform: translateY(-2px);
     }
   </style>
+  <!-- 공통스타일시트 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
+    
+    <!-- sample페이지 전용 스타일시트 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home/home.css" />
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="brand">MOVIEFLIX</div>
-    <nav class="nav">
-      <a href="#">홈</a>
-      <a href="#">시리즈</a>
-      <a href="#">영화</a>
-      <a href="#"><b>NEW!</b> 요즘 대세 콘텐츠</a>
-    </nav>
-  </header>
+
+  <%@ include file="/WEB-INF/views/include/memberHeader.jsp"%>
 
   <div class="page">
 
@@ -182,7 +186,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${likeRecList}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/movieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -212,7 +216,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${popularRecList}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/movieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -228,13 +232,13 @@
       <!-- 장르별 추천 (스크린샷의 여러 줄 캐러셀 느낌) -->
       <c:forEach var="entry" items="${genreRecMap}">
         <div class="carousel-wrap" data-carousel>
-          <h2 class="carousel-title">${entry.value[0].genre_name} 장르 추천</h2>
+          <h2 class="carousel-title">${entry.value[0].genreName} 장르 추천</h2>
 
           <div class="carousel-pad">
             <span class="fade left"></span>
             <span class="fade right"></span>
 
-            <button class="arrow left" type="button" data-left aria-label="left">
+            <button class="arrow-left" type="button" data-left aria-label="left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"/>
               </svg>
@@ -243,7 +247,7 @@
             <div class="scroll" data-scroll>
               <c:forEach var="m" items="${entry.value}">
                 <c:set var="movie" value="${m}" scope="request" />
-                <jsp:include page="/WEB-INF/views/movie/recommend/MovieCard.jsp" />
+                <jsp:include page="/WEB-INF/views/movie/recommend/movieCard.jsp" />
               </c:forEach>
             </div>
 
@@ -366,5 +370,7 @@
   });
 })();
 </script>
+ <script src="${pageContext.request.contextPath}/js/home.js"></script>
+
 </body>
 </html>

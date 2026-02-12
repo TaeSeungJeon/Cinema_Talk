@@ -13,4 +13,6 @@ public interface MovieRecDAO {
 
 	List<MovieRecResponse> getLikeRecList(int memNo);
 
+	List<MovieRecResponse> getIndexGenreList(int memNo);
+
 }

@@ -15,15 +15,15 @@
   </head>
 
   <body class="page-home" data-context-path="${pageContext.request.contextPath}">
-    <%@ include file="../include/member_header.jsp"%>
+    <%@ include file="../include/memberHeader.jsp"%>
 
     <!-- 레이아웃: 사이드바 + main -->
     <div class="container">
       
 
-      <%@ include file="home_main.jsp"%>
-      <%@ include file="home_sidebar.jsp"%>
-<%--       <%@ include file="home_sidebar2.jsp"%> --%>
+      <%@ include file="homeMain.jsp"%>
+      <%@ include file="homeSidebar.jsp"%>
+<%--       <%@ include file="homeSidebar2.jsp"%> --%>
     </div>
  <script src="${pageContext.request.contextPath}/js/home.js"></script>
   </body>

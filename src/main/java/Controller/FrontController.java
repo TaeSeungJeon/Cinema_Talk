@@ -19,6 +19,7 @@ public class FrontController extends HttpServlet {
 		String RequestURI = request.getRequestURI();	// /Middle_Project/*.do 경로를 구함
 		String contextPath = request.getContextPath();	// /Middle_Project 컨텍스트 패스경로를 구함
 		String command = RequestURI.substring(contextPath.length());// 컨텍스트 패스 경로 이후의 /*.do 즉 매핑주소를 구함.
+		
 		// /*.do 접근 시 index.do로 리다이렉트 (주소창도 변경됨)
 		if (command.equals("/*.do")) {
 			response.sendRedirect(contextPath + "/index.do");

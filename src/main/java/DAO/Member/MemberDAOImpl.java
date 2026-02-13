@@ -82,8 +82,6 @@ public class MemberDAOImpl implements MemberDAO {
 			}
 		}
 
-	}
-
 	}//loginCheck() -> 입력한 아이디로 로그인 인증
 
 	@Override

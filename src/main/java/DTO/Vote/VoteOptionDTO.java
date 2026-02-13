@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 public class VoteOptionDTO {
 
-	private int vote_id;
-	private int movie_id;
+	private int voteId;
+	private int movieId;
 
 	//선택지 매핑
-	private String movie_title;
-	private String movie_release_date;
-	private String movie_poster_path;
+	private String movieTitle;
+	private String movieReleaseDate;
+	private String moviePosterPath;
 	
 
 }

@@ -25,3 +25,4 @@ select memNoSeq.nextval as "다음 시퀀스 번호값" from dual;
 
 -- member테이블 삭제
 drop table member;
+drop sequence memNoSeq;

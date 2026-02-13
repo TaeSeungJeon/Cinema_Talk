@@ -84,4 +84,22 @@ public class MemberDAOImpl implements MemberDAO {
 
 	}
 
+	}//loginCheck() -> 입력한 아이디로 로그인 인증
+
+	@Override
+	public MemberDTO findId(MemberDTO mdto) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("findId", mdto);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+	}//findId() -> 입력받은 이름과 전화번호를 기준으로 아이디 찾기
+
+
 }

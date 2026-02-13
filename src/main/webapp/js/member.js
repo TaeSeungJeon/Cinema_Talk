@@ -70,3 +70,26 @@ function idCheck(){
 	
 	//아이디 최소 길이 검사
 }
+
+//아이디찾기 입력 확인
+function findAccount(){
+	const memName = $.trim($("#mem-name").val());
+	const memPhone = $.trim($("#mem-phone").val());
+	
+	if(memName == "" ){
+		alert("이름을 입력하세요.");
+		$("#mem-name").focuce();
+		return false;
+	}
+	
+	if(memPhone == "" ){
+		alert("전화번호를 입력하세요.");
+		$("#mem-phone").focus();	
+		return false;
+	}
+		
+	return true;
+}
+
+	
+

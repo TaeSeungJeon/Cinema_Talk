@@ -6,8 +6,11 @@ public interface MemberDAO {
 
 	void insertMember(MemberDTO member);
 
-	MemberDTO idCheck(String mem_id);
+	MemberDTO idCheck(String memId);
 
 	MemberDTO loginCheck(String id);
+
+	MemberDTO findId(MemberDTO mdto);
+
 	MemberDTO getMemberInfo(Integer memNo);
 }

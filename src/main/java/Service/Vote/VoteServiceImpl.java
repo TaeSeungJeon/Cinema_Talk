@@ -19,9 +19,9 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public List<VoteResultDTO> getVoteResult(int vote_id) {
+	public List<VoteResultDTO> getVoteResult(int voteId) {
 		
-		return this.vdao.getVoteResult(vote_id);
+		return this.vdao.getVoteResult(voteId);
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public VoteRegisterDTO getVoteRegById(int vote_id) {
+	public VoteRegisterDTO getVoteRegById(int voteId) {
 		
-		return this.vdao.getVoteRegById(vote_id);
+		return this.vdao.getVoteRegById(voteId);
 	}
 
 	@Override

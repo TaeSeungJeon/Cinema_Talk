@@ -35,18 +35,28 @@ function toggleMenu(element) {
        document.getElementById("prevBtn").onclick = () => updateHero('prev');
 
        const track = document.getElementById('movieTrack');
+       const cards = track.querySelectorAll('.movie-card-small');
+       const totalCards = cards.length;
+       const visibleCards = 5;
+       const maxIdx = Math.max(0, totalCards - visibleCards); // 7-5=2
+       const cardWidth = 190; // 170px 카드 + 20px gap 고정
        let currentIdx = 0;
+       
+       const updateSlider = () => {
+           track.style.transform = `translateX(-${currentIdx * cardWidth}px)`;
+       };
+       
        document.getElementById('listNext').onclick = () => {
-           if (currentIdx < 1) {
+           if (currentIdx < maxIdx) {
                currentIdx++;
-               track.style.transform = `translateX(-200px)`;
+               updateSlider();
            }
        };
 
        document.getElementById('listPrev').onclick = () => {
            if (currentIdx > 0) {
                currentIdx--;
-               track.style.transform = `translateX(0px)`;
+               updateSlider();
            }
        };
    });/**

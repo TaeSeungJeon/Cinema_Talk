@@ -41,4 +41,9 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDTO getMemberInfo(Integer memNo) {
 		return this.mdao.getMemberInfo(memNo);
 	}
+
+	@Override
+	public MemberDTO findId(MemberDTO mdto) {
+		return this.mdao.findId(mdto);
+	}//이름과 전화번호를 기준으로 회원 검색
 }

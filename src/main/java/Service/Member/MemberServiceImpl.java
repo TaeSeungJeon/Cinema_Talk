@@ -46,4 +46,14 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDTO findId(MemberDTO mdto) {
 		return this.mdao.findId(mdto);
 	}//이름과 전화번호를 기준으로 회원 검색
+
+	@Override
+	public MemberDTO findPwd(MemberDTO mdto) {
+		return this.mdao.findPwd(mdto);
+	}//아이디와 전화번호를 기준으로 회원 검색
+
+	@Override
+	public void updatePwd(MemberDTO mdto) {
+		this.mdao.updatePwd(mdto);
+	}//암호화된 임시비밀번호로 수정
 }

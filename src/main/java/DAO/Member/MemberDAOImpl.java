@@ -99,5 +99,34 @@ public class MemberDAOImpl implements MemberDAO {
 
 	}//findId() -> 입력받은 이름과 전화번호를 기준으로 아이디 찾기
 
+	@Override
+	public MemberDTO findPwd(MemberDTO mdto) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("findPwd", mdto);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//findPwd() -> 입력받은 아이디와 전화번호를 기준으로 회원 검색
+
+	@Override
+	public void updatePwd(MemberDTO mdto) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			sqlSession.update("updatePwd", mdto);
+			sqlSession.commit();
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}	
+	}//updatePwd() -> 암호화된 임시비밀번호로 수정
+
 
 }

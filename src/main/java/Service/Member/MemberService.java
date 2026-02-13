@@ -13,4 +13,8 @@ public interface MemberService {
 
 	MemberDTO findId(MemberDTO mdto);
 
+	MemberDTO findPwd(MemberDTO mdto);
+
+	void updatePwd(MemberDTO mdto);
+
 }

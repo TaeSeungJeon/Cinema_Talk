@@ -13,4 +13,8 @@ public interface MemberDAO {
 	MemberDTO findId(MemberDTO mdto);
 
 	MemberDTO getMemberInfo(Integer memNo);
+
+	MemberDTO findPwd(MemberDTO mdto);
+
+	void updatePwd(MemberDTO mdto);
 }

@@ -57,6 +57,7 @@ body {
 	padding: 25px;
 	box-shadow: var(--shadow-subtle);
 }
+
 .aside.glass-panel {
 	background: var(--glass-bg);
 	backdrop-filter: blur(15px);
@@ -265,7 +266,7 @@ body {
 	font-size: 1.2rem;
 	transition: 0.3s;
 	z-index: 10;
-	color:black;
+	color: black;
 }
 
 .glass-panel .nav-btn:hover {
@@ -286,13 +287,48 @@ aside.glass-panel {
 	overflow-y: auto;
 }
 
-.upcoming-item {
-	background: rgba(255, 255, 255, 0.5);
-	padding: 15px;
-	border-radius: 15px;
-	margin-bottom: 15px;
+/* 두 아이템 모두에 공통 적용 */
+/* [1] 공통 레이아웃 및 애니메이션 설정 */
+.upcoming-item, 
+.history-card {
+    width: 100% !important; /* 너비 고정 */
+    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent; /* 호버 시 흔들림 방지 */
+    margin-bottom: 12px;
 }
 
+/* [2] 호버 시 효과 통일 (위로 이동, 그림자, 테두리) */
+.upcoming-item:hover, 
+.history-card:hover {
+    transform: translateY(-5px); /* 위로 이동 강도 살짝 상향 */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-color) !important;
+    background-color: white !important; /* 호버 시 배경을 흰색으로 통일하여 선명하게 */
+}
+
+/* [3] 기본 상태에서의 미세한 차이 조정 */
+.upcoming-item {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.history-card {
+    /* glass-panel2 내부에 있을 때를 대비한 기본 투명도 */
+    background: var(--glass-bg); 
+}
+
+/* [4] 내부 텍스트 및 박스 조정 */
+.winner-box {
+    background: #f1f5f9; /* 배경과 대비되는 연한 색상 */
+    transition: background 0.3s;
+}
+
+.history-card:hover .winner-box {
+    background: #eff6ff; /* 호버 시 내부 박스 색상도 미세하게 변경 */
+}
 .history-section {
 	max-width: 1200px;
 	margin: 50px auto 0;
@@ -306,9 +342,18 @@ aside.glass-panel {
 }
 
 .history-card {
-	background: white;
-	padding: 20px;
-	border-radius: 20px;
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+	cursor: pointer;
+	border: 1px solid transparent;
+	overflow: hidden; /* 내부 요소 돌출 방지 */
+}
+
+/* 마우스 호버 시 효과 */
+.history-card:hover {
+	background: rgba(255, 255, 255, 0.15); /* 글래스모피즘 강조 */
+	transform: scale(1.01); /* 아주 살짝 커지는 효과 */
+	border-color: rgba(255, 255, 255, 0.3);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .winner-box {
@@ -359,16 +404,25 @@ aside.glass-panel {
 	animation: blink 1.5s infinite;
 }
 
-@keyframes blink {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.3;
-    }
-    100% {
-        opacity: 1;
-    }
+@
+keyframes blink { 0% {
+	opacity: 1;
+}
+
+50
+%
+{
+opacity
+:
+0.3;
+}
+100
+%
+{
+opacity
+:
+1;
+}
 }
 .vote-description {
 	text-align: center;
@@ -444,24 +498,22 @@ aside.glass-panel {
     <hr> 
 	</c:forEach> --%>
 
- 
-	<main class="main-layout" style="width:100%">
-		<section class="glass-panel vote-card-container" style="width:60%">
+
+	<main class="main-layout" style="width: 100%">
+		<section class="glass-panel vote-card-container" style="width: 60%">
 			<button class="nav-btn" id="prevBtn">&lt;</button>
 
 			<div class="vote-window">
 				<div class="vote-track">
-				<c:choose>
-								<c:when test="${not empty voteRegisterActive}">
-								<c:forEach var="vote" items="${voteRegisterActive}">
-<div class="vote-content">
+					<c:choose>
+						<c:when test="${not empty voteRegisterActive}">
+							<c:forEach var="vote" items="${voteRegisterActive}">
+								<div class="vote-content">
 									<div class="vote-header">
 
-<strong class="status-badge status-ongoing">진행중</strong>
-										
-
-
-										<span>종료: <span id="voteEndDate">${vote.voteEndDate}</span></span>
+										<strong class="status-badge status-ongoing">진행중</strong> <span>종료:
+											<span id="voteEndDate">${vote.voteEndDate}</span>
+										</span>
 									</div>
 
 									<h2 class="vote-title">${vote.voteTitle}</h2>
@@ -502,132 +554,121 @@ aside.glass-panel {
 										<button class="btn btn-primary submit-vote-btn"
 											data-vote-id="${vote.voteId}">투표하기</button>
 									</div>
-									
+
 								</div>
-								</c:forEach>
-								</c:when>
+							</c:forEach>
+						</c:when>
 
-								<c:otherwise>
-<div class="glass-panel no-active-vote"
-										style="text-align: center; padding: 40px; width:100%; display:flex;flex-direction:column;">
-										<h3 style="margin-bottom: 10px;">현재 참여할 수 있는 투표가 없습니다</h3>
-										<a href="voteList.do" class="btn btn-primary"
-											style="margin-top: 15px; display: inline-block;width: auto; align-self: center;"> 전체 투표
-											보러가기 </a>
-									</div>
-								</c:otherwise>
+						<c:otherwise>
+							<div class="glass-panel no-active-vote"
+								style="text-align: center; padding: 40px; width: 100%; display: flex; flex-direction: column;">
+								<h3 style="margin-bottom: 10px;">현재 참여할 수 있는 투표가 없습니다</h3>
+								<a href="voteList.do" class="btn btn-primary"
+									style="margin-top: 15px; display: inline-block; width: auto; align-self: center;">
+									전체 투표 보러가기 </a>
+							</div>
+						</c:otherwise>
 
-								</c:choose>
-
-				</div>
+					</c:choose>
 
 				</div>
 
-			
+			</div>
+
+
 
 			<button class="nav-btn" id="nextBtn">&gt;</button>
 		</section>
 
 		<aside class="aside " style="width: 30%;">
-		<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px;min-height:200px;justify-content:start;">
-<div class="sidebar-title" 
-     style="width:100%;font-weight: 700; 
-            margin-bottom: 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;"> <span>예정된 투표</span>
-    
-    <a href="voteList.do" 
-       style="font-size: 0.8rem; 
-              color: var(--text-muted); 
-              text-decoration: none;">
-       전체보기 >
-    </a>
-</div>
-
-<c:choose>
-<c:when test="${not empty voteRegisterReady}">
-<c:forEach var="vote" items="${voteRegisterReady}">
-				<div class="upcoming-item" style="width:100%;">
-					<div style="font-weight: 600;">${vote.voteTitle}</div>
-					<div style="font-size: 0.8rem; color: var(--accent-color);">시작일:
-						${vote.voteStartDate}</div>
+			<div class="glass-panel"
+				style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
+				<div class="sidebar-title"
+					style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+					<span>예정된 투표</span> <a href="voteList.do"
+						style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
+						전체보기 > </a>
 				</div>
-			</c:forEach>
-</c:when>
 
-<c:otherwise>
-<div class="upcoming-item" style="width:100%;">
-예정된 투표가 없습니다.
-</div>
+				<c:choose>
+					<c:when test="${not empty voteRegisterReady}">
+						<c:forEach var="vote" items="${voteRegisterReady}">
+							<div class="upcoming-item"
+								onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
+								<div style="font-weight: 600;">${vote.voteTitle}</div>
+								<div style="font-size: 0.8rem; color: var(--accent-color);">
+									시작일: ${vote.voteStartDate}</div>
+							</div>
+						</c:forEach>
+					</c:when>
 
-</c:otherwise>
+					<c:otherwise>
+						<div class="upcoming-item" style="width: 100%;">예정된 투표가
+							없습니다.</div>
 
-</c:choose>
-			
-		</div>
-<br><br>
-			<div class="glass-panel" style="display:flex; flex-direction:column; gap:20px; min-height:200px;justify-content:start;">
-<div class="sidebar-title" 
-     style="width:100%;font-weight: 700; 
-            margin-bottom: 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;"> <span>지난 투표 결과</span>
-    
-    <a href="voteList.do" 
-       style="font-size: 0.8rem; 
-              color: var(--text-muted); 
-              text-decoration: none;">
-       전체보기 >
-    </a>
-</div>
+					</c:otherwise>
 
-<c:choose>
-<c:when test="${not empty voteRegisterReady}">
-<c:forEach var="vote" items="${voteRegisterClosed}">
-				<div class="glass-panel2 history-card" style="width:100%">
-					<div style="font-weight: 700;">${vote.voteTitle}</div>
-					<div
-						style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">종료:
-						${vote.voteEndDate} | 참여 
-						<c:set var="done" value="false" />
-<c:forEach var="res" items="${vote.resultList}">
-    <c:if test="${not done}">
-        <c:if test="${res.rank == 1}">
-            <span style="font-weight: 600;"> ${res.totalVoterCount} </span>
-            <c:set var="done" value="true" /> </c:if>
-    </c:if>
-</c:forEach>
-						
-						
-						명</div>
-					<div class="winner-box">
-						<span class="winner-label">최다 득표</span>
+				</c:choose>
 
-						<c:set var="done" value="false" />
-<c:forEach var="res" items="${vote.resultList}">
-    <c:if test="${not done}">
-        <c:if test="${res.rank == 1}">
-            <span style="font-weight: 600;"> ${res.movieTitle} </span>
-            <c:set var="done" value="true" /> </c:if>
-    </c:if>
-</c:forEach>
-					</div>
+			</div>
+			<br>
+			<br>
+			<div class="glass-panel"
+				style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
+				<div class="sidebar-title"
+					style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+					<span>지난 투표 결과</span> <a href="voteList.do"
+						style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
+						전체보기 > </a>
 				</div>
-			</c:forEach>
-</c:when>
 
-<c:otherwise>
-<div class="upcoming-item" style="width:100%;">
-예정된 투표가 없습니다.
-</div>
-</c:otherwise>
-</c:choose>
 
-			
-		</div>
-			
+
+				<c:choose>
+					<c:when test="${not empty voteRegisterClosed}">
+						<c:forEach var="vote" items="${voteRegisterClosed}">
+							<div class="glass-panel2 history-card" style="width: 100%"
+								onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
+
+								<div style="font-weight: 700;">${vote.voteTitle}</div>
+
+								<div
+									style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">
+									종료: ${vote.voteEndDate} | 참여
+									<c:set var="done" value="false" />
+									<c:forEach var="res" items="${vote.resultList}">
+										<c:if test="${not done and res.rank == 1}">
+											<span style="font-weight: 600;">
+												${res.totalVoterCount} </span>
+											<c:set var="done" value="true" />
+										</c:if>
+									</c:forEach>
+									명
+								</div>
+
+								<div class="winner-box" style="margin-top: 8px;">
+									<span class="winner-label">최다 득표</span>
+									<c:set var="done" value="false" />
+									<c:forEach var="res" items="${vote.resultList}">
+										<c:if test="${not done and res.rank == 1}">
+											<span style="font-weight: 600;"> ${res.movieTitle} </span>
+											<c:set var="done" value="true" />
+										</c:if>
+									</c:forEach>
+								</div>
+							</div>
+						</c:forEach>
+					</c:when>
+
+					<c:otherwise>
+						<div class="upcoming-item" style="width: 100%;">종료된 투표가
+							없습니다.</div>
+					</c:otherwise>
+				</c:choose>
+
+
+			</div>
+
 
 		</aside>
 	</main>

@@ -203,13 +203,6 @@
 </head>
 <body>
 
-<header>
-    <div class="glass-panel" style="padding: 10px 25px; font-weight: bold; color: var(--accent-color);">영화 로고</div>
-    <div style="display: flex; gap: 10px;">
-        <span style="font-size: 0.9rem; color: var(--text-muted); cursor: pointer; margin-right: 15px; padding-top: 10px;">추가</span>
-        <div class="glass-panel" style="padding: 10px 20px; cursor: pointer;">계정</div>
-    </div>
-</header>
 
 <nav class="filter-nav">
     <button class="filter-btn active">전체</button>
@@ -220,21 +213,7 @@
 
 <main class="vote-list-container">
 
-<%-- <c:forEach var="vote" items="${vote_register_all}"> --%>
-<%--     <h3>${vote.vote_title}</h3> --%>
-<%--     <h3>${vote.vote_id}</h3> --%>
-<%--     <h3>${vote.vote_status}</h3> --%>
 
-<%--     <c:forEach var="opt" items="${vote.optionList}"> --%>
-<%--         movie_id : ${opt.movie_id} <br> --%>
-<%--         title : ${opt.movie_title} <br> --%>
-<%--     </c:forEach> --%>
-<%--      <h3>${vote.voted}</h3> --%>
-<%--     <h3>${vote.vote_status}</h3> --%>
-<%--      <h3>${vote.vote_title}</h3> --%>
-
-<!--     <hr> -->
-<%-- </c:forEach> --%>
 
 <c:forEach var="vote" items="${vote_register_all}">
 

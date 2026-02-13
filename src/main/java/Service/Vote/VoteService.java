@@ -30,4 +30,8 @@ public interface VoteService {
 
 	VoteRegisterDTO getVoteRegFullById(int voteId);
 
+	void updateVoteStatus(VoteRegisterDTO voteReg);
+
+	
+
 }

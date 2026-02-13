@@ -1,140 +1,358 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>투표 목록 & 토론 - 프리미엄 영화 큐레이션</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
- :root {
-    --bg-color: #f0f2f5;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --accent-color: #6366f1;
-    --text-main: #1f2937;
-    --text-muted: #64748b;
-    --radius-soft: 24px;
-    --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투표 목록 & 토론 - 프리미엄 영화 큐레이션</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap"
+	rel="stylesheet">
+<style>
+:root {
+	--bg-color: #f0f2f5;
+	--glass-bg: rgba(255, 255, 255, 0.7);
+	--accent-color: #6366f1;
+	--text-main: #1f2937;
+	--text-muted: #64748b;
+	--radius-soft: 24px;
+	--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
 }
 
 body {
-    font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    margin: 0; padding: 25px;
-    display: flex; flex-direction: column; align-items: center; gap: 20px;
+	font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
+	background-color: var(--bg-color);
+	color: var(--text-main);
+	margin: 0;
+	padding: 25px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
 }
 
 /* --- Header & Navigation --- */
 header {
-    display: flex; justify-content: space-between; align-items: center;
-    max-width: 1200px; width: 100%; margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 1200px;
+	width: 100%;
+	margin-bottom: 10px;
 }
+
 .search-bar {
-    background: var(--glass-bg); backdrop-filter: blur(10px);
-    border-radius: 50px; padding: 10px 30px; width: 40%;
-    text-align: center; border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: var(--shadow-subtle); color: #94a3b8; font-size: 0.9rem;
+	background: var(--glass-bg);
+	backdrop-filter: blur(10px);
+	border-radius: 50px;
+	padding: 10px 30px;
+	width: 40%;
+	text-align: center;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	box-shadow: var(--shadow-subtle);
+	color: #94a3b8;
+	font-size: 0.9rem;
 }
 
 .glass-panel {
-    background: var(--glass-bg); backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.4); border-radius: var(--radius-soft);
-    padding: 20px; box-shadow: var(--shadow-subtle);
+	background: var(--glass-bg);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: var(--radius-soft);
+	padding: 20px;
+	box-shadow: var(--shadow-subtle);
 }
 
 /* --- 필터 탭 --- */
-.filter-container { display: flex; gap: 10px; width: 100%; max-width: 1000px; justify-content: center; margin: 10px 0; }
+.filter-container {
+	display: flex;
+	gap: 10px;
+	width: 100%;
+	max-width: 1000px;
+	justify-content: center;
+	margin: 10px 0;
+}
+
 .filter-btn {
-    padding: 10px 24px; border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.1); background: white;
-    cursor: pointer; font-weight: 500; color: var(--text-muted);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	padding: 10px 24px;
+	border-radius: 12px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	background: white;
+	cursor: pointer;
+	font-weight: 500;
+	color: var(--text-muted);
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .filter-btn:hover:not(.active) {
-    background-color: #f8fafc; border-color: var(--accent-color);
-    color: var(--accent-color); transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+	background-color: #f8fafc;
+	border-color: var(--accent-color);
+	color: var(--accent-color);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
 }
+
 .filter-btn.active {
-    background: var(--accent-color); color: white;
-    border-color: var(--accent-color); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-    font-weight: 700;
+	background: var(--accent-color);
+	color: white;
+	border-color: var(--accent-color);
+	box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+	font-weight: 700;
 }
 
 /* --- 투표 섹션 레이아웃 --- */
-.vote-section { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 30px; }
-.vote-card { position: relative; padding: 40px 30px 30px; }
+.vote-section {
+	width: 100%;
+	max-width: 800px;
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.vote-card {
+	position: relative;
+	padding: 40px 30px 30px;
+}
 
 .vote-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 0; margin-bottom: 15px; font-size: 0.9rem; color: var(--text-muted);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 0;
+	margin-bottom: 15px;
+	font-size: 0.9rem;
+	color: var(--text-muted);
 }
-.status-badge {
-    padding: 5px 15px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;
-}
-.status-ongoing { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 
-.vote-title { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: 20px; }
+.status-badge {
+	padding: 5px 15px;
+	border-radius: 4px;
+	font-size: 0.8rem;
+	font-weight: bold;
+}
+
+.status-ongoing {
+	background-color: #dcfce7;
+	color: #166534;
+	border: 1px solid #bbf7d0;
+}
+
+.vote-title {
+	font-size: 1.5rem;
+	font-weight: 700;
+	text-align: center;
+	margin-bottom: 20px;
+}
 
 /* --- 영화 옵션 리스트 및 스크롤 --- */
 .vote-options-list {
-    max-height: 500px; overflow-y: auto; padding-right: 10px; margin-bottom: 15px;
-    scrollbar-width: thin; scrollbar-color: var(--accent-color) transparent;
+	max-height: 500px;
+	overflow-y: auto;
+	padding-right: 10px;
+	margin-bottom: 15px;
+	scrollbar-width: thin;
+	scrollbar-color: var(--accent-color) transparent;
 }
-.vote-options-list::-webkit-scrollbar { width: 5px; }
-.vote-options-list::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+
+.vote-options-list::-webkit-scrollbar {
+	width: 5px;
+}
+
+.vote-options-list::-webkit-scrollbar-thumb {
+	background: var(--accent-color);
+	border-radius: 10px;
+}
 
 /* ⭐ 수정된 영화 옵션 카드 (배경 그래프 핵심) */
 .movie-option {
-    position: relative; overflow: hidden; display: flex; align-items: center;
-    background-color: #ffffff;
-    /* 그라데이션 레이어를 단독으로 설정 */
-    background-image: linear-gradient(to right, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.15));
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: 0% 100%; /* JS에서 이 값을 조절함 */
-    
-    border: 2px solid #f1f5f9; border-radius: 12px; padding: 12px; margin-bottom: 12px;
-    cursor: pointer; transition: background-size 0.7s cubic-bezier(.4, 0, .2, 1), border-color 0.2s;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	background-color: #ffffff;
+	/* 그라데이션 레이어를 단독으로 설정 */
+	background-image: linear-gradient(to right, rgba(99, 102, 241, 0.15),
+		rgba(99, 102, 241, 0.15));
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-size: 0% 100%; /* JS에서 이 값을 조절함 */
+	border: 2px solid #f1f5f9;
+	border-radius: 12px;
+	padding: 12px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	transition: background-size 0.7s cubic-bezier(.4, 0, .2, 1),
+		border-color 0.2s;
 }
-.movie-option:hover { border-color: var(--accent-color); }
-.movie-option input[type="radio"] { margin-right: 15px; width: 18px; height: 18px; accent-color: var(--accent-color); }
 
-.movie-thumb { width: 60px; height: 80px; border-radius: 8px; overflow: hidden; margin-right: 15px; background: #eee; flex-shrink: 0; }
-.movie-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.movie-option:hover {
+	border-color: var(--accent-color);
+}
 
-.movie-info { flex-grow: 1; }
-.m-title { font-weight: 700; margin-bottom: 4px; }
-.m-meta { font-size: 0.8rem; color: var(--text-muted); }
+.movie-option input[type="radio"] {
+	margin-right: 15px;
+	width: 18px;
+	height: 18px;
+	accent-color: var(--accent-color);
+}
+
+.movie-thumb {
+	width: 60px;
+	height: 80px;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-right: 15px;
+	background: #eee;
+	flex-shrink: 0;
+}
+
+.movie-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.movie-info {
+	flex-grow: 1;
+}
+
+.m-title {
+	font-weight: 700;
+	margin-bottom: 4px;
+}
+
+.m-meta {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+}
 
 /* 결과 수치 디자인 */
-.m-result { font-size: 0.85rem; font-weight: 600; color: var(--accent-color); margin-top: 5px; }
+.m-result {
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: var(--accent-color);
+	margin-top: 5px;
+}
 
 .action-btn {
-    width: 100%; padding: 15px; border-radius: 10px; border: none;
-    background: #d1d5db; font-weight: 700; cursor: pointer; margin-top: 10px;
+	width: 100%;
+	padding: 15px;
+	border-radius: 10px;
+	border: none;
+	background: #d1d5db;
+	font-weight: 700;
+	cursor: pointer;
+	margin-top: 10px;
 }
 
 /* --- 댓글 섹션 --- */
-.comment-section { margin-top: 20px; padding: 25px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; }
-.comment-count { font-weight: bold; margin-bottom: 15px; }
-.comment-input-box { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 25px; position: relative; }
-.comment-input-box textarea { width: 100%; border: none; outline: none; resize: none; min-height: 60px; font-family: inherit; }
-.submit-btn { position: absolute; bottom: 10px; right: 10px; padding: 6px 15px; background: #6366f1; color: white; border-radius: 4px; border: none; cursor: pointer; font-size: 0.85rem; }
+.comment-section {
+	margin-top: 20px;
+	padding: 25px;
+	background: white;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+}
 
-.comment-list { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-.comment-item { border: 1px solid #eee; padding: 15px; border-radius: 10px; }
-.user-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.user-avatar { width: 35px; height: 35px; background: #e2e8f0; border-radius: 50%; }
-.username { font-weight: bold; font-size: 0.9rem; }
-.timestamp { font-size: 0.75rem; color: #94a3b8; }
-.comment-content { background: #f8fafc; padding: 15px; border-radius: 6px; font-size: 0.95rem; text-align: left; }
+.comment-count {
+	font-weight: bold;
+	margin-bottom: 15px;
+}
 
+.comment-input-box {
+	border: 1px solid #ddd;
+	padding: 20px;
+	border-radius: 8px;
+	margin-bottom: 25px;
+	position: relative;
+}
 
-    </style>
-    <!-- 공통스타일시트 -->
+.comment-input-box textarea {
+	width: 100%;
+	border: none;
+	outline: none;
+	resize: none;
+	min-height: 60px;
+	font-family: inherit;
+}
+
+.submit-btn {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	padding: 6px 15px;
+	background: #6366f1;
+	color: white;
+	border-radius: 4px;
+	border: none;
+	cursor: pointer;
+	font-size: 0.85rem;
+}
+
+.comment-list {
+	max-height: 400px;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.comment-item {
+	border: 1px solid #eee;
+	padding: 15px;
+	border-radius: 10px;
+}
+
+.user-meta {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.user-avatar {
+	width: 35px;
+	height: 35px;
+	background: #e2e8f0;
+	border-radius: 50%;
+}
+
+.username {
+	font-weight: bold;
+	font-size: 0.9rem;
+}
+
+.timestamp {
+	font-size: 0.75rem;
+	color: #94a3b8;
+}
+
+.comment-content {
+	background: #f8fafc;
+	padding: 15px;
+	border-radius: 6px;
+	font-size: 0.95rem;
+	text-align: left;
+}
+
+.action-btn:disabled, .disabled-style {
+    background-color: #ccc !important;
+    border-color: #bbb !important;
+    color: #fff !important;
+    cursor: not-allowed; /* 마우스 커서를 금지 모양으로 변경 */
+    opacity: 0.7;
+}
+
+/* 활성화된 버튼에만 호버 효과 적용 */
+.cmnt-show-btn:not(:disabled):hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+</style>
+<!-- 공통스타일시트 -->
 <!-- <link rel="stylesheet" -->
 <%-- 	href="${pageContext.request.contextPath}/css/common.css" /> --%>
 <script
@@ -264,157 +482,144 @@ $input.prop("checked", true);
 </script>
 </head>
 <body>
-<%-- 	<%@ include file="../include/member_header.jsp"%> --%>
+	<%-- 	<%@ include file="../include/member_header.jsp"%> --%>
 
 
 
 
-<main class="vote-section">
+	<main class="vote-section">
 
-<section class="glass-panel vote-card-container" style="width:100%">
-			
+		<section class="glass-panel vote-card-container" style="width: 100%">
+
 
 			<div class="vote-window">
 				<div class="vote-track">
-				
-<div class="vote-content">
-									<div class="vote-header">
 
-<strong class="status-badge status-ongoing">진행중</strong>
-										
+					<div class="vote-content">
+						<div class="vote-header">
 
-
-										<span>종료: <span id="voteEndDate">${voteInfo.voteEndDate}</span></span>
-									</div>
-
-									<h2 class="vote-title">${voteInfo.voteTitle}</h2>
-									<div class="vote-description">${voteInfo.voteContent}</div>
-
-									<div class="vote-options-list">
-										<c:forEach var="opt" items="${voteInfo.optionList}">
-											<label class="movie-option" data-movie-id="${opt.movieId}">
-
-												<input type="radio" name="movie-vote-${voteInfo.voteId}"
-												value="${opt.movieId}" data-movie-id="${opt.movieId}">
-
-												<div class="movie-thumb">
-													<img
-														src="https://image.tmdb.org/t/p/w500${opt.moviePosterPath}"
-														alt="${opt.movieTitle}">
-												</div>
-
-												<div class="movie-info">
-													<div class="m-title">${opt.movieTitle}</div>
-													<div class="m-meta">
-														${opt.movieReleaseDate.substring(0,4)}</div>
-
-													<!-- ⭐ 결과 영역 추가 -->
-													<div class="m-result" style="display: none;">
-														<span class="res-count">0</span>표 (<span class="res-pct">0</span>%)
-
-
-													</div>
-
-												</div>
-
-											</label>
-										</c:forEach>
-									</div>
-
-<%-- <div class="comment-item">
-                    <div class="user-meta">
-                       
-                        <span class="username cmnt-cnt"></span>
-                        
-                    </div>
-                    <div class="vote-actions">
-										<button class="btn btn-primary cmnt-show-btn action-btn"
-											>댓글 추가</button>
-									</div>
-                </div>
-
-
-									
-									
-								</div> --%>
+							<c:choose>
+								<c:when test="${voteInfo.voteStatus eq 'READY'}">
+								<strong class="status-badge status-ongoing">예정</strong> <span>시작:
+								<span id="voteEndDate">${voteInfo.voteStartDate}</span>
+							</span>
+								</c:when>
 								
+								<c:when test="${voteInfo.voteStatus eq 'ACTIVE'}">
+								<strong class="status-badge status-ongoing">진행중</strong> <span>종료:
+								<span id="voteEndDate">${voteInfo.voteEndDate}</span>
+							</span>
+								</c:when>
+								
+								<c:when test="${voteInfo.voteStatus eq 'CLOSED'}">
+								<strong class="status-badge status-ongoing">종료</strong> <span>종료:
+								<span id="voteEndDate">${voteInfo.voteEndDate}</span>
+							</span>
+								</c:when>
+
+
+							</c:choose>
+
+							
+						</div>
+
+						<h2 class="vote-title">${voteInfo.voteTitle}</h2>
+						<div class="vote-description">${voteInfo.voteContent}</div>
+
+						<div class="vote-options-list">
+							<c:forEach var="opt" items="${voteInfo.optionList}">
+								<label class="movie-option" data-movie-id="${opt.movieId}">
+
+									<input type="radio" name="movie-vote-${voteInfo.voteId}"
+									value="${opt.movieId}" data-movie-id="${opt.movieId}">
+
+									<div class="movie-thumb">
+										<img
+											src="https://image.tmdb.org/t/p/w500${opt.moviePosterPath}"
+											alt="${opt.movieTitle}">
+									</div>
+
+									<div class="movie-info">
+										<div class="m-title">${opt.movieTitle}</div>
+										<div class="m-meta">
+											${opt.movieReleaseDate.substring(0,4)}</div>
+
+										<!-- ⭐ 결과 영역 추가 -->
+										<div class="m-result" style="display: none;">
+											<span class="res-count">0</span>표 (<span class="res-pct">0</span>%)
+
+
+										</div>
+
+									</div>
+
+								</label>
+							</c:forEach>
+						</div>
+
+					
+
+
+<c:if test="${voteInfo.voteStatus ne 'READY' }">
+<div class="comment-section">
+							<div class="comment-count "></div>
+							<form id="commentForm" action="voteOk.do" method="post">
+								<input type="hidden" name="voteId" value="${voteInfo.voteId}">
+								<input type="hidden" name="movieId"
+									value="${voteInfo.userChoice}">
+								<div class="comment-input-box">
+									<textarea name="voteCommentText" id="commentText"
+										placeholder="댓글 내용을 입력해주세요."></textarea>
+										
+									<c:choose>
+    <%-- $ 표시를 꼭 붙여주세요 --%>
+    <c:when test="${voteInfo.voteStatus eq 'CLOSED'}">
+        <button type="button" class="submit-btn disabled-style " id="submitComment" disabled>등록</button>
+    </c:when>
+    
+    <c:otherwise>
+        <%-- 보통 active 상태일 때 디자인을 위해 클래스를 넣으므로, disabled-style은 위쪽에 어울릴 것 같네요 --%>
+        <button type="button" class="submit-btn" id="submitComment">등록</button>
+    </c:otherwise>
+</c:choose>
+									
+								</div>
+							</form>
+							<div class="comment-list"></div>
+						</div>
+
+</c:if>
+
+<c:if test="${voteInfo.voteStatus ne 'CLOSED' }">
+
+<div class="vote-actions">
+    <c:choose>
+        <%-- 1. 투표 예정 상태이거나 이미 참여한 경우 (비활성화) --%>
+        <c:when test="${voteInfo.voteStatus eq 'READY' or not empty voteInfo.userChoice}">
+            <button class="btn btn-primary action-btn disabled-style" disabled>
+                <c:choose>
+                    <c:when test="${voteInfo.voteStatus eq 'READY'}">투표 예정</c:when>
+                    <c:otherwise>참여 완료</c:otherwise>
+                </c:choose>
+            </button>
+        </c:when>
+        
+        <%-- 2. 그 외 (진행 중이며 참여 가능한 경우) --%>
+        <c:otherwise>
+            <button class="btn btn-primary cmnt-show-btn action-btn" 
+                    onclick="submitVote()">투표하기</button>
+        </c:otherwise>
+    </c:choose>
+</div>
+</c:if>
+
 						
 
-        <div class="comment-section">
-            <div class="comment-count "></div>
-            <form id="commentForm" action="voteOk.do" method="post">
-    <input type="hidden" name="voteId" value="${voteInfo.voteId}">
-    <input type="hidden" name="movieId" value="${voteInfo.userChoice}">
-    
-    <div class="comment-input-box">
-        <textarea name="voteCommentText" id="commentText" placeholder="댓글 내용을 입력해주세요."></textarea>
-        <button type="button" class="submit-btn" id="submitComment">등록</button>
-    </div>
-</form>
-
-            
-
-            <div class="comment-list">
-                
-        </div>
-								
-
-				</div>
-
-				</div>
-
-			
-
-			
+					</div>
 		</section>
 
-<!--     <section class="glass-panel vote-card"> -->
-  
-<!--         <div class="status-badge">진행중</div> -->
-<!--         <div class="end-date">종료날짜</div> -->
-<!--         <h2 class="vote-title">투표 제목</h2> -->
-        
-<!--         <div class="vote-item selected"> -->
-<!--             <div class="radio-btn"></div> -->
-<!--             <div class="movie-img">영화 이미지</div> -->
-<!--             <div class="movie-info"> -->
-<!--                 <div class="m-title">영화 제목</div> -->
-<!--                 <div class="m-meta">개봉년 . genre</div> -->
-<!--             </div> -->
-<!--             <div class="vote-stats">2,924 표 <strong>38%</strong></div> -->
-<!--         </div> -->
-        
-<!--         <button class="action-btn">토론 보기</button> -->
 
-<!--         <div class="comment-section"> -->
-<!--             <div class="comment-count">댓글 10개</div> -->
-<!--             <div class="comment-input-box"> -->
-<!--                 <textarea placeholder="댓글 입력창"></textarea> -->
-<!--                 <button class="submit-btn">등록</button> -->
-<!--             </div> -->
-
-<!--             <div class="comment-list"> -->
-<!--                 <div class="comment-item"> -->
-<!--                     <div class="user-meta"> -->
-<!--                         <div class="user-avatar"></div> -->
-<!--                         <span class="username">username</span> -->
-<!--                         <span class="timestamp">작성시간</span> -->
-<!--                     </div> -->
-<!--                     <div class="comment-content">내용</div> -->
-<!--                 </div> -->
-<!--                 <div class="comment-item"> -->
-<!--                     <div class="user-meta"> -->
-<!--                         <div class="user-avatar"></div> -->
-<!--                         <span class="username">username</span> -->
-<!--                         <span class="timestamp">작성시간</span> -->
-<!--                     </div> -->
-<!--                     <div class="comment-content">내용</div> -->
-<!--                 </div> -->
-<!--             </div> -->
-<!--         </div> -->
-<!--     </section> -->
-
-</main>
+	</main>
 
 </body>
 </html>

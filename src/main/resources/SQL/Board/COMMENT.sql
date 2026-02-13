@@ -1,21 +1,18 @@
-create table comments
-(
-    commentsId      NUMBER       not NULL,-- 댓글 아이디
-    boardId         NUMBER       NOT NULL, -- 게시판 아이디
-    boardType       NUMBER       NOT NULL, -- 게시판 종류
-    commentsContent CLOB         NULL, -- 댓글내용
-    commentsName    VARCHAR2(50) NULL, -- 댓글 작성자
-    commentsDate    DATE         NULL, -- 댓글 작성일
-    commentsNo      NUMBER       NULL, -- 댓글 아이디
-    memNo           NUMBER       NOT NULL, -- 회원번호
-    parentBoardNo  NUMBER       NULL, -- 부모 댓글 ID
-    parentBoardId  NUMBER       NOT NULL, -- 게시판 아이디
+-- 1. 시퀀스 생성 (이미 있으면 삭제 후 생성)
+DROP SEQUENCE SEQ_COMMENTS;
+CREATE SEQUENCE SEQ_COMMENTS START WITH 1 INCREMENT BY 1;
 
-    constraint pk_comments primary key (commentsId, boardId, boardType)
+-- 2. 제약 조건 없이 테이블만 생성 (가장 안전함)
+CREATE TABLE COMMENTS (
+                          COMMENTSID      NUMBER(10) PRIMARY KEY,
+                          BOARDID         NUMBER(10) NOT NULL,
+                          BOARDTYPE       NUMBER(10) NOT NULL,
+                          COMMENTSCONTENT VARCHAR2(2000) NOT NULL,
+                          COMMENTSNAME    VARCHAR2(50),
+                          COMMENTSDATE    DATE DEFAULT SYSDATE,
+                          MEMNO           NUMBER(10) NOT NULL,
+                          PARENTBOARDID   NUMBER(10)
 );
-alter table comments add constraint fk_memNo foreign key (memNo)
-    references MEMBER (memNo);
 
-
-/* mem_no, parent_board_no, parent_board_id fk 해야함*/
-
+-- 3. 테이블 생성이 확인되면 커밋
+COMMIT;

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%-- [수정] 500 에러 방지를 위해 memberHeader.jsp와 동일한 Jakarta 버전으로 통일 --%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -369,56 +369,8 @@
 </head>
 <body>
 
-<header>
-    <a href="../../../Cinema_Talk.jsp" class="glass-panel"
-       style="padding: 12px 28px; font-weight: 800; color: var(--accent-color); font-size: 1.3rem; letter-spacing: -1px;">Cinema
-        Talk</a>
-    <div class="search-bar">
-        <form action="searchResult.jsp" method="get" style="width:100%">
-            <input type="text" name="query" placeholder="관심 있는 영화나 리뷰를 검색해보세요">
-        </form>
-    </div>
-    <div style="display: flex; gap: 12px;">
-        <a href="memberLogin.do" class="glass-panel"
-           style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">로그인</a>
-        <a href="myPage.jsp" class="glass-panel"
-           style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">마이페이지</a>
-    </div>
-</header>
-
-<nav class="category-nav">
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">인기 영화 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="movies_now.jsp?cat=current">현재 상영작</a></li>
-            <li><a href="movies_yet.jsp?cat=yet">개봉 예정작</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">장르별 찾기 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="genre1.jsp?code=action">액션/범죄</a></li>
-            <li><a href="genre2.jsp?code=romance">로맨스</a></li>
-            <li><a href="genre3.jsp?code=thriller">스릴러</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">커뮤니티 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="community.jsp?tab=best">영화 리뷰</a></li>
-            <li><a href="community.jsp?tab=best">다른ㄴ거 만들기</a></li>
-            <li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">고객센터 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="faq.jsp">자주 묻는 질문</a></li>
-            <li><a href="notice.jsp">공지사항 전체보기</a></li>
-            <li><a href="inquiry.jsp">1:1 문의</a></li>
-        </ul>
-    </div>
-</nav>
+<%-- [수정] 헤더 include 적용 (기존 <header>, <nav>는 include된 파일에서 처리됨) --%>
+<%@ include file="../include/memberHeader.jsp"%>
 
 <div class="container">
     <main>
@@ -431,27 +383,29 @@
         </header>
 
         <nav class="filter-nav">
-            <a href="community.jsp?filter=all" class="filter-btn active">전체보기</a>
-            <a href="community.jsp?filter=review" class="filter-btn">영화리뷰</a>
-            <a href="community.jsp?filter=debate" class="filter-btn">끝장토론</a>
-            <a href="community.jsp?filter=free" class="filter-btn">자유게시판</a>
+            <a href="${pageContext.request.contextPath}/community.jsp?filter=all" class="filter-btn active">전체보기</a>
+            <a href="${pageContext.request.contextPath}/community.jsp?filter=review" class="filter-btn">영화리뷰</a>
+            <a href="${pageContext.request.contextPath}/community.jsp?filter=debate" class="filter-btn">끝장토론</a>
+            <%-- [수정] contextPath 반영 --%>
+            <a href="${pageContext.request.contextPath}/freeBoard.do?tab=free" class="filter-btn">자유게시판</a>
         </nav>
 
         <div class="post-list">
-               <c:forEach var="board" items="${boardList}">
-                    <article class="post-card">
-                        <div class="post-content">
-                            <h2>
-                                    ${board.boardTitle}
-                            </h2>
-                            <p>${board.boardContent}</p>
-                            <div style="font-size:0.8rem; color:#64748b;">
-                                작성자 : ${board.boardName}
-                            </div>
+            <c:forEach var="board" items="${boardList}">
+                <article class="post-card">
+                    <div class="post-content">
+                        <h2>
+                            <a href="${pageContext.request.contextPath}/postDetail.do?boardId=${board.boardId}"
+                               style="text-decoration: none; color: inherit;">
+                                    ${board.boardTitle} </a>
+                        </h2>
+                        <p>${board.boardContent}</p>
+                        <div style="font-size:0.8rem; color:#64748b;">
+                            작성자 : ${board.boardName}
                         </div>
-                    </article>
-                </c:forEach>
-
+                    </div>
+                </article>
+            </c:forEach>
         </div>
     </main>
 
@@ -504,7 +458,8 @@
     <div class="write-modal">
         <h2 style="margin-top:0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">새 게시글
             작성</h2>
-        <form method="post" action="freeOkBoard.do" class="write-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;" >
+        <%-- [수정] contextPath 반영 --%>
+        <form method="post" action="${pageContext.request.contextPath}/freeOkBoard.do" class="write-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;" >
 
             <div style="display: flex; gap: 10px;">
                 <select style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-weight: 600;">
@@ -541,7 +496,7 @@
                 <span style="cursor:pointer;">🖼️ 사진첨부</span>
             </div>
             <textarea rows="12" placeholder="영화에 대한 솔직한 생각을 들려주세요..."
-                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;" name="BoardContent"></textarea>
+                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;" name="boardContent"></textarea>
             <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
                 📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.
             </div>
@@ -590,16 +545,15 @@
     }
 
     function gotofreeBoard() {
-        const form = document.getElementById("boardForm"); // form 태그에 id="boardForm"이 있어야 함
+        const form = document.getElementById("boardForm");
 
-        // 유효성 검사 (예: 제목이 비어있는지 확인)
         if(form.boardTitle && form.boardTitle.value === "") {
             alert("제목을 입력해주세요.");
             return;
         }
 
-        // 경로 설정: contextPath가 /Cinema_Talk 이므로 상대 경로로 지정
-        form.action = "freeOkBoard.do";
+        <%-- [수정] contextPath 반영 --%>
+        form.action = "${pageContext.request.contextPath}/freeOkBoard.do";
         form.method = "post";
         form.submit();
     }

@@ -59,4 +59,46 @@ public class BoardDAOImpl implements BoardDAO{
 
         return boardList;
     }
+
+    @Override
+    public BoardDTO boardCont(int boardId) {
+        SqlSession sqlSession = null;
+        BoardDTO dto = null;
+
+        try {
+            sqlSession = getSqlSession(); // 세션 열기
+            // "Board.boardCont"는 Mapper의 namespace.id 형식입니다.
+            dto = sqlSession.selectOne("Board.boardCont", boardId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close(); // 세션 닫기
+            }
+        }
+        return dto;
+    }
+
+    @Override
+    public int updateReadCount(int boardId) {
+        SqlSession sqlSession = null;
+        int result = 0;
+        try {
+            sqlSession = getSqlSession();
+            // 1. SQL 실행 (네임스페이스 Board와 ID updateReadCount 조합)
+            result = sqlSession.update("Board.updateReadCount", boardId);
+
+            // 2. 중요: 수동 커밋 모드이므로 반드시 commit을 해야 DB에 반영됩니다!
+            if(result > 0) {
+                sqlSession.commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return result;
+    }
 }

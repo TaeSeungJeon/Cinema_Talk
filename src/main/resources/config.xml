@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Vote.VoteRegisterDTO" alias="voteregister" />
 		<typeAlias type="DTO.Vote.VoteOptionDTO" alias="voteoption" />
 		<typeAlias type="DTO.Board.BoardDTO" alias="bdto" />
+		<typeAlias type="DTO.Board.CommentsDTO" alias="cdto"/>
 	</typeAliases>
 
 	<!-- 마이바티스의 실행 환경을 세팅한 구간 특히 이 구간에서는 마이바티스가 JDBC 수준에서 트랜잭션을 관리(transactionManager)하게 
@@ -92,6 +93,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Member/MemberMapper.xml"/>
 		<mapper resource="mappers/Vote/VoteMapper.xml"/>
 		<mapper resource="mappers/Board/BoardMapper.xml"/>
+		<mapper resource="mappers/Board/CommentsMapper.xml"/>
+
 	</mappers>
 
 </configuration>

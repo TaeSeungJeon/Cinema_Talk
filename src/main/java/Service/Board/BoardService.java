@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface BoardService {
 
-    void boardIn(BoardDTO bdto);
+    int boardIn(BoardDTO bdto);
 
     List<BoardDTO> boardList();
+    BoardDTO boardCont(int boardId);
+    void plusReadCount(int boardId);
+    BoardDTO getBoardDetail(int boardId);
 }

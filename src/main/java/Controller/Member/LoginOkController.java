@@ -46,10 +46,14 @@ public class LoginOkController implements Action {
 		
 		//로그인 성공 -> 세션 저장 후 redirect
 		HttpSession session = request.getSession();
-		session.setAttribute("memId", id); // 세션에 저장할 키이름 : memId, 저장할 값 : id
-		
+		session.setAttribute("memNo", mdto.getMemNo()); // 세션에 저장할 키이름 : memNo, 저장할 값 : No
+		session.setAttribute("memId", mdto.getMemId()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
+		session.setAttribute("memName", mdto.getMemName()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
+
+
 		forward.setRedirect(true);
-		forward.setPath("index.do"); //메인페이지로 이동
+		forward.setPath(request.getContextPath() + "/index.do"); // JSP로 forward 시도
+
 		return forward;
 	}
 

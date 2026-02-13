@@ -23,6 +23,10 @@ public class VoteListController implements Action {
 		
 		VoteService voteService = new VoteServiceImpl();
 		HttpSession session = request.getSession();
+		
+		
+		
+		
 
 	
 		

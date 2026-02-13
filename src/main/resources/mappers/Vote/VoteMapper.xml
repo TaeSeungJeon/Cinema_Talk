@@ -125,7 +125,7 @@ ON r.movieId = m.movieId
 FROM VOTE_RECORD vr
 JOIN MEMBER m ON vr.memNo = m.memNo
 WHERE vr.voteId = #{voteId}
-ORDER BY vr.recordId DESC;
+ORDER BY vr.recordId DESC
 	</select>
 	
 	<select id="vregFullByVoteId" resultMap="voteRegisterMap">

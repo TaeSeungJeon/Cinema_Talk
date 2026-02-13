@@ -267,14 +267,7 @@ $input.prop("checked", true);
 <%-- 	<%@ include file="../include/member_header.jsp"%> --%>
 
 
-	
-	
-<nav class="filter-container">
-    <button class="filter-btn active">전체</button>
-    <button class="filter-btn">진행중인 투표</button>
-    <button class="filter-btn">종료된 투표</button>
-    <button class="filter-btn">예정된 투표</button>
-</nav>
+
 
 <main class="vote-section">
 

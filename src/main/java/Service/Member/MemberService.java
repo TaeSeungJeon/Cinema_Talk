@@ -9,5 +9,8 @@ public interface MemberService {
 	MemberDTO idCheck(String memId);
 
 	MemberDTO loginCheck(String id);
+    MemberDTO getMemberInfo(Integer memNo);
+
+	MemberDTO findId(MemberDTO mdto);
 
 }

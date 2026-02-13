@@ -21,5 +21,16 @@
   <select id="loginCheck" parameterType="String" resultType="member">
   	select * from member where memId = #{id} and memRole=2 and memState=1
   </select>
+
+  <!-- 글쓰기 입력할 유저 조회 (?) -->
+  <select id="getMemberInfo" parameterType="Integer" resultType="member">
+    select * from member where memNo = #{memNo}
+  </select>
+  
+  <!-- 입력받은 이름과 전화번호로 아이디 검색 -->
+  <select id="findId" parameterType="member" resultType="member">
+  	select memId from member where memName = #{memName} and memPhone = #{memPhone}
+  </select>
+  
   
   </mapper>

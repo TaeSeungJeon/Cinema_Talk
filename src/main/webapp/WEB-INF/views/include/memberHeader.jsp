@@ -12,6 +12,7 @@
         		<option value="3">장르</option>
         	</select>
             <input type="text" name="search-words" placeholder="영화 제목, 감독, 배우, 장르를 검색해보세요">
+            <input type="submit" value="검색">
         </form>
     </div>
     <div style="display: flex; gap: 10px;">         
@@ -43,7 +44,7 @@
         <div class="cat-title">커뮤니티 ▾</div>
         <ul class="sub-menu">
             <li><a href="community.jsp?tab=best">인기 리뷰</a></li>
-            <li><a href="boardFree.jsp?tab=free">자유 게시판</a></li>
+            <li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">

@@ -1,6 +1,7 @@
 package Controller.Board;
 
-import Controller.Action;import Controller.ActionForward;
+import Controller.Action;
+import Controller.ActionForward;
 import DTO.Board.BoardDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
@@ -9,23 +10,22 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
-public class BoardController implements Action {
+public class BoardListController implements Action {
 
     @Override
-    public ActionForward execute(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         BoardService service = new BoardServiceImpl();
 
+        // 게시글 목록 가져오기
         List<BoardDTO> list = service.boardList();
+
+        // request에 담기
         request.setAttribute("boardList", list);
 
         ActionForward forward = new ActionForward();
-
-        // 이동할 JSP 경로를 지정합니다.
         forward.setPath("/WEB-INF/views/board/freeBoard.jsp");
-        forward.setRedirect(false); // Forward 방식 사용
-                    // 재연결한다 = 새로고침 한다.
+        forward.setRedirect(false);
 
         return forward;
     }

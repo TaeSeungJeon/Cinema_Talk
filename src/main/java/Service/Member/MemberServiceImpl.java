@@ -36,4 +36,14 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDTO loginCheck(String id) {
 		return this.mdao.loginCheck(id);
 	}//아이디로 로그인 인증
+
+	@Override
+	public MemberDTO getMemberInfo(Integer memNo) {
+		return this.mdao.getMemberInfo(memNo);
+	}
+
+	@Override
+	public MemberDTO findId(MemberDTO mdto) {
+		return this.mdao.findId(mdto);
+	}//이름과 전화번호를 기준으로 회원 검색
 }

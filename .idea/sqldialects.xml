@@ -5,5 +5,13 @@
     <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Board/BOARD.sql" dialect="Oracle" />
     <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Board/BOARD_TYPE.sql" dialect="Oracle" />
     <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Board/COMMENT.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Member/MEMBER.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Movie/GENRE.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Movie/MOVIE.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Movie/MOVIE_CAST.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Movie/MOVIE_CREW.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Movie/MOVIE_GENRE.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Movie/PERSON.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Vote/VOTE.sql" dialect="Oracle" />
   </component>
 </project>

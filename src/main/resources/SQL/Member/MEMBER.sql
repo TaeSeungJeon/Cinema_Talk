@@ -13,6 +13,8 @@ create table MEMBER(
 	, memDate date not null					--등록 날짜
 );
 
+
+
 select * from MEMBER;
 
 --mem_no컬럼 정수 숫자 레코드 값으로 활용할 mem_no_seq 시퀀스 생성
@@ -23,3 +25,4 @@ select memNoSeq.nextval as "다음 시퀀스 번호값" from dual;
 
 -- member테이블 삭제
 drop table member;
+drop sequence memNoSeq;

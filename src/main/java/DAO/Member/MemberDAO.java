@@ -10,4 +10,7 @@ public interface MemberDAO {
 
 	MemberDTO loginCheck(String id);
 
+	MemberDTO findId(MemberDTO mdto);
+
+	MemberDTO getMemberInfo(Integer memNo);
 }

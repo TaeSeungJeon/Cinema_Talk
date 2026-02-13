@@ -10,11 +10,11 @@ public interface VoteDAO {
 
 	void insertVoteRecord(VoteRecordDTO voteRecord);
 
-	List<VoteResultDTO> getVoteResult(int vote_id);
+	List<VoteResultDTO> getVoteResult(int voteId);
 
 	List<VoteRegisterDTO> getVoteRegList();
 
-	VoteRegisterDTO getVoteRegById(int vote_id);
+	VoteRegisterDTO getVoteRegById(int voteId);
 
 	List<VoteRecordDTO> getVoteRecordList();
 
@@ -23,5 +23,9 @@ public interface VoteDAO {
 	void updateVoteRecord(VoteRecordDTO voteRecord);
 
 	List<VoteRegisterDTO> getVoteRegFullList();
+
+    List<VoteRecordDTO> getVoteRecordByVoteId(int voteId);
+
+	VoteRegisterDTO getVoteRegFullById(int voteId);
 
 }

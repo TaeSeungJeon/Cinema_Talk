@@ -8,15 +8,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class VoteRegisterDTO {
-	private int vote_id;
-	private String vote_title;
-	private String vote_content;
-	private String vote_start_date;
-	private String vote_end_date;
-	private String vote_status;
+	private int voteId;
+	private String voteTitle;
+	private String voteContent;
+	private String voteStartDate;
+	private String voteEndDate;
+	private String voteStatus;
 	
 	private List<VoteOptionDTO> optionList;
 	
 	private boolean voted; // 내가 투표했는지
 	private List<VoteResultDTO> resultList; // 결과
+
+	//사용자가 선택한 투표선택지 
+	private int userChoice;
 }

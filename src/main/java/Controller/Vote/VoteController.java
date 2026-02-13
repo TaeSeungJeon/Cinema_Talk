@@ -4,11 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import Controller.Action;
 import Controller.ActionForward;
+import DTO.Member.MemberDTO;
 import DTO.Vote.VoteRecordDTO;
 import DTO.Vote.VoteRegisterDTO;
+import DTO.Vote.VoteResultDTO;
+import Service.Member.MemberService;
+import Service.Member.MemberServiceImpl;
 import Service.Vote.VoteService;
 import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,75 +26,87 @@ public class VoteController implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
 
+
 		VoteService voteService = new VoteServiceImpl();
 		HttpSession session = request.getSession();
 
-		List<VoteRegisterDTO> voteReglist = voteService.getVoteRegList();
-		List<VoteRecordDTO> voteReclist = voteService.getVoteRecordList();
+
+		String sessionMemId = (String) session.getAttribute("memId");
+
+		// 2. 로그인 여부 확인 (null이 아니면 true)
+		boolean isLogin = (sessionMemId != null);
+
+		int memNo = -1; // 기본값 설정
+
+		if (isLogin) {
+			MemberService memberService = new MemberServiceImpl();
+			MemberDTO memDto = memberService.idCheck(sessionMemId);
+			memNo = memDto.getMemNo();
+		}
+		//DB에서  VOTE_REGISTER 레코드를 조회
 		List<VoteRegisterDTO> voteRegFullList = voteService.getVoteRegFullList();
-		List<VoteRegisterDTO> voteRegActiveForMem = voteService.getVoteRegActiveForMem();
+
+		//READY, ACTIVE, CLOSED STATUS SET (상태 분류 및 집계)
 		List<VoteRegisterDTO> activeReg = new ArrayList<>();
 		List<VoteRegisterDTO> readyReg = new ArrayList<>();
 		List<VoteRegisterDTO> closedReg = new ArrayList<>();
 
+		List<VoteRecordDTO> voteReclist = voteService.getVoteRecordList();
+
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date now = new Date();
-
 		for(VoteRegisterDTO v : voteRegFullList){
-
-			Date start = sdf.parse(v.getVote_start_date());
-			Date end   = sdf.parse(v.getVote_end_date());
+			Date start = sdf.parse(v.getVoteStartDate());
+			Date end   = sdf.parse(v.getVoteEndDate());
 
 			if(now.before(start)){
-				v.setVote_status("READY");
+				v.setVoteStatus("READY");
 				readyReg.add(v);
 			}else if(now.after(end)){
-				v.setVote_status("CLOSED");
+				//closed 인 레지스터들은 setResultList
+				v.setVoteStatus("CLOSED");
+				v.setResultList(voteService.getVoteResult(v.getVoteId()));
 				closedReg.add(v);
 			}else{
-				v.setVote_status("ACTIVE");
-				activeReg.add(v);
-			}
-		}
-		
-		//TODO
-		//Integer mem_no = (Integer) session.getAttribute("id");
-		Integer mem_no=1;
-		if(mem_no != null) {
-			for(VoteRegisterDTO v : voteRegFullList){
+				//ACTIVE 인 레지스터들은 사용자 로그인 상태 판단해서 로그인된 사용자이면 setVoted = false  
+				v.setVoteStatus("ACTIVE");
 
-			    // 내가 투표했는지 확인
+				// 내가 투표했는지 확인
 				boolean voted = false;
 
-			    for(VoteRecordDTO r : voteReclist){
-			    	System.out.println(r.getVote_id());
-			    	System.out.println(v.getVote_id());
-			        if(r.getVote_id() == v.getVote_id()){
-			            voted = true;
-			            break;
-			        }
-			    }
+				for(VoteRecordDTO r : voteReclist){
 
-			    v.setVoted(voted);
+					if(isLogin && r.getVoteId() == v.getVoteId() && r.getMemNo() == memNo){
 
-			    // 종료된 투표
-			    if("CLOSED".equals(v.getVote_status())){
-			        v.setResultList(voteService.getVoteResult(v.getVote_id()));
-			    }
+						voted = true;
+						break;
+					}
+				}
 
-			    // 진행중 + 내가 투표함
-			    else if("ACTIVE".equals(v.getVote_status()) && voted){
-			        v.setResultList(voteService.getVoteResult(v.getVote_id()));
-			    }
+				v.setVoted(voted);
+
+				if(isLogin && voted==false){//로그인된 상태이면 voted false 만 저장
+					System.err.println(v.getVoteId());
+					System.err.println(voted);	
+					activeReg.add(v);
+				}else if(!isLogin ){
+
+					activeReg.add(v);
+				}
+
+
 			}
 		}
-		
-		
-		request.setAttribute("vote_register_all", voteRegFullList);
-		request.setAttribute("vote_register_active", activeReg);
-		request.setAttribute("vote_register_ready", readyReg);
-		request.setAttribute("vote_register_closed", closedReg);
-		request.setAttribute("vote_records", voteReclist);
+
+		//setAttribute active, ready, closed (데이터 전달)
+		request.setAttribute("voteRegisterActive", activeReg);
+		request.setAttribute("voteRegisterReady", readyReg);
+		request.setAttribute("voteRegisterClosed", closedReg);
+
+
+		System.out.println("===============================================");
+
 
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

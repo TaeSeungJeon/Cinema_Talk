@@ -58,17 +58,17 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
              
          2. dataSource: 데이터베이스에 연결하기 위한 설정을 담고 있는 요소.
        -->
-        <!--  <property name="driver" value="oracle.jdbc.OracleDriver" />
-				<property name="url"
-					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
-				<property name="username" value="week" />
-				<property name="password" value="week" /> -->
-        
         <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
+				<property name="username" value="week" />
+				<property name="password" value="week" />
+        
+         <!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
+				<property name="url"
+					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
 				<property name="username" value="C##test1" />
-				<property name="password" value="test1" /> 
+				<property name="password" value="test1" />  -->
 				
 				<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"

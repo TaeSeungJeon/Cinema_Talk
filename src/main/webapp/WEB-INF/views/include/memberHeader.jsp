@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <header>
@@ -33,7 +32,7 @@
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">장르별 찾기 ▾</div>
+        <div class="cat-title">장르별 추천</div>
         <ul class="sub-menu">
             <li><a href="genre1.jsp?code=action">액션/범죄</a></li>
             <li><a href="genre2.jsp?code=romance">로맨스</a></li>

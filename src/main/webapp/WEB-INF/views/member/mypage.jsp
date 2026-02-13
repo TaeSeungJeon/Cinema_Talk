@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
-<%@ include file="../include/member_header.jsp"%>
+<%@ include file="../include/memberHeader.jsp"%>
 
 <html>
 <head>

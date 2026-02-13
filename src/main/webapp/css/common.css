@@ -51,8 +51,41 @@
             align-items: center;
             box-shadow: var(--shadow-subtle);
         }
-        .search-bar form { width: 100%; }
-        .search-bar input { border: none; background: none; outline: none; width: 100%; text-align: center; color: var(--text-main); font-size: 0.95rem; }
+        .search-bar form { width: 100%; display: flex; align-items: center; gap: 10px; }
+        .search-bar select {
+            border: none;
+            background: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .search-bar input[type="text"] { 
+            border: none; 
+            background: none; 
+            outline: none; 
+            flex: 1; 
+            text-align: center; 
+            color: var(--text-main); 
+            font-size: 0.95rem; 
+        }
+        .search-bar input[type="submit"] {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .search-bar input[type="submit"]:hover {
+            background: #4f46e5;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
 
         /* --- [복원] 4개 메뉴 카테고리 --- */
         .category-nav {
@@ -152,11 +185,11 @@
 
         .movie-list-container { background: white; border-radius: var(--radius-soft); padding: 20px; box-shadow: var(--shadow-subtle); margin-bottom: 25px; }
         .movie-slider-wrapper { display: flex; align-items: center; gap: 15px; position: relative; }
-        .movie-track-container { overflow: hidden; width: 100%; }
+        .movie-track-container { overflow: hidden; width: 930px; }
         .movie-grid { display: flex; gap: 20px; transition: transform 0.5s; padding: 15px 5px; }
 
         .movie-card-small {
-            flex: 0 0 calc(20% - 16px); background: #f8fafc; border-radius: 20px; overflow: hidden;
+            flex: 0 0 170px; width: 170px; background: #f8fafc; border-radius: 20px; overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.3s; text-decoration: none;
         }
         .movie-card-small:hover { transform: translateY(-8px); }

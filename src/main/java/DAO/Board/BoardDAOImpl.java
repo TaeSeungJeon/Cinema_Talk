@@ -4,6 +4,8 @@ import DTO.Board.BoardDTO;
 import mybatis.DBService;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.List;
+
 public class BoardDAOImpl implements BoardDAO{
 
         private static BoardDAOImpl instance = null;
@@ -28,10 +30,33 @@ public class BoardDAOImpl implements BoardDAO{
         try {
             sqlSession = getSqlSession();
             sqlSession.insert("Board.boardIn", bdto);
+            sqlSession.commit();
         } finally {
             if (sqlSession != null) {
                 sqlSession.close();
             }
         }
     }//boardIn() -> 글작성
+    // 게시글 목록 조회
+    @Override
+    public List<BoardDTO> boardList() {
+
+        SqlSession sqlSession = null;
+        List<BoardDTO> boardList = null;
+
+        try {
+            sqlSession = getSqlSession();
+            boardList = sqlSession.selectList("Board.boardList");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+
+        return boardList;
+    }
 }

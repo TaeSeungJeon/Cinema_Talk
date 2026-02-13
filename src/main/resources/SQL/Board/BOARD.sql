@@ -10,7 +10,6 @@ create table BOARD(
     movieId              NUMBER        not null,  -- 영화 고유 ID
 
     constraint pk_board_type primary key (boardId ,boardType)
-    /*constraint fk_mem_no foreign key (mem_no)*/
 
 );
 -- bbs_file_no 컬럼에 정수 숫자 레코드 값으로 활용할 시퀀스 생성
@@ -19,8 +18,8 @@ nocache;                    -- start with 1, increment by 1, nocycle 옵션은 �
 
 select boardIdSeq.nextval as "boardIdSeq 다음 시퀀스 번호값 확인" from dual;
 
-/*
-alter table board add constraint fk_mem_no foreign key (mem_no)
-references MEMBER (mem_no);
-*/
+
+alter table board add constraint fk_mem_no foreign key (memNo)
+references MEMBER (memNo);
+
 

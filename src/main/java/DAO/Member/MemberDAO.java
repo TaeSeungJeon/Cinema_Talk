@@ -12,4 +12,5 @@ public interface MemberDAO {
 
 	MemberDTO findId(MemberDTO mdto);
 
+	MemberDTO getMemberInfo(Integer memNo);
 }

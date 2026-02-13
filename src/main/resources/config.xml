@@ -61,14 +61,14 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
-				<property name="username" value="week" />
-				<property name="password" value="week" />
+				<property name="username" value="seung" />
+				<property name="password" value="seung" />
         
          <!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
 				<property name="username" value="C##test1" />
-				<property name="password" value="test1" />  -->
+				<property name="password" value="test1" /> -->
 				
 				<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
@@ -91,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Movie/Recommend/MovieRec.xml"/>
 		<mapper resource="mappers/Member/MemberMapper.xml"/>
 		<mapper resource="mappers/Vote/VoteMapper.xml"/>
+		<mapper resource="mappers/Board/BoardMapper.xml"/>
 	</mappers>
 
 </configuration>

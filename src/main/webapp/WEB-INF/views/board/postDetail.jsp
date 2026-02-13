@@ -165,7 +165,7 @@
 <body>
 
 <header>
-    <a href="Cinema_Talk.jsp" class="glass-panel-btn" style="padding: 12px 28px; font-weight: 800; color: var(--accent-color); font-size: 1.3rem; letter-spacing: -1px;">Cinema Talk</a>
+    <a href="../../../Cinema_Talk.jsp" class="glass-panel-btn" style="padding: 12px 28px; font-weight: 800; color: var(--accent-color); font-size: 1.3rem; letter-spacing: -1px;">Cinema Talk</a>
     <div style="display: flex; gap: 12px;">
         <a href="login.jsp" class="glass-panel-btn" style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">로그인</a>
         <a href="myPage.jsp" class="glass-panel-btn" style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">마이페이지</a>

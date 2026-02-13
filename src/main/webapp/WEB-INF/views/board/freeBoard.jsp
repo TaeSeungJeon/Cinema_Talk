@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -367,7 +370,7 @@
 <body>
 
 <header>
-    <a href="Cinema_Talk.jsp" class="glass-panel"
+    <a href="../../../Cinema_Talk.jsp" class="glass-panel"
        style="padding: 12px 28px; font-weight: 800; color: var(--accent-color); font-size: 1.3rem; letter-spacing: -1px;">Cinema
         Talk</a>
     <div class="search-bar">
@@ -376,7 +379,7 @@
         </form>
     </div>
     <div style="display: flex; gap: 12px;">
-        <a href="login.jsp" class="glass-panel"
+        <a href="memberLogin.do" class="glass-panel"
            style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">로그인</a>
         <a href="myPage.jsp" class="glass-panel"
            style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">마이페이지</a>
@@ -435,45 +438,20 @@
         </nav>
 
         <div class="post-list">
-            <article class="post-card">
-                <div class="user-info">
-                    <div class="avatar" style="background-color: #ffedd5;"></div>
-                    <div>
-                        <div style="font-weight:700;">CinephileMax <span
-                                style="font-size:0.65rem; background:#fbbf24; color:#78350f; padding:2px 6px; border-radius:4px; margin-left:4px;">GOLD</span>
+               <c:forEach var="board" items="${boardList}">
+                    <article class="post-card">
+                        <div class="post-content">
+                            <h2>
+                                    ${board.boardTitle}
+                            </h2>
+                            <p>${board.boardContent}</p>
+                            <div style="font-size:0.8rem; color:#64748b;">
+                                작성자 : ${board.boardName}
+                            </div>
                         </div>
-                        <div style="font-size:0.8rem; color:var(--text-sub);">2시간 전 · 리뷰</div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <h2><a href="postDetail.jsp?id=1">Dune: Part Two의 사운드 디자인이 정말 예술이었다</a></h2>
-                    <p style="color:var(--text-sub); font-size:0.95rem; line-height: 1.6;">특히 사막 장면에서 웜이 등장할 때 저주파 진동이
-                        영화관 좌석까지 울렸는데...</p>
-                </div>
-                <div class="post-footer">
-                    <span>❤️ 342</span> <span>💬 85</span> <span>👁 1,240</span>
-                </div>
-            </article>
+                    </article>
+                </c:forEach>
 
-            <article class="post-card">
-                <div class="user-info">
-                    <div class="avatar" style="background-color: #e0e7ff;"></div>
-                    <div>
-                        <div style="font-weight:700;">NolanFan99 <span
-                                style="font-size:0.65rem; background:#6366f1; color:white; padding:2px 6px; border-radius:4px; margin-left:4px;">PRO</span>
-                        </div>
-                        <div style="font-size:0.8rem; color:var(--text-sub);">5시간 전 · 토론</div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <h2><a href="postDetail.jsp?id=2">Oppenheimer 무음 연출의 미학에 대하여</a></h2>
-                    <p style="color:var(--text-sub); font-size:0.95rem; line-height: 1.6;">폭발 장면에서의 정적이 주는 압도감이
-                        대단했습니다.</p>
-                </div>
-                <div class="post-footer">
-                    <span>❤️ 210</span> <span>💬 42</span> <span>👁 890</span>
-                </div>
-            </article>
         </div>
     </main>
 
@@ -526,7 +504,8 @@
     <div class="write-modal">
         <h2 style="margin-top:0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">새 게시글
             작성</h2>
-        <form class="write-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;" onsubmit="writeBoard()" >
+        <form method="post" action="freeOkBoard.do" class="write-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;" >
+
             <div style="display: flex; gap: 10px;">
                 <select style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-weight: 600;">
                     <option>장르 선택</option>
@@ -553,7 +532,7 @@
                        style="flex: 2; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
             </div>
             <input type="text" placeholder="제목을 입력하세요"
-                   style="padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem; font-weight: 700;" name="board-title">
+                   style="padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem; font-weight: 700;" name="boardTitle">
             <div style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; gap: 15px; color: #64748b; font-size: 0.9rem;">
                 <span style="cursor:pointer; font-weight: 800;">B</span>
                 <span style="cursor:pointer; font-style: italic;">I</span>
@@ -562,7 +541,7 @@
                 <span style="cursor:pointer;">🖼️ 사진첨부</span>
             </div>
             <textarea rows="12" placeholder="영화에 대한 솔직한 생각을 들려주세요..."
-                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;" name="Board-cont"></textarea>
+                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;" name="BoardContent"></textarea>
             <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
                 📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.
             </div>
@@ -571,7 +550,8 @@
                         style="padding:12px 30px; border:none; cursor:pointer; font-weight: 600;"
                         onclick="closeModal()">취소
                 </button>
-                <button type="submit" class="btn-write-submit" style="padding:12px 40px;">등록하기</button>
+                <button type="submit" class="btn-write-submit" style="padding:12px 40px;"
+                >등록하기</button>
             </div>
         </form>
     </div>
@@ -607,6 +587,21 @@
     function closeModal() {
         document.getElementById('writeModal').style.display = 'none';
         document.body.style.overflow = 'auto';
+    }
+
+    function gotofreeBoard() {
+        const form = document.getElementById("boardForm"); // form 태그에 id="boardForm"이 있어야 함
+
+        // 유효성 검사 (예: 제목이 비어있는지 확인)
+        if(form.boardTitle && form.boardTitle.value === "") {
+            alert("제목을 입력해주세요.");
+            return;
+        }
+
+        // 경로 설정: contextPath가 /Cinema_Talk 이므로 상대 경로로 지정
+        form.action = "freeOkBoard.do";
+        form.method = "post";
+        form.submit();
     }
 </script>
 

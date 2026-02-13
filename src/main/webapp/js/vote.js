@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
         const track = document.querySelector('.vote-track');
         const slides = document.querySelectorAll('.vote-content');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('votePrevBtn');
+        const nextBtn = document.getElementById('voteNextBtn');
 		const radioButtons = document.querySelectorAll('input[name^="movie-vote-"]');
         
         let currentIndex = 0;

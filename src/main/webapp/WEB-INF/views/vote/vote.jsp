@@ -404,24 +404,16 @@ aside.glass-panel {
 	animation: blink 1.5s infinite;
 }
 
-@
-keyframes blink { 0% {
+@keyframes blink { 
+	0% {
 	opacity: 1;
 }
 
-50
-%
-{
-opacity
-:
-0.3;
+50%{
+opacity:0.3;
 }
-100
-%
-{
-opacity
-:
-1;
+100%{
+opacity:1;
 }
 }
 .vote-description {
@@ -501,7 +493,7 @@ opacity
 
 	<main class="main-layout" style="width: 100%">
 		<section class="glass-panel vote-card-container" style="width: 60%">
-			<button class="nav-btn" id="prevBtn">&lt;</button>
+			<button class="nav-btn" id="votePrevBtn">&lt;</button>
 
 			<div class="vote-window">
 				<div class="vote-track">
@@ -577,7 +569,7 @@ opacity
 
 
 
-			<button class="nav-btn" id="nextBtn">&gt;</button>
+			<button class="nav-btn" id="voteNextBtn">&gt;</button>
 		</section>
 
 		<aside class="aside " style="width: 30%;">
@@ -674,5 +666,6 @@ opacity
 	</main>
 
 	<script src="${pageContext.request.contextPath}/js/vote.js"></script>
+	<script src="${pageContext.request.contextPath}/js/home.js"></script>
 </body>
 </html>

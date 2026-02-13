@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -56,7 +56,7 @@ header {
 	font-size: 0.9rem;
 }
 
-.glass-panel {
+.glass-panel2 {
 	background: var(--glass-bg);
 	backdrop-filter: blur(15px);
 	border: 1px solid rgba(255, 255, 255, 0.4);
@@ -109,6 +109,7 @@ header {
 	display: flex;
 	flex-direction: column;
 	gap: 30px;
+	margin-top:100px;
 }
 
 .vote-card {
@@ -278,6 +279,19 @@ header {
 	font-family: inherit;
 }
 
+.vote-description {
+	text-align: center;
+	color: var(--text-muted);
+	font-size: 0.95rem;
+	line-height: 1.6;
+	margin-bottom: 25px; /* 옵션 리스트와의 간격 */
+	padding: 0 20px;
+	word-break: keep-all; /* 단어 단위 줄바꿈으로 깔끔하게 */
+	/* 혹시 내용이 너무 길어질 경우를 대비한 최대 높이 설정 (선택사항) */
+	max-height: 60px;
+	overflow-y: auto;
+}
+
 .submit-btn {
 	position: absolute;
 	bottom: 10px;
@@ -353,8 +367,8 @@ header {
 }
 </style>
 <!-- 공통스타일시트 -->
-<!-- <link rel="stylesheet" -->
-<%-- 	href="${pageContext.request.contextPath}/css/common.css" /> --%>
+ <link rel="stylesheet" 
+	href="${pageContext.request.contextPath}/css/common.css" /> 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
@@ -412,7 +426,8 @@ console.log(data)
             
             const $input = $(`input[data-movie-id="\${item.movieId}"]`);
             const $label = $input.closest('.movie-option');
-$input.prop("checked", true);
+
+
             if ($label.length > 0) {
             	console.log("test")
                 // 결과 영역 보여주기 및 데이터 세팅
@@ -426,6 +441,13 @@ $input.prop("checked", true);
                 }, 50);
             }
         });
+
+if(data.userResult != 0 || data.userResult != '0') {
+	
+	const $input = $(`input[data-movie-id="\${data.userResult}"]`);
+	$input.prop("checked", true);
+}
+		
 
         $(".comment-count").text(`댓글 \${data.commentCount}개`);
         const $commentList = $(".comment-list");
@@ -482,14 +504,29 @@ $input.prop("checked", true);
 </script>
 </head>
 <body>
-	<%-- 	<%@ include file="../include/member_header.jsp"%> --%>
+		
+<%@ include file="../include/memberHeader.jsp"%>
 
 
+<%-- 
+	     <h3>${voteInfo.vote_title}</h3> 
+	    <h3>${voteInfo.vote_id}</h3> 
+	     <h3>${voteInfo.vote_status}</h3> 
 
+	     <c:forEach var="opt" items="${voteInfo.optionList}">
+	        movie_id : ${opt.movie_id} <br> 
+	        title : ${opt.movie_title} <br> 
+	     </c:forEach> 
+	      <h3>${voteInfo.voted}</h3> 
+	     <h3>${voteInfo.vote_status}</h3> 
+	      <h3>${voteInfo.userChoice}</h3> 
+
+    <hr>  --%>
+	
 
 	<main class="vote-section">
 
-		<section class="glass-panel vote-card-container" style="width: 100%">
+		<section class="glass-panel2 vote-card-container" style="width: 100%">
 
 
 			<div class="vote-window">
@@ -557,7 +594,28 @@ $input.prop("checked", true);
 							</c:forEach>
 						</div>
 
-					
+	<c:if test="${voteInfo.voteStatus ne 'CLOSED' }">
+
+<div class="vote-actions">
+    <c:choose>
+        <%-- 1. 투표 예정 상태이거나 이미 참여한 경우 (비활성화) --%>
+        <c:when test="${voteInfo.voteStatus eq 'READY' or  voteInfo.userChoice ne 0 or voteInfo.userChoice ne '0'}">
+            <button class="btn btn-primary action-btn disabled-style" disabled>
+                <c:choose>
+                    <c:when test="${voteInfo.voteStatus eq 'READY'}">투표 예정</c:when>
+                    <c:otherwise>참여 완료</c:otherwise>
+                </c:choose>
+            </button>
+        </c:when>
+        
+        <%-- 2. 그 외 (진행 중이며 참여 가능한 경우) --%>
+        <c:otherwise>
+            <button class="btn btn-primary cmnt-show-btn action-btn" 
+                    onclick="submitVote()">투표하기</button>
+        </c:otherwise>
+    </c:choose>
+</div>
+</c:if>				
 
 
 <c:if test="${voteInfo.voteStatus ne 'READY' }">
@@ -590,28 +648,7 @@ $input.prop("checked", true);
 
 </c:if>
 
-<c:if test="${voteInfo.voteStatus ne 'CLOSED' }">
 
-<div class="vote-actions">
-    <c:choose>
-        <%-- 1. 투표 예정 상태이거나 이미 참여한 경우 (비활성화) --%>
-        <c:when test="${voteInfo.voteStatus eq 'READY' or not empty voteInfo.userChoice}">
-            <button class="btn btn-primary action-btn disabled-style" disabled>
-                <c:choose>
-                    <c:when test="${voteInfo.voteStatus eq 'READY'}">투표 예정</c:when>
-                    <c:otherwise>참여 완료</c:otherwise>
-                </c:choose>
-            </button>
-        </c:when>
-        
-        <%-- 2. 그 외 (진행 중이며 참여 가능한 경우) --%>
-        <c:otherwise>
-            <button class="btn btn-primary cmnt-show-btn action-btn" 
-                    onclick="submitVote()">투표하기</button>
-        </c:otherwise>
-    </c:choose>
-</div>
-</c:if>
 
 						
 
@@ -620,6 +657,6 @@ $input.prop("checked", true);
 
 
 	</main>
-
+	<script src="${pageContext.request.contextPath}/js/home.js"></script>
 </body>
 </html>

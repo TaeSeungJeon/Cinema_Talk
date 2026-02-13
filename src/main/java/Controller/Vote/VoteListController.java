@@ -63,12 +63,14 @@ public class VoteListController implements Action {
 			
 			VoteRecordDTO temp = new VoteRecordDTO();
 			temp.setVoteId(vote.getVoteId());
-			temp.setMemNo(finalMem.getMemNo());
+			
 			
 			//로그인했을때만 참여기록 확인
 			if(finalMem != null) {
+				temp.setMemNo(finalMem.getMemNo());
 				VoteRecordDTO vrec = voteService.getVoteRecordByMemNo(temp);
 				vote.setUserChoice(vrec.getMovieId());
+				
 			}
 			
 			//결과 집계

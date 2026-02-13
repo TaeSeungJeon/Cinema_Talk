@@ -19,8 +19,7 @@
 
     <!-- 레이아웃: 사이드바 + main -->
     <div class="container">
-      
-
+     
       <%@ include file="homeMain.jsp"%>
       <%@ include file="homeSidebar.jsp"%>
 <%--       <%@ include file="homeSidebar2.jsp"%> --%>

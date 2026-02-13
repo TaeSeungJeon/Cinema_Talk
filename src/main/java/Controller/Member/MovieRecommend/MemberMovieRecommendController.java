@@ -1,5 +1,7 @@
 package Controller.Member.MovieRecommend;
 
+import java.io.PrintWriter;
+
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
@@ -19,16 +21,19 @@ public class MemberMovieRecommendController implements Action {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         MemberService memberService = new MemberServiceImpl();
+        PrintWriter out = response.getWriter();
+        
         // 세션에서 회원 ID 가져오기
         HttpSession session = request.getSession();
         String memId = (String) session.getAttribute("memId");
 
         if (memId == null) {
             // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
-            ActionForward forward = new ActionForward();
-            forward.setPath("/WEB-INF/views/member/login.jsp");
-            forward.setRedirect(false);
-            return forward;
+        	out.println("<script>");
+        	out.println("alert('로그인이 필요합니다.');");
+        	out.println("history.back();");
+        	out.println("</script>");
+        	return null;
         }
 
         // 파라미터 가져오기
@@ -37,7 +42,6 @@ public class MemberMovieRecommendController implements Action {
         String redirectUrl = request.getParameter("redirect");
 
         if (movieIdParam == null || action == null) {
-            // 에러 처리
             ActionForward forward = new ActionForward();
             forward.setPath("/WEB-INF/views/error/error.jsp");
             forward.setRedirect(false);

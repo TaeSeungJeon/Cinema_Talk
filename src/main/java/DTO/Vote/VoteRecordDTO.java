@@ -14,6 +14,9 @@ public class VoteRecordDTO {
 	private int movieId;
 	private String voteCommentText;
 	
-	
+	// 마이페이지용 추가 필드
+	private String voteTitle;
+	private String voteEndDate;
+	private String movieTitle;
 	
 }

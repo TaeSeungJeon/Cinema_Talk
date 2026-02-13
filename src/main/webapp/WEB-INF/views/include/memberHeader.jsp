@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <header>
-    <a href="Cinema_Talk.jsp" class="glass-panel" style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema Talk</a>
+    <a href="${pageContext.request.contextPath}/index.do" class="glass-panel" style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema Talk</a>
     <div class="search-bar">
         <form action="searchMovie.do" method="get">
         	<select name="search-option">
@@ -18,7 +18,7 @@
     <div style="display: flex; gap: 10px;">         
     	<c:if test="${not empty sessionScope.memId}"><a href="memberLogout.do" 
     		class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
-    				<a href="myPage.jsp" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a></c:if>
+    				<a href="myPage.do" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a></c:if>
 		<c:if test="${empty sessionScope.memId}">
 		<a href="memberLogin.do" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a></c:if>
     </div>

@@ -467,11 +467,11 @@
     var movieId = ${movie.movieId};
     
     function searchByGenre(genreName) {
-        window.location.href = 'searchMovie.do?search-option=3&search_words=' + encodeURIComponent(genreName);
+        window.location.href = 'searchMovie.do?search-option=3&search-words=' + encodeURIComponent(genreName);
     }
     function pressFavorite() {
         var action = event.target.value === 'true' ? 'add' : 'remove';
-        window.location.href = 'MemberMovieRecommend.do?movieId=' + movieId + '&action=' + action + '&redirect=movieDetail.do?movieId=' + movieId;
+        window.location.href = 'MemberMovieRecommend.do?movieId=' + movieId + '&redirect=movieDetail.do?movieId=' + movieId + '&action=' + action;
     }
 
 </script>

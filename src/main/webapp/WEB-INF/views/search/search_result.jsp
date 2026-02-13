@@ -416,7 +416,7 @@
                 <!-- 이전 버튼 -->
                 <c:choose>
                     <c:when test="${page > 1}">
-                        <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${page - 1}" 
+                        <a href="${pageContext.request.contextPath}/searchMovie.do?search-option=${findField}&search-words=${findName}&page=${page - 1}" 
                            class="nav-btn">← 이전</a>
                     </c:when>
                     <c:otherwise>
@@ -431,7 +431,7 @@
                             <span class="current">${i}</span>
                         </c:when>
                         <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${i}">${i}</a>
+                            <a href="${pageContext.request.contextPath}/searchMovie.do?search-option=${findField}&search-words=${findName}&page=${i}">${i}</a>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
@@ -439,7 +439,7 @@
                 <!-- 다음 버튼 -->
                 <c:choose>
                     <c:when test="${page < maxpage}">
-                        <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${page + 1}" 
+                        <a href="${pageContext.request.contextPath}/searchMovie.do?search-option=${findField}&search-words=${findName}&page=${page + 1}" 
                            class="nav-btn">다음 →</a>
                     </c:when>
                     <c:otherwise>

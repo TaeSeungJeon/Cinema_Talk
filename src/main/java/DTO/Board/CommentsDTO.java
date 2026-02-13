@@ -16,4 +16,7 @@ public class CommentsDTO {
     private int memNo;
     private int parentBoardNo;
     private int parentBoardId;
+    
+    // 마이페이지용 추가 필드
+    private String boardTitle;
 }

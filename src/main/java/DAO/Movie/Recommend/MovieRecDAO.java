@@ -15,4 +15,6 @@ public interface MovieRecDAO {
 
 	List<MovieRecResponse> getIndexGenreList(int memNo);
 
+	List<MovieRecResponse> getIndexTrendList();
+
 }

@@ -8,4 +8,6 @@ public interface HomeService {
 
 	List<MovieRecResponse> getIndexGenreList(int memNo);
 
+	List<MovieRecResponse> getIndexTrendList();
+
 }

@@ -4,7 +4,7 @@
 <header>
     <a href="Cinema_Talk.jsp" class="glass-panel" style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema Talk</a>
     <div class="search-bar">
-        <form action="search_movie.do" method="get">
+        <form action="searchMovie.do" method="get">
         	<select name="search-option">
         		<option value="0">제목</option>
         		<option value="1">감독</option>

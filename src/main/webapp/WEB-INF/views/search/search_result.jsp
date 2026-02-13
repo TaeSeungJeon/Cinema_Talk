@@ -335,9 +335,9 @@
 <div class="container">
     <!-- 헤더 -->
     <header>
-        <a href="${pageContext.request.contextPath}/Cinema_Talk.jsp" class="logo">영화 로고</a>
+        <a href="${pageContext.request.contextPath}/index.do" class="logo">영화 로고</a>
         <div class="search-bar">
-            <form action="${pageContext.request.contextPath}/search_movie.do" method="get" style="display: flex; align-items: center; width: 100%; gap: 10px;">
+            <form action="${pageContext.request.contextPath}/searchMovie.do" method="get" style="display: flex; align-items: center; width: 100%; gap: 10px;">
                 <select name="search-option">
                     <option value="0" <c:if test="${findField == 0}">selected</c:if>>제목</option>
                     <option value="1" <c:if test="${findField == 1}">selected</c:if>>감독</option>
@@ -351,7 +351,7 @@
     </header>
 
     <!-- 뒤로가기 -->
-    <a href="${pageContext.request.contextPath}/Cinema_Talk.jsp" class="back-btn">← 메인으로</a>
+    <a href="${pageContext.request.contextPath}/index.do" class="back-btn">← 메인으로</a>
 
     <!-- 검색 결과 정보 -->
     <div class="search-info">
@@ -372,7 +372,7 @@
         <c:when test="${not empty movies}">
             <div class="movie-list">
                 <c:forEach var="movie" items="${movies}">
-                    <a href="${pageContext.request.contextPath}/movie_detail.do?id=${movie.movieId}" class="movie-item">
+                    <a href="${pageContext.request.contextPath}/movieDetail.do?movieId=${movie.movieId}" class="movie-item">
                         <div class="movie-poster">
                             <c:choose>
                                 <c:when test="${not empty movie.moviePosterPath}">

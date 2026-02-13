@@ -70,7 +70,7 @@
         </c:if>
 
         <c:forEach var="m" items="${homeGenreMovieList}">
-          <a href="${pageContext.request.contextPath}/movie_detail.do?id=${m.movieId}" class="movie-card-small">
+          <a href="${pageContext.request.contextPath}/movieDetail.do?movieId=${m.movieId}" class="movie-card-small">
             <div class="poster-area" style="border-radius:12px; overflow:hidden; background:#e5e7eb;">
               <img
                 src="https://images.tmdb.org/t/p/w300/${m.moviePosterPath}"

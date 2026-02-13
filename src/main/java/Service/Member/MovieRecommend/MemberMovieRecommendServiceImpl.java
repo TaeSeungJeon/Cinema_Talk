@@ -1,8 +1,8 @@
-package Service.Member;
+package Service.Member.MovieRecommend;
 
-import DAO.Member.MemberMovieRecommendDAO;
-import DAO.Member.MemberMovieRecommendDAOImpl;
-import DTO.Member.MemberMovieRecommendDTO;
+import DAO.Member.MovieRecommend.MemberMovieRecommendDAO;
+import DAO.Member.MovieRecommend.MemberMovieRecommendDAOImpl;
+import DTO.Member.MovieRecommend.MemberMovieRecommendDTO;
 
 public class MemberMovieRecommendServiceImpl implements MemberMovieRecommendService {
 	

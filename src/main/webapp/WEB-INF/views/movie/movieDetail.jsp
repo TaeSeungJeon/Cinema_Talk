@@ -467,7 +467,7 @@
     var movieId = ${movie.movieId};
     
     function searchByGenre(genreName) {
-        window.location.href = 'searchMovie.do?search_option=3&search_words=' + encodeURIComponent(genreName);
+        window.location.href = 'searchMovie.do?search-option=3&search_words=' + encodeURIComponent(genreName);
     }
     function pressFavorite() {
         var action = event.target.value === 'true' ? 'add' : 'remove';

@@ -1,6 +1,6 @@
-package Service.Member;
+package Service.Member.MovieRecommend;
 
-import DTO.Member.MemberMovieRecommendDTO;
+import DTO.Member.MovieRecommend.MemberMovieRecommendDTO;
 
 public interface MemberMovieRecommendService {
 

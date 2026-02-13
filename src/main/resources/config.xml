@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Movie.PersonDTO" alias="person" />
 		<typeAlias type="DTO.Movie.Recommend.MovieRecResponse" alias="MovieRecResponse" />
 		<typeAlias type="DTO.Member.MemberDTO" alias="member" />
-		<typeAlias type="DTO.Member.MemberMovieRecommendDTO" alias="membermovierecommend" />
+		<typeAlias type="DTO.Member.MovieRecommend.MemberMovieRecommendDTO" alias="membermovierecommend" />
 		<typeAlias type="DTO.Vote.VoteRecordDTO" alias="voterecord" />
 		<typeAlias type="DTO.Vote.VoteResultDTO" alias="voteresult" />
 		<typeAlias type="DTO.Vote.VoteRegisterDTO" alias="voteregister" />
@@ -91,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Movie/MovieGenreMapper.xml"/>
 		<mapper resource="mappers/Movie/Recommend/MovieRec.xml"/>
 		<mapper resource="mappers/Member/MemberMapper.xml"/>
-		<mapper resource="mappers/Member/MemberMovieRecommendMapper.xml"/>
+		<mapper resource="mappers/Member/MovieRecommend/MemberMovieRecommendMapper.xml"/>
 		<mapper resource="mappers/Vote/VoteMapper.xml"/>
 		<mapper resource="mappers/Board/BoardMapper.xml"/>
 	</mappers>

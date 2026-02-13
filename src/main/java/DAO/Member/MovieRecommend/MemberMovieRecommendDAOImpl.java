@@ -1,8 +1,8 @@
-package DAO.Member;
+package DAO.Member.MovieRecommend;
 
 import org.apache.ibatis.session.SqlSession;
 
-import DTO.Member.MemberMovieRecommendDTO;
+import DTO.Member.MovieRecommend.MemberMovieRecommendDTO;
 import mybatis.DBService;
 
 public class MemberMovieRecommendDAOImpl implements MemberMovieRecommendDAO {

@@ -1,4 +1,4 @@
-package Controller.Member;
+package Controller.Member.MyPage;
 
 import java.io.PrintWriter;
 

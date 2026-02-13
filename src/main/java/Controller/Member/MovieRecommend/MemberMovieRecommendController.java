@@ -1,13 +1,13 @@
-package Controller.Member;
+package Controller.Member.MovieRecommend;
 
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
-import DTO.Member.MemberMovieRecommendDTO;
-import Service.Member.MemberMovieRecommendService;
-import Service.Member.MemberMovieRecommendServiceImpl;
+import DTO.Member.MovieRecommend.MemberMovieRecommendDTO;
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
+import Service.Member.MovieRecommend.MemberMovieRecommendService;
+import Service.Member.MovieRecommend.MemberMovieRecommendServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -59,7 +59,7 @@ public class MemberMovieRecommendController implements Action {
         // 리다이렉트
         ActionForward forward = new ActionForward();
         forward.setPath(redirectUrl != null ? redirectUrl : "index.do");
-        forward.setRedirect(true);
+        forward.setRedirect(false);
         return forward;
     }
 }

@@ -1,6 +1,6 @@
-package DAO.Member;
+package DAO.Member.MovieRecommend;
 
-import DTO.Member.MemberMovieRecommendDTO;
+import DTO.Member.MovieRecommend.MemberMovieRecommendDTO;
 
 public interface MemberMovieRecommendDAO {
 

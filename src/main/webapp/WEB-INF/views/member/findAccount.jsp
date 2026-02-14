@@ -117,7 +117,7 @@
 
         <div id="pw-content" class="find-content">
             <div class="title">Reset Password</div>
-            <p class="description">아이디와 전화번호가 일치하면<br>화면에 임시비밀번호가 표시됩니다.</p>
+            <p class="description">아이디와 전화번호가 일치하면<br>등록된 메일로 임시비밀번호가 전송됩니다.</p>
             <form action="memberPwdFindOk.do" method="post">
                 <div class="input-wrapper">
                     <label>아이디</label>
@@ -127,7 +127,7 @@
                     <label>휴대폰 번호</label>
                     <input type="tel" class="input-field" name="mem-phone" placeholder="010-0000-0000" required>
                 </div>
-                <button type="submit" class="btn-submit">비밀번호 확인</button>
+                <button type="submit" class="btn-submit">임시비밀번호 전송</button>
             </form>
         </div>
 
@@ -149,28 +149,6 @@
   </div>
 </div>
 
-<!-- 임시비밀번호 결과 모달 -->
-<div id="pwdResultModal" 
-     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);">
-
-  <div style="width:350px; margin:15vh auto; background:white; padding:20px; border-radius:12px;">
-    
-    <h3 style="margin:0 0 12px;">임시 비밀번호 발급</h3>
-
-    <p style="margin:0 0 18px;">
-      회원님의 임시 비밀번호는<br>
-      <b id="tempPwdText">${tempPwd}</b> 입니다.<br><br>
-      로그인 후 반드시 변경해주세요.
-    </p>
-
-    <button type="button" class="btn-submit"
-      onclick="location.href='memberLogin.do'">
-      로그인 하러가기
-    </button>
-
-  </div>
-</div>
-
 
 <script>
     function openTab(e, tabName) {
@@ -187,15 +165,6 @@
 window.addEventListener("load", function(){
 	document.getElementById("foundIdText").innerText = "${findId}";
   	document.getElementById("idResultModal").style.display = "block";
-});
-</script>
-</c:if>
-
-<!-- 비밀번호 찾기 모달 관련 스크립트 -->
-<c:if test="${not empty tempPwd}">
-<script>
-window.addEventListener("load", function(){
-  document.getElementById("pwdResultModal").style.display = "block";
 });
 </script>
 </c:if>

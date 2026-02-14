@@ -14,7 +14,8 @@ public interface MemberDAO {
 
 	MemberDTO getMemberInfo(Integer memNo);
 
-	MemberDTO findPwd(MemberDTO mdto);
+	MemberDTO findByIdAndPhone(String memId, String memPhone);
 
-	void updatePwd(MemberDTO mdto);
+	int updatePwd(MemberDTO mdto);
+
 }

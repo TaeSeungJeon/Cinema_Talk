@@ -13,8 +13,8 @@ public interface MemberService {
 
 	MemberDTO findId(MemberDTO mdto);
 
-	MemberDTO findPwd(MemberDTO mdto);
+	MemberDTO findByIdAndPhone(String memId, String memPhone);
 
-	void updatePwd(MemberDTO mdto);
+	boolean resetPwdSendEmail(MemberDTO mdto);
 
 }

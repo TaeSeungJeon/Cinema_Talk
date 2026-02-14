@@ -1,5 +1,8 @@
 package DAO.Member;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 
 import DTO.Member.MemberDTO;
@@ -100,33 +103,37 @@ public class MemberDAOImpl implements MemberDAO {
 	}//findId() -> 입력받은 이름과 전화번호를 기준으로 아이디 찾기
 
 	@Override
-	public MemberDTO findPwd(MemberDTO mdto) {
+	public MemberDTO findByIdAndPhone(String memId, String memPhone) {
 		SqlSession sqlSession = null;
 		
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectOne("findPwd", mdto);
+			
+			Map<String, Object> param = new HashMap<>();
+			param.put("memId", memId);
+			param.put("memPhone", memPhone);
+			
+			return sqlSession.selectOne("findByIdAndPhone", param);
+		}finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//findByIdAndPhone() -> 입력받은 아이디와 전화번호를 기준으로 아이디 찾기
+
+	@Override
+	public int updatePwd(MemberDTO mdto) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.update("updatePwd", mdto);
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();
 			}
 		}
-	}//findPwd() -> 입력받은 아이디와 전화번호를 기준으로 회원 검색
-
-	@Override
-	public void updatePwd(MemberDTO mdto) {
-		SqlSession sqlSession = null;
-		
-		try {
-			sqlSession = getSqlSession();
-			sqlSession.update("updatePwd", mdto);
-			sqlSession.commit();
-		}finally {
-			if(sqlSession != null) {
-				sqlSession.close();
-			}
-		}	
-	}//updatePwd() -> 암호화된 임시비밀번호로 수정
+	}//updatePwd() -> 암호화된 임시비밀번호로 업데이트
 
 
 }

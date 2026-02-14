@@ -24,10 +24,12 @@ public class IndexController implements Action {
 
 		Object memNoObj = session.getAttribute("mem_no");
 	    int memNo = (memNoObj != null) ? (int)memNoObj : -1;//로그인한 상태면 회원 번호 구함
-		
-	    List<MovieRecResponse> homeGenreMovieList = homeService.getIndexGenreList(memNo);
-
-	    request.setAttribute("homeGenreMovieList", homeGenreMovieList);
+	    
+	    List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
+	    List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList(memNo);
+	    
+	    request.setAttribute("indexTrendMovieList", indexTrendMovieList);
+	    request.setAttribute("homeGenreMovieList", indexGenreMovieList);
 	    
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

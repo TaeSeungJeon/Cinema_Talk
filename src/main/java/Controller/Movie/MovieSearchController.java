@@ -81,7 +81,7 @@ public class MovieSearchController implements Action {
 			
 			ActionForward forward = new ActionForward();
 			forward.setRedirect(false);
-			forward.setPath("/WEB-INF/views/search/search_result.jsp");
+			forward.setPath("/WEB-INF/views/search/searchResult.jsp");
 			
 			return forward;
 		}

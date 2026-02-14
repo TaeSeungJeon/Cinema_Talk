@@ -96,79 +96,272 @@
             color: white !important;
         }
 
-        .cat-title { font-weight: 700; font-size: 0.95rem; pointer-events: none; }
+        .cat-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
 
         .sub-menu {
-            list-style: none; padding: 0; margin: 0; position: absolute; top: 110%; left: 0; right: 0;
-            background: #ffffff !important; border-radius: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            max-height: 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 9999; border: 1px solid rgba(0, 0, 0, 0.05); text-align: center; opacity: 0; pointer-events: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background: #ffffff !important;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .category-bubble.active .sub-menu { max-height: 400px; padding: 15px 0; opacity: 1; pointer-events: auto; }
+        .category-bubble.active .sub-menu {
+            max-height: 400px;
+            padding: 15px 0;
+            opacity: 1;
+            pointer-events: auto;
+        }
 
         .sub-menu li a {
-            text-decoration: none; color: #64748b !important; display: block; padding: 12px 0; margin: 2px 10px;
-            border-radius: 12px; transition: 0.2s; font-size: 0.9rem; font-weight: 600;
+            text-decoration: none;
+            color: #64748b !important;
+            display: block;
+            padding: 12px 0;
+            margin: 2px 10px;
+            border-radius: 12px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
-        .sub-menu li a:hover { background: var(--accent-color) !important; color: white !important; }
+        .sub-menu li a:hover {
+            background: var(--accent-color) !important;
+            color: white !important;
+        }
 
         /* --- 레이아웃 설정 --- */
         .layout-wrapper {
-            max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; align-items: start;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            gap: 25px;
+            align-items: start;
         }
 
-        .side-panel { display: flex; flex-direction: column; gap: 20px; }
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
         .glass-panel {
-            background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: var(--radius-soft); padding: 25px; box-shadow: var(--shadow-subtle);
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: var(--radius-soft);
+            padding: 25px;
+            box-shadow: var(--shadow-subtle);
         }
 
         /* --- 게시글 본문 스타일 --- */
-        .post-header { margin-bottom: 30px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding-bottom: 20px; }
-        .post-category { color: var(--accent-color); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; }
-        .post-title { font-size: 2rem; margin: 10px 0; line-height: 1.3; font-weight: 800; }
+        .post-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 20px;
+        }
 
-        .avatar { width: 45px; height: 45px; border-radius: 50%; background: #e2e8f0; border: 2px solid white; }
+        .post-category {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
 
-        .post-body { font-size: 1.05rem; line-height: 1.8; color: #374151; min-height: 250px; }
+        .post-title {
+            font-size: 2rem;
+            margin: 10px 0;
+            line-height: 1.3;
+            font-weight: 800;
+        }
 
-        .tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
-        .tag { background: rgba(99, 102, 241, 0.05); color: var(--accent-color); padding: 5px 12px; border-radius: 50px; font-size: 0.8rem; text-decoration: none; font-weight: 500; }
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            border: 2px solid white;
+        }
 
-        .post-actions { display: flex; justify-content: center; gap: 15px; margin-top: 40px; }
-        .action-btn { background: white; border: 1px solid rgba(0, 0, 0, 0.05); padding: 12px 25px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600; transition: 0.3s; box-shadow: var(--shadow-subtle); }
-        .action-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+        .post-body {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #374151;
+            min-height: 250px;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .tag {
+            background: rgba(99, 102, 241, 0.05);
+            color: var(--accent-color);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-strong);
+        }
 
         /* --- 댓글 섹션 --- */
-        .comment-section { margin-top: 25px; }
-        .comment-count { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
-        .comment-write { background: white; border-radius: 18px; padding: 15px; margin-bottom: 30px; border: 1px solid rgba(0, 0, 0, 0.05); }
-        .comment-write textarea { width: 100%; border: none; outline: none; resize: none; min-height: 60px; font-family: inherit; font-size: 0.95rem; margin-bottom: 10px; }
-        .btn-submit { background: var(--accent-color); color: white; border: none; padding: 8px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .comment-section {
+            margin-top: 25px;
+        }
 
-        .side-title { font-weight: 800; font-size: 1rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-        .side-item { font-size: 0.9rem; color: var(--text-sub); padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.03); cursor: pointer; transition: 0.2s; }
-        .side-item:hover { color: var(--accent-color); padding-left: 5px; }
+        .comment-count {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
 
-        .comment-item { display: flex; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-        .comment-user { font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; }
-        .comment-text { font-size: 0.95rem; color: #374151; line-height: 1.5; }
-        .comment-utils { margin-top: 10px; font-size: 0.8rem; color: var(--text-sub); display: flex; gap: 15px; }
+        .comment-write {
+            background: white;
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-write textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            min-height: 60px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .btn-submit {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .side-title {
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .side-item {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .side-item:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-user {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            font-size: 0.95rem;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .comment-utils {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            display: flex;
+            gap: 15px;
+        }
 
         /* 대댓글 입력 영역 스타일 */
-        .reply-form-container { width: 100%; margin-top: 15px; display: none; }
+        .reply-form-container {
+            width: 100%;
+            margin-top: 15px;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="../../../Cinema_Talk.jsp" class="glass-panel-btn" style="padding: 12px 28px; font-weight: 800; color: var(--accent-color); font-size: 1.3rem; letter-spacing: -1px;">Cinema Talk</a>
+    <a href="../../../Cinema_Talk.jsp" class="glass-panel-btn"
+       style="padding: 12px 28px; font-weight: 800; color: var(--accent-color); font-size: 1.3rem; letter-spacing: -1px;">Cinema
+        Talk</a>
     <div style="display: flex; gap: 12px;">
-        <a href="memberLogin.do" class="glass-panel-btn" style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">로그인</a>
-        <a href="myPage.jsp" class="glass-panel-btn" style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">마이페이지</a>
+        <a href="memberLogin.do" class="glass-panel-btn"
+           style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">로그인</a>
+        <a href="myPage.jsp" class="glass-panel-btn"
+           style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">마이페이지</a>
     </div>
 </header>
 
@@ -234,19 +427,36 @@
 
             <div class="author-profile" style="margin-bottom: 20px;">
                 <span class="author-name" style="font-weight: 700;">${cont.boardName}</span>
-                <span class="post-meta" style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardRecommendCount}</span>
+                <span class="post-meta"
+                      style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardRecommendCount}</span>
             </div>
 
             <div class="post-body">
                 ${cont.boardContent}
             </div>
 
-            <div class="post-footer-actions" style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                <button type="button" class="btn-list" style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;" onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로</button>
-                <div class="right-actions" style="display: flex; gap: 10px;">
-                    <button type="button" class="btn-edit" style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;" onclick="location.href='${pageContext.request.contextPath}/postUpdate.do?boardId=${cont.boardId}'">수정하기</button>
-                    <button type="button" class="btn-delete" onclick="deletePost(${cont.boardId})" style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">삭제하기</button>
-                </div>
+            <div class="post-footer-actions"
+                 style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                <button type="button" class="btn-list"
+                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
+                        onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
+                </button>
+
+                <c:if test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
+                    <div class="right-actions" style="display: flex; gap: 10px;">
+                        <button type="button" class="btn-edit"
+                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
+                                onclick="location.href='${pageContext.request.contextPath}/BoardUpdateForm.do?boardId=${cont.boardId}'">
+                            수정하기
+                        </button>
+                        <button type="button" class="btn-delete"
+                                onclick="deletePost(${cont.boardId})"
+                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">
+                            삭제하기
+                        </button>
+                    </div>
+                </c:if>
+
             </div>
 
             <div class="tag-group">
@@ -256,7 +466,8 @@
             </div>
 
             <div class="post-actions">
-                <button class="action-btn" onclick="this.style.color='#ef4444'">👍 <span class="count">${cont.boardRecommendCount}</span></button>
+                <button class="action-btn" onclick="this.style.color='#ef4444'">👍 <span
+                        class="count">${cont.boardRecommendCount}</span></button>
                 <button class="action-btn">🔗 공유하기</button>
             </div>
         </article>
@@ -280,7 +491,8 @@
 
             <div class="comment-list">
                 <c:forEach var="comm" items="${clist}">
-                    <div class="comment-item" style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
+                    <div class="comment-item"
+                         style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
                         <div class="avatar" style="width:35px; height:35px;"></div>
 
                         <div class="comment-content" style="flex: 1;">
@@ -289,9 +501,11 @@
 
                                 <c:if test="${not empty sessionScope.memNo and sessionScope.memNo == comm.memNo}">
                                     <div class="comment-edit-delete" style="font-size: 0.75rem; color:var(--text-sub);">
-                                        <span style="cursor:pointer;" onclick="showEditForm(${comm.commentsId})">수정</span>
+                                        <span style="cursor:pointer;"
+                                              onclick="showEditForm(${comm.commentsId})">수정</span>
                                         <span style="margin: 0 3px;">|</span>
-                                        <span style="cursor:pointer;" onclick="deleteComment(${comm.commentsId}, ${cont.boardId})">삭제</span>
+                                        <span style="cursor:pointer;"
+                                              onclick="deleteComment(${comm.commentsId}, ${cont.boardId})">삭제</span>
                                     </div>
                                 </c:if>
                             </div>
@@ -305,21 +519,28 @@
                                     <textarea name="commentsContent" class="glass-panel"
                                               style="width:100%; min-height: 60px; padding:10px; margin-bottom:5px; border:1px solid var(--accent-color); outline:none; resize:none; border-radius:12px;">${comm.commentsContent}</textarea>
                                     <div style="display: flex; justify-content: flex-end; gap:5px;">
-                                        <button type="button" class="btn-submit" style="background:var(--text-sub); padding:4px 12px; font-size:0.8rem;" onclick="hideEditForm(${comm.commentsId})">취소</button>
-                                        <button type="submit" class="btn-submit" style="padding:4px 12px; font-size:0.8rem;">수정완료</button>
+                                        <button type="button" class="btn-submit"
+                                                style="background:var(--text-sub); padding:4px 12px; font-size:0.8rem;"
+                                                onclick="hideEditForm(${comm.commentsId})">취소
+                                        </button>
+                                        <button type="submit" class="btn-submit"
+                                                style="padding:4px 12px; font-size:0.8rem;">수정완료
+                                        </button>
                                     </div>
                                 </form>
                             </div>
 
                             <div class="comment-utils">
                                 <span>${comm.commentsDate}</span>
-                                <span class="reply-trigger" style="cursor:pointer; font-weight:600; color:var(--accent-color);"
+                                <span class="reply-trigger"
+                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);"
                                       onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
                                 <span>좋아요 0</span>
                             </div>
 
                             <div id="reply-form-${comm.commentsId}" class="reply-form-container">
-                                <div class="comment-write" style="background: #f8fafc; border: 1px solid var(--accent-color); margin-top: 10px;">
+                                <div class="comment-write"
+                                     style="background: #f8fafc; border: 1px solid var(--accent-color); margin-top: 10px;">
                                     <form action="commentsOk.do" method="post">
                                         <input type="hidden" name="boardId" value="${cont.boardId}">
                                         <input type="hidden" name="boardType" value="${cont.boardType}">
@@ -328,7 +549,10 @@
                                         <input type="hidden" name="commentsNo" value="2">
                                         <textarea name="commentsContent" placeholder="답글을 남겨보세요..." required></textarea>
                                         <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                                            <button type="button" class="btn-submit" style="background: var(--text-sub);" onclick="hideReplyForm(${comm.commentsId})">취소</button>
+                                            <button type="button" class="btn-submit"
+                                                    style="background: var(--text-sub);"
+                                                    onclick="hideReplyForm(${comm.commentsId})">취소
+                                            </button>
                                             <button type="submit" class="btn-submit">답글 등록</button>
                                         </div>
                                     </form>
@@ -351,10 +575,13 @@
             <div class="widget-placeholder">
                 <div style="text-align: center;">
                     <p style="margin:0; font-size: 0.8rem; color: var(--text-main);">올해 최고의 기대작은?</p>
-                    <button style="margin-top:10px; font-size:0.7rem; padding:5px 10px; border-radius:8px; border:none; background:var(--accent-color); color:white; cursor:pointer; font-weight:700;">투표하기</button>
+                    <button style="margin-top:10px; font-size:0.7rem; padding:5px 10px; border-radius:8px; border:none; background:var(--accent-color); color:white; cursor:pointer; font-weight:700;">
+                        투표하기
+                    </button>
                 </div>
             </div>
         </div>
+
         <div class="glass-panel">
             <div class="side-title">🔥 실시간 인기글</div>
             <div class="side-item">1. 범죄도시4 관람 후기</div>
@@ -362,57 +589,68 @@
             <div class="side-item">3. 듄2 포토카드 나눔합니다</div>
         </div>
     </aside>
-</div>
 
-<script>
-    function toggleMenu(element) {
-        const isActive = element.classList.contains('active');
-        document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
-        if (!isActive) element.classList.add('active');
-    }
-
-    window.addEventListener('click', function (e) {
-        if (!e.target.closest('.category-bubble')) {
+    <script>
+        function toggleMenu(element) {
+            const isActive = element.classList.contains('active');
             document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
+            if (!isActive) element.classList.add('active');
         }
-    });
 
-    // 대댓글 폼 제어 함수
-    function showReplyForm(id) {
-        // 모든 열린 답글 폼을 닫고 클릭한 것만 엶
-        document.querySelectorAll('.reply-form-container').forEach(el => el.style.display = 'none');
-        document.getElementById('reply-form-' + id).style.display = 'block';
-    }
+        window.addEventListener('click', function (e) {
+            if (!e.target.closest('.category-bubble')) {
+                document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
+            }
+        });
 
-    function hideReplyForm(id) {
-        document.getElementById('reply-form-' + id).style.display = 'none';
-    }
 
-    function deletePost(id) {
-        if (confirm("정말로 이 게시글을 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다.")) {
-            location.href = "${pageContext.request.contextPath}/postDeleteOk.do?boardId=" + id;
+        function showReplyForm(id) {
+            document.querySelectorAll('.reply-form-container').forEach(el => el.style.display = 'none');
+            document.getElementById('reply-form-' + id).style.display = 'block';
         }
-    }
 
-    // 수정 폼 열기 : 기존 글 숨기고 입력창 노출
-    function showEditForm(id) {
-        document.getElementById('comment-text-' + id).style.display = 'none';
-        document.getElementById('edit-form-' + id).style.display = 'block';
-    }
-
-    // 수정 폼 닫기: 입력창 숨기고 기존 글 노출
-    function hideEditForm(id) {
-        document.getElementById('comment-text-' + id).style.display = 'block';
-        document.getElementById('edit-form-' + id).style.display = 'none';
-    }
-
-    // 삭제 확인창
-    function deleteComment(cId, bId) {
-        if(confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
-            location.href = "commentsDeleteOk.do?commentsId=" + cId + "&boardId=" + bId;
+        function hideReplyForm(id) {
+            document.getElementById('reply-form-' + id).style.display = 'none';
         }
-    }
 
-</script>
+        /*수정 폼 열기 : 기존 글 숨기고 입력창 노출*/
+        function showEditForm(id) {
+            document.getElementById('comment-text-' + id).style.display = 'none';
+            document.getElementById('edit-form-' + id).style.display = 'block';
+        }
+
+        /*수정 폼 닫기: 입력창 숨기고 기존 글 노출*/
+        function hideEditForm(id) {
+            document.getElementById('comment-text-' + id).style.display = 'block';
+            document.getElementById('edit-form-' + id).style.display = 'none';
+        }
+
+
+        function deleteComment(cId, bId) {
+            if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+                location.href = "commentsDeleteOk.do?commentsId=" + cId + "&boardId=" + bId;
+            }
+
+        }
+
+        function deletePost(boardId) {
+            if (confirm("정말 삭제하시겠습니까?")) {
+
+                const form = document.createElement("form");
+                form.method = "post";
+                form.action = "<c:url value='/BoardDelete.do'/>";
+
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "boardId";
+                input.value = boardId;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+    </script>
 </body>
-</html>
+</html> 오류없음?

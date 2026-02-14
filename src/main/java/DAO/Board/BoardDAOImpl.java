@@ -95,15 +95,58 @@ public class BoardDAOImpl implements BoardDAO {
         return result;
     }
 
-    // --- 추가된 댓글 관련 코드 (DTO 10개 필드 반영된 Mapper 호출) ---
+    // Service에서 사용하는 getBoardCont (기존 boardCont 재사용)
+    @Override
+    public BoardDTO getBoardCont(int boardId) {
+        return boardCont(boardId);
+    }
 
-    // 댓글 저장 (commentsIn)
+    // 게시글 수정
+    @Override
+    public void updateBoard(BoardDTO bdto) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            int result = sqlSession.update("Board.updateBoard", bdto);
+            if (result > 0) {
+                sqlSession.commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    // 게시글 삭제
+    @Override
+    public void deleteBoard(int boardId) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            int result = sqlSession.delete("Board.deleteBoard", boardId);
+            if (result > 0) {
+                sqlSession.commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    // --- 댓글 관련 코드 (기존 유지) ---
+
+    @Override
     public int commentsIn(CommentsDTO cdto) {
         SqlSession sqlSession = null;
         int result = 0;
         try {
             sqlSession = getSqlSession();
-            // 수정된 Mapper의 10개 컬럼 insert 로직 호출
             result = sqlSession.insert("Comments.commentsIn", cdto);
             if (result > 0) {
                 sqlSession.commit();
@@ -118,13 +161,12 @@ public class BoardDAOImpl implements BoardDAO {
         return result;
     }
 
-    // 댓글 목록 조회 (commentsList)
+    @Override
     public List<CommentsDTO> commentsList(int boardId) {
         SqlSession sqlSession = null;
         List<CommentsDTO> list = null;
         try {
             sqlSession = getSqlSession();
-            // 수정된 Mapper의 10개 컬럼 select 로직 호출
             list = sqlSession.selectList("Comments.commentsList", boardId);
         } catch (Exception e) {
             e.printStackTrace();

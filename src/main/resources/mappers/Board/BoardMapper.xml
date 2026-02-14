@@ -3,12 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-
 <mapper namespace="Board">
 
-    <insert id="boardIn" parameterType="bdto">
-        insert into BOARD (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo)
-            values(boardIdSeq.nextval, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
+    <insert id="boardIn" parameterType="DTO.Board.BoardDTO">
+        INSERT INTO BOARD
+        (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo)
+        VALUES
+            (boardIdSeq.nextval, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
     </insert>
 
     <select id="boardList" resultType="DTO.Board.BoardDTO">
@@ -16,7 +17,17 @@
     </select>
 
     <select id="boardCont" parameterType="int" resultType="DTO.Board.BoardDTO">
-        SELECT * FROM BOARD WHERE boardId = #{boardId}
+        SELECT
+            BOARDID as boardId,
+            BOARDTYPE as boardType,
+            BOARDTITLE as boardTitle,
+            BOARDCONTENT as boardContent,
+            BOARDNAME as boardName,
+            BOARDDATE as boardDate,
+            MEMNO as memNo,
+            BOARDRECOMMENDCOUNT as boardRecommendCount
+        FROM BOARD
+        WHERE BOARDID = #{boardId}
     </select>
 
     <update id="updateReadCount" parameterType="int">
@@ -24,5 +35,24 @@
         SET BOARDRECOMMENDCOUNT = NVL(BOARDRECOMMENDCOUNT, 0) + 1
         WHERE BOARDID = #{boardId}
     </update>
+
+    <update id="updateBoard" parameterType="DTO.Board.BoardDTO">
+        UPDATE BOARD
+        SET
+            BOARDTITLE = #{boardTitle},
+            BOARDCONTENT = #{boardContent}
+        WHERE BOARDID = #{boardId}
+    </update>
+
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM BOARD
+        WHERE BOARDID = #{boardId}
+    </delete>
+
+    <select id="getBoardCont" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM BOARD
+        WHERE BOARDID = #{boardId}
+    </select>
 
 </mapper>

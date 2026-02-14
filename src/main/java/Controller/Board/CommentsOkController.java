@@ -3,57 +3,57 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.CommentsDTO;
-import Service.Board.CommentsService;
 import Service.Board.CommentsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import java.io.PrintWriter;
+
 public class CommentsOkController implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        // 1. JSP의 name값과 반드시 일치해야 함
-        String boardIdStr = request.getParameter("boardId");
-        String boardTypeStr = request.getParameter("boardType");
-        String content = request.getParameter("commentsContent");
-
-        // 데이터가 안 넘어왔을 때를 위한 방어 코드
-        if (boardIdStr == null || content == null) {
+        HttpSession session = request.getSession();
+        // 02-14 비회원 로그인 세션 체크 추가
+        if (session.getAttribute("memNo") == null) {
+            response.setContentType("text/html;charset=utf-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>");
+            out.println("alert('댓글을 작성하려면 로그인을 해주세요');");
+            out.println("location.href='memberLogin.do';");
+            out.println("</script>");
+            out.close();
             return null;
         }
 
-        int boardId = Integer.parseInt(boardIdStr);
-        int boardType = Integer.parseInt(boardTypeStr);
+        // 로그인 로직 수행
+        int boardId = Integer.parseInt(request.getParameter("boardId"));
+        int boardType = Integer.parseInt(request.getParameter("boardType"));
+        String content = request.getParameter("commentsContent");
 
-        // 2. 세션 확인 (로그인 정보가 없으면 등록 안 됨)
-        HttpSession session = request.getSession();
-        Object memNoObj = session.getAttribute("memNo");
+        // JSP에서 넘어온 값 수집
+        int pId = Integer.parseInt(request.getParameter("parentBoardId"));
+        int pNo = Integer.parseInt(request.getParameter("parentBoardNo"));
+        int cNo = Integer.parseInt(request.getParameter("commentsNo"));
 
-        if (memNoObj == null) {
-            // 로그인 안 됐으면 로그인 페이지로 쫓아냄
-            ActionForward forward = new ActionForward();
-            forward.setPath("memberLogin.do");
-            forward.setRedirect(true);
-            return forward;
-        }
+        int memNo = (int) session.getAttribute("memNo");
+        String memName = (String) session.getAttribute("memName");
 
-        int memNo = (int)memNoObj;
-
-        // 3. DTO 세팅
         CommentsDTO cdto = new CommentsDTO();
         cdto.setBoardId(boardId);
         cdto.setBoardType(boardType);
         cdto.setCommentsContent(content);
         cdto.setMemNo(memNo);
-        cdto.setParentBoardId(boardId);
-        cdto.setCommentsName("작성자"); // 나중에 세션 이름으로 변경 가능
+        cdto.setCommentsName(memName != null ? memName : "익명");
 
-        // 4. 서비스 호출
-        CommentsService service = CommentsServiceImpl.getInstance();
-        int result = service.commentsIn(cdto);
+        // 핵심: 0이면 null로 세팅하여 DB FK 에러 방지
+        cdto.setParentBoardId(pId == 0 ? null : pId);
+        cdto.setParentBoardNo(pNo == 0 ? null : pNo);
+        cdto.setCommentsNo(cNo);
 
-        // 5. 성공 시 상세페이지로 리다이렉트
+        int result = CommentsServiceImpl.getInstance().commentsIn(cdto);
+
         ActionForward forward = new ActionForward();
         if (result > 0) {
             forward.setPath("postDetail.do?boardId=" + boardId);

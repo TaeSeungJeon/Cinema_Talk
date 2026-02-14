@@ -18,10 +18,10 @@ public class PostDetailController implements Action {
         int boardId = Integer.parseInt(request.getParameter("boardId"));
         BoardService service = new BoardServiceImpl();
 
-        service.plusReadCount(boardId); // 1. 조회수 증가
-        BoardDTO cont = service.getBoardDetail(boardId); // 2. 본문 가져오기
+        service.plusReadCount(boardId); // 조회수 증가
+        BoardDTO cont = service.getBoardDetail(boardId); // 본문 가져오기
 
-        // 3. 댓글 목록 가져오기 (화면에 보여주기 위해 꼭 필요!)
+        // 댓글 목록 가져오기 (화면에 보여주기 위해 꼭 필요)
         CommentsService cService = CommentsServiceImpl.getInstance();
         List<CommentsDTO> clist = cService.commentsList(boardId);
 

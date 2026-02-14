@@ -12,7 +12,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	<settings>
 		<setting name="logImpl" value="STDOUT_LOGGING" />
 		<!-- mybatis null 피라미터값 insert ,update시 에러가 발생하는 것을 방지한다. -->
-		<setting name="jdbcTypeForNull" value="NULL" /> 
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
 	</settings>
 
 	<typeAliases>

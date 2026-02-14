@@ -18,16 +18,16 @@ public class BoardController implements Action {
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        // 1. 서비스 객체 생성
+        // 서비스 객체 생성
         BoardService service = new BoardServiceImpl();
 
-        // 2. 게시글 전체 목록 가져오기 로직 수행
+        // 게시글 전체 목록 가져오기 로직 수행
         List<BoardDTO> list = service.boardList();
 
-        // 3. JSP에서 사용할 수 있도록 request 영역에 저장
+        // JSP에서 사용할 수 있도록 request 영역에 저장
         request.setAttribute("boardList", list);
 
-        // 4. 목록 페이지(freeBoard.jsp)로 이동 설정
+        // 목록 페이지(freeBoard.jsp)로 이동 설정
         ActionForward forward = new ActionForward();
         forward.setPath("/WEB-INF/views/board/freeBoard.jsp");
         forward.setRedirect(false); // 데이터를 담아서 가야 하므로 forward 방식(false)

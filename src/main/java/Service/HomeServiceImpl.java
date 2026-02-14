@@ -15,4 +15,9 @@ public class HomeServiceImpl implements HomeService {
 		return movieRecDAO.getIndexGenreList(memNo);
 	}
 
+	@Override
+	public List<MovieRecResponse> getIndexTrendList() {
+		return movieRecDAO.getIndexTrendList();
+	}
+
 }

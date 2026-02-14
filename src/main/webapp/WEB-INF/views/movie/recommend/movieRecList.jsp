@@ -163,7 +163,7 @@
 
 <body>
 
-  <%@ include file="/WEB-INF/views/include/memberHeader.jsp"%>
+  <%@ include file="../../home/homeHeader.jsp"%>
 
   <div class="page">
 

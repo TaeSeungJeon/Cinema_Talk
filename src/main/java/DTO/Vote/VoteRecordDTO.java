@@ -15,6 +15,4 @@ public class VoteRecordDTO {
 	private String voteCommentText;
 	private String memName;
 	
-	
-	
 }

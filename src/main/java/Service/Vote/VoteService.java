@@ -32,6 +32,8 @@ public interface VoteService {
 
 	void updateVoteStatus(VoteRegisterDTO voteReg);
 
+    List<VoteRegisterDTO> sortVote(List<VoteRegisterDTO> voteRegFullList);
+
 	
 
 }

@@ -15,6 +15,7 @@
 	--bg-color: #f0f2f5;
 	--glass-bg: rgba(255, 255, 255, 0.7);
 	--accent-color: #6366f1;
+	--accent-hover: #4338ca;
 	--text-main: #1f2937;
 	--text-muted: #64748b;
 	--radius-soft: 24px;
@@ -65,34 +66,28 @@ header {
 	box-shadow: var(--shadow-subtle);
 }
 
-/* --- 필터 탭 --- */
-.filter-container {
-	display: flex;
-	gap: 10px;
-	width: 100%;
-	max-width: 1000px;
-	justify-content: center;
-	margin: 10px 0;
-}
 
-.filter-btn {
-	padding: 10px 24px;
+
+.btn {
+	border: none;
+	padding: 15px;
 	border-radius: 12px;
-	border: 1px solid rgba(0, 0, 0, 0.1);
-	background: white;
+	font-weight: 600;
 	cursor: pointer;
-	font-weight: 500;
-	color: var(--text-muted);
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: 0.3s;
+	width: 100%;
 }
 
-.filter-btn:hover:not(.active) {
-	background-color: #f8fafc;
-	border-color: var(--accent-color);
-	color: var(--accent-color);
-	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+.btn-primary {
+	background: var(--accent-color);
+	color: white;
 }
+
+.btn-primary:hover {
+	background: var(--accent-hover);
+}
+
+
 
 .filter-btn.active {
 	background: var(--accent-color);
@@ -109,7 +104,7 @@ header {
 	display: flex;
 	flex-direction: column;
 	gap: 30px;
-	margin-top:100px;
+	
 }
 
 .vote-card {
@@ -132,6 +127,35 @@ header {
 	border-radius: 4px;
 	font-size: 0.8rem;
 	font-weight: bold;
+}
+
+.status-upcoming {
+	background-color: #e2e8f0;
+	color: #475569;
+}
+.status-ongoing::before {
+	content: "●";
+	margin-right: 4px;
+	animation: blink 1.5s infinite;
+}
+
+@keyframes blink { 
+	0% {
+	opacity: 1;
+}
+
+50%{
+opacity:0.3;
+}
+100%{
+opacity:1;
+}
+}
+
+/* 3. 완료: 가독성 좋은 레드/핑크 */
+.status-completed {
+	background-color: #f1f5f9;
+	color: #94a3b8;
 }
 
 .status-ongoing {
@@ -199,6 +223,27 @@ header {
 	accent-color: var(--accent-color);
 }
 
+.movie-option a {
+    margin-left: auto; /* 핵심: 왼쪽 마진을 최대로 밀어 오른쪽 끝으로 이동 */
+    padding: 8px 14px;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+    z-index: 10; /* 배경 게이지보다 위에 오도록 설정 */
+}
+
+.movie-option a:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
 .movie-thumb {
 	width: 60px;
 	height: 80px;
@@ -255,7 +300,11 @@ header {
 	background: white;
 	border-radius: 12px;
 	border: 1px solid #e2e8f0;
+	 display: none; 
+	 animation: fadeIn 0.5s ease;
 }
+
+
 
 .comment-count {
 	font-weight: bold;
@@ -333,6 +382,16 @@ header {
 	border-radius: 50%;
 }
 
+.page-title {
+	font-size: 2.2rem;
+	font-weight: 700;
+	margin-bottom: 10px;
+}
+
+.page-desc {
+	color: var(--text-muted);
+	margin-bottom: 40px;
+}
 .username {
 	font-weight: bold;
 	font-size: 0.9rem;
@@ -365,6 +424,11 @@ header {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+.header {
+	max-width: 1200px;
+	
+	text-align: center;
+}
 </style>
 <!-- 공통스타일시트 -->
  <link rel="stylesheet" 
@@ -373,18 +437,18 @@ header {
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
-    // 1. 서버에서 받은 resultList를 JS 배열로 변환
-    // (JSTL의 c:forEach를 사용하여 JS 객체 배열을 만듭니다)
+    // 서버에서 받은 resultList를 JS 배열로 변환
+   
    <c:set var="validCommentCount" value="0" />
 
 <c:forEach var="res" items="${voteRecordList}">
-    <%-- 2. 빈 문자열("")이 아니고 null이 아닌 경우에만 카운트 증가 --%>
+   
     <c:if test="${not empty res.voteCommentText}">
         <c:set var="validCommentCount" value="${validCommentCount + 1}" />
     </c:if>
 </c:forEach>
     const data = {
-    // 1. 투표 결과 통계
+    // 투표 결과 통계
     results: [
         <c:forEach var="res" items="${voteInfo.resultList}" varStatus="status">
             {
@@ -395,10 +459,10 @@ $(document).ready(function() {
         </c:forEach>
     ],
     
-    // 2. 현재 로그인한 사용자의 선택값 (없으면 null 또는 0)
+    //현재 로그인한 사용자의 선택값 (없으면 null 또는 0)
     userResult: "${voteInfo.userChoice}",
 
-    // 3. 댓글 리스트 (문자열은 반드시 따옴표로 감싸야 함)
+    // 댓글 리스트 (문자열은 반드시 따옴표로 감싸야 함)
     comments: [
             <c:forEach var="res" items="${voteRecordList}" varStatus="status">
                 <%-- JS 배열에도 내용이 있는 것만 담기 --%>
@@ -420,7 +484,6 @@ $(document).ready(function() {
     // 2. 데이터가 있을 때만 실행하는 함수 정의
     function displayVoteResults(data) {
         if (!data || !data.results) return;
-console.log(data)
         data.results.forEach(function(item) {
             // 해당 영화 ID를 가진 input 찾기
             
@@ -480,7 +543,7 @@ if(data.userResult != 0 || data.userResult != '0') {
     // 3. 페이지 로드 시 바로 실행
     displayVoteResults(data);
 
-    $("#submitComment").on("click", function() {
+    $("#submitComment").on("click", function(e) {
         const $textarea = $("#commentText");
         const commentContent = $textarea.val().trim(); // 앞뒤 공백 제거
 
@@ -491,16 +554,60 @@ if(data.userResult != 0 || data.userResult != '0') {
             return false;
         }
 
-        // 2. 글자수 제한 (필요시 추가, 예: 300자)
-        if (commentContent.length > 300) {
-            alert("댓글은 300자 이내로 작성 가능합니다.");
-            return false;
+		 e.preventDefault(); // 1. 브라우저의 페이지 이동 기능을 차단!
+
+		// 2. 폼 데이터 준비
+		const formData = $("#commentForm").serialize(); 
+
+		// 3. AJAX로 전송
+		$.ajax({
+			type: "POST",
+        url: "voteOk.do", 
+        data: formData,
+        success: function(response) {
+            const data = JSON.parse(response);
+            console.log(data)
+            if (data.status === "SUCCESS") {
+               
+                
+                // 댓글 리스트 업데이트
+                updateComments(data.comments);
+                
+                // 입력창 비우기
+                $("#commentText").val("");
+                alert("댓글이 등록되었습니다!");
+            }
+        },
+        error: function() {
+            alert("통신 중 오류가 발생했습니다.");
         }
 
-        // 3. 검사 통과 시 폼 전송
-        $("#commentForm").submit();
+     
+});
     });
 });
+
+function updateComments(comments) {
+    let html = "";
+	let validCommentCount = 0;
+    comments.forEach(c => {
+		if(c.commentText){
+html += `
+            <div class="comment-item" style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                <div style="font-weight: bold; color: var(--primary);">\${c.memName}</div>
+                <div style="margin: 5px 0;">\${c.commentText}</div>
+                <div style="font-size: 0.8rem; color: #999;">\${c.createdDate}</div>
+            </div>
+        `;
+validCommentCount++;
+		}
+        
+    });
+	
+   $(".comment-list").hide().html(html).fadeIn();
+        $(".comment-count").text(`댓글 \${validCommentCount}개`);
+	
+}
 </script>
 </head>
 <body>
@@ -522,7 +629,10 @@ if(data.userResult != 0 || data.userResult != '0') {
 	      <h3>${voteInfo.userChoice}</h3> 
 
     <hr>  --%>
-	
+	<div class="header">
+    <h1 class="page-title">PICK YOUR BEST</h1>
+    <p class="page-desc">치열한 경쟁 속, 당신의 마음을 훔친 단 하나의 영화를 선택해 주세요.</p>
+</div>
 
 	<main class="vote-section">
 
@@ -537,7 +647,7 @@ if(data.userResult != 0 || data.userResult != '0') {
 
 							<c:choose>
 								<c:when test="${voteInfo.voteStatus eq 'READY'}">
-								<strong class="status-badge status-ongoing">예정</strong> <span>시작:
+								<strong class="status-badge status-upcoming">예정</strong> <span>시작:
 								<span id="voteEndDate">${voteInfo.voteStartDate}</span>
 							</span>
 								</c:when>
@@ -549,7 +659,7 @@ if(data.userResult != 0 || data.userResult != '0') {
 								</c:when>
 								
 								<c:when test="${voteInfo.voteStatus eq 'CLOSED'}">
-								<strong class="status-badge status-ongoing">종료</strong> <span>종료:
+								<strong class="status-badge status-completed">종료</strong> <span>종료:
 								<span id="voteEndDate">${voteInfo.voteEndDate}</span>
 							</span>
 								</c:when>
@@ -590,6 +700,9 @@ if(data.userResult != 0 || data.userResult != '0') {
 
 									</div>
 
+									<a href="movie_detail.do?id=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
+
+
 								</label>
 							</c:forEach>
 						</div>
@@ -600,7 +713,7 @@ if(data.userResult != 0 || data.userResult != '0') {
     <c:choose>
         <%-- 1. 투표 예정 상태이거나 이미 참여한 경우 (비활성화) --%>
         <c:when test="${voteInfo.voteStatus eq 'READY' or  voteInfo.userChoice ne 0 or voteInfo.userChoice ne '0'}">
-            <button class="btn btn-primary action-btn disabled-style" disabled>
+            <button class="btn btn-primary  disabled-style" disabled>
                 <c:choose>
                     <c:when test="${voteInfo.voteStatus eq 'READY'}">투표 예정</c:when>
                     <c:otherwise>참여 완료</c:otherwise>
@@ -610,8 +723,8 @@ if(data.userResult != 0 || data.userResult != '0') {
         
         <%-- 2. 그 외 (진행 중이며 참여 가능한 경우) --%>
         <c:otherwise>
-            <button class="btn btn-primary cmnt-show-btn action-btn" 
-                    onclick="submitVote()">투표하기</button>
+            <button class="btn btn-primary  submit-vote-btn"  data-vote-id="${voteInfo.voteId}"
+                    >투표하기</button>
         </c:otherwise>
     </c:choose>
 </div>
@@ -619,7 +732,7 @@ if(data.userResult != 0 || data.userResult != '0') {
 
 
 <c:if test="${voteInfo.voteStatus ne 'READY' }">
-<div class="comment-section">
+<div class="comment-section" style="display: ${(voteInfo.voted || voteInfo.voteStatus eq 'CLOSED') ? 'block' : 'none'};">
 							<div class="comment-count "></div>
 							<form id="commentForm" action="voteOk.do" method="post">
 								<input type="hidden" name="voteId" value="${voteInfo.voteId}">
@@ -630,13 +743,13 @@ if(data.userResult != 0 || data.userResult != '0') {
 										placeholder="댓글 내용을 입력해주세요."></textarea>
 										
 									<c:choose>
-    <%-- $ 표시를 꼭 붙여주세요 --%>
+    
     <c:when test="${voteInfo.voteStatus eq 'CLOSED'}">
         <button type="button" class="submit-btn disabled-style " id="submitComment" disabled>등록</button>
     </c:when>
     
     <c:otherwise>
-        <%-- 보통 active 상태일 때 디자인을 위해 클래스를 넣으므로, disabled-style은 위쪽에 어울릴 것 같네요 --%>
+       
         <button type="button" class="submit-btn" id="submitComment">등록</button>
     </c:otherwise>
 </c:choose>
@@ -657,6 +770,7 @@ if(data.userResult != 0 || data.userResult != '0') {
 
 
 	</main>
+	<script src="${pageContext.request.contextPath}/js/vote.js"></script>
 	<script src="${pageContext.request.contextPath}/js/home.js"></script>
 </body>
 </html>

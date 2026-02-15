@@ -27,14 +27,13 @@ public class VoteOkController implements Action {
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-
 		response.setContentType("text/html;charset=UTF-8");
 
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
 
 		VoteService voteService = new VoteServiceImpl();
-		
+
 		String sessionMemId = (String) session.getAttribute("memId");
 
 		// 2. 로그인 여부 확인 (null이 아니면 true)
@@ -47,54 +46,50 @@ public class VoteOkController implements Action {
 			MemberDTO memDto = memberService.idCheck(sessionMemId);
 			memNo = memDto.getMemNo();
 		}
-		
-		
-		
-		if(!isLogin) {
+
+		if (!isLogin) {
 			JSONObject error = new JSONObject();
-		    error.put("status", "LOGIN_REQUIRED");
-		    out.print(error.toString());
-		    out.flush();
-			    return null;
-		}else {
-			
-			
-			int voteId = Integer.parseInt(request.getParameter("voteId")); 	
-			int movieId = Integer.parseInt(request.getParameter("movieId")); 
+			error.put("status", "LOGIN_REQUIRED");
+			out.print(error.toString());
+			out.flush();
+			return null;
+		} else {
+
+			int voteId = Integer.parseInt(request.getParameter("voteId"));
+			int movieId = Integer.parseInt(request.getParameter("movieId"));
 			String cmnt = request.getParameter("voteCommentText");
 
-			//vote_id로 vote_register를 조회해서 반환받은다음에 현재와 종료날짜 비교하여 지났으면 return 하고, 현재와 시작날짜 비교하여 시작전이면 return함
+			// vote_id로 vote_register를 조회해서 반환받은다음에 현재와 종료날짜 비교하여 지났으면 return 하고, 현재와 시작날짜
+			// 비교하여 시작전이면 return함
 
-			//vote_register 조회
+			// vote_register 조회
 			VoteRegisterDTO voteReg = voteService.getVoteRegById(voteId);
 
-			if(voteReg == null) {
+			if (voteReg == null) {
 				out.println("NO_VOTES");
 				out.flush();
 				return null;
 			}
-			
-			
-			SimpleDateFormat sdf =
-				    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-				Date now = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-				Date start = sdf.parse(voteReg.getVoteStartDate());
-				Date end   = sdf.parse(voteReg.getVoteEndDate());
-				
-				if(now.before(start)){
-					out.println("NOT_STARTED");
-					out.flush();
-				    return null;
-				}
+			Date now = new Date();
 
-				// 종료됨
-				if(now.after(end)){
-					out.println("ENDED");
-					out.flush();
-				    return null;
-				}
+			Date start = sdf.parse(voteReg.getVoteStartDate());
+			Date end = sdf.parse(voteReg.getVoteEndDate());
+
+			if (now.before(start)) {
+				out.println("NOT_STARTED");
+				out.flush();
+				return null;
+			}
+
+			// 종료됨
+			if (now.after(end)) {
+				out.println("ENDED");
+				out.flush();
+				return null;
+			}
 
 			VoteRecordDTO voteRecord = new VoteRecordDTO();
 			voteRecord.setMemNo(memNo);
@@ -103,56 +98,55 @@ public class VoteOkController implements Action {
 			voteRecord.setVoteCommentText(cmnt);
 
 			try {
-				//투표한적 있는지 판단
+				// 투표한적 있는지 판단
 				VoteRecordDTO existingRecord = voteService.getVoteRecordByMemNo(voteRecord);
-				//기록이 없으면 새로 insert
-				if(existingRecord == null) {
-					//사용자의 투표를 기록한다
+
+				if (existingRecord == null) {
 					voteService.insertVoteRecord(voteRecord);
-					// 영화별 투표 결과 가져오기
-				List<VoteResultDTO> resultList = voteService.getVoteResult(voteId);
-				
-				JSONArray jsonArray = new JSONArray();
-
-				for (VoteResultDTO dto : resultList) {
-				    JSONObject jsonObj = new JSONObject();
-				    jsonObj.put("movieId", dto.getMovieId());
-				    jsonObj.put("count", dto.getCount());
-				    jsonObj.put("percentage", dto.getPercentage());
-				    jsonObj.put("rank", dto.getRank());
-				    
-				    jsonArray.put(jsonObj);
-				}
-				JSONObject success = new JSONObject();
-				success.put("status", "SUCCESS");
-				success.put("results", jsonArray); //  투표 결과 배열
-				out.print(success.toString());
-
-				// request에 담아서 jsp로 전달
-//				request.setAttribute("vote_result", resultList);
-
-//				out.print("SUCCESS");
-//				System.out.println("suces");
-				
-			    out.flush();
-			    out.close();
-				}else {
-					//사용자의 투표를 수정한다
+				} else {
 					voteService.updateVoteRecord(voteRecord);
-			ActionForward forward = new ActionForward();
-		forward.setRedirect(true);
-forward.setPath("voteCont.do?voteId=" + voteId); 
-return forward;
 				}
-			
-				
+				List<VoteResultDTO> resultList = voteService.getVoteResult(voteId);
+
+				JSONArray resultJsonArray = new JSONArray();
+				for (VoteResultDTO dto : resultList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("movieId", dto.getMovieId());
+					jsonObj.put("count", dto.getCount());
+					jsonObj.put("percentage", dto.getPercentage());
+					jsonObj.put("rank", dto.getRank());
+					resultJsonArray.put(jsonObj);
+				}
+
+				List<VoteRecordDTO> vrecord = voteService.getVoteRecordByVoteId(voteId);
+				JSONArray recordJsonArray = new JSONArray();
+
+				for (VoteRecordDTO record : vrecord) {
+					JSONObject recObj = new JSONObject();
+					recObj.put("memName", record.getMemName());
+					recObj.put("commentText", record.getVoteCommentText());
+					recObj.put("createdDate", record.getRecordCreatedDate());
+					recObj.put("movieId", record.getMovieId()); // 어떤 영화에 단 댓글인지 구분용
+					recordJsonArray.put(recObj);
+				}
+
+				JSONObject finalResponse = new JSONObject();
+				finalResponse.put("status", "SUCCESS");
+				finalResponse.put("results", resultJsonArray); // 투표 집계 결과
+				finalResponse.put("comments", recordJsonArray);
+
+				out.print(finalResponse.toString());
+				out.flush();
+				out.close();
+
+				return null;
+
 			} catch (Exception e) {
-				e.printStackTrace(); 
+				e.printStackTrace();
 
 				out.print("ERROR");
 				out.flush();
 			}
-
 
 		}
 

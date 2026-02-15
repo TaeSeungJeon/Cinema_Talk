@@ -1,10 +1,7 @@
 package Controller.Vote;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import Controller.Action;
 import Controller.ActionForward;
@@ -38,29 +35,23 @@ public class VoteListController implements Action {
 		//모든 투표목록 가져오기
 		List<VoteRegisterDTO> voteRegFullList = voteService.getVoteRegFullList();
 
-		
+		voteRegFullList=voteService.sortVote(voteRegFullList);
+		System.out.println(voteRegFullList.getFirst().getVoteId());
 
 		//로그인 사용자 정보 가져오기
-		Object memIdAttr = session.getAttribute("memId");
-		String memId = null;
-		if(memIdAttr != null) {
-			if( memIdAttr instanceof String) {
-				memId = (String) memIdAttr;
-			}
-
-		}
-
-		MemberDTO mem = null;
-		if(memId != null) {
-			mem = memberService.idCheck(memId);		
-		}
+		String memId = (String) session.getAttribute("memId"); // 값이 없으면 자동으로 null
+		MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
+		
 		final MemberDTO finalMem = mem;
+
+		Object filterObj = request.getParameter("filter");
+		String filter = filterObj == null ? null : (String) filterObj;
 		
 		
 		voteRegFullList.forEach(vote -> {
 			//현재 시간 기준으로 상태(READY, ONGOING, CLOSED) 업데이트
 			voteService.updateVoteStatus(vote);
-			
+			vote.setVoted(false);
 			VoteRecordDTO temp = new VoteRecordDTO();
 			temp.setVoteId(vote.getVoteId());
 			
@@ -69,38 +60,27 @@ public class VoteListController implements Action {
 			if(finalMem != null) {
 				temp.setMemNo(finalMem.getMemNo());
 				VoteRecordDTO vrec = voteService.getVoteRecordByMemNo(temp);
-				vote.setUserChoice(vrec.getMovieId());
+				if(vrec != null){
+					vote.setUserChoice(vrec.getMovieId());
+					vote.setVoted(true);
+				}
+				
 				
 			}
 			
 			//결과 집계
-			if("CLOSED".equals(vote.getVoteStatus()) || (Integer) vote.getUserChoice() != null) {
+			if(vote.isVoted() || "CLOSED".equals(vote.getVoteStatus())){
 				List<VoteResultDTO> voteResultList = voteService.getVoteResult(vote.getVoteId());
 				vote.setResultList(voteResultList);
 			}
 		});
 		
 		
-		List<VoteRegisterDTO> activeReg = new ArrayList<>();
-		List<VoteRegisterDTO> readyReg = new ArrayList<>();
-		List<VoteRegisterDTO> closedReg = new ArrayList<>();
 		
-		for(VoteRegisterDTO v : voteRegFullList) {
-			if("ACTIVE".equals(v.getVoteStatus())) {
-				
-			}else if("READY".equals(v.getVoteStatus())) {
-				
-			}
-		}
+		request.setAttribute("voteRegisterAll", voteRegFullList);
+		if(filter != null)
+		request.setAttribute("filter", filter);
 		
-		
-		
-		request.setAttribute("voteRegisterActive", activeReg);
-		request.setAttribute("voteRegisterReady", readyReg);
-		request.setAttribute("voteRegisterClosed", closedReg);
-
-
-	
 
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

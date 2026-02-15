@@ -69,8 +69,8 @@ body {
 }
 
 .header {
-	max-width: 1200px;
-	margin: 0 auto 30px;
+	width:100%;
+	
 	text-align: center;
 }
 
@@ -217,6 +217,9 @@ body {
 	object-fit: cover;
 }
 
+.movie-info {
+    flex-grow: 1; /* 이 설정이 있어야 오른쪽 버튼이 끝으로 밀립니다 */
+}
 .movie-info .m-title {
 	font-weight: 700;
 	font-size: 1rem;
@@ -458,6 +461,27 @@ opacity:1;
 .glass-panel.no-active-vote {
 	width: 100%;
 }
+
+.movie-option a {
+    margin-left: auto; /* 핵심: 왼쪽 마진을 최대로 밀어 오른쪽 끝으로 이동 */
+    padding: 8px 14px;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+    z-index: 10; /* 배경 게이지보다 위에 오도록 설정 */
+}
+
+.movie-option a:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
 </style>
 <!-- 공통스타일시트 -->
 <link rel="stylesheet"
@@ -474,21 +498,6 @@ opacity:1;
 		<p class="page-desc">마음에 드는 영화에 한 표. 순위는 커뮤니티가 만듭니다.</p>
 	</div>
 
-	<%-- <c:forEach var="vote" items="${voteRegisterActive}"> 
-	     <h3>${vote.vote_title}</h3> 
-	    <h3>${vote.vote_id}</h3> 
-	     <h3>${vote.vote_status}</h3> 
-
-	     <c:forEach var="opt" items="${vote.optionList}">
-	        movie_id : ${opt.movie_id} <br> 
-	        title : ${opt.movie_title} <br> 
-	     </c:forEach> 
-	      <h3>${vote.voted}</h3> 
-	     <h3>${vote.vote_status}</h3> 
-	      <h3>${vote.vote_title}</h3> 
-
-    <hr> 
-	</c:forEach> --%>
 
 
 	<main class="main-layout" style="width: 100%">
@@ -538,6 +547,8 @@ opacity:1;
 
 												</div>
 
+												<a href="movie_detail.do?id=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
+
 											</label>
 										</c:forEach>
 									</div>
@@ -577,7 +588,7 @@ opacity:1;
 				style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
 				<div class="sidebar-title"
 					style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-					<span>예정된 투표</span> <a href="voteList.do"
+					<span>예정된 투표</span> <a href="voteList.do?filter=READY"
 						style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
 						전체보기 > </a>
 				</div>
@@ -609,7 +620,7 @@ opacity:1;
 				style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
 				<div class="sidebar-title"
 					style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-					<span>지난 투표 결과</span> <a href="voteList.do"
+					<span>지난 투표 결과</span> <a href="voteList.do?filter=CLOSED"
 						style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
 						전체보기 > </a>
 				</div>

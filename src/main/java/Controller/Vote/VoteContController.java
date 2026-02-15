@@ -1,17 +1,14 @@
 package Controller.Vote;
 
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
 
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
 import DTO.Vote.VoteRecordDTO;
 import DTO.Vote.VoteRegisterDTO;
-import DTO.Vote.VoteResultDTO;
+
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
 import Service.Vote.VoteService;

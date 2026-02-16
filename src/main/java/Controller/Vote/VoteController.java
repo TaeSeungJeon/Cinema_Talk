@@ -1,12 +1,10 @@
 package Controller.Vote;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import Controller.Action;
@@ -80,9 +78,9 @@ public class VoteController implements Action {
 	List<VoteRegisterDTO> closedReg = groupedVotes.getOrDefault("CLOSED", new ArrayList<>());
 
 	request.setAttribute("voteRegisterActive", activeReg.stream()
-    .filter(vote -> !vote.isVoted()) // 1. 아직 참여하지 않은(false) 것만 필터링
-    .sorted(Comparator.comparing(VoteRegisterDTO::getVoteEndDate)) // 2. 종료 임박순 정렬
-    .collect(Collectors.toList())); // 3. 리스트로 변환// 리스트로 변환 필수
+    .filter(vote -> !vote.isVoted()) 
+    .sorted(Comparator.comparing(VoteRegisterDTO::getVoteEndDate)) 
+    .collect(Collectors.toList())); 
 
 	request.setAttribute("voteRegisterReady", 
 		readyReg.stream().sorted(Comparator.comparing(VoteRegisterDTO::getVoteStartDate).reversed()) 

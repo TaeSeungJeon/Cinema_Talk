@@ -36,7 +36,7 @@ public class VoteOkController implements Action {
 
 		String sessionMemId = (String) session.getAttribute("memId");
 
-		// 2. 로그인 여부 확인 (null이 아니면 true)
+		//  로그인 여부 확인 (null이 아니면 true)
 		boolean isLogin = (sessionMemId != null);
 
 		int memNo = -1; // 기본값 설정

@@ -62,13 +62,8 @@ public class VoteContController implements Action {
 			request.setAttribute("voteRecordList", voteService.getVoteRecordByVoteId(voteId));
 		}
 
-			voteReg.setVoted(voted);
-					
-
-
-
-
-
+		voteReg.setVoted(voted);
+		
 		request.setAttribute("voteInfo", voteReg);
 
 		ActionForward forward = new ActionForward();

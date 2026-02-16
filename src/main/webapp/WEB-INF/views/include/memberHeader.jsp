@@ -48,6 +48,13 @@
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">
+        <div class="cat-title">투표 ▾</div>
+        <ul class="sub-menu">
+            <li><a href="vote.do">오늘의 투표</a></li>
+            <li><a href="voteList.do">투표목록</a></li>
+        </ul>
+    </div>
+    <div class="category-bubble" onclick="toggleMenu(this)">
         <div class="cat-title">고객센터 ▾</div>
         <ul class="sub-menu">
             <li><a href="faq.jsp">자주 묻는 질문</a></li>

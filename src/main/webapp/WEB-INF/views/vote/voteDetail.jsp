@@ -34,28 +34,7 @@ body {
 	gap: 20px;
 }
 
-/* --- Header & Navigation --- */
-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	max-width: 1200px;
-	width: 100%;
-	margin-bottom: 10px;
-}
 
-.search-bar {
-	background: var(--glass-bg);
-	backdrop-filter: blur(10px);
-	border-radius: 50px;
-	padding: 10px 30px;
-	width: 40%;
-	text-align: center;
-	border: 1px solid rgba(255, 255, 255, 0.3);
-	box-shadow: var(--shadow-subtle);
-	color: #94a3b8;
-	font-size: 0.9rem;
-}
 
 .glass-panel2 {
 	background: var(--glass-bg);

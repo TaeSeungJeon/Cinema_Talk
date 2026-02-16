@@ -58,7 +58,7 @@ body {
 	box-shadow: var(--shadow-subtle);
 }
 
-.aside.glass-panel {
+.aside .glass-panel {
 	background: var(--glass-bg);
 	backdrop-filter: blur(15px);
 	border: 1px solid rgba(255, 255, 255, 0.4);
@@ -66,6 +66,8 @@ body {
 	padding: 25px;
 	box-shadow: var(--shadow-subtle);
 	display: block;
+	animation: fadeIn 0.4s ease forwards;
+	 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .header {
@@ -103,8 +105,14 @@ body {
 	gap: 15px;
 	padding: 20px;
 	overflow: hidden;
+	animation: fadeIn 0.4s ease forwards;
+	 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+  @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 /* 슬라이드가 보이는 창 */
 .vote-window {
 	flex: 1;
@@ -129,6 +137,7 @@ body {
 	flex-direction: column;
 	box-sizing: border-box;
 	padding: 0 10px;
+	
 }
 
 .vote-header {

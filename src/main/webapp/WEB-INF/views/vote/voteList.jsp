@@ -21,7 +21,7 @@
             --status-closed: #94a3b8;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {   padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -340,6 +340,8 @@
             });
         });
 </script>
+
+<script src="${pageContext.request.contextPath}/js/home.js"></script>
 
 </body>
 </html>

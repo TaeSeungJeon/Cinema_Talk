@@ -431,9 +431,37 @@
                       style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardRecommendCount}</span>
             </div>
 
-            <div class="post-body">
+            <div class="post-body" id="post-body">
                 ${cont.boardContent}
             </div>
+
+            <div id="update-form" style="display:none; margin-top:20px;">
+                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post">
+                    <input type="hidden" name="boardId" value="${cont.boardId}">
+
+                    <input type="text" name="boardTitle"
+                           value="${cont.boardTitle}"
+                           style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
+
+                    <textarea name="boardContent"
+                              style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; resize:none;">${cont.boardContent}</textarea>
+
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+                        <button type="button"
+                                onclick="hideUpdateForm()"
+                                style="padding:8px 18px; border-radius:10px; border:none; background:#9ca3af; color:white; font-weight:600; cursor:pointer;">
+                            취소
+                        </button>
+
+                        <button type="submit"
+                                style="padding:8px 18px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:700; cursor:pointer;">
+                            수정완료
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
 
             <div class="post-footer-actions"
                  style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
@@ -446,7 +474,7 @@
                     <div class="right-actions" style="display: flex; gap: 10px;">
                         <button type="button" class="btn-edit"
                                 style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
-                                onclick="location.href='${pageContext.request.contextPath}/BoardUpdateForm.do?boardId=${cont.boardId}'">
+                                onclick="showUpdateForm()">
                             수정하기
                         </button>
                         <button type="button" class="btn-delete"
@@ -638,7 +666,7 @@
 
                 const form = document.createElement("form");
                 form.method = "post";
-                form.action = "<c:url value='/BoardDelete.do'/>";
+                form.action = "<c:url value='/boardDelete.do'/>";
 
                 const input = document.createElement("input");
                 input.type = "hidden";
@@ -650,7 +678,18 @@
                 form.submit();
             }
         }
+        /* 게시글 수정 폼 열기 */
+        function showUpdateForm() {
+            document.getElementById("post-body").style.display = "none";
+            document.getElementById("update-form").style.display = "block";
+        }
+
+        /* 게시글 수정 폼 닫기 */
+        function hideUpdateForm() {
+            document.getElementById("post-body").style.display = "block";
+            document.getElementById("update-form").style.display = "none";
+        }
 
     </script>
 </body>
-</html> 오류없음?
+</html>

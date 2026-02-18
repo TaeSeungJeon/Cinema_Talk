@@ -60,7 +60,7 @@ public class BoardUpdateOkController implements Action {
         boardService.updateBoard(bdto);
 
         // 상세페이지로 이동
-        forward.setPath("boardContent.do?boardId=" + boardId);
+        forward.setPath("postDetail.do?boardId=" + boardId);
         forward.setRedirect(true);
 
         return forward;

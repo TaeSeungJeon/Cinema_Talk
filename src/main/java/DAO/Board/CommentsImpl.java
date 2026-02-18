@@ -3,14 +3,14 @@ package DAO.Board;
 import java.util.List;
 import java.util.Map;
 
-import mybatis.SqlMapConfig;
+import mybatis.DBService;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import DTO.Board.CommentsDTO;
 
 public class CommentsImpl implements Comments {
 
-    private SqlSessionFactory factory = SqlMapConfig.getSqlSessionFactory();
+    private SqlSessionFactory factory = DBService.getFactory();
 
     // 싱글톤
     private static CommentsImpl instance = new CommentsImpl();
@@ -31,7 +31,7 @@ public class CommentsImpl implements Comments {
     // 메서드명을 매퍼 ID(commentsList)와 통일
     @Override
     public List<CommentsDTO> commentsList(int boardId) {
-        SqlSession sqlSession = factory.openSession();
+        SqlSession sqlSession = factory.openSession(true);
         List<CommentsDTO> list = sqlSession.selectList("Comments.commentsList", boardId);
         sqlSession.close();
         return list;

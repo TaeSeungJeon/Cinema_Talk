@@ -30,4 +30,12 @@ public interface VoteService {
 
 	VoteRegisterDTO getVoteRegFullById(int voteId);
 
+	void updateVoteStatus(VoteRegisterDTO voteReg);
+
+    List<VoteRegisterDTO> sortVote(List<VoteRegisterDTO> voteRegFullList);
+
+    boolean insertVoteRegister(VoteRegisterDTO vdto);
+
+	
+
 }

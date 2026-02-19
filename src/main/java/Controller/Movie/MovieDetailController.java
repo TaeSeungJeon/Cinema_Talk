@@ -34,7 +34,7 @@ public class MovieDetailController implements Action {
 		// 3. 영화가 없으면 에러 페이지로 이동
 		if (movieDetail == null) {
 			ActionForward forward = new ActionForward();
-			forward.setPath("/WEB-INF/views/error/not_found.jsp");
+			forward.setPath("/WEB-INF/views/error/notFound.jsp");
 			forward.setRedirect(false);
 			return forward;
 		}

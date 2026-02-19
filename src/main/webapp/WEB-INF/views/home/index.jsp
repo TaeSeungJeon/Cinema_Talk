@@ -15,7 +15,7 @@
   </head>
 
   <body class="page-home" data-context-path="${pageContext.request.contextPath}">
-    <%@ include file="../include/memberHeader.jsp"%>
+    <%@ include file="homeHeader.jsp"%>
 
     <!-- 레이아웃: 사이드바 + main -->
     <div class="container">

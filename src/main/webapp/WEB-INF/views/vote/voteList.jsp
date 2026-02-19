@@ -1,369 +1,347 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>투표 목록 - 프리미엄 영화 큐레이션</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Cinema Talk - 투표 목록</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f0f2f5;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --accent-color: #6366f1;
-            --text-main: #1f2937;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #1e293b;
             --text-muted: #64748b;
-            --radius-soft: 24px;
-            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
+            --status-active: #22c55e;
+            --status-ready: #f59e0b;
+            --status-closed: #94a3b8;
         }
+
+        * {   padding: 0; }
 
         body {
-            font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
             color: var(--text-main);
-            margin: 0; padding: 25px;
-            display: flex; flex-direction: column; align-items: center; gap: 30px;
+            padding: 40px 20px;
+            line-height: 1.6;
         }
 
-        /* --- Header & Layout --- */
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            max-width: 1200px; width: 100%;
+        .vote-list-container { width: 1200px; margin: 0 auto; }
+
+        /* 헤더 섹션 */
+        .v-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.4);
-            border-radius: var(--radius-soft);
-            padding: 20px;
-            box-shadow: var(--shadow-subtle);
-        }
+        .v-title-group {
+	max-width: 1200px;
+	
+	text-align: center;
+}
 
-        /* --- 필터 탭 영역 (이미지 상단 버튼부) --- */
-        .filter-nav {
-            display: flex; gap: 12px; max-width: 1200px; width: 100%; justify-content: flex-start;
-        }
+
+        .v-title-group p { color: var(--text-muted); font-size: 1rem; }
+
+        /* 필터 네비게이션 */
+       .v-filter-nav {
+    background: #fff;
+    padding: 6px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 5px;
+    margin-top: 30px;
+      margin-bottom: 30px;
+
+    /* 추가된 부분 */
+    width: fit-content;   /* 내용물만큼만 너비 차지 */
+    margin-left: auto;    /* 왼쪽 여백을 최대로 밀어 오른쪽 정렬 */
+}
 
         .filter-btn {
-            padding: 10px 24px;
+            border: none;
+            background: none;
+            padding: 10px 20px;
             border-radius: 12px;
-            border: 1px solid rgba(0,0,0,0.05);
-            background: white;
-            cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-muted);
-            transition: 0.3s;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .filter-btn.active {
-            background: var(--accent-color);
-            color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
-        .filter-btn:hover:not(.active) {
-            background: #f8fafc;
-            transform: translateY(-2px);
+        /* 그리드 레이아웃 */
+        .v-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
         }
 
-        /* --- 투표 리스트 컨테이너 --- */
-        .vote-list-container {
-            display: flex; flex-direction: column; gap: 40px; max-width: 900px; width: 100%;
-        }
-
-        /* --- 개별 투표 카드 스타일 --- */
-        .vote-card {
+        /* 카드 디자인 */
+        .v-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
             padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
         }
 
-        .vote-status-bar {
-            display: flex; gap: 15px; margin-bottom: 20px; font-size: 0.85rem;
+        .v-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+            cursor:pointer;
         }
 
-        .status-tag {
-            background: #e2e8f0; padding: 4px 12px; border-radius: 6px; font-weight: 600;
+        /* 상태 뱃지 */
+        .v-status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .status-tag.ongoing { background: #fee2e2; color: #ef4444; } /* 진행중 빨간 계열 */
-        .status-tag.upcoming { background: #dcfce7; color: #10b981; } /* 예정된 초록 계열 */
-
-        .vote-title {
-            font-size: 1.4rem; font-weight: 700; text-align: center; margin-bottom: 30px;
+        .v-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 8px;
+            text-transform: uppercase;
         }
 
-        /* --- 투표 항목 (이미지 내부 박스) --- */
-        .vote-item {
-            display: flex; align-items: center; gap: 20px;
-            background: white; border-radius: 15px; padding: 15px;
-            margin-bottom: 12px; border: 1px solid rgba(0,0,0,0.05);
-            transition: 0.2s;
+        .v-badge.active { background: #dcfce7; color: var(--status-active); }
+        .v-badge.ready { background: #fef3c7; color: var(--status-ready); }
+        .v-badge.closed { background: #f1f5f9; color: var(--status-closed); }
+
+        .v-date { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+        /* 카드 본문 */
+        .v-card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
         }
 
-        .vote-item:hover { border-color: var(--accent-color); }
-
-        .radio-circle {
-            width: 22px; height: 22px; border: 2px solid #cbd5e1; border-radius: 50%;
-            position: relative; flex-shrink: 0;
-        }
-        
-        .vote-item.selected .radio-circle {
-            border-color: var(--accent-color);
-        }
-        .vote-item.selected .radio-circle::after {
-            content: ''; position: absolute; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%);
-            width: 12px; height: 12px; background: var(--accent-color); border-radius: 50%;
+        .v-card-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .movie-img-placeholder {
-            width: 70px; height: 90px; background: #f1f5f9;
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; color: #94a3b8; border: 1px solid #e2e8f0;
+        /* 푸터/액션 */
+        .v-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
         }
 
-        .movie-info .m-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
-        .movie-info .m-meta { font-size: 0.85rem; color: var(--text-muted); }
-
-        /* --- 투표 버튼 --- */
-        .action-btn {
-            width: 100%; margin-top: 20px; padding: 15px;
-            border-radius: 12px; border: none; background: #e2e8f0;
-            font-weight: 700; color: #475569; cursor: pointer; transition: 0.3s;
+        .v-action-btn {
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
         }
 
-        .action-btn:hover { background: var(--accent-color); color: white; }
-        
-        .movie-option { 
- 	display: flex; 
- 	align-items: center;
- 	background: white; 
- 	border-radius: 15px; 
- 	padding: 12px; 
- 	margin-bottom: 12px; 
- 	border: 2px solid transparent;
- 	transition: 0.2s; 
- 	cursor: pointer; 
- } 
+        .v-action-btn:hover { gap: 10px; }
 
-.movie-option{
-    position: relative;
-    overflow: hidden;
-    border-radius:12px;
+        .v-action-btn.disabled {
+            color: var(--text-muted);
+            pointer-events: none;
+        }
 
-    background:
-        linear-gradient(to right, rgba(108,124,255,0.18), rgba(108,124,255,0.18)) no-repeat,
-        #ffffff;
+        /* 애니메이션 효과 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    background-size:0% 100%; /* 처음 0% */
-    transition:background-size 0.7s cubic-bezier(.4,0,.2,1);
-}
+        .v-card { animation: fadeIn 0.5s ease backwards; }
 
 
-.movie-option:hover {
-	border-color: var(--accent-color);
-}
-
-.movie-option input[type="radio"] {
-	margin-right: 15px;
-	width: 18px;
-	height: 18px;
-	accent-color: var(--accent-color);
-}
-
-.movie-thumb {
-	width: 60px;
-	height: 80px;
-	border-radius: 8px;
-	overflow: hidden;
-	margin-right: 15px;
-	background: #eee;
-	flex-shrink: 0;
-}
-
-.movie-thumb img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.movie-info .m-title {
+.page-title {
+	font-size: 2.2rem;
 	font-weight: 700;
-	font-size: 1rem;
-	margin-bottom: 3px;
+	margin-bottom: 10px;
 }
 
-.movie-info .m-meta {
-	font-size: 0.8rem;
+.page-desc {
 	color: var(--text-muted);
+	margin-bottom: 40px;
 }
-
+.header {
+	max-width: 1200px;
+	
+	text-align: center;
+}
     </style>
 </head>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/common.css" />
 <body>
 
-<header>
-    <div class="glass-panel" style="padding: 10px 25px; font-weight: bold; color: var(--accent-color);">영화 로고</div>
-    <div style="display: flex; gap: 10px;">
-        <span style="font-size: 0.9rem; color: var(--text-muted); cursor: pointer; margin-right: 15px; padding-top: 10px;">추가</span>
-        <div class="glass-panel" style="padding: 10px 20px; cursor: pointer;">계정</div>
-    </div>
-</header>
+<%@ include file="../include/memberHeader.jsp"%>
 
-<nav class="filter-nav">
-    <button class="filter-btn active">전체</button>
-    <button class="filter-btn">진행중인 투표</button>
-    <button class="filter-btn">종료된 투표</button>
-    <button class="filter-btn">예정된 투표</button>
-</nav>
+<div class="vote-list-container">
 
-<main class="vote-list-container">
-
-<%-- <c:forEach var="vote" items="${vote_register_all}"> --%>
-<%--     <h3>${vote.vote_title}</h3> --%>
-<%--     <h3>${vote.vote_id}</h3> --%>
-<%--     <h3>${vote.vote_status}</h3> --%>
-
-<%--     <c:forEach var="opt" items="${vote.optionList}"> --%>
-<%--         movie_id : ${opt.movie_id} <br> --%>
-<%--         title : ${opt.movie_title} <br> --%>
-<%--     </c:forEach> --%>
-<%--      <h3>${vote.voted}</h3> --%>
-<%--     <h3>${vote.vote_status}</h3> --%>
-<%--      <h3>${vote.vote_title}</h3> --%>
-
-<!--     <hr> -->
-<%-- </c:forEach> --%>
-
-<c:forEach var="vote" items="${vote_register_all}">
-
-<c:choose>
-<c:when test="${vote.vote_status eq 'ACTIVE'}">
- <section class="glass-panel vote-card">
-        <div class="vote-status-bar">
-            <span class="status-tag ongoing">진행중</span>
-            <span style="color: var(--text-muted)">종료날짜: ${vote.vote_end_date}</span>
+ <div class="v-title-group">
+             <h1 class="page-title">투표 목록</h1>
+              <p class="page-desc">당신의 한 표가 커뮤니티가 인정하는 진정한 명작의 순위를 결정합니다.</p>
         </div>
-        <h2 class="vote-title">${vote.vote_title}</h2>
+
+        <div style="width:100%">
+         <nav class="v-filter-nav">
+            <button class="filter-btn active" onclick="filterVotes('all', this)">All</button>
+            <button class="filter-btn" onclick="filterVotes('ACTIVE', this)">Ongoing</button>
+            <button class="filter-btn" onclick="filterVotes('READY', this)">Upcoming</button>
+            <button class="filter-btn" onclick="filterVotes('CLOSED', this)">Closed</button>
+        </nav>
         
-        <c:forEach var="opt" items="${vote.optionList}">
-									<label class="movie-option" data-movie-id="${opt.movie_id}">
-
-										<input type="radio" name="movie-vote-${vote.vote_id}"
-										value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
-
-										<div class="movie-thumb">
-											<img
-												src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
-												alt="${opt.movie_title}">
-										</div>
-
-										<div class="movie-info">
-											<div class="m-title">${opt.movie_title}</div>
-											<div class="m-meta">
-												${opt.movie_release_date.substring(0,4)}</div>
-
-											<!-- ⭐ 결과 영역 추가 -->
-											<div class="m-result" style="display:none;">
-     <span class="res-count">0</span>표 
-    (<span class="res-pct">0</span>%)
-
-    
-</div>
-
-										</div>
-
-									</label>
-								</c:forEach>
-        <button class="action-btn">투표하기</button>
-    </section>
-
-</c:when>
-
-
-
-
-<c:when test="${vote.vote_status eq 'READY'}">
-
-    <section class="glass-panel vote-card">
-        <div class="vote-status-bar">
-            <span class="status-tag upcoming">예정된 투표</span>
-            <span style="color: var(--text-muted)">시작날짜: ${vote.vote_start_date}</span>
         </div>
-        <h2 class="vote-title">${vote.vote_title}</h2>
-        
-         
-        <c:forEach var="opt" items="${vote.optionList}">
-									<label class="movie-option" data-movie-id="${opt.movie_id}">
-
-										<input type="radio" name="movie-vote-${vote.vote_id}"
-										value="${opt.movie_id}" data-movie-id="${opt.movie_id}">
-
-										<div class="movie-thumb">
-											<img
-												src="https://image.tmdb.org/t/p/w500${opt.movie_poster_path}"
-												alt="${opt.movie_title}">
-										</div>
-
-										<div class="movie-info">
-											<div class="m-title">${opt.movie_title}</div>
-											<div class="m-meta">
-												${opt.movie_release_date.substring(0,4)}</div>
-
-											<!-- ⭐ 결과 영역 추가 -->
-											<div class="m-result" style="display:none;">
-     <span class="res-count">0</span>표 
-    (<span class="res-pct">0</span>%)
-
-    
-</div>
-
-										</div>
-
-									</label>
-								</c:forEach>
-    </section>
-
-</c:when>
-
-<c:when test="${vote.vote_status eq 'CLOSED'}">
-
-    <section class="glass-panel vote-card">
-        <div class="vote-status-bar">
-            <span class="status-tag upcoming">종료</span>
-            <span style="color: var(--text-muted)">종료날짜: ${vote.vote_end_date}</span>
-        </div>
-        <h2 class="vote-title"> ${vote.vote_title}</h2>
-        
-        <div class="vote-item">
-            <div class="radio-circle"></div>
-            <div class="movie-img-placeholder">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-name">영화 제목</div>
-                <div class="m-meta">개봉년 · genre</div>
-            </div>
-        </div>
-        <div class="vote-item">
-            <div class="radio-circle"></div>
-            <div class="movie-img-placeholder">영화 이미지</div>
-            <div class="movie-info">
-                <div class="m-name">영화 제목</div>
-                <div class="m-meta">개봉년 · genre</div>
-            </div>
-        </div>
-    </section>
-
-</c:when>
-</c:choose>
-</c:forEach>
-
 
 
    
 
+   <div class="v-grid" id="voteGrid">
+    <c:forEach var="vote" items="${voteRegisterAll}">
+        <div class="v-card" data-status="${vote.voteStatus}" data-vote-id="${vote.voteId}">
+            <div class="v-status-row">
+                <c:choose>
+                    <c:when test="${vote.voteStatus eq 'ACTIVE'}">
+                        <span class="v-badge active">진행중</span>
+                        <span class="v-date">종료: ${vote.voteEndDate}</span>
+                    </c:when>
+                    <c:when test="${vote.voteStatus eq 'READY'}">
+                        <span class="v-badge ready">예정된 투표</span>
+                        <span class="v-date">시작: ${vote.voteStartDate}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="v-badge closed">종료된투표</span>
+                        <span class="v-date">종료: ${vote.voteEndDate}</span>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 
-</main>
+            <h3 class="v-card-title">${vote.voteTitle}</h3>
+            <p class="v-card-desc">${vote.voteContent}</p>
+
+            <div class="v-card-footer">
+                <div class="v-meta">
+                    <c:choose>
+                        <c:when test="${vote.voted}">
+                            <span style="color: var(--primary); font-size: 0.85rem; font-weight: 700;">
+                                ✓ 참여 완료
+                            </span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="v-date">참여 전</span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
+                <c:choose>
+                    <c:when test="${vote.voteStatus eq 'READY'}">
+                        <a href="javascript:void(0)" class="v-action-btn disabled" style="opacity: 0.5;">
+                           
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="voteDetail.do?voteId=${vote.voteId}" class="v-action-btn">
+                            ${vote.voteStatus eq 'ACTIVE' ? '투표하기 →' : '결과 보기 →'}
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </c:forEach>
+</div>
+</div>
+
+
+
+<script>
+    function filterVotes(status, btn) {
+        // 버튼 활성화 스타일 변경
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // 카드 필터링
+        const cards = document.querySelectorAll('.v-card');
+        cards.forEach(card => {
+            if (status === 'all' || card.getAttribute('data-status') === status) {
+                card.style.display = 'flex';
+                card.style.animation = 'fadeIn 0.4s ease forwards';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+       
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 서버에서 전달된 filter 값 가져오기 (값이 없으면 'all'을 기본값으로)
+        const serverFilter = "${not empty filter ? filter : 'all'}";
+        
+        // 해당 필터 값에 맞는 버튼 찾기
+        // filter-btn 중에서 onclick 속성에 해당 status가 포함된 버튼을 선택합니다.
+        const targetBtn = document.querySelector(`.filter-btn[onclick*="'\${serverFilter}'"]`) 
+                          || document.querySelector('.filter-btn[onclick*="\'all\'"]');
+
+        if (targetBtn) {
+            // 자바스크립트 필터 함수 실행 (강제 클릭 효과)
+            filterVotes(serverFilter, targetBtn);
+        }
+    });
+
+    // 카드 클릭 시 상세 페이지 이동 로직
+    const cards = document.querySelectorAll('.v-card');
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+               
+                const voteId = this.getAttribute('data-vote-id'); 
+                console.log(voteId)
+                if (voteId) {
+                    location.href = `voteCont.do?voteId=\${voteId}`;
+                }
+            });
+        });
+</script>
+
+<script src="${pageContext.request.contextPath}/js/home.js"></script>
 
 </body>
 </html>

@@ -187,4 +187,22 @@ public class VoteDAOImpl implements VoteDAO {
 			}
 		}
 	}
+
+	@Override
+	public boolean insertVoteRegister(VoteRegisterDTO vdto) {
+		SqlSession sqlSession = null;
+		boolean isSucces = false;
+
+		try {
+			sqlSession = getSqlSession();
+			sqlSession.insert("vregIn", vdto);
+			sqlSession.commit();
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+		return isSucces;
+	}
 }

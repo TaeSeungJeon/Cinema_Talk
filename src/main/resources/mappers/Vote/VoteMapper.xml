@@ -91,7 +91,7 @@ ON r.movieId = m.movieId
 
 	<update id="vrecUpdate">
 		update vote_record set recordCreatedDate=sysdate,
-		voteCommentText=#{voteCommentText} where memNo=#{memNo}
+		voteCommentText=#{voteCommentText} where memNo=#{memNo} and voteId =#{voteId}
 	</update>
 
 	<select id="vregFullList" resultMap="voteRegisterMap">
@@ -119,7 +119,13 @@ ON r.movieId = m.movieId
 	</select>
 
 	<select id="vrecListVoteId" resultType="voterecord">
-	select * from vote_record where voteId=#{voteId}
+	SELECT 
+    vr.*, 
+    m.memName 
+FROM VOTE_RECORD vr
+JOIN MEMBER m ON vr.memNo = m.memNo
+WHERE vr.voteId = #{voteId}
+ORDER BY vr.recordId DESC
 	</select>
 	
 	<select id="vregFullByVoteId" resultMap="voteRegisterMap">

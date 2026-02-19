@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <header>
-    <a href="Cinema_Talk.jsp" class="glass-panel" style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema Talk</a>
+    <a href="${pageContext.request.contextPath}/index.do" class="glass-panel" style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema Talk</a>
     <div class="search-bar">
         <form action="search_movie.do" method="get">
         	<select name="search-option">
@@ -32,19 +32,21 @@
             <li><a href="moviesYet.jsp?cat=yet">개봉 예정작</a></li>
         </ul>
     </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">장르별 추천</div>
-        <ul class="sub-menu">
-            <li><a href="genre1.jsp?code=action">액션/범죄</a></li>
-            <li><a href="genre2.jsp?code=romance">로맨스</a></li>
-            <li><a href="genre3.jsp?code=thriller">스릴러</a></li>
-        </ul>
+    <div class="category-bubble" onclick="location.href='${pageContext.request.contextPath}/movieRecommend.do'" style="cursor: pointer;">
+        <div class="cat-title">회원별 영화 추천</div>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">
         <div class="cat-title">커뮤니티 ▾</div>
         <ul class="sub-menu">
             <li><a href="community.jsp?tab=best">인기 리뷰</a></li>
             <li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
+        </ul>
+    </div>
+    <div class="category-bubble" onclick="toggleMenu(this)">
+        <div class="cat-title">투표 ▾</div>
+        <ul class="sub-menu">
+            <li><a href="vote.do">오늘의 투표</a></li>
+            <li><a href="voteList.do">투표목록</a></li>
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">

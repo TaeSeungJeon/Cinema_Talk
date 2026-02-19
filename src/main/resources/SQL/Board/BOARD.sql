@@ -7,7 +7,7 @@ create table BOARD(
     boardRecommendCount NUMBER        null,     -- 게시판 추천 수
     boardDate            DATE          null,     -- 게시판 작성일
     memNo                NUMBER        null,     -- 회원번호
-    movieId              NUMBER        not null,  -- 영화 고유 ID
+    movieId              NUMBER        null,  -- 영화 고유 ID
 
     constraint pk_board_type primary key (boardId ,boardType)
 
@@ -22,4 +22,5 @@ select boardIdSeq.nextval as "boardIdSeq 다음 시퀀스 번호값 확인" from
 alter table board add constraint fk_mem_no foreign key (memNo)
 references MEMBER (memNo);
 
-
+-- MOVIEID 컬럼을 NULL 허용으로 변경
+ALTER TABLE BOARD MODIFY (MOVIEID NULL);

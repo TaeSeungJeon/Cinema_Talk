@@ -24,23 +24,14 @@
         M.MOVIERELEASEDATE AS movieReleaseDate,
         M.MOVIERUNTIME     AS movieRuntime,
         M.MOVIEPOSTERPATH  AS moviePosterPath,
+        M.MOVIERATINGAVERAGE AS movieRatingAverage,
+        M.MOVIERECOMMENDCOUNT AS movieRecommendCount,
         (
           0.2 * (M.MOVIERATINGAVERAGE - S.minAvg) / NULLIF(S.maxAvg - S.minAvg, 0)
           + 0.8 * (M.MOVIERECOMMENDCOUNT - S.minRec) / NULLIF(S.maxRec - S.minRec, 0)
         ) AS popularScore
       FROM MOVIE M
       CROSS JOIN stats S
-    ),
-    oneGenre AS (
-      SELECT movieId, genreId
-      FROM (
-        SELECT
-          MG.MOVIEID AS movieId,
-          MG.GENREID AS genreId,
-          ROW_NUMBER() OVER (PARTITION BY MG.MOVIEID ORDER BY MG.GENREID) AS rn
-        FROM MOVIE_GENRE MG
-      )
-      WHERE rn = 1
     )
     SELECT
       SC.movieId,
@@ -49,10 +40,13 @@
       SC.movieReleaseDate,
       SC.movieRuntime,
       SC.moviePosterPath,
-      G.GENRENAME AS genreName
+      SC.movieRatingAverage,
+      SC.movieRecommendCount,
+      (SELECT LISTAGG(G.GENRENAME, ', ') WITHIN GROUP (ORDER BY G.GENRENAME)
+       FROM MOVIE_GENRE MG
+       JOIN GENRE G ON G.GENREID = MG.GENREID
+       WHERE MG.MOVIEID = SC.movieId) AS genreName
     FROM scored SC
-    LEFT JOIN oneGenre OG ON OG.movieId = SC.movieId
-    LEFT JOIN GENRE G ON G.GENREID = OG.genreId
     ORDER BY SC.popularScore DESC
     FETCH FIRST #{MOVIESELECT} ROWS ONLY
   </select>
@@ -74,6 +68,8 @@
       T.movieReleaseDate,
       T.movieRuntime,
       T.moviePosterPath,
+      T.movieRatingAverage,
+      T.movieRecommendCount,
       T.genreName
     FROM (
       SELECT
@@ -83,14 +79,12 @@
         M.MOVIERELEASEDATE AS movieReleaseDate,
         M.MOVIERUNTIME     AS movieRuntime,
         M.MOVIEPOSTERPATH  AS moviePosterPath,
-        (
-          SELECT G.GENRENAME
-          FROM MOVIE_GENRE MG2
-          JOIN GENRE G ON G.GENREID = MG2.GENREID
-          WHERE MG2.MOVIEID = M.MOVIEID
-          ORDER BY MG2.GENREID
-          FETCH FIRST 1 ROWS ONLY
-        ) AS genreName
+        M.MOVIERATINGAVERAGE AS movieRatingAverage,
+        M.MOVIERECOMMENDCOUNT AS movieRecommendCount,
+        (SELECT LISTAGG(G.GENRENAME, ', ') WITHIN GROUP (ORDER BY G.GENRENAME)
+         FROM MOVIE_GENRE MG2
+         JOIN GENRE G ON G.GENREID = MG2.GENREID
+         WHERE MG2.MOVIEID = M.MOVIEID) AS genreName
       FROM MOVIE M
       WHERE EXISTS (
         SELECT 1
@@ -134,6 +128,8 @@
       T.movieReleaseDate,
       T.movieRuntime,
       T.moviePosterPath,
+      T.movieRatingAverage,
+      T.movieRecommendCount,
       T.genreName
     FROM (
       SELECT
@@ -143,17 +139,21 @@
         M.MOVIERELEASEDATE AS movieReleaseDate,
         M.MOVIERUNTIME     AS movieRuntime,
         M.MOVIEPOSTERPATH  AS moviePosterPath,
-        G.GENRENAME        AS genreName
+        M.MOVIERATINGAVERAGE AS movieRatingAverage,
+        M.MOVIERECOMMENDCOUNT AS movieRecommendCount,
+        (SELECT LISTAGG(G2.GENRENAME, ', ') WITHIN GROUP (ORDER BY G2.GENRENAME)
+         FROM MOVIE_GENRE MG2
+         JOIN GENRE G2 ON G2.GENREID = MG2.GENREID
+         WHERE MG2.MOVIEID = M.MOVIEID) AS genreName
       FROM MOVIE M
       JOIN MOVIE_GENRE MG ON MG.MOVIEID = M.MOVIEID
-      JOIN GENRE G ON G.GENREID = MG.GENREID
       WHERE MG.GENREID = #{genreId}
       ORDER BY M.MOVIERATINGCOUNT DESC
     ) T
     WHERE ROWNUM &lt;= #{movieLimit}
   </select>
 
-  <!-- 인덱스: 랜덤 장르 7개 뽑고 장르당 영화 1개씩 -->
+  <!-- 인덱스 영화 추천 섹션: 랜덤 장르 7개 뽑고 장르당 영화 1개씩 -->
   <select id="indexGenreMovie" resultType="MovieRecResponse">
     WITH pickedGenres AS (
       SELECT genreId
@@ -177,6 +177,9 @@
         M.MOVIERELEASEDATE AS movieReleaseDate,
         M.MOVIERUNTIME    AS movieRuntime,
         M.MOVIEPOSTERPATH AS moviePosterPath,
+        M.MOVIEBACKDROPPATH AS movieBackdropPath,
+        M.MOVIERATINGAVERAGE AS movieRatingAverage,
+        M.MOVIERECOMMENDCOUNT AS movieRecommendCount,
         ROW_NUMBER() OVER (PARTITION BY PG.genreId ORDER BY DBMS_RANDOM.VALUE) AS rn
       FROM pickedGenres PG
       JOIN MOVIE_GENRE MG ON MG.GENREID = PG.genreId
@@ -191,10 +194,45 @@
       OM.movieReleaseDate,
       OM.movieRuntime,
       OM.moviePosterPath,
+      OM.movieBackdropPath,
+      OM.movieRatingAverage,
+      OM.movieRecommendCount,
       G.GENRENAME AS genreName
     FROM oneMovie OM
     JOIN GENRE G ON G.GENREID = OM.genreId
     WHERE OM.rn = 1
   </select>
+
+	<!-- 인덱스 영화 베너: 랜덤 영화 3개 (모든 장르 포함) -->
+	<select id="indexTrendMovie" resultType="MovieRecResponse">
+  		WITH randomMovies AS (
+      SELECT movieId
+      FROM (
+        SELECT M.MOVIEID AS movieId
+        FROM MOVIE M
+        WHERE M.MOVIEPOSTERPATH IS NOT NULL
+          AND M.MOVIEBACKDROPPATH IS NOT NULL
+          AND M.MOVIERATINGCOUNT &gt;= 10
+        ORDER BY DBMS_RANDOM.VALUE
+      )
+      WHERE ROWNUM &lt;= 3
+    )
+    SELECT
+      M.MOVIEID AS movieId,
+      M.MOVIETITLE AS movieTitle,
+      M.MOVIEOVERVIEW AS movieOverview,
+      M.MOVIERELEASEDATE AS movieReleaseDate,
+      M.MOVIERUNTIME AS movieRuntime,
+      M.MOVIEPOSTERPATH AS moviePosterPath,
+      M.MOVIEBACKDROPPATH AS movieBackdropPath,
+      M.MOVIERATINGAVERAGE AS movieRatingAverage,
+      M.MOVIERECOMMENDCOUNT AS movieRecommendCount,
+      (SELECT LISTAGG(G.GENRENAME, ', ') WITHIN GROUP (ORDER BY G.GENRENAME)
+       FROM MOVIE_GENRE MG2
+       JOIN GENRE G ON G.GENREID = MG2.GENREID
+       WHERE MG2.MOVIEID = M.MOVIEID) AS genreName
+    FROM randomMovies RM
+    JOIN MOVIE M ON M.MOVIEID = RM.movieId
+	</select>
 
 </mapper>

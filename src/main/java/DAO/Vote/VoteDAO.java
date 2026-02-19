@@ -28,4 +28,6 @@ public interface VoteDAO {
 
 	VoteRegisterDTO getVoteRegFullById(int voteId);
 
+    boolean insertVoteRegister(VoteRegisterDTO vdto);
+
 }

@@ -138,4 +138,9 @@ return voteRegFullList.stream()
     .collect(Collectors.toList());
 	}
 
+	@Override
+	public boolean insertVoteRegister(VoteRegisterDTO vdto) {
+		return this.vdao.insertVoteRegister(vdto);
+	}
+
 }

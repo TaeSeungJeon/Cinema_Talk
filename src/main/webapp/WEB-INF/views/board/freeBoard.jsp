@@ -71,7 +71,7 @@
             box-shadow: var(--shadow-subtle);
         }
 
-        .search-bar input {
+        .search-bar input[type="text"] {
             border: none;
             background: none;
             outline: none;
@@ -79,6 +79,10 @@
             text-align: center;
             color: var(--text-main);
             font-size: 0.95rem;
+        }
+
+        .search-bar input[type="submit"] {
+            width: auto;
         }
 
         .category-nav {

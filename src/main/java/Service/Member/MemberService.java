@@ -17,4 +17,8 @@ public interface MemberService {
 
 	boolean resetPwdSendEmail(MemberDTO mdto);
 
+	int phoneCheck(String memPhone);
+
+	int emailCheck(String memEmail);
+
 }

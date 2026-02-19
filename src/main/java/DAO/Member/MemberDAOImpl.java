@@ -50,7 +50,7 @@ public class MemberDAOImpl implements MemberDAO {
 		
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectOne("Member.idCheck", memId);
+			return sqlSession.selectOne("idCheck", memId);
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();
@@ -64,7 +64,7 @@ public class MemberDAOImpl implements MemberDAO {
 		
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectOne("Member.loginCheck", id);
+			return sqlSession.selectOne("loginCheck", id);
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();
@@ -134,6 +134,34 @@ public class MemberDAOImpl implements MemberDAO {
 			}
 		}
 	}//updatePwd() -> 암호화된 임시비밀번호로 업데이트
+
+	@Override
+	public int phoneCheck(String memPhone) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("phoneCheck", memPhone);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//phoneCheck() -> 전화번호 중복 체크
+
+	@Override
+	public int emailCheck(String memEmail) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("emailCheck", memEmail);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//emailCheck() -> 이메일 중복 체크
 
 
 }

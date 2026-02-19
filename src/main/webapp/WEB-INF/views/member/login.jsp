@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 - 프리미엄 영화 큐레이션</title>
+    <title>로그인</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -147,16 +147,16 @@
 <body>
 
 <div class="login-container">
-    <div class="logo-box">영화 로고</div>
+    <div class="logo-box">로고</div>
 
     <div class="title">로그인</div>
 
-    <form action="memberLoginOk.do" method="post">
+    <form action="memberLoginOk.do" method="post" onsubmit="return loginOk();" novalidate>
         <div class="input-group">
-            <input type="text" name="mem-id" placeholder="Username" required>
+            <input type="text" id="mem-id" name="mem-id" placeholder="아이디">
         </div>
         <div class="input-group">
-            <input type="password" name="mem-pwd" placeholder="Password" required>
+            <input type="password" id="mem-pwd" name="mem-pwd" placeholder="비밀번호">
         </div>
         <button type="submit" class="btn-submit">로그인</button>
     </form>

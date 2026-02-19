@@ -36,7 +36,7 @@
 			style="background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280${indexTrendMovieList[0].movieBackdropPath}'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;">
 			<div class="hero-content">
 				<a
-					href="${pageContext.request.contextPath}/movie_detail.do?id=${indexTrendMovieList[0].movieId}"
+					href="${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}"
 					id="movie-title-link"
 					style="text-decoration: none; color: inherit; display: inline-block;">
 					<h1 id="movie-title"
@@ -51,7 +51,7 @@
 				</p>
 				<button id="objBtn"
 					style="margin-top: 20px; background: rgba(255, 255, 255, 0.2); border: 1px solid white; color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer;"
-					onclick="location.href='${pageContext.request.contextPath}/movie_detail.do?id=${indexTrendMovieList[0].movieId}'">상세
+					onclick="location.href='${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}'">상세
 					보기</button>
 			</div>
 			<div class="slide-controls">
@@ -114,7 +114,7 @@
 					}
 
 					titleEl.textContent = movie.movieTitle;
-					titleLink.href = contextPath + "/movie_detail.do?id="
+					titleLink.href = contextPath + "/movieDetail.do?movieId="
 							+ movie.movieId;
 
 					var infoText = movie.genreName + " • ⭐ "
@@ -135,7 +135,7 @@
 					overviewEl.textContent = overview || "";
 
 					detailBtn.onclick = function() {
-						location.href = contextPath + "/movie_detail.do?id="
+						location.href = contextPath + "/movieDetail.do?movieId="
 								+ movie.movieId;
 					};
 
@@ -190,7 +190,7 @@
 					</c:if>
 
 					<c:forEach var="m" items="${homeGenreMovieList}">
-						<a href="${pageContext.request.contextPath}/movie_detail.do?id=${m.movieId}"
+						<a href="${pageContext.request.contextPath}/movieDetail.do?movieId=${m.movieId}"
 							class="movie-card-small">
 							<div class="poster-area"
 								style="border-radius: 12px; overflow: hidden; background: #e5e7eb;">

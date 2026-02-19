@@ -556,7 +556,7 @@ opacity:1;
 
 												</div>
 
-												<a href="movie_detail.do?id=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
+												<a href="movieDetail.do?movieId=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
 
 											</label>
 										</c:forEach>

@@ -63,10 +63,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
        <!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" /> 
-
+					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
 				<property name="username" value="week" />
 				<property name="password" value="week" />-->
-
         
           <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"

@@ -591,7 +591,7 @@ validCommentCount++;
 </head>
 <body>
 		
-<%@ include file="../include/memberHeader.jsp"%>
+<%@ include file="../home/homeHeader.jsp"%>
 
 
 <%-- 

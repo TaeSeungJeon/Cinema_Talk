@@ -212,7 +212,7 @@
 	href="${pageContext.request.contextPath}/css/common.css" />
 <body>
 
-<%@ include file="../include/memberHeader.jsp"%>
+<%@ include file="../home/homeHeader.jsp"%>
 
 <div class="vote-list-container">
 

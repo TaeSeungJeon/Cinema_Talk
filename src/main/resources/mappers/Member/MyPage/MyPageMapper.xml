@@ -54,5 +54,15 @@
 	<select id="getVoteCountByMemNo" parameterType="int" resultType="int">
 		SELECT COUNT(DISTINCT voteId) FROM VOTE_RECORD WHERE memNo = #{memNo}
 	</select>
-
+	
+	<!-- 회원 정보 수정 -->
+	<update id="updateMemberInfo" parameterType="member">
+        UPDATE MEMBER
+        SET memName = #{memName},
+            memPhone = #{memPhone},
+            memEmail = #{memEmail},
+            memPwd = #{memPwd},
+            memId = #{memId}
+        WHERE memNo = #{memNo}
+    </update>
 </mapper>

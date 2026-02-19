@@ -24,6 +24,7 @@ public class MovieDetailController implements Action {
 		
 		// 1. 파라미터에서 영화 ID 가져오기
 		String idParam = request.getParameter("movieId");
+	
 		if (idParam == null || idParam.isEmpty()) {
 			// 영화 ID가 없으면 에러 페이지로 이동
 			ActionForward forward = new ActionForward();

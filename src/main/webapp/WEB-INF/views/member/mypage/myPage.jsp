@@ -335,7 +335,7 @@
 </head>
 <body class="page-mypage">
 
-<%@ include file="../../include/memberHeader.jsp"%>
+<%@ include file="../../home/homeHeader.jsp"%>
 
 <div class="mypage-container">
     <!-- 프로필 카드 -->

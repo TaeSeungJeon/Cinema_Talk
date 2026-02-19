@@ -1,21 +1,37 @@
-create table comments
+CREATE SEQUENCE SEQ_COMMENTS START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE COMMENTS
 (
-    commentsId      NUMBER       not NULL,-- 댓글 아이디
-    boardId         NUMBER       NOT NULL, -- 게시판 아이디
-    boardType       NUMBER       NOT NULL, -- 게시판 종류
-    commentsContent CLOB         NULL, -- 댓글내용
-    commentsName    VARCHAR2(50) NULL, -- 댓글 작성자
-    commentsDate    DATE         NULL, -- 댓글 작성일
-    commentsNo      NUMBER       NULL, -- 댓글 아이디
-    memNo           NUMBER       NOT NULL, -- 회원번호
-    parentBoardNo  NUMBER       NULL, -- 부모 댓글 ID
-    parentBoardId  NUMBER       NOT NULL, -- 게시판 아이디
+    COMMENTSID      NUMBER(10),              -- commentsId (PK)
+    BOARDID         NUMBER(10)     NOT NULL, -- boardId
+    BOARDTYPE       NUMBER(10)     NOT NULL, -- boardType
+    COMMENTSCONTENT VARCHAR2(2000) NOT NULL, -- commentsContent
+    COMMENTSNAME    VARCHAR2(50),            -- commentsName
+    COMMENTSDATE    DATE DEFAULT SYSDATE,    -- commentsDate
+    COMMENTSNO      NUMBER(10),              -- commentsNo
+    MEMNO           NUMBER(10)     NOT NULL, -- memNo (FK 설정 대상)
+    PARENTBOARDNO   NUMBER(10),              -- parentBoardNo (FK 설정 대상)
+    PARENTBOARDID   NUMBER(10),              -- parentBoardId (FK 설정 대상)
 
-    constraint pk_comments primary key (commentsId, boardId, boardType)
+    CONSTRAINT PK_COMMENTS PRIMARY KEY (COMMENTSID),
+
+    CONSTRAINT FK_COMMENTS_BOARD FOREIGN KEY (BOARDID, BOARDTYPE)
+        REFERENCES BOARD (BOARDID, BOARDTYPE),
+
+    CONSTRAINT FK_COMMENTS_MEMBER FOREIGN KEY (MEMNO)
+        REFERENCES MEMBER (MEMNO),
+
+    CONSTRAINT FK_COMMENTS_PARENT_ID FOREIGN KEY (PARENTBOARDID)
+        REFERENCES COMMENTS (COMMENTSID),
+
+    CONSTRAINT FK_COMMENTS_PARENT_NO FOREIGN KEY (PARENTBOARDNO)
+        REFERENCES COMMENTS (COMMENTSID)
 );
-alter table comments add constraint fk_memNo foreign key (memNo)
-    references MEMBER (memNo);
+/*기존 제약조건삭제*/
+ALTER TABLE COMMENTS DROP CONSTRAINT FK_COMMENTS_PARENT_ID;
 
+ALTER TABLE COMMENTS ADD CONSTRAINT FK_COMMENTS_PARENT_ID
+    FOREIGN KEY (PARENTBOARDID) REFERENCES COMMENTS(COMMENTSID)
+        ON DELETE CASCADE;
 
-/* mem_no, parent_board_no, parent_board_id fk 해야함*/
-
+COMMIT;

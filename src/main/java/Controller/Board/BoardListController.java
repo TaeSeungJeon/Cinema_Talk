@@ -18,10 +18,24 @@ public class BoardListController implements Action {
         BoardService service = new BoardServiceImpl();
 
         // 게시글 목록 가져오기
-        List<BoardDTO> list = service.boardList();
+        String filter = request.getParameter("filter");
+        if (filter == null) filter = "all";
 
-        // request에 담기
+        List<BoardDTO> list;
+
+        switch (filter) {
+            case "free":
+                list = service.boardListByType(1); // 자유게시판
+                break;
+            case "hot":
+                list = service.boardListByType(2); // 영화 추천/후기
+                break;
+            default:
+                list = service.boardList(); // 전체
+        }
+
         request.setAttribute("boardList", list);
+        request.setAttribute("filter", filter);
 
         ActionForward forward = new ActionForward();
         forward.setPath("/WEB-INF/views/board/freeBoard.jsp");

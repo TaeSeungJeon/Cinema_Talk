@@ -6,6 +6,9 @@ import lombok.Setter;
 @Setter@Getter
 public class BoardDTO {
 
+    public int getBoardType() { return boardType; }
+    public void setBoardType(int boardType) { this.boardType = boardType; }
+
     private int boardId;
     private int boardType;
     private String boardTitle;

@@ -53,4 +53,12 @@ public class BoardServiceImpl implements BoardService {
     public void updateBoard(BoardDTO bdto) {
         bdao.updateBoard(bdto);
     }
+
+    @Override
+    public List<BoardDTO> boardListByType(int boardType) {
+        return bdao.boardListByType(boardType);
+    }
+
+
+
 }

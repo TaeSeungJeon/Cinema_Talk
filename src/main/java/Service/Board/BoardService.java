@@ -22,4 +22,5 @@ public interface BoardService {
     // 수정
     void updateBoard(BoardDTO bdto);
 
+    List<BoardDTO> boardListByType(int boardType);
 }

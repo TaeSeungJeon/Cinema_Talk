@@ -24,18 +24,18 @@ public class MemberEditOkController implements Action {
 		ActionForward forward = new ActionForward();
 		HttpSession session = request.getSession(false);
 		
+		MemberService memberService = new MemberServiceImpl();
 		MyPageService myPageService = new MyPageServiceImpl();
 		
 		int memNo = (int) session.getAttribute("memNo");
 		String memId = request.getParameter("mem-id"); //회원 아이디
 		String memPwd = request.getParameter("mem-pwd"); //회원 비밀번호
 		String memPassword = BCrypt.hashpw(memPwd, BCrypt.gensalt(12));
-		
 		String memName = request.getParameter("mem-name"); //회원 이름
 		String memPhone = request.getParameter("mem-phone"); //회원 전화번호
 		String memEmail = request.getParameter("mem-email"); //회원 이메일
 		
-		MemberDTO member = new MemberDTO();
+		MemberDTO member = memberService.getMemberInfo(memNo); // 아이디로 회원 정보 조회 (비밀번호 검증을 위해)
 		member.setMemNo(memNo);
 		member.setMemId(memId);
 		// DTO에 암호화된 비밀번호 다시 저장

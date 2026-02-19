@@ -111,5 +111,29 @@ public class MyPageDAOImpl implements MyPageDAO {
 			}
 		}
 	}
-	
+
+	@Override
+	public List<Integer> getBoardCommentCountByMemNo(int boardId) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			return sqlSession.selectList("MyPage.getBoardCommentsCount", boardId);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<VoteRecordDTO> getVoteCommentListByMemNo(int memNo) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			return sqlSession.selectList("MyPage.getVoteCommentListByMemNo", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
 }

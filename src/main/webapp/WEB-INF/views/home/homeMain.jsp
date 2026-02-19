@@ -100,7 +100,6 @@
 					var titleLink = document.getElementById('movie-title-link');
 					var titleEl = document.getElementById('movie-title');
 					var infoEl = document.getElementById('movie-info');
-					var overviewEl = document.getElementById('movie-overview');
 					var detailBtn = document.getElementById('objBtn');
 					var pageIdx = document.getElementById('pageIdx');
 
@@ -127,12 +126,6 @@
 						infoText += " • " + movie.movieReleaseDate;
 					}
 					infoEl.textContent = infoText;
-
-					var overview = movie.movieOverview;
-					if (overview && overview.length > 200) {
-						overview = overview.substring(0, 200) + "...";
-					}
-					overviewEl.textContent = overview || "";
 
 					detailBtn.onclick = function() {
 						location.href = contextPath + "/movieDetail.do?movieId="

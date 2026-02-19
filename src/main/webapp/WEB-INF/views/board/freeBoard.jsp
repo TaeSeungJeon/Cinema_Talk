@@ -370,7 +370,7 @@
 <body>
 
 <%-- [수정] 헤더 include 적용 (기존 <header>, <nav>는 include된 파일에서 처리됨) --%>
-<%@ include file="../include/memberHeader.jsp"%>
+<%@ include file="../home/homeHeader.jsp"%>
 
 <div class="container">
     <main>

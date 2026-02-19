@@ -337,7 +337,7 @@
     <header>
         <a href="${pageContext.request.contextPath}/Cinema_Talk.jsp" class="logo">영화 로고</a>
         <div class="search-bar">
-            <form action="${pageContext.request.contextPath}/search_movie.do" method="get" style="display: flex; align-items: center; width: 100%; gap: 10px;">
+            <form action="${pageContext.request.contextPath}/searchMovie.do" method="get" style="display: flex; align-items: center; width: 100%; gap: 10px;">
                 <select name="search-option">
                     <option value="0" <c:if test="${findField == 0}">selected</c:if>>제목</option>
                     <option value="1" <c:if test="${findField == 1}">selected</c:if>>감독</option>
@@ -372,7 +372,7 @@
         <c:when test="${not empty movies}">
             <div class="movie-list">
                 <c:forEach var="movie" items="${movies}">
-                    <a href="${pageContext.request.contextPath}/movie_detail.do?id=${movie.movieId}" class="movie-item">
+                    <a href="${pageContext.request.contextPath}/movieDetail.do?movieId=${movie.movieId}" class="movie-item">
                         <div class="movie-poster">
                             <c:choose>
                                 <c:when test="${not empty movie.moviePosterPath}">
@@ -416,7 +416,7 @@
                 <!-- 이전 버튼 -->
                 <c:choose>
                     <c:when test="${page > 1}">
-                        <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${page - 1}" 
+                        <a href="${pageContext.request.contextPath}/searchMovie.do?search-option=${findField}&search-words=${findName}&page=${page - 1}" 
                            class="nav-btn">← 이전</a>
                     </c:when>
                     <c:otherwise>
@@ -431,7 +431,7 @@
                             <span class="current">${i}</span>
                         </c:when>
                         <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${i}">${i}</a>
+                            <a href="${pageContext.request.contextPath}/searchMovie.do?search-option=${findField}&search-words=${findName}&page=${i}">${i}</a>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
@@ -439,7 +439,7 @@
                 <!-- 다음 버튼 -->
                 <c:choose>
                     <c:when test="${page < maxpage}">
-                        <a href="${pageContext.request.contextPath}/search_movie.do?search-option=${findField}&search-words=${findName}&page=${page + 1}" 
+                        <a href="${pageContext.request.contextPath}/searchMovie.do?search-option=${findField}&search-words=${findName}&page=${page + 1}" 
                            class="nav-btn">다음 →</a>
                     </c:when>
                     <c:otherwise>

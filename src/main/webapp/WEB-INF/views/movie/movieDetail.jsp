@@ -387,6 +387,17 @@
                     </c:forEach>
                 </div>
             </c:if>
+            
+            <!-- 좋아요 버튼 -->
+            <c:choose>
+                <c:when test="${isFavorite}">
+                    <button class="genre-tag" style="background:#ef4444;" onclick="pressFavorite()" value="false">👎 좋아요 취소</button>
+                </c:when>
+                <c:otherwise>
+                    <button class="genre-tag" style="background:#FC39C6;" onclick="pressFavorite()" value="true">👍 좋아요</button>
+                </c:otherwise>
+            </c:choose>
+            <span style="margin-left: 10px; color: var(--text-secondary);">💖 ${favoriteCount}명이 좋아요</span>
 
             <!-- 줄거리 -->
             <c:if test="${not empty movie.movieOverview}">
@@ -453,9 +464,16 @@
 </div>
 
 <script>
+    var movieId = ${movie.movieId};
+    
     function searchByGenre(genreName) {
-        window.location.href = 'search_movie.do?search_option=3&search_words=' + encodeURIComponent(genreName);
+        window.location.href = 'searchMovie.do?search-option=3&search-words=' + encodeURIComponent(genreName);
     }
+    function pressFavorite() {
+        var action = event.target.value === 'true' ? 'add' : 'remove';
+        window.location.href = 'MemberMovieRecommend.do?movieId=' + movieId + '&redirect=movieDetail.do?movieId=' + movieId + '&action=' + action;
+    }
+
 </script>
 </body>
 </html>

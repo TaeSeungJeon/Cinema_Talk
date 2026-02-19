@@ -17,7 +17,7 @@ public class IdCheckController implements Action {
 	public ActionForward execute(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		response.setContentType("text/html; charset=utf-8"); //웹브라우제에 출력되는 문자와 태그 언어코딩 타입 설정
+		response.setContentType("text/html; charset=utf-8"); //웹브라우저에 출력되는 문자와 태그 언어코딩 타입 설정
 		PrintWriter out = response.getWriter();
 		MemberService memberService = new MemberServiceImpl(); //서비스 안에서 dao호출하고 db 접근했을테니까 dao를 호출하지 않아도 되겠구나
 		

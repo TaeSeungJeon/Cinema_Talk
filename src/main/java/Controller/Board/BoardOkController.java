@@ -45,15 +45,14 @@ public class BoardOkController implements Action {
 
         // 세션에서 값 가져오기
         Integer memNo = (Integer) session.getAttribute("memNo");
-        String memName = (String) session.getAttribute("memName");
-
-
+        String memId = (String) session.getAttribute("memId");
+        
         BoardDTO bdto = new BoardDTO();
         bdto.setBoardTitle(boardTitle);
         bdto.setBoardContent(boardCont);
         bdto.setMemNo(memNo);
         bdto.setBoardType(2);
-        bdto.setBoardName(memName); // 세션에서 바로 사용
+        bdto.setBoardName(memId); // 세션에서 바로 사용
 
         try {
             BoardService boardService = new BoardServiceImpl();

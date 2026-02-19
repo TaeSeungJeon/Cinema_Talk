@@ -1,7 +1,10 @@
 package Service.Member;
 
+import java.util.Random;
+
 import org.mindrot.jbcrypt.BCrypt;
 
+import Controller.Member.MailUtil;
 import DAO.Member.MemberDAO;
 import DAO.Member.MemberDAOImpl;
 import DTO.Member.MemberDTO;
@@ -46,4 +49,49 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDTO findId(MemberDTO mdto) {
 		return this.mdao.findId(mdto);
 	}//이름과 전화번호를 기준으로 회원 검색
+
+	@Override
+	public MemberDTO findByIdAndPhone(String memId, String memPhone) {
+		return this.mdao.findByIdAndPhone(memId, memPhone);
+	}//아이디와 전화번호를 기준으로 회원 검색
+
+	@Override
+	public boolean resetPwdSendEmail(MemberDTO mdto) {
+		try {
+		//임시 비밀번호 생성
+		String tempPwd = makeTempPwd(10);
+		
+		//BCrypt로 암호화
+		String encPwd = BCrypt.hashpw(tempPwd, BCrypt.gensalt());
+		
+		//DB에 암호화된 임시비번 저장
+		mdto.setMemPwd(encPwd);
+		
+		int result = mdao.updatePwd(mdto);
+		if(result <= 0) return false;
+		
+		//이메일 전송
+		MailUtil.sendTempPassword(mdto.getMemEmail(), tempPwd);
+		
+		return true;
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}//임시 비밀번호로 재설정, 메일 전송
+	}
+	
+	private String makeTempPwd(int len) {
+		String chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+		StringBuilder sb = new StringBuilder();
+		Random r = new Random();
+	
+		for(int i=0; i<len; i++){
+		sb.append(chars.charAt(r.nextInt(chars.length())));
+		}
+		return sb.toString();
+	}//임시비밀번호 생성 메서드
+
 }
+
+

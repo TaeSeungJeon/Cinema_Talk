@@ -94,8 +94,8 @@
     <div class="logo-area"><div class="logo-box">영화 로고</div></div>
 
     <div class="tab-menu">
-        <button class="tab-btn active" onclick="openTab('id')">아이디 찾기</button>
-        <button class="tab-btn" onclick="openTab('pw')">비밀번호 찾기</button>
+        <button class="tab-btn active" onclick="openTab(event, 'id')">아이디 찾기</button>
+        <button class="tab-btn" onclick="openTab(event, 'pw')">비밀번호 찾기</button>
     </div>
 
     <div class="content-area">
@@ -117,8 +117,8 @@
 
         <div id="pw-content" class="find-content">
             <div class="title">Reset Password</div>
-            <p class="description">아이디와 전화번호가 일치하면<br>이메일로 임시 비밀번호를 전송합니다.</p>
-            <form action="FindPwController" method="post">
+            <p class="description">아이디와 전화번호가 일치하면<br>등록된 메일로 임시비밀번호가 전송됩니다.</p>
+            <form action="memberPwdFindOk.do" method="post">
                 <div class="input-wrapper">
                     <label>아이디</label>
                     <input type="text" class="input-field" name="mem-id" placeholder="아이디를 입력하세요" required>
@@ -127,7 +127,7 @@
                     <label>휴대폰 번호</label>
                     <input type="tel" class="input-field" name="mem-phone" placeholder="010-0000-0000" required>
                 </div>
-                <button type="submit" class="btn-submit">이메일로 전송</button>
+                <button type="submit" class="btn-submit">임시비밀번호 전송</button>
             </form>
         </div>
 
@@ -149,8 +149,9 @@
   </div>
 </div>
 
+
 <script>
-    function openTab(tabName) {
+    function openTab(e, tabName) {
         document.querySelectorAll('.find-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(tabName + '-content').classList.add('active');
@@ -158,12 +159,13 @@
     }
 </script>
 
+<!-- 아이디 찾기 모달 관련 스크립트 -->
 <c:if test="${not empty findId}">
 <script>
-    window.onload = function(){
-        document.getElementById("foundIdText").innerText = "${findId}";
-        document.getElementById("idResultModal").style.display = "block";
-    }
+window.addEventListener("load", function(){
+	document.getElementById("foundIdText").innerText = "${findId}";
+  	document.getElementById("idResultModal").style.display = "block";
+});
 </script>
 </c:if>
 

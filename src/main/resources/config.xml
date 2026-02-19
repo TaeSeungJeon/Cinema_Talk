@@ -12,7 +12,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	<settings>
 		<setting name="logImpl" value="STDOUT_LOGGING" />
 		<!-- mybatis null 피라미터값 insert ,update시 에러가 발생하는 것을 방지한다. -->
-		<setting name="jdbcTypeForNull" value="NULL" /> 
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
 	</settings>
 
 	<typeAliases>
@@ -33,8 +34,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Vote.VoteResultDTO" alias="voteresult" />
 		<typeAlias type="DTO.Vote.VoteRegisterDTO" alias="voteregister" />
 		<typeAlias type="DTO.Vote.VoteOptionDTO" alias="voteoption" />
-		<typeAlias type="DTO.Board.BoardDTO" alias="bdto" />
-		<typeAlias type="DTO.Member.MyPage.MyPageDTO" alias="mypage" />
+    <typeAlias type="DTO.Board.BoardDTO" alias="bdto" />
+		<typeAlias type="DTO.Board.CommentsDTO" alias="cdto"/>
+    <typeAlias type="DTO.Member.MyPage.MyPageDTO" alias="mypage" />
 	</typeAliases>
 
 	<!-- 마이바티스의 실행 환경을 세팅한 구간 특히 이 구간에서는 마이바티스가 JDBC 수준에서 트랜잭션을 관리(transactionManager)하게 
@@ -60,17 +62,18 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
              
          2. dataSource: 데이터베이스에 연결하기 위한 설정을 담고 있는 요소.
        -->
-        <property name="driver" value="oracle.jdbc.OracleDriver" />
+       <!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
+					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" /> 
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
 				<property name="username" value="week" />
-				<property name="password" value="week" />
+				<property name="password" value="week" />-->
         
-         <!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
+          <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
 				<property name="username" value="C##test1" />
-				<property name="password" value="test1" /> -->
+				<property name="password" value="test1" /> 
 				
 				<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
@@ -96,6 +99,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Member/MyPage/MyPageMapper.xml"/>
 		<mapper resource="mappers/Vote/VoteMapper.xml"/>
 		<mapper resource="mappers/Board/BoardMapper.xml"/>
+		<mapper resource="mappers/Board/CommentsMapper.xml"/>
+
+
 	</mappers>
 
 </configuration>

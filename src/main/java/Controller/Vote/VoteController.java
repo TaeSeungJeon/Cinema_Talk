@@ -1,9 +1,10 @@
 package Controller.Vote;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import Controller.Action;
@@ -28,82 +29,67 @@ public class VoteController implements Action {
 
 
 		VoteService voteService = new VoteServiceImpl();
+		MemberService memberService = new MemberServiceImpl();
 		HttpSession session = request.getSession();
 
 
-		String sessionMemId = (String) session.getAttribute("memId");
-
-		// 2. 로그인 여부 확인 (null이 아니면 true)
-		boolean isLogin = (sessionMemId != null);
-
-		int memNo = -1; // 기본값 설정
-
-		if (isLogin) {
-			MemberService memberService = new MemberServiceImpl();
-			MemberDTO memDto = memberService.idCheck(sessionMemId);
-			memNo = memDto.getMemNo();
-		}
+		//로그인 사용자 정보 가져오기
+		String memId = (String) session.getAttribute("memId"); // 값이 없으면 자동으로 null
+		MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
+		
+		final MemberDTO finalMem = mem;
+		
 		//DB에서  VOTE_REGISTER 레코드를 조회
 		List<VoteRegisterDTO> voteRegFullList = voteService.getVoteRegFullList();
 
-		//READY, ACTIVE, CLOSED STATUS SET (상태 분류 및 집계)
-		List<VoteRegisterDTO> activeReg = new ArrayList<>();
-		List<VoteRegisterDTO> readyReg = new ArrayList<>();
-		List<VoteRegisterDTO> closedReg = new ArrayList<>();
-
-		List<VoteRecordDTO> voteReclist = voteService.getVoteRecordList();
-
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date now = new Date();
-		for(VoteRegisterDTO v : voteRegFullList){
-			Date start = sdf.parse(v.getVoteStartDate());
-			Date end   = sdf.parse(v.getVoteEndDate());
-
-			if(now.before(start)){
-				v.setVoteStatus("READY");
-				readyReg.add(v);
-			}else if(now.after(end)){
-				//closed 인 레지스터들은 setResultList
-				v.setVoteStatus("CLOSED");
-				v.setResultList(voteService.getVoteResult(v.getVoteId()));
-				closedReg.add(v);
-			}else{
-				//ACTIVE 인 레지스터들은 사용자 로그인 상태 판단해서 로그인된 사용자이면 setVoted = false  
-				v.setVoteStatus("ACTIVE");
-
-				// 내가 투표했는지 확인
-				boolean voted = false;
-
-				for(VoteRecordDTO r : voteReclist){
-
-					if(isLogin && r.getVoteId() == v.getVoteId() && r.getMemNo() == memNo){
-
-						voted = true;
-						break;
-					}
+	
+		voteRegFullList.forEach(vote -> {
+			//현재 시간 기준으로 상태(READY, ONGOING, CLOSED) 업데이트
+			voteService.updateVoteStatus(vote);
+			vote.setVoted(false);
+			VoteRecordDTO temp = new VoteRecordDTO();
+			temp.setVoteId(vote.getVoteId());
+			
+			
+			//로그인했을때만 참여기록 확인
+			if(finalMem != null) {
+				temp.setMemNo(finalMem.getMemNo());
+				VoteRecordDTO vrec = voteService.getVoteRecordByMemNo(temp);
+				if(vrec != null){
+					vote.setUserChoice(vrec.getMovieId());
+					vote.setVoted(true);
 				}
-
-				v.setVoted(voted);
-
-				if(isLogin && voted==false){//로그인된 상태이면 voted false 만 저장
-					System.err.println(v.getVoteId());
-					System.err.println(voted);	
-					activeReg.add(v);
-				}else if(!isLogin ){
-
-					activeReg.add(v);
-				}
-
-
+				
+				
 			}
-		}
+			
+			//결과 집계
+			if(vote.isVoted() || "CLOSED".equals(vote.getVoteStatus())){
+				List<VoteResultDTO> voteResultList = voteService.getVoteResult(vote.getVoteId());
+				vote.setResultList(voteResultList);
+			}
+		});
+	Map<String, List<VoteRegisterDTO>> groupedVotes = voteRegFullList.stream()
+		.collect(Collectors.groupingBy(VoteRegisterDTO::getVoteStatus));
 
-		//setAttribute active, ready, closed (데이터 전달)
-		request.setAttribute("voteRegisterActive", activeReg);
-		request.setAttribute("voteRegisterReady", readyReg);
-		request.setAttribute("voteRegisterClosed", closedReg);
+	
+	List<VoteRegisterDTO> activeReg = groupedVotes.getOrDefault("ACTIVE", new ArrayList<>());
+	List<VoteRegisterDTO> readyReg = groupedVotes.getOrDefault("READY", new ArrayList<>());
+	List<VoteRegisterDTO> closedReg = groupedVotes.getOrDefault("CLOSED", new ArrayList<>());
 
+	request.setAttribute("voteRegisterActive", activeReg.stream()
+    .filter(vote -> !vote.isVoted()) 
+    .sorted(Comparator.comparing(VoteRegisterDTO::getVoteEndDate)) 
+    .collect(Collectors.toList())); 
+
+	request.setAttribute("voteRegisterReady", 
+		readyReg.stream().sorted(Comparator.comparing(VoteRegisterDTO::getVoteStartDate).reversed()) 
+		.limit(2).collect(Collectors.toList()));
+
+	request.setAttribute("voteRegisterClosed", closedReg.stream()
+    .sorted(Comparator.comparing(VoteRegisterDTO::getVoteEndDate).reversed()) 
+    .limit(2)
+    .collect(Collectors.toList()));
 
 		System.out.println("===============================================");
 

@@ -13,6 +13,6 @@ public class BoardDTO {
     private String boardName;
     private int boardRecommendCount;
     private String boardDate;
-    private int memNo;
+    private Integer memNo;
     private int movieId;
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
+import DTO.Vote.VoteOptionDTO;
 import DTO.Vote.VoteRecordDTO;
 import DTO.Vote.VoteRegisterDTO;
 import DTO.Vote.VoteResultDTO;
@@ -196,6 +197,14 @@ public class VoteDAOImpl implements VoteDAO {
 		try {
 			sqlSession = getSqlSession();
 			sqlSession.insert("vregIn", vdto);
+			
+			int generatedId = vdto.getVoteId();
+			for(VoteOptionDTO opt : vdto.getOptionList()) {
+	            opt.setVoteId(generatedId); // 모든 옵션에 부모 ID 세팅
+	        }
+			
+			sqlSession.insert("voptIn", vdto.getOptionList());
+			
 			sqlSession.commit();
 		} finally {
 			if(sqlSession != null) {

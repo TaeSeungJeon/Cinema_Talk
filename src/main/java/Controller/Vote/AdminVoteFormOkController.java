@@ -20,7 +20,8 @@ public class AdminVoteFormOkController implements Action {
     VoteService voteService = new VoteServiceImpl();
 
     String state = request.getParameter("state");
-    int voteId = Integer.parseInt(request.getParameter("voteId"));
+    String voteId = request.getParameter("voteId");
+    System.out.println(voteId);
 
     String voteTitle = request.getParameter("voteTitle");
     String voteContent = request.getParameter("voteContent");

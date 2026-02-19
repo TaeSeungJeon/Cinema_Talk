@@ -36,6 +36,8 @@ public interface VoteService {
 
     boolean insertVoteRegister(VoteRegisterDTO vdto);
 
+	List<VoteRegisterDTO> getActiveVoteRegList();
+
 	
 
 }

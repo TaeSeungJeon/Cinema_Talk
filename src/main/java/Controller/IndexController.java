@@ -3,10 +3,11 @@ package Controller;
 import java.util.List;
 
 import DTO.Movie.Recommend.MovieRecResponse;
+import DTO.Vote.VoteRegisterDTO;
 import Service.HomeService;
 import Service.HomeServiceImpl;
-import Service.Movie.Recommend.MovieRecService;
-import Service.Movie.Recommend.MovieRecServiceImpl;
+import Service.Vote.VoteService;
+import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +19,7 @@ public class IndexController implements Action {
 			throws Exception {
 	
 		HomeService homeService = new HomeServiceImpl();
+		VoteService voteService = new VoteServiceImpl();
 		
 		response.setContentType("text/html;charset=UTF-8");
 		HttpSession session = request.getSession();
@@ -30,6 +32,9 @@ public class IndexController implements Action {
 	    
 	    request.setAttribute("indexTrendMovieList", indexTrendMovieList);
 	    request.setAttribute("homeGenreMovieList", indexGenreMovieList);
+	    
+	    List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
+	    request.setAttribute("activeVoteRegList", activeVoteRegList);
 	    
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

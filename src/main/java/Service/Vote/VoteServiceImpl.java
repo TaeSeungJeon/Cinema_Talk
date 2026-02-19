@@ -3,6 +3,7 @@ package Service.Vote;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -141,6 +142,22 @@ return voteRegFullList.stream()
 	@Override
 	public boolean insertVoteRegister(VoteRegisterDTO vdto) {
 		return this.vdao.insertVoteRegister(vdto);
+	}
+
+	@Override
+	public List<VoteRegisterDTO> getActiveVoteRegList() {
+		List<VoteRegisterDTO> voteRegFullList = getVoteRegFullList();
+		voteRegFullList.forEach(vote -> {
+			//현재 시간 기준으로 상태(READY, ONGOING, CLOSED) 업데이트
+			updateVoteStatus(vote);});
+		
+		List<VoteRegisterDTO> activeVoteRegFullList = (voteRegFullList != null && !voteRegFullList.isEmpty()) 
+			    ? voteRegFullList.stream()
+			        .filter(vote -> "ACTIVE".equals(vote.getVoteStatus()))
+			        .collect(Collectors.toList()) 
+			    : new ArrayList<>();
+		
+		return activeVoteRegFullList;
 	}
 
 }

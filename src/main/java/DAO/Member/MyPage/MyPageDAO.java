@@ -4,6 +4,7 @@ import java.util.List;
 
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
+import DTO.Member.MemberDTO;
 import DTO.Vote.VoteRecordDTO;
 
 public interface MyPageDAO {
@@ -19,5 +20,6 @@ public interface MyPageDAO {
 	// 투표 관련
 	List<VoteRecordDTO> getVoteRecordListByMemNo(int memNo);
 	int getVoteCountByMemNo(int memNo);
+	void updateMemberInfo(MemberDTO myPageDTO);
 	
 }

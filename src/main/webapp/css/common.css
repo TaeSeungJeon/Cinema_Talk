@@ -8,6 +8,10 @@
             --shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
             background-color: var(--bg-color);

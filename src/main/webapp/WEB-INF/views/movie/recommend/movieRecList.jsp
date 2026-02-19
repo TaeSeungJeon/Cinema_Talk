@@ -7,6 +7,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MovieRecList</title>
+  
+  <!-- 공통스타일시트 -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
+  
+  <!-- sample페이지 전용 스타일시트 -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home/home.css" />
+  
   <style>
     :root{
       --page-pad: 48px;
@@ -14,12 +21,6 @@
       --card-h: 330px;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Pretendard', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #f0f2f5;
-      color: #111;
-    }
     a { text-decoration: none; color: inherit; }
 
     /* ===== 상단 헤더 (스크린샷 느낌) ===== */
@@ -52,7 +53,8 @@
 
     /* ===== 섹션 ===== */
     .page{
-      padding: 6px 0 40px;
+      padding-top: 6px;
+      padding-bottom: 40px;
       max-width: 1400px;
       margin: 0 auto;
       width: 100%;
@@ -154,14 +156,9 @@
       transform: translateY(-2px);
     }
   </style>
-  <!-- 공통스타일시트 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
-    
-    <!-- sample페이지 전용 스타일시트 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home/home.css" />
 </head>
 
-<body>
+<body class="page-home" data-context-path="${pageContext.request.contextPath}">
 
   <%@ include file="../../home/homeHeader.jsp"%>
 
@@ -350,7 +347,7 @@
 
   document.querySelectorAll("[data-card]").forEach(card => {
     card.addEventListener("mouseenter", () => {
-      const timer = setTimeout(() => card.classList.add("is-flipped"), 1000);
+      const timer = setTimeout(() => card.classList.add("is-flipped"), 500);
       timers.set(card, timer);
     });
     card.addEventListener("mouseleave", () => {
@@ -363,9 +360,7 @@
       if (!idEl) return;
       const id = idEl.value;
       
-      if (card.classList.contains("is-flipped")) {
-        location.href = "${pageContext.request.contextPath}/movieDetail.do?movieId=" + id;
-      }
+      location.href = "${pageContext.request.contextPath}/movieDetail.do?movieId=" + id;
     });
   });
 })();

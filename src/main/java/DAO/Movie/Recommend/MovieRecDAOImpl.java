@@ -122,4 +122,22 @@ public class MovieRecDAOImpl implements MovieRecDAO {
 			}
 		}
 	}
+
+	@Override
+	public List<MovieRecResponse> getIndexTrendList() {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+				
+			List<MovieRecResponse> indexTrendList = 
+					sqlSession.selectList("MovieRecommend.indexTrendMovie");
+
+			return indexTrendList;
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
 }

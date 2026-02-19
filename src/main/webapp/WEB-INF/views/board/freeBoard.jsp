@@ -370,7 +370,7 @@
 <body>
 
 <%-- [수정] 헤더 include 적용 (기존 <header>, <nav>는 include된 파일에서 처리됨) --%>
-<%@ include file="../home/homeHeader.jsp"%>
+<%@ include file="../home/homeHeader.jsp" %>
 
 <div class="container">
     <main>
@@ -383,11 +383,17 @@
         </header>
 
         <nav class="filter-nav">
-            <a href="${pageContext.request.contextPath}/community.jsp?filter=all" class="filter-btn active">전체보기</a>
-            <a href="${pageContext.request.contextPath}/community.jsp?filter=review" class="filter-btn">영화리뷰</a>
-            <a href="${pageContext.request.contextPath}/community.jsp?filter=debate" class="filter-btn">끝장토론</a>
-            <%-- [수정] contextPath 반영 --%>
-            <a href="${pageContext.request.contextPath}/freeBoard.do?tab=free" class="filter-btn">자유게시판</a>
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
+               class="filter-btn ${filter=='all' ? 'active' : ''}">전체보기</a>
+
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=free"
+               class="filter-btn ${filter=='free' ? 'active' : ''}">자유게시판</a>
+
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=hot"
+               class="filter-btn ${filter=='hot' ? 'active' : ''}">영화 추천/후기</a>
+
+
+
         </nav>
 
         <div class="post-list">
@@ -416,7 +422,8 @@
                 <a href="#" class="widget-link">더보기</a>
             </div>
             <ul class="hot-list">
-                <li class="hot-item"><span class="rank-num">1</span> <span class="hot-text">범죄도시4 빌런 예상 (스포주의)</span></li>
+                <li class="hot-item"><span class="rank-num">1</span> <span class="hot-text">범죄도시4 빌런 예상 (스포주의)</span>
+                </li>
                 <li class="hot-item"><span class="rank-num">2</span> <span class="hot-text">이번 주말 넷플릭스 추천 영화</span></li>
                 <li class="hot-item"><span class="rank-num">3</span> <span class="hot-text">인터스텔라 재개봉 일정 공유</span></li>
             </ul>
@@ -456,38 +463,35 @@
 
 <div class="modal-overlay" id="writeModal">
     <div class="write-modal">
-        <h2 style="margin-top:0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">새 게시글
-            작성</h2>
-        <%-- [수정] contextPath 반영 --%>
-        <form method="post" action="${pageContext.request.contextPath}/freeOkBoard.do" class="write-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;" >
+        <h2 style="margin-top:0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">새 게시글 작성</h2>
 
+        <form method="post"
+              action="${pageContext.request.contextPath}/boardOk.do"
+              class="write-form"
+              style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+
+            <!-- 카테고리 -->
             <div style="display: flex; gap: 10px;">
-                <select style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-weight: 600;">
-                    <option>장르 선택</option>
-                    <option>애니메이션</option>
-                    <option>코미디</option>
-                    <option>범죄</option>
-                    <option>다큐멘터리</option>
-                    <option>드라마</option>
-                    <option>가족</option>
-                    <option>판타지</option>
-                    <option>역사</option>
-                    <option>공포</option>
-                    <option>음악</option>
-                    <option>미스터리</option>
-                    <option>로맨스</option>
-                    <option>SF</option>
-                    <option>Tv영화</option>
-                    <option>스릴러</option>
-                    <option>전쟁</option>
-                    <option>서부</option>
-
+                <select name="boardType"
+                        required
+                        style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-weight: 600;">
+                    <option value="" disabled selected>게시판 선택</option>
+                    <option value="1">자유게시판</option>
+                    <option value="2">영화 리뷰/토론</option>
                 </select>
-                <input type="text" placeholder="태그 입력 (예: #듄, #추천)"
+
+                <input type="text"
+                       name="boardTag"
+                       placeholder="태그 입력 (예: #듄, #추천)"
                        style="flex: 2; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
             </div>
+
+            <!-- 제목 -->
             <input type="text" placeholder="제목을 입력하세요"
-                   style="padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem; font-weight: 700;" name="boardTitle">
+                   style="padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem; font-weight: 700;"
+                   name="boardTitle" required>
+
+            <!-- 툴바 -->
             <div style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; gap: 15px; color: #64748b; font-size: 0.9rem;">
                 <span style="cursor:pointer; font-weight: 800;">B</span>
                 <span style="cursor:pointer; font-style: italic;">I</span>
@@ -495,18 +499,25 @@
                 <span style="cursor:pointer;">🔗 링크</span>
                 <span style="cursor:pointer;">🖼️ 사진첨부</span>
             </div>
+
+            <!-- 내용 -->
             <textarea rows="12" placeholder="영화에 대한 솔직한 생각을 들려주세요..."
-                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;" name="boardContent"></textarea>
+                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;"
+                      name="boardContent" required></textarea>
+
+            <!-- 가이드라인-->
             <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
                 📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.
             </div>
+
+            <!-- 버튼 -->
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top: 10px;">
                 <button type="button" class="glass-panel"
                         style="padding:12px 30px; border:none; cursor:pointer; font-weight: 600;"
                         onclick="closeModal()">취소
                 </button>
-                <button type="submit" class="btn-write-submit" style="padding:12px 40px;"
-                >등록하기</button>
+                <button type="submit" class="btn-write-submit" style="padding:12px 40px;">등록하기
+                </button>
             </div>
         </form>
     </div>
@@ -547,13 +558,13 @@
     function gotofreeBoard() {
         const form = document.getElementById("boardForm");
 
-        if(form.boardTitle && form.boardTitle.value === "") {
+        if (form.boardTitle && form.boardTitle.value === "") {
             alert("제목을 입력해주세요.");
             return;
         }
 
         <%-- [수정] contextPath 반영 --%>
-        form.action = "${pageContext.request.contextPath}/freeOkBoard.do";
+        form.action = "${pageContext.request.contextPath}/boardOk.do";
         form.method = "post";
         form.submit();
     }

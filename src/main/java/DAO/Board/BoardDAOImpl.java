@@ -177,4 +177,21 @@ public class BoardDAOImpl implements BoardDAO {
         }
         return list;
     }
+
+    @Override
+    public List<BoardDTO> boardListByType(int boardType) {
+        SqlSession sqlSession = null;
+        List<BoardDTO> list = null;
+        try {
+            sqlSession = getSqlSession();
+            list = sqlSession.selectList("Board.boardListByType", boardType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+        return list;
+    }
+
+
 }

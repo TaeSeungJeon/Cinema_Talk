@@ -147,14 +147,13 @@
             color: white !important;
         }
 
-        /* --- 레이아웃 설정 --- */
+        /* --- 게시판 레이아웃 설정 --- */
         .layout-wrapper {
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 280px 1fr 280px;
+            grid-template-columns: 280px 650px 280px;
             gap: 25px;
-            align-items: start;
         }
 
         .side-panel {
@@ -384,7 +383,7 @@
     <div class="category-bubble" onclick="toggleMenu(this)">
         <div class="cat-title">커뮤니티 ▾</div>
         <ul class="sub-menu">
-            <li><a href="community.jsp?tab=best">인기 리뷰</a></li>
+            <li><a href="community.jsp?tab=best">인기 게시글</a></li>
             <li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
         </ul>
     </div>
@@ -676,6 +675,7 @@
                 form.appendChild(input);
                 document.body.appendChild(form);
                 form.submit();
+
             }
         }
         /* 게시글 수정 폼 열기 */
@@ -690,6 +690,8 @@
             document.getElementById("update-form").style.display = "none";
         }
 
+
     </script>
+</div>
 </body>
 </html>

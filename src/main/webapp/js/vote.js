@@ -100,17 +100,20 @@ document.addEventListener("DOMContentLoaded", function() {
         if(prevBtn) prevBtn.style.display = 'none';
         if(nextBtn) nextBtn.style.display = 'none';
     }
-
-    nextBtn?.addEventListener('click', () => {
-        currentIndex = (currentIndex >= slideCount - 1) ? 0 : currentIndex + 1;
-        moveSlide(currentIndex);
-    });
-
-    prevBtn?.addEventListener('click', () => {
-        currentIndex = (currentIndex <= 0) ? slideCount - 1 : currentIndex - 1;
-        moveSlide(currentIndex);
-    });
-
+	
+	if(nextBtn){
+		nextBtn.addEventListener('click', () => {
+			currentIndex = (currentIndex >= slideCount - 1) ? 0 : currentIndex + 1;
+			moveSlide(currentIndex);
+		})
+	}
+	
+	if(prevBtn){
+		prevBtn.addEventListener('click', () => {
+		        currentIndex = (currentIndex <= 0) ? slideCount - 1 : currentIndex - 1;
+		        moveSlide(currentIndex);
+		    });
+	}
    
     $(".submit-vote-btn").on("click", submitVote);
 

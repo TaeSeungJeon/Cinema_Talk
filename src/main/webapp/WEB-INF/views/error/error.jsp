@@ -41,7 +41,7 @@
 <div class="error-container">
     <h1>⚠️ 오류</h1>
     <p>잘못된 요청입니다.</p>
-    <a href="${pageContext.request.contextPath}/Cinema_Talk.jsp">메인으로 돌아가기</a>
+    <a href="${pageContext.request.contextPath}/index.do">메인으로 돌아가기</a>
 </div>
 </body>
 </html>

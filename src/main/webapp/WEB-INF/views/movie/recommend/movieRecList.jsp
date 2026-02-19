@@ -364,7 +364,7 @@
       const id = idEl.value;
       
       if (card.classList.contains("is-flipped")) {
-        location.href = "${pageContext.request.contextPath}/movie_detail.do?id=" + id;
+        location.href = "${pageContext.request.contextPath}/movieDetail.do?movieId=" + id;
       }
     });
   });

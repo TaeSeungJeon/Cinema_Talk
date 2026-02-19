@@ -2,6 +2,7 @@ package Service.Member.MyPage;
 
 import DAO.Member.MyPage.MyPageDAO;
 import DAO.Member.MyPage.MyPageDAOImpl;
+import DTO.Member.MemberDTO;
 import DTO.Member.MyPage.MyPageDTO;
 
 public class MyPageServiceImpl implements MyPageService {
@@ -23,6 +24,11 @@ public class MyPageServiceImpl implements MyPageService {
 		myPageDTO.setVoteRecordList(myPageDAO.getVoteRecordListByMemNo(memNo));
 		
 		return myPageDTO;
+	}
+	
+	@Override
+	public void updateMemberInfo(MemberDTO mdto) {
+		myPageDAO.updateMemberInfo(mdto);
 	}
 	
 }

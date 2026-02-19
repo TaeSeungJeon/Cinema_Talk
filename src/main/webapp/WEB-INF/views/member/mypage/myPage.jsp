@@ -345,7 +345,7 @@
             <div class="profile-name">${myPageInfo.memId}</div>
             <div class="profile-date">가입일: ${myPageInfo.memDate}</div>
         </div>
-        <a href="memberEdit.do" class="profile-edit-btn">회원정보 수정</a>
+        <a href="checkMember.do" class="profile-edit-btn">회원정보 수정</a>
     </div>
 
     <!-- 통계 -->
@@ -383,7 +383,7 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="board" items="${myPageInfo.boardList}">
-                        <a href="boardDetail.do?boardId=${board.boardId}">
+                        <a href="postDetail.do?boardId=${board.boardId}">
                             <div class="list-item">
                                 <div class="list-item-title">${board.boardTitle}</div>
                                 <div class="list-item-meta">${board.boardDate}</div>

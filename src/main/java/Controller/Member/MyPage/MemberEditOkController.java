@@ -1,5 +1,7 @@
 package Controller.Member.MyPage;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
@@ -20,20 +22,35 @@ public class MemberEditOkController implements Action {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		ActionForward forward = new ActionForward();
-		MemberService memberService = new MemberServiceImpl();
 		HttpSession session = request.getSession(false);
-		MyPageService myPageService = new MyPageServiceImpl();
-			
-		String memId = (String) session.getAttribute("memId");
-
-		// DB에서 사용자 정보 조회
-		MemberDTO member = memberService.loginCheck(memId);
 		
+		MyPageService myPageService = new MyPageServiceImpl();
+		
+		int memNo = (int) session.getAttribute("memNo");
+		String memId = request.getParameter("mem-id"); //회원 아이디
+		String memPwd = request.getParameter("mem-pwd"); //회원 비밀번호
+		String memPassword = BCrypt.hashpw(memPwd, BCrypt.gensalt(12));
+		
+		String memName = request.getParameter("mem-name"); //회원 이름
+		String memPhone = request.getParameter("mem-phone"); //회원 전화번호
+		String memEmail = request.getParameter("mem-email"); //회원 이메일
+		
+		MemberDTO member = new MemberDTO();
+		member.setMemNo(memNo);
+		member.setMemId(memId);
+		// DTO에 암호화된 비밀번호 다시 저장
+		member.setMemPwd(memPassword);
+		member.setMemName(memName);
+		member.setMemPhone(memPhone);
+		member.setMemEmail(memEmail);
+		
+		myPageService.updateMemberInfo(member);
+		// 마이페이지 정보 조회 (게시글, 댓글, 투표 목록 및 통계)
 		MyPageDTO myPageInfo = myPageService.getMyPageInfo(member.getMemNo());
 		myPageInfo.setMemId(member.getMemId());
 		myPageInfo.setMemName(member.getMemName());
 		myPageInfo.setMemDate(member.getMemDate());
-
+		
 		// 뷰에 데이터 전달
 		request.setAttribute("member", member);
 		request.setAttribute("myPageInfo", myPageInfo);
@@ -42,5 +59,7 @@ public class MemberEditOkController implements Action {
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;
 	}
+
+	
 
 }

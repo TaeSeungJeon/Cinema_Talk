@@ -11,7 +11,7 @@
         <button id="check-member-close" aria-label="Close">×</button>
         <h2 id="check-member-title">회원정보 수정 확인</h2>
 
-        <form id="check-member-form" name="frm" action="memberEditOk.do" method="post">
+        <form id="check-member-form" name="frm" action="memberEdit.do" method="post">
             <div class="input-group">
                 <label for="mem-id">아이디</label>
                 <input id="mem-id" type="text" name="mem-id" placeholder="Username" required>

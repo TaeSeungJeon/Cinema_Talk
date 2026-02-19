@@ -45,15 +45,28 @@ public class BoardOkController implements Action {
 
         // 세션에서 값 가져오기
         Integer memNo = (Integer) session.getAttribute("memNo");
-        String memName = (String) session.getAttribute("memName");
-
+        String memId = (String) session.getAttribute("memId");
 
         BoardDTO bdto = new BoardDTO();
         bdto.setBoardTitle(boardTitle);
         bdto.setBoardContent(boardCont);
         bdto.setMemNo(memNo);
-        bdto.setBoardType(2);
-        bdto.setBoardName(memName); // 세션에서 바로 사용
+
+        String typeStr = request.getParameter("boardType");
+
+        if(typeStr == null){
+            out.println("<script>");
+            out.println("alert('게시판 선택하세요');");
+            out.println("history.back();");
+            out.println("</script>");
+            return null;
+        }
+
+        int boardType = Integer.parseInt(typeStr);
+        bdto.setBoardType(boardType);
+
+
+        bdto.setBoardName(memId); // 세션에서 바로 사용
 
         try {
             BoardService boardService = new BoardServiceImpl();
@@ -61,7 +74,8 @@ public class BoardOkController implements Action {
 
             out.println("<script>");
             out.println("alert('게시글이 등록되었습니다.');");
-            out.println("location=href='" + contextPath + "/freeBoard.do';");
+            String filter = (boardType == 1) ? "free" : "hot";
+            out.println("location.href='" + contextPath + "/freeBoard.do?filter=" + filter + "';");
             out.println("</script>");
         }catch (Exception e){
             e.printStackTrace();

@@ -137,6 +137,9 @@
   }
 
   /* 클릭/호버 감성 */
+  .movie-card{
+    cursor: pointer;
+  }
   .movie-card:hover{
     transform: translateY(-3px);
   }

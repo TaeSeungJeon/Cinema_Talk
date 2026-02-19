@@ -71,7 +71,7 @@
             box-shadow: var(--shadow-subtle);
         }
 
-        .search-bar input {
+        .search-bar input[type="text"] {
             border: none;
             background: none;
             outline: none;
@@ -79,6 +79,10 @@
             text-align: center;
             color: var(--text-main);
             font-size: 0.95rem;
+        }
+
+        .search-bar input[type="submit"] {
+            width: auto;
         }
 
         .category-nav {
@@ -217,11 +221,42 @@
             margin-bottom: 20px;
             box-shadow: var(--shadow-subtle);
             transition: 0.3s;
+            position: relative;
+            padding-bottom: 45px;
         }
 
         .post-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .post-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .post-author {
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .post-author:hover {
+            color: var(--accent-color);
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 12px;
+            font-weight: 500;
+            position: absolute;
+            right: 22px;
+            bottom: 18px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
         }
 
         .user-info {
@@ -365,6 +400,44 @@
             font-weight: 700;
             transition: 0.3s;
         }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .page-btn {
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: white;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            box-shadow: var(--shadow-subtle);
+            transition: 0.3s;
+        }
+
+        .page-btn:hover {
+            background: #f8fafc;
+            color: var(--text-main);
+            transform: translateY(-2px);
+        }
+
+        .page-btn.active {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 700;
+            box-shadow: var(--shadow-strong);
+        }
+
+        .ellipsis {
+            padding: 6px 8px;
+            color: #94a3b8;
+        }
     </style>
 </head>
 <body>
@@ -383,15 +456,32 @@
         </header>
 
         <nav class="filter-nav">
-            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=all" class="filter-btn active">전체보기</a>
-            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=free" class="filter-btn">자유게시판</a>
-            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=hot" class="filter-btn">영화 추천/후기</a>
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
+               class="filter-btn ${filter=='all' ? 'active' : ''}">전체보기</a>
+
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=free"
+               class="filter-btn ${filter=='free' ? 'active' : ''}">자유게시판</a>
+
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=hot"
+               class="filter-btn ${filter=='hot' ? 'active' : ''}">영화 추천/후기</a>
+
+
 
         </nav>
 
         <div class="post-list">
             <c:forEach var="board" items="${boardList}">
                 <article class="post-card">
+                    <div class="post-card-header">
+                        <a class="post-author"
+                           href="${pageContext.request.contextPath}/myPage.do?memNo=${board.memNo}">
+                                ${board.boardName}
+                        </a>
+                        <div class="post-meta">
+                            <span>작성일 ${board.boardDate}</span>
+                            <span>조회수 ${board.boardRecommendCount}</span>
+                        </div>
+                    </div>
                     <div class="post-content">
                         <h2>
                             <a href="${pageContext.request.contextPath}/postDetail.do?boardId=${board.boardId}"
@@ -399,12 +489,39 @@
                                     ${board.boardTitle} </a>
                         </h2>
                         <p>${board.boardContent}</p>
-                        <div style="font-size:0.8rem; color:#64748b;">
-                            작성자 : ${board.boardName}
-                        </div>
                     </div>
                 </article>
             </c:forEach>
+        </div>
+
+        <div class="pagination">
+            <c:if test="${page > 1}">
+                <a href="${pageContext.request.contextPath}/freeBoard.do?page=${page - 1}&filter=${filter}"
+                   class="page-btn">←</a>
+            </c:if>
+
+            <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                <c:choose>
+                    <c:when test="${i == page}">
+                        <span class="page-btn active">${i}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/freeBoard.do?page=${i}&filter=${filter}"
+                           class="page-btn">${i}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+
+            <c:if test="${endPage < maxPage}">
+                <span class="ellipsis">...</span>
+                <a href="${pageContext.request.contextPath}/freeBoard.do?page=${endPage + 1}&filter=${filter}"
+                   class="page-btn">${endPage + 1}</a>
+            </c:if>
+
+            <c:if test="${page < maxPage}">
+                <a href="${pageContext.request.contextPath}/freeBoard.do?page=${page + 1}&filter=${filter}"
+                   class="page-btn">→</a>
+            </c:if>
         </div>
     </main>
 
@@ -463,23 +580,28 @@
               class="write-form"
               style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
 
+            <!-- 카테고리 -->
             <div style="display: flex; gap: 10px;">
                 <select name="boardType"
+                        required
                         style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-weight: 600;">
                     <option value="" disabled selected>게시판 선택</option>
                     <option value="1">자유게시판</option>
                     <option value="2">영화 리뷰/토론</option>
-                    <option value="3">? 추가 ?</option>
                 </select>
 
-                <input type="text" placeholder="태그 입력 (예: #듄, #추천)"
+                <input type="text"
+                       name="boardTag"
+                       placeholder="태그 입력 (예: #듄, #추천)"
                        style="flex: 2; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
             </div>
 
+            <!-- 제목 -->
             <input type="text" placeholder="제목을 입력하세요"
                    style="padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem; font-weight: 700;"
-                   name="boardTitle">
+                   name="boardTitle" required>
 
+            <!-- 툴바 -->
             <div style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; gap: 15px; color: #64748b; font-size: 0.9rem;">
                 <span style="cursor:pointer; font-weight: 800;">B</span>
                 <span style="cursor:pointer; font-style: italic;">I</span>
@@ -488,21 +610,23 @@
                 <span style="cursor:pointer;">🖼️ 사진첨부</span>
             </div>
 
+            <!-- 내용 -->
             <textarea rows="12" placeholder="영화에 대한 솔직한 생각을 들려주세요..."
                       style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;"
-                      name="boardContent"></textarea>
+                      name="boardContent" required></textarea>
 
+            <!-- 가이드라인-->
             <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
                 📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.
             </div>
 
+            <!-- 버튼 -->
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top: 10px;">
                 <button type="button" class="glass-panel"
                         style="padding:12px 30px; border:none; cursor:pointer; font-weight: 600;"
                         onclick="closeModal()">취소
                 </button>
-                <button type="submit" class="btn-write-submit" style="padding:12px 40px;">
-                    등록하기
+                <button type="submit" class="btn-write-submit" style="padding:12px 40px;">등록하기
                 </button>
             </div>
         </form>
@@ -549,11 +673,20 @@
             return;
         }
 
-        <%-- [수정] contextPath 반영 --%>
-        form.action = "${pageContext.request.contextPath}/freeOkBoard.do";
+        form.action = "${pageContext.request.contextPath}/boardOk.do";
         form.method = "post";
         form.submit();
     }
+
+    // 뒤로가기 캐시 복원 시 새로고침
+    window.addEventListener("pageshow", function (e) {
+        const nav = performance.getEntriesByType("navigation")[0];
+        if (e.persisted || (nav && nav.type === "back_forward")) {
+            location.reload();
+        }
+    });
+
+
 </script>
 
 </body>

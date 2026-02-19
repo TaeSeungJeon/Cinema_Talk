@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
+import DTO.Member.MemberDTO;
 import DTO.Vote.VoteRecordDTO;
 import mybatis.DBService;
 
@@ -91,6 +92,19 @@ public class MyPageDAOImpl implements MyPageDAO {
 		SqlSession sqlSession = getSqlSession();
 		try {
 			return sqlSession.selectOne("MyPage.getVoteCountByMemNo", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+	
+	@Override
+	public void updateMemberInfo(MemberDTO mdto) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			sqlSession.update("MyPage.updateMemberInfo", mdto);
+			sqlSession.commit();
 		} finally {
 			if (sqlSession != null) {
 				sqlSession.close();

@@ -35,14 +35,82 @@ header {
     box-sizing: border-box;
 }
 .search-bar form { width: 100%; display: flex; align-items: center; gap: 10px; }
-.search-bar select {
-    border: none;
-    background: none;
-    outline: none;
-    color: #1f2937;
-    font-size: 0.9rem;
-    cursor: pointer;
+
+/* 검색 옵션 select 스타일 */
+#search-option {
+    display: none;
 }
+
+/* 커스텀 드롭다운 */
+.custom-select {
+    position: relative;
+    min-width: 70px;
+}
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background-color: #f1f3f5;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #495057;
+    transition: background-color 0.2s ease;
+    user-select: none;
+}
+.custom-select-trigger:hover {
+    background-color: #e9ecef;
+}
+.custom-select-trigger .arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #6366f1;
+    transition: transform 0.2s ease;
+}
+.custom-select.open .custom-select-trigger .arrow {
+    transform: rotate(180deg);
+}
+.custom-select-options {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 60px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+.custom-select.open .custom-select-options {
+    opacity: 1;
+    visibility: visible;
+}
+.custom-select-option {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+}
+.custom-select-option:hover {
+    background: #6366f1;
+    color: white;
+}
+.custom-select-option.selected {
+    background: #f0f0ff;
+    color: #6366f1;
+    font-weight: 600;
+}
+
 .search-bar input[type="text"] { 
     border: none; 
     background: none; 
@@ -84,7 +152,7 @@ header {
     position: relative; background: white; border-radius: 50px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;
 }
-.category-bubble:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(99, 102, 241, 0.15); }
+.category-bubble:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(99, 102, 241, 0.25); }
 .cat-title { font-weight: 600; font-size: 0.95rem; pointer-events: none; }
 .sub-menu {
     list-style: none; padding: 0; margin: 0; position: absolute; top: 110%; left: 0; right: 0;
@@ -104,12 +172,24 @@ header {
     <a href="${pageContext.request.contextPath}/index.do" class="glass-panel" style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema Talk</a>
     <div class="search-bar">
         <form action="searchMovie.do" method="get">
-        	<select name="search-option">
+        	<select id="search-option" name="search-option">
         		<option value="0">제목</option>
         		<option value="1">감독</option>
         		<option value="2">배우</option>
         		<option value="3">장르</option>
         	</select>
+        	<div class="custom-select">
+        	    <div class="custom-select-trigger">
+        	        <span>제목</span>
+        	        <span class="arrow"></span>
+        	    </div>
+        	    <div class="custom-select-options">
+        	        <div class="custom-select-option selected" data-value="0">제목</div>
+        	        <div class="custom-select-option" data-value="1">감독</div>
+        	        <div class="custom-select-option" data-value="2">배우</div>
+        	        <div class="custom-select-option" data-value="3">장르</div>
+        	    </div>
+        	</div>
             <input type="text" name="search-words" placeholder="영화 제목, 감독, 배우, 장르를 검색해보세요">
             <input type="submit" value="검색">
         </form>
@@ -154,36 +234,6 @@ header {
 </nav>
 
 <script>
-// 각 category-bubble에 대한 hover 타이머 저장
-const hoverTimers = new Map();
-
-// 마우스오버 1초 후 서브메뉴 열기
-document.querySelectorAll('.category-bubble').forEach(bubble => {
-    // 서브메뉴가 있는지 확인 (추천 영화는 서브메뉴가 비어있음)
-    const subMenu = bubble.querySelector('.sub-menu');
-    const hasSubMenu = subMenu && subMenu.children.length > 0;
-    
-    if (hasSubMenu) {
-        // 마우스 진입 시 1초 타이머 시작
-        bubble.addEventListener('mouseenter', function() {
-            const timer = setTimeout(() => {
-                this.classList.add('active');
-            }, 1000); // 1초 후 열기
-            hoverTimers.set(this, timer);
-        });
-        
-        // 마우스 이탈 시 타이머 취소 및 메뉴 닫기
-        bubble.addEventListener('mouseleave', function() {
-            const timer = hoverTimers.get(this);
-            if (timer) {
-                clearTimeout(timer);
-                hoverTimers.delete(this);
-            }
-            this.classList.remove('active');
-        });
-    }
-});
-
 // 클릭으로 토글 (기존 기능 유지)
 function toggleMenu(el) {
     // 다른 메뉴 닫기
@@ -204,4 +254,46 @@ document.addEventListener('click', function(e) {
         });
     }
 });
+
+// 커스텀 셀렉트 드롭다운
+(function() {
+    const customSelect = document.querySelector('.custom-select');
+    const trigger = customSelect.querySelector('.custom-select-trigger');
+    const options = customSelect.querySelectorAll('.custom-select-option');
+    const hiddenSelect = document.getElementById('search-option');
+    const triggerText = trigger.querySelector('span:first-child');
+
+    // 드롭다운 토글
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        customSelect.classList.toggle('open');
+    });
+
+    // 옵션 선택
+    options.forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const value = this.dataset.value;
+            const text = this.textContent;
+
+            // 선택 상태 업데이트
+            options.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+
+            // 트리거 텍스트 변경
+            triggerText.textContent = text;
+
+            // 숨겨진 select 값 변경
+            hiddenSelect.value = value;
+
+            // 드롭다운 닫기
+            customSelect.classList.remove('open');
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    document.addEventListener('click', function() {
+        customSelect.classList.remove('open');
+    });
+})();
 </script>

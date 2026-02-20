@@ -127,7 +127,9 @@ public class MemberDAOImpl implements MemberDAO {
 		
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.update("updatePwd", mdto);
+			int a = sqlSession.update("updatePwd", mdto);
+			sqlSession.commit();
+			return a;
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();

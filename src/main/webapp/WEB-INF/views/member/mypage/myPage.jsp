@@ -167,7 +167,7 @@
     }
 
     .list-item:hover {
-        background: #f8fafc;
+        background: #DFE1E3;
         transform: translateX(5px);
     }
 
@@ -181,7 +181,16 @@
         font-size: 0.85rem;
         color: #94a3b8;
     }
-
+	.list-item-recommend-count{
+	    font-size: 0.85rem;
+        color: #94a3b8;
+        margin-top: 5px;
+    }
+    .list-item-comments-count{
+    	font-size: 0.85rem;
+        color: #94a3b8;
+        margin-top: 5px;
+    }
     /* 댓글 카드 스타일 */
     .comment-card {
         display: flex;
@@ -199,7 +208,7 @@
     }
 
     .comment-card:hover {
-        background: #f8fafc;
+        background: #DFE1E3;
     }
 
     .comment-avatar {
@@ -262,7 +271,7 @@
     }
 
     .vote-card:hover {
-        background: #f8fafc;
+        background: #DFE1E3;
     }
 
     .vote-icon {
@@ -331,6 +340,49 @@
     .list-section a:hover .list-item-title {
         color: var(--accent-color);
     }
+
+    /* 댓글 탭 드롭다운 */
+    .tab-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tab-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        padding: 8px 0;
+        z-index: 100;
+        min-width: 140px;
+        margin-top: 5px;
+    }
+
+    .tab-dropdown:hover .tab-dropdown-menu {
+        display: block;
+    }
+
+    .tab-dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 10px 20px;
+        border: none;
+        background: none;
+        text-align: left;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-main);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .tab-dropdown-item:hover {
+        background: #f1f5f9;
+        color: var(--accent-color);
+    }
 </style>
 </head>
 <body class="page-mypage">
@@ -369,7 +421,13 @@
     <!-- 탭 네비게이션 -->
     <div class="tab-nav">
         <button class="tab-btn active" onclick="showTab('board')">게시글</button>
-        <button class="tab-btn" onclick="showTab('comment')">댓글</button>
+        <div class="tab-dropdown">
+            <button class="tab-btn" onclick="showTab('comment')">댓글 ▾</button>
+            <div class="tab-dropdown-menu">
+                <button class="tab-dropdown-item" onclick="showTab('comment')">게시판 댓글</button>
+                <button class="tab-dropdown-item" onclick="showTab('voteComment')">투표 댓글</button>
+            </div>
+        </div>
         <button class="tab-btn" onclick="showTab('vote')">투표참여</button>
     </div>
 
@@ -387,8 +445,10 @@
                     <c:forEach var="board" items="${myPageInfo.boardList}">
                         <a href="boardDetail.do?boardId=${board.boardId}">
                             <div class="list-item">
-                                <div class="list-item-title">${board.boardTitle}</div>
-                                <div class="list-item-meta">${board.boardDate}</div>
+                                <div class="list-item-title">글 제목: ${board.boardTitle}</div>
+                                <div class="list-item-meta">작성일: ${board.boardDate}</div>
+                                <div class="list-item-recommend-count">좋아요👍: ${board.boardRecommendCount}</div>
+                                <div class="list-item-comments-count">댓글💬: ${myPageInfo.boardCommentCount[board.boardId]}</div>
                             </div>
                         </a>
                     </c:forEach>
@@ -411,12 +471,41 @@
                     <c:forEach var="comment" items="${myPageInfo.commentList}">
                         <div class="comment-card">
                             <div class="comment-avatar">💬</div>
+                            
                             <div class="comment-body">
                                 <div class="comment-header">
-                                    <span class="comment-board-title">${comment.boardTitle}</span>
+                                    <span class="comment-board-title">게시글 제목: ${comment.boardTitle}</span>
                                     <span class="comment-date">${comment.commentsDate}</span>
                                 </div>
                                 <div class="comment-content">${comment.commentsContent}</div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+
+    <!-- 투표 댓글 탭 -->
+    <div id="voteComment-tab" class="tab-content">
+        <div class="list-section">
+            <c:choose>
+                <c:when test="${empty myPageInfo.voteCommentList}">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🗳️</div>
+                        <p>작성한 투표 댓글이 없습니다.</p>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="vc" items="${myPageInfo.voteCommentList}">
+                        <div class="comment-card">
+                            <div class="comment-avatar">🗳️</div>
+                            <div class="comment-body">
+                                <div class="comment-header">
+                                    <span class="comment-board-title">투표 제목: ${vc.voteTitle}</span>
+                                    <span class="comment-date">투표일: ${vc.recordCreatedDate}</span>
+                                </div>
+                                <div class="comment-content">${vc.voteCommentText}</div>
                             </div>
                         </div>
                     </c:forEach>

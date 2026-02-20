@@ -1,6 +1,7 @@
 package DTO.Member.MyPage;
 
 import java.util.List;
+import java.util.Map;
 
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
@@ -26,5 +27,6 @@ public class MyPageDTO {
 	private List<BoardDTO> boardList;           // 작성한 게시글 목록
 	private List<CommentsDTO> commentList;      // 작성한 댓글 목록
 	private List<VoteRecordDTO> voteRecordList; // 참여한 투표 목록
-	
+	private List<VoteRecordDTO> voteCommentList; // 투표 댓글 목록
+	private Map<Integer, Integer> boardCommentCount;  	// 게시글-댓글 수
 }

@@ -20,17 +20,33 @@ public class LoginOkController implements Action {
 		//로그인 창에서 입력받은 아이디, 비번 변수에 저장
 		String id = request.getParameter("mem-id");
 		String pwd = request.getParameter("mem-pwd");
-
+		
+		ActionForward forward = new ActionForward();
+		
+		//아이디 입력 확인
+		if(id == null || id.trim().isEmpty()) {
+			request.setAttribute("msg", "아이디를 입력하세요.");
+			forward.setRedirect(false);
+			forward.setPath("/WEB-INF/views/member/login.jsp");
+			return forward;
+		}
+		
+		//비밀번호 입력확인
+		if(pwd == null || pwd.trim().isEmpty()) {
+			request.setAttribute("msg", "비밀번호를 입력하세요.");
+			forward.setRedirect(false);
+			forward.setPath("/WEB-INF/views/member/login.jsp");
+			return forward;
+		}
+		
 		MemberService memberService = new MemberServiceImpl();
 
 		//아이디로 회원 조회
 		MemberDTO mdto = memberService.loginCheck(id);
 
-		ActionForward forward = new ActionForward();
-
 		//아이디가 없으면
 		if(mdto == null) {
-			request.setAttribute("msg", "가입 안 된 회원입니다.");
+			request.setAttribute("msg", "가입되지 않은 회원입니다.");
 			forward.setRedirect(false);
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
@@ -49,7 +65,6 @@ public class LoginOkController implements Action {
 		session.setAttribute("memNo", mdto.getMemNo()); // 세션에 저장할 키이름 : memNo, 저장할 값 : No
 		session.setAttribute("memId", mdto.getMemId()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
 		session.setAttribute("memName", mdto.getMemName()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
-
 
 		forward.setRedirect(true);
 		forward.setPath(request.getContextPath() + "/index.do"); // JSP로 forward 시도

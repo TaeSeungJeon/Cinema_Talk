@@ -214,15 +214,44 @@
             box-shadow: var(--shadow-strong);
         }
 
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            border: 2px solid white;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-sub);
+            fill: none;
+            stroke-width: 1.6;
+        }
+
+        .post-boardtype {
+            margin-left: 6px;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
         .post-card {
             background: white;
             border-radius: var(--radius-soft);
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 14px;
             box-shadow: var(--shadow-subtle);
             transition: 0.3s;
             position: relative;
-            padding-bottom: 45px;
+            padding-bottom: 32px;
         }
 
         .post-card:hover {
@@ -233,7 +262,7 @@
         .post-card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 5px;
             font-size: 0.85rem;
             color: var(--text-sub);
         }
@@ -252,31 +281,22 @@
             display: flex;
             gap: 12px;
             font-weight: 500;
-            position: absolute;
-            right: 22px;
-            bottom: 18px;
             font-size: 0.8rem;
             color: var(--text-sub);
+            position: absolute;
+            left: 25px;
+            bottom: 18px;
         }
 
-        .user-info {
-            display: flex;
+        .post-meta-item {
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            border: 2px solid white;
+            gap: 6px;
         }
 
         .post-content h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.3rem;
+            margin: 0 0 5px 0;
+            font-size: 1.15rem;
             font-weight: 700;
         }
 
@@ -466,7 +486,6 @@
                class="filter-btn ${filter=='hot' ? 'active' : ''}">영화 추천/후기</a>
 
 
-
         </nav>
 
         <div class="post-list">
@@ -477,10 +496,32 @@
                            href="${pageContext.request.contextPath}/myPage.do?memNo=${board.memNo}">
                                 ${board.boardName}
                         </a>
-                        <div class="post-meta">
-                            <span>작성일 ${board.boardDate}</span>
-                            <span>조회수 ${board.boardRecommendCount}</span>
-                        </div>
+                        <span class="post-boardtype">
+                        <%-- 게시판 종류 표시 --%>
+                        <c:choose>
+                            <c:when test="${board.boardType == 1}">자유게시판</c:when>
+                            <c:when test="${board.boardType == 2}">영화 추천/후기</c:when>
+                            <c:otherwise>전체</c:otherwise>
+                        </c:choose>
+                    </span>
+                    </div>
+                    <div class="post-meta">
+                        <span class="post-time" data-time="${board.boardDate}"></span>
+
+                        <span class="post-meta-item">
+                            <svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M1.5 12s4-7 10.5-7 10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z"/>
+                        <circle cx="12" cy="12" r="3.5"/>
+                    </svg>
+                    ${board.boardRecommendCount}
+                    </span>
+
+                        <span class="post-meta-item">
+                            <svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7 11v8M7 11l4-7 2 1c1 .5 1.5 1.7 1.1 2.8L13 11h5.5c1.4 0 2.5 1.1 2.5 2.5 0 .3-.1.6-.2.9l-2 5.5c-.4 1.1-1.5 1.6-2.6 1.6H10c-1.7 0-3-1.3-3-3v-7"/>
+                            </svg>
+                        <span class="like-count">${board.likeCount}</span>
+                    </span>
                     </div>
                     <div class="post-content">
                         <h2>
@@ -573,7 +614,8 @@
 
 <div class="modal-overlay" id="writeModal">
     <div class="write-modal">
-        <h2 style="margin-top:0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">새 게시글 작성</h2>
+        <h2 style="margin-top:0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">새 게시글
+            작성</h2>
 
         <form method="post"
               action="${pageContext.request.contextPath}/boardOk.do"
@@ -678,12 +720,52 @@
         form.submit();
     }
 
-    // 뒤로가기 캐시 복원 시 새로고침
+    /*뒤로가기 캐시 복원 시 새로고침*/
     window.addEventListener("pageshow", function (e) {
         const nav = performance.getEntriesByType("navigation")[0];
         if (e.persisted || (nav && nav.type === "back_forward")) {
             location.reload();
         }
+    });
+
+    function toRelativeTime(dateStr) {
+        if (!dateStr) return "";
+
+        const raw = dateStr.trim();
+
+        let normalized = raw.replace(" ", "T");
+        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(normalized)) {
+            normalized += ":00";
+        }
+
+        normalized = normalized.replace(/\.\d+$/, "");
+
+        const d = new Date(normalized);
+        if (isNaN(d)) return raw;
+
+        const diffMs = Date.now() - d.getTime();
+        const diffSec = Math.floor(diffMs / 1000);
+        const diffMin = Math.floor(diffSec / 60);
+        const diffHr = Math.floor(diffMin / 60);
+        const diffDay = Math.floor(diffHr / 24);
+        const diffWeek = Math.floor(diffDay / 7);
+        const diffMonth = Math.floor(diffDay / 30);
+        const diffYear = Math.floor(diffDay / 365);
+
+        if (diffSec < 1) return "방금 전";
+        if (diffSec < 60) return diffSec + "초 전";
+        if (diffMin < 60) return diffMin + "분 전";
+        if (diffHr < 24) return diffHr + "시간 전";
+        if (diffDay < 7) return diffDay + "일 전";
+        if (diffWeek < 4) return diffWeek + "주 전";
+        if (diffMonth < 12) return diffMonth + "달 전";
+        return diffYear + "년 전";
+
+    }
+
+    document.querySelectorAll(".post-time").forEach(el => {
+        const t = el.getAttribute("data-time");
+        el.textContent = toRelativeTime(t);
     });
 
 

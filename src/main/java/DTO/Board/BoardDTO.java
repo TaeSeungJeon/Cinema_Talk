@@ -15,4 +15,5 @@ public class BoardDTO {
     private String boardDate;
     private Integer memNo;
     private int movieId;
+    private int likeCount;
 }

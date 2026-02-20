@@ -79,4 +79,26 @@ public class BoardServiceImpl implements BoardService {
         return bdao.boardListPageByType(boardType, startRow, endRow);
     }
 
+    @Override
+    public int toggleBoardLike(int boardId, int boardType, int memNo) {
+        int liked = bdao.isBoardLiked(boardId, boardType, memNo);
+        if (liked > 0) {
+            bdao.deleteBoardLike(boardId, boardType, memNo);
+        } else {
+            bdao.insertBoardLike(boardId, boardType, memNo);
+        }
+        return bdao.getBoardLikeCount(boardId, boardType);
+    }
+
+    @Override
+    public int getBoardLikeCount(int boardId, int boardType) {
+        return bdao.getBoardLikeCount(boardId, boardType);
+    }
+
+    @Override
+    public boolean isBoardLiked(int boardId, int boardType, int memNo) {
+        return bdao.isBoardLiked(boardId, boardType, memNo) > 0;
+    }
+
+
 }

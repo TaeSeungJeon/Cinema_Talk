@@ -496,8 +496,10 @@
             </div>
 
             <div class="post-actions">
-                <button class="action-btn" onclick="this.style.color='#ef4444'">👍 <span
-                        class="count">${cont.boardRecommendCount}</span></button>
+                <button class="action-btn" type="button"
+                        onclick="toggleLike(${cont.boardId}, ${cont.boardType})">
+                    👍 <span id="likeCount">${likeCount}</span>
+                </button>
                 <button class="action-btn">🔗 공유하기</button>
             </div>
         </article>
@@ -691,6 +693,19 @@
         function hideUpdateForm() {
             document.getElementById("post-body").style.display = "block";
             document.getElementById("update-form").style.display = "none";
+        }
+        /* 좋아요 */
+        function toggleLike(boardId, boardType) {
+            fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
+                .then(r => r.text())
+                .then(res => {
+                    if (res === "LOGIN_REQUIRED") {
+                        alert("로그인 후 이용 가능합니다.");
+                        location.href = "memberLogin.do";
+                        return;
+                    }
+                    document.getElementById("likeCount").innerText = res;
+                });
         }
 
 

@@ -17,12 +17,18 @@ public class PostDetailController implements Action {
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         int boardId = Integer.parseInt(request.getParameter("boardId"));
+
         BoardService service = new BoardServiceImpl();
 
         BoardDTO cont = service.getBoardDetail(boardId);
 
         CommentsService cService = CommentsServiceImpl.getInstance();
         List<CommentsDTO> clist = cService.commentsList(boardId);
+
+        // 좋아요
+        int likeCount = service.getBoardLikeCount(cont.getBoardId(), cont.getBoardType());
+
+        request.setAttribute("likeCount", likeCount);
 
         request.setAttribute("cont", cont);
         request.setAttribute("clist", clist);
@@ -31,5 +37,8 @@ public class PostDetailController implements Action {
         forward.setPath("/WEB-INF/views/board/postDetail.jsp");
         forward.setRedirect(false);
         return forward;
+
+
     }
+
 }

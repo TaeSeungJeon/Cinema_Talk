@@ -92,6 +92,17 @@ public class MemberServiceImpl implements MemberService {
 		return sb.toString();
 	}//임시비밀번호 생성 메서드
 
+	@Override
+	public int phoneCheck(String memPhone) {
+		return mdao.phoneCheck(memPhone);
+	}//전화번호 중복 체크
+
+	@Override
+	public int emailCheck(String memEmail) {
+		return mdao.emailCheck(memEmail);
+	}//이메일 중복 체크
+	
+
 }
 
 

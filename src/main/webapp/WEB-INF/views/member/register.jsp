@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -139,46 +139,72 @@
         .footer-link a:hover {
             text-decoration: underline;
         }
-        
+
+		.id-check-msg{
+		    display: block;
+		    margin-top: 8px;
+		    margin-left: 5px;
+		    font-size: 0.85rem;
+		    font-weight: 600;
+		}
+		.id-check-msg.ok { color: #22c55e; }     /* 사용 가능 */
+		.id-check-msg.bad { color: #ef4444; }    /* 중복/불가 */
+		
+		.field-msg{
+    	display:block;
+	    margin-top:8px;
+	    margin-left:5px;
+	    font-size:0.85rem;
+	    font-weight:600;
+		}
+		.field-msg.bad{ color:#ef4444; }
+		
     </style>
 </head>
 <body>
 
 <div class="register-container">
-    <div class="logo-box">영화 로고</div>
-
     <div class="title">회원가입</div>
     <form action="memberRegisterOk.do" method="post" onsubmit="return joinCheck();">
         <div class="input-group">
             <label>아이디</label>
-            <input type="text" id="mem-id" name="mem-id" required>
+            <input type="text" id="mem-id" name="mem-id" placeholder="아이디는 영문/숫자만 가능합니다." novalidate>
             <input type="button" class="btn-idCheck" value="id중복확인" onclick="idCheck();">
+            <input type="hidden" id="idChecked" value="N">
             <span id="idcheck" class="id-check-msg"></span>
         </div>
 
         <div class="input-group">
             <label>비밀번호</label>
-            <input type="password" id="mem-pwd" name="mem-pwd" required>
+            <input type="password" id="mem-pwd" name="mem-pwd" novalidate>
         </div>
 
         <div class="input-group">
             <label>비밀번호 확인</label>
-            <input type="password" id="mem-pwd-confirm" name="mem-pwd-confirm" required>
+            <input type="password" id="mem-pwd-confirm" name="mem-pwd-confirm" novalidate>
         </div>
 
         <div class="input-group">
             <label>이름</label>
-            <input type="text" id="mem-name" name="mem-name" required>
+            <input type="text" id="mem-name" name="mem-name" novalidate>
         </div>
 
         <div class="input-group">
             <label>전화번호</label>
-            <input type="tel" id="mem-phone" name="mem-phone" placeholder="010-0000-0000" required>
+            <input type="tel" id="mem-phone" name="mem-phone" placeholder="010-0000-0000" novalidate>
+   
+            <c:if test="${not empty phoneMsg}">
+   				<span class="field-msg bad">${phoneMsg}</span>         
+            </c:if>
         </div>
 
         <div class="input-group">
             <label>email</label>
-            <input type="email" id="mem-email" name="mem-email" required>
+            <input type="email" id="mem-email" name="mem-email" placeholder="직접입력" novalidate>
+            
+            <c:if test="${not empty emailMsg}">
+   				<span class="field-msg bad">${emailMsg}</span>         
+            </c:if>
         </div>
 
         <button type="submit" class="btn-submit">회원가입</button>

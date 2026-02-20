@@ -22,4 +22,12 @@ public interface BoardService {
     // 수정
     void updateBoard(BoardDTO bdto);
 
+    List<BoardDTO> boardListByType(int boardType);
+
+    int getBoardCount();
+
+    List<BoardDTO> boardListPage(int startRow, int endRow);
+
+    int getBoardCountByType(int boardType);
+    List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow);
 }

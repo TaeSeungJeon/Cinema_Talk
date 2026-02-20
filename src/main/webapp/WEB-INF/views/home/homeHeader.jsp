@@ -125,10 +125,8 @@ header {
 
 <nav class="category-nav">
     <div class="category-bubble" onclick="location.href='${pageContext.request.contextPath}/movieRecommend.do'">
-        <div class="cat-title">추천 영화 ▾</div>
+        <div class="cat-title">추천 영화</div>
         <ul class="sub-menu">
-            <li><a href="moviesNow.jsp?cat=current">현재 상영작</a></li>
-            <li><a href="moviesYet.jsp?cat=yet">개봉 예정작</a></li>
         </ul>
     </div>
     <div class="category-bubble" onclick="toggleMenu(this)">
@@ -154,3 +152,56 @@ header {
         </ul>
     </div>
 </nav>
+
+<script>
+// 각 category-bubble에 대한 hover 타이머 저장
+const hoverTimers = new Map();
+
+// 마우스오버 1초 후 서브메뉴 열기
+document.querySelectorAll('.category-bubble').forEach(bubble => {
+    // 서브메뉴가 있는지 확인 (추천 영화는 서브메뉴가 비어있음)
+    const subMenu = bubble.querySelector('.sub-menu');
+    const hasSubMenu = subMenu && subMenu.children.length > 0;
+    
+    if (hasSubMenu) {
+        // 마우스 진입 시 1초 타이머 시작
+        bubble.addEventListener('mouseenter', function() {
+            const timer = setTimeout(() => {
+                this.classList.add('active');
+            }, 1000); // 1초 후 열기
+            hoverTimers.set(this, timer);
+        });
+        
+        // 마우스 이탈 시 타이머 취소 및 메뉴 닫기
+        bubble.addEventListener('mouseleave', function() {
+            const timer = hoverTimers.get(this);
+            if (timer) {
+                clearTimeout(timer);
+                hoverTimers.delete(this);
+            }
+            this.classList.remove('active');
+        });
+    }
+});
+
+// 클릭으로 토글 (기존 기능 유지)
+function toggleMenu(el) {
+    // 다른 메뉴 닫기
+    document.querySelectorAll('.category-bubble').forEach(bubble => {
+        if (bubble !== el) {
+            bubble.classList.remove('active');
+        }
+    });
+    // 현재 메뉴 토글
+    el.classList.toggle('active');
+}
+
+// 외부 클릭 시 모든 메뉴 닫기
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.category-bubble')) {
+        document.querySelectorAll('.category-bubble').forEach(bubble => {
+            bubble.classList.remove('active');
+        });
+    }
+});
+</script>

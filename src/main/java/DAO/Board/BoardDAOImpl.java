@@ -5,7 +5,9 @@ import DTO.Board.CommentsDTO; // 댓글 DTO 임포트 추가
 import mybatis.DBService;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BoardDAOImpl implements BoardDAO {
 
@@ -177,4 +179,80 @@ public class BoardDAOImpl implements BoardDAO {
         }
         return list;
     }
+
+    @Override
+    public List<BoardDTO> boardListByType(int boardType) {
+        SqlSession sqlSession = null;
+        List<BoardDTO> list = null;
+        try {
+            sqlSession = getSqlSession();
+            list = sqlSession.selectList("Board.boardListByType", boardType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+        return list;
+    }
+
+    @Override
+    public int getBoardCount() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            return sqlSession.selectOne("Board.getBoardCount");
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public List<BoardDTO> boardListPage(int startRow, int endRow) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            Map<String, Object> param = new HashMap<>();
+            param.put("startRow", startRow);
+            param.put("endRow", endRow);
+            return sqlSession.selectList("Board.boardListPage", param);
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public int getBoardCountByType(int boardType) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            return sqlSession.selectOne("Board.getBoardCountByType", boardType);
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            Map<String, Object> param = new HashMap<>();
+            param.put("boardType", boardType);
+            param.put("startRow", startRow);
+            param.put("endRow", endRow);
+            return sqlSession.selectList("Board.boardListPageByType", param);
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+
 }

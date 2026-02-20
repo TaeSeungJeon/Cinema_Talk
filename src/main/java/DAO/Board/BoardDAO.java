@@ -24,4 +24,14 @@ public interface BoardDAO {
     int commentsIn(CommentsDTO cdto);
 
     List<CommentsDTO> commentsList(int boardId);
+
+    List<BoardDTO> boardListByType(int boardType);
+
+    int getBoardCount();
+
+    List<BoardDTO> boardListPage(int startRow, int endRow);
+
+    List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow);
+
+    int getBoardCountByType(int boardType);
 }

@@ -18,4 +18,8 @@ public interface MemberDAO {
 
 	int updatePwd(MemberDTO mdto);
 
+	int phoneCheck(String memPhone);
+
+	int emailCheck(String memEmail);
+
 }

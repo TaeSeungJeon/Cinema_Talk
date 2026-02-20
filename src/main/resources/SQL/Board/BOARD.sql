@@ -1,3 +1,4 @@
+
 create table BOARD(
     boardId              NUMBER        NOT NULL, -- 게시판 아이디
     boardType            NUMBER        not null, -- 게시판 종류

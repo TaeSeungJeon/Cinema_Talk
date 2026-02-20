@@ -133,7 +133,6 @@ input[type="text"], input[type="date"], select, textarea {
 </style>
 </head>
 <body>
-
 	<div class="form-container">
 		<h2>${empty vote ? '새 투표 등록' : '투표 정보 수정'}</h2>
 

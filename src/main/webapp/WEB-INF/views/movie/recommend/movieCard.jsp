@@ -98,7 +98,7 @@
   .movie-card .pill.genre-모험 { background: #F97316; }
   .movie-card .pill.genre-애니메이션 { background: #EC4899; }
   .movie-card .pill.genre-코미디 { background: #FBBF24; color: #333; }
-  .movie-card .pill.genre-범죄 { background: #1F2937; }
+  .movie-card .pill.genre-범죄 { background: #475569; }
   .movie-card .pill.genre-다큐멘터리 { background: #6B7280; }
   .movie-card .pill.genre-드라마 { background: #8B5CF6; }
   .movie-card .pill.genre-가족 { background: #10B981; }
@@ -110,7 +110,7 @@
   .movie-card .pill.genre-로맨스 { background: #F472B6; }
   .movie-card .pill.genre-SF { background: #3B82F6; }
   .movie-card .pill.genre-TV-영화 { background: #64748B; }
-  .movie-card .pill.genre-스릴러 { background: #0F172A; }
+  .movie-card .pill.genre-스릴러 { background: #DC2626; }
   .movie-card .pill.genre-전쟁 { background: #78716C; }
   .movie-card .pill.genre-서부 { background: #D97706; }
   .movie-card .label{
@@ -180,8 +180,9 @@
           </div>
 
           <div class="meta-row" style="flex-wrap: wrap; gap: 6px;">
-            <c:forEach var="genre" items="${fn:split(movie.genreName, ', ')}" end="2">
-              <span class="pill genre-${fn:replace(genre, ' ', '-')}">${genre}</span>
+            <c:forEach var="genre" items="${fn:split(movie.genreName, ',')}" end="2">
+              <c:set var="trimmedGenre" value="${fn:trim(genre)}" />
+              <span class="pill genre-${fn:replace(trimmedGenre, ' ', '-')}">${trimmedGenre}</span>
             </c:forEach>
           </div>
         </div>

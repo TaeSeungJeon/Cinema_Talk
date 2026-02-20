@@ -227,9 +227,9 @@
       </c:if>
 
       <!-- 장르별 추천 (스크린샷의 여러 줄 캐러셀 느낌) -->
-      <c:forEach var="entry" items="${genreRecMap}">
+      <c:forEach var="section" items="${genreSections}">
         <div class="carousel-wrap" data-carousel>
-          <h2 class="carousel-title">${entry.value[0].genreName} 장르 추천</h2>
+          <h2 class="carousel-title">${section.sectionGenreName} 장르 추천</h2>
 
           <div class="carousel-pad">
             <span class="fade left"></span>
@@ -242,7 +242,7 @@
             </button>
 
             <div class="scroll" data-scroll>
-              <c:forEach var="m" items="${entry.value}">
+              <c:forEach var="m" items="${section.movies}">
                 <c:set var="movie" value="${m}" scope="request" />
                 <jsp:include page="/WEB-INF/views/movie/recommend/movieCard.jsp" />
               </c:forEach>

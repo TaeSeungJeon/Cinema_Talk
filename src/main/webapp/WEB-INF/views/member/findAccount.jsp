@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>계정 찾기 - 프리미엄 영화 큐레이션</title>
+    <title>계정 찾기</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -91,7 +91,6 @@
 </head>
 <body>
 <div class="container">
-    <div class="logo-area"><div class="logo-box">영화 로고</div></div>
 
     <div class="tab-menu">
         <button class="tab-btn active" onclick="openTab(event, 'id')">아이디 찾기</button>
@@ -100,32 +99,32 @@
 
     <div class="content-area">
         <div id="id-content" class="find-content active">
-            <div class="title">Find My ID</div>
+            <div class="title">아이디 찾기</div>
             <p class="description">이름과 전화번호가 일치하면<br>화면에 아이디가 표시됩니다.</p>
-            <form action="memberIdFindOk.do" method="post" onsubmit="return findAccount();">
+            <form action="memberIdFindOk.do" method="post" onsubmit="return findId();">
                 <div class="input-wrapper">
                     <label>이름</label>
-                    <input type="text" id="mem-name" class="input-field" name="mem-name" placeholder="이름을 입력하세요" required>
+                    <input type="text" id="mem-name" class="input-field" name="mem-name" placeholder="이름">
                 </div>
                 <div class="input-wrapper">
                     <label>전화번호</label>
-                    <input type="tel" id="mem-phone" class="input-field" name="mem-phone" placeholder="010-0000-0000" required>
+                    <input type="tel" id="id-mem-phone" class="input-field" name="mem-phone" placeholder="전화번호">
                 </div>
                 <button type="submit" class="btn-submit">아이디 확인</button>
             </form>
         </div>
 
         <div id="pw-content" class="find-content">
-            <div class="title">Reset Password</div>
-            <p class="description">아이디와 전화번호가 일치하면<br>등록된 메일로 임시비밀번호가 전송됩니다.</p>
-            <form action="memberPwdFindOk.do" method="post">
+            <div class="title">비밀번호 찾기</div>
+            <p class="description">아이디와 전화번호가 일치하면<br> 등록된 이메일로 임시비밀번호가 전송됩니다.</p>
+            <form action="memberPwdFindOk.do" method="post" onsubmit="return findPwd();">
                 <div class="input-wrapper">
                     <label>아이디</label>
-                    <input type="text" class="input-field" name="mem-id" placeholder="아이디를 입력하세요" required>
+                    <input type="text" class="input-field" id="mem-id" name="mem-id" placeholder="아이디">
                 </div>
                 <div class="input-wrapper">
-                    <label>휴대폰 번호</label>
-                    <input type="tel" class="input-field" name="mem-phone" placeholder="010-0000-0000" required>
+                    <label>전화번호</label>
+                    <input type="tel" class="input-field" id="pwd-mem-phone" name="mem-phone" placeholder="전화번호">
                 </div>
                 <button type="submit" class="btn-submit">임시비밀번호 전송</button>
             </form>
@@ -133,12 +132,13 @@
 
         <div class="back-link"><a href="memberLogin.do">로그인</a></div>
     </div>
-    
 </div>
 
 <!-- 아이디 찾기 결과 모달 -->
-<div id="idResultModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);">
-  <div style="width:350px; margin:15vh auto; background:white; padding:20px; border-radius:12px;">
+<div id="idResultModal"
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);
+            justify-content:center; align-items:flex-start; padding-top:150px;">
+  <div style="width:350px; background:white; padding:20px; border-radius:12px; box-shadow:0 12px 24px rgba(0,0,0,0.15);">
     <h3 style="margin:0 0 12px;">아이디 찾기 결과</h3>
     <p style="margin:0 0 18px;">회원님의 아이디는 <b id="foundIdText"></b> 입니다.</p>
 
@@ -149,25 +149,88 @@
   </div>
 </div>
 
+<!-- 비밀번호 찾기 결과 모달 -->
+<div id="pwdResultModal"
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);
+            justify-content:center; align-items:flex-start; padding-top:120px;">
+
+  <div style="width:360px; background:white; padding:22px 20px; border-radius:12px; box-shadow:0 12px 24px rgba(0,0,0,0.15);">
+    <h3 style="margin:0 0 12px;">비밀번호 찾기 결과</h3>
+    <p id="pwdModalMsg" style="margin:0 0 18px; line-height:1.6;"></p>
+
+    <button type="button" class="btn-submit" onclick="closePwdModal()">확인</button>
+  </div>
+</div>
 
 <script>
     function openTab(e, tabName) {
         document.querySelectorAll('.find-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(tabName + '-content').classList.add('active');
-        event.currentTarget.classList.add('active');
+        e.currentTarget.classList.add('active');
+    }
+
+    // 아이디 모달 열기
+    function openIdModal(foundId){
+        document.getElementById("foundIdText").innerText = foundId;
+        document.getElementById("idResultModal").style.display = "flex";
+    }
+
+    // 비번 모달 열기/닫기
+    function openPwdModal(message, goLogin) {
+        document.getElementById("pwdModalMsg").innerHTML = message;
+        document.getElementById("pwdResultModal").style.display = "flex";
+        window.__goLoginAfterClose = !!goLogin;
+    }
+
+    function closePwdModal() {
+        document.getElementById("pwdResultModal").style.display = "none";
+        if (window.__goLoginAfterClose) {
+            location.href = "<%=request.getContextPath()%>/memberLogin.do";
+        }
     }
 </script>
 
-<!-- 아이디 찾기 모달 관련 스크립트 -->
+<!-- 아이디 찾기: 서버에서 findId 넘어오면 자동으로 id 탭 열고 모달 띄움 -->
 <c:if test="${not empty findId}">
 <script>
-window.addEventListener("load", function(){
-	document.getElementById("foundIdText").innerText = "${findId}";
-  	document.getElementById("idResultModal").style.display = "block";
-});
+    window.addEventListener("load", function(){
+        // id 탭으로 강제 전환
+        document.querySelectorAll('.find-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('id-content').classList.add('active');
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+
+        openIdModal("${findId}");
+    });
 </script>
 </c:if>
 
+<!-- 비밀번호 찾기 성공: sendEmail 넘어오면 pw 탭 열고 모달 띄움 -->
+<c:if test="${not empty sendEmail}">
+<script>
+    window.addEventListener("load", function(){
+        // pw 탭으로 강제 전환
+        document.querySelectorAll('.find-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('pw-content').classList.add('active');
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+
+        openPwdModal("가입된 <b>${sendEmail}</b>로 임시비밀번호를 전송했습니다.<br>로그인 후 비밀번호를 변경해주세요.", true);
+    });
+</script>
+</c:if>
+
+<!-- 비밀번호 찾기 실패/안내: msg 넘어오면 현재 탭 유지하고 모달 띄움 -->
+<c:if test="${not empty msg}">
+<script>
+    window.addEventListener("load", function(){
+        openPwdModal("${msg}", false);
+    });
+</script>
+</c:if>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>		<!-- jQuery 사용 -->
+<script src="<%=request.getContextPath()%>/js/member.js?v=1"></script>	<!-- javaScript 사용 -->
 </body>
 </html>

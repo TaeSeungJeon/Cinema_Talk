@@ -51,7 +51,7 @@ public class LoginOkController implements Action {
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
 		}
-
+		
 		//비밀번호 검증(BCrypt)
 		if(!BCrypt.checkpw(pwd, mdto.getMemPwd())) {
 			request.setAttribute("msg", "비밀번호가 다릅니다.");

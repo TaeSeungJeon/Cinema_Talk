@@ -26,6 +26,12 @@ public class IdFindOkController implements Action {
 		String memName = request.getParameter("mem-name");
 		String memPhone = request.getParameter("mem-phone");  
 		
+		//입력 하지 않았다면
+		if(memName == null || memName.trim().isEmpty() || memPhone == null || memPhone.trim().isEmpty()){
+		    out.println("<script>alert('이름과 전화번호를 입력하세요.');history.back();</script>");
+		    return null;
+		}
+		
 		//DTO에 담기
 		mdto.setMemName(memName.trim()); mdto.setMemPhone(memPhone.trim());
 		

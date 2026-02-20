@@ -215,5 +215,8 @@
     </div>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>		<!-- jQuery 사용 -->
+<script src="<%=request.getContextPath()%>/js/member.js?v=1"></script>	<!-- javaScript 사용 -->
 </body>
 </html>

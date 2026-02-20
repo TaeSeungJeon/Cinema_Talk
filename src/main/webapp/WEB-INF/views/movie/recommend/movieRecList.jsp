@@ -106,6 +106,7 @@
       top: 0; bottom: 0;
       width: 50px;
       z-index: 5;
+      transition: opacity 0.3s ease;
     }
     .fade.left{
       left: 0;
@@ -259,6 +260,7 @@
 
     </div>
   </div>
+         <%@ include file="../../home/homeFooter.jsp"%>
 
 <script>
 (function initApp() {
@@ -298,8 +300,21 @@
     // ===== 카드 투명/블러 (스크린샷처럼 양끝 흐림) + 화살표 표시 =====
     const updateUI = () => {
       const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
-      leftBtn.style.display = scrollEl.scrollLeft > 10 ? "flex" : "none";
-      rightBtn.style.display = scrollEl.scrollLeft < maxScroll - 10 ? "flex" : "none";
+      const currentScroll = scrollEl.scrollLeft;
+      
+      // 스크롤 위치 판단 (맨 왼쪽/오른쪽 끝인지)
+      const isAtStart = currentScroll <= 10;
+      const isAtEnd = currentScroll >= maxScroll - 10;
+      
+      // 화살표 표시/숨김
+      leftBtn.style.display = !isAtStart ? "flex" : "none";
+      rightBtn.style.display = !isAtEnd ? "flex" : "none";
+      
+      // 페이드 그라데이션 표시/숨김
+      const fadeLeft = wrap.querySelector(".fade.left");
+      const fadeRight = wrap.querySelector(".fade.right");
+      if (fadeLeft) fadeLeft.style.opacity = isAtStart ? "0" : "1";
+      if (fadeRight) fadeRight.style.opacity = isAtEnd ? "0" : "1";
 
       const rect = scrollEl.getBoundingClientRect();
       const center = rect.left + rect.width / 2;
@@ -311,21 +326,32 @@
         const r = card.getBoundingClientRect();
         const cardCenter = r.left + r.width / 2;
         const dist = Math.abs(center - cardCenter);
+        const distFromCenter = cardCenter - center; // 음수면 왼쪽, 양수면 오른쪽
 
         if (dist < bestDist) {
           bestDist = dist;
           bestCard = card;
         }
 
-        // dist가 멀수록 opacity/blur 증가
-        const fadeStart = 280;
-        const fadeRange = 420;
-        const t = Math.min(Math.max((dist - fadeStart) / fadeRange, 0), 1); // 0~1
-        const opacity = 1 - (t * 0.55); // 1 -> 0.45
-        const blur = t * 3.2;
+        // 맨 끝에서는 해당 방향 블러 제거
+        // 왼쪽 끝이면 왼쪽 카드들(distFromCenter < 0) 블러 안함
+        // 오른쪽 끝이면 오른쪽 카드들(distFromCenter > 0) 블러 안함
+        const skipBlur = (isAtStart && distFromCenter < 0) || (isAtEnd && distFromCenter > 0);
 
-        card.style.opacity = opacity.toFixed(3);
-        card.style.filter = `blur(${blur.toFixed(2)}px)`;
+        if (skipBlur) {
+          card.style.opacity = "1";
+          card.style.filter = "blur(0px)";
+        } else {
+          // dist가 멀수록 opacity/blur 증가
+          const fadeStart = 280;
+          const fadeRange = 420;
+          const t = Math.min(Math.max((dist - fadeStart) / fadeRange, 0), 1); // 0~1
+          const opacity = 1 - (t * 0.55); // 1 -> 0.45
+          const blur = t * 3.2;
+
+          card.style.opacity = opacity.toFixed(3);
+          card.style.filter = `blur(${blur.toFixed(2)}px)`;
+        }
         card.classList.remove("is-focus");
       });
 

@@ -34,4 +34,15 @@ public interface BoardDAO {
     List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow);
 
     int getBoardCountByType(int boardType);
+
+    // 좋아요
+    int isBoardLiked(int boardId, int boardType, int memNo);
+
+    int insertBoardLike(int boardId, int memNo, int boardType);
+
+    void deleteBoardLike(int boardId, int memNo);
+
+    int deleteBoardLike(int boardId, int boardType, int memNo);
+
+    int getBoardLikeCount(int boardId, int boardType);
 }

@@ -8,8 +8,6 @@ CREATE TABLE VOTE_REGISTER (
 	voteStatus	VARCHAR2(20)		NULL
 );
 
-
-
 CREATE TABLE VOTE_OPTION (
 	voteId	NUMBER		NOT NULL,
 	movieId	NUMBER		NOT NULL
@@ -23,7 +21,6 @@ CREATE TABLE VOTE_RECORD (
 	movieId	NUMBER		NOT NULL,
 	voteCommentText	VARCHAR2(4000)		NULL
 );
-
 
 ALTER TABLE VOTE_OPTION ADD CONSTRAINT PK_VOTE_OPTION PRIMARY KEY (
 	voteId,
@@ -66,9 +63,7 @@ create sequence optionidSeq
 start with 1
 increment by 1
 nocycle
-nocache; 
-
-
+nocache;
 
 create sequence recordIdSeq
 start with 1
@@ -81,4 +76,5 @@ start with 1
 increment by 1
 nocycle
 nocache;
+
 

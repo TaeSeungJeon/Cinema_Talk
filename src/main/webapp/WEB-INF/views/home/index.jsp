@@ -25,5 +25,6 @@
 <%--       <%@ include file="homeSidebar2.jsp"%> --%>
     </div>
  <script src="${pageContext.request.contextPath}/js/home.js"></script>
+         <%@ include file="homeFooter.jsp"%>
   </body>
 </html>

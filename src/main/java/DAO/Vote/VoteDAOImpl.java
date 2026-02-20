@@ -192,7 +192,7 @@ public class VoteDAOImpl implements VoteDAO {
 	@Override
 	public boolean insertVoteRegister(VoteRegisterDTO vdto) {
 		SqlSession sqlSession = null;
-		boolean isSucces = false;
+		boolean isSuccess = false;
 
 		try {
 			sqlSession = getSqlSession();
@@ -206,12 +206,68 @@ public class VoteDAOImpl implements VoteDAO {
 			sqlSession.insert("voptIn", vdto.getOptionList());
 			
 			sqlSession.commit();
+			isSuccess = true;
 		} finally {
 			if(sqlSession != null) {
 				sqlSession.close();
 			}
 		}
 
-		return isSucces;
+		return isSuccess;
+	}
+
+	@Override
+	public boolean editVoteRegister( VoteRegisterDTO vdto) {
+		SqlSession sqlSession = null;
+		boolean isSuccess = false;
+
+		try {
+			sqlSession = getSqlSession();
+			sqlSession.update("vregUpdate", vdto);
+			sqlSession.delete("voptDel", vdto);
+			for(VoteOptionDTO opt : vdto.getOptionList()) {
+	            opt.setVoteId(vdto.getVoteId()); // 모든 옵션에 부모 ID 세팅
+	        }
+			
+			sqlSession.insert("voptIn", vdto.getOptionList());
+			
+			sqlSession.commit();
+			isSuccess = true;
+		} catch (Exception e){
+			if(sqlSession != null) {
+				sqlSession.rollback();//예외 발생하면 롤백처리
+				
+			}
+			isSuccess = false;
+			e.printStackTrace();
+		}
+		
+		finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+		return isSuccess;
+	}
+
+	@Override
+	public boolean deleteVoteRegister(VoteRegisterDTO vdto) {
+		SqlSession sqlSession = null;
+		boolean isSuccess = false;
+
+		try {
+			sqlSession = getSqlSession();
+			sqlSession.delete("vregDel", vdto);
+			
+			sqlSession.commit();
+			isSuccess = true;
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+		return isSuccess;
 	}
 }

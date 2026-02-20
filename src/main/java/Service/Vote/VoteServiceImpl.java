@@ -160,4 +160,15 @@ return voteRegFullList.stream()
 		return activeVoteRegFullList;
 	}
 
+	@Override
+	public boolean editVoteRegister(VoteRegisterDTO vdto) {
+		
+		return this.vdao.editVoteRegister(vdto);
+	}
+
+	@Override
+	public boolean deleteVoteRegister(VoteRegisterDTO vdto) {
+		return this.vdao.deleteVoteRegister(vdto);
+	}
+
 }

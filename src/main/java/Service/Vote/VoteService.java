@@ -38,6 +38,10 @@ public interface VoteService {
 
 	List<VoteRegisterDTO> getActiveVoteRegList();
 
+	boolean editVoteRegister(VoteRegisterDTO vdto);
+
+	boolean deleteVoteRegister(VoteRegisterDTO vdto);
+
 	
 
 }

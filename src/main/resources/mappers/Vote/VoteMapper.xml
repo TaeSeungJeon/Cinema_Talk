@@ -168,6 +168,17 @@ ORDER BY vr.voteId, vo.movieId
     SELECT * FROM DUAL
 </insert>
 
+<update id="vregUpdate" parameterType="voteregister">
+UPDATE VOTE_REGISTER SET VOTETITLE=#{voteTitle}, votecontent=#{voteContent}, voteStartDate = #{voteStartDate}, voteEndDate = #{voteEndDate} where voteId=#{voteId}   
+</update>
+
+<delete id="voptDel" parameterType="voteregister">
+DELETE from vote_option where voteId=#{voteId}
+</delete>
+
+<delete id="vregDel" parameterType="voteregister">
+delete from vote_register where voteId=#{voteId}</delete>
+
 
 
 

@@ -36,7 +36,7 @@ public class VoteListController implements Action {
 		List<VoteRegisterDTO> voteRegFullList = voteService.getVoteRegFullList();
 
 		voteRegFullList=voteService.sortVote(voteRegFullList);
-		System.out.println(voteRegFullList.getFirst().getVoteId());
+		
 
 		//로그인 사용자 정보 가져오기
 		String memId = (String) session.getAttribute("memId"); // 값이 없으면 자동으로 null

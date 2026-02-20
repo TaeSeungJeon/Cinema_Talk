@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,7 +137,7 @@ input[type="text"], input[type="date"], select, textarea {
 	<div class="form-container">
 		<h2>${empty vote ? '새 투표 등록' : '투표 정보 수정'}</h2>
 
-		<form action="voteOkForm.do?state=insert" method="post" id="voteForm">
+		<form action="voteOkForm.do?state=${not empty vote ? 'edit' : 'add'}" method="post" id="voteForm">
 			<input type="hidden" name="voteId" value="${vote.voteId}"> <label
 				class="section-title">투표 제목</label> <input type="text"
 				name="voteTitle" value="${vote.voteTitle}"
@@ -147,16 +148,21 @@ input[type="text"], input[type="date"], select, textarea {
 
 
 			<div style="display: flex; gap: 20px;">
-				<div style="flex: 1;">
-					<label class="section-title">시작일</label> <input type="date"
-						name="voteStartDate" value="${vote.voteStartDate}" required>
-				</div>
-				<div style="flex: 1;">
-					<label class="section-title">종료일</label> <input type="date"
-						name="voteEndDate" value="${vote.voteEndDate}" required>
-				</div>
+			    <div style="flex: 1;">
+			        <label class="section-title">시작일</label> 
+			        <input type="date" name="voteStartDate" 
+			               value="${not empty vote ? fn:substring(vote.voteStartDate, 0, 10) : ''}" 
+			               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
+			               required>
+			    </div>
+			    <div style="flex: 1;">
+			        <label class="section-title">종료일</label> 
+			        <input type="date" name="voteEndDate" 
+			               value="${not empty vote ? fn:substring(vote.voteEndDate, 0, 10) : ''}" 
+			               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
+			               required>
+			    </div>
 			</div>
-
 			<div
 				style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
 				<label class="section-title">투표 선택지 (영화)</label>
@@ -208,7 +214,7 @@ input[type="text"], input[type="date"], select, textarea {
 			<div class="btn-group">
 				<button type="button" class="btn btn-cancel"
 					onclick="history.back()">취소</button>
-				<button type="submit" class="btn btn-save">저장</button>
+				<button type="submit" class="btn btn-save">${not empty vote ? '수정' : '등록'}</button>
 			</div>
 		</form>
 	</div>
@@ -219,33 +225,33 @@ input[type="text"], input[type="date"], select, textarea {
             let currentFocus = -1; // 현재 선택된 항목의 인덱스
             
            // 옵션 삭제 (최소 1개 유지)
-function removeOption(btn) {
-    const $items = $('.option-item');
-    if ($items.length > 1) {
-        $(btn).closest('.option-item').remove();
-    } else {
-        alert("투표 선택지는 최소 1개 이상 있어야 합니다.");
-        
-    }
-}
+			function removeOption(btn) {
+			    const $items = $('.option-item');
+			    if ($items.length > 1) {
+			        $(btn).closest('.option-item').remove();
+			    } else {
+			        alert("투표 선택지는 최소 1개 이상 있어야 합니다.");
+			        
+			    }
+			}
 
-// 옵션 추가 
-function addOption() {
-    const html = `
-        <div class="option-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
-            <div style="flex: 1; position: relative;">
-                <input type="hidden" name="movieId" class="movie-id-hidden">
-                <input type="text" name="optionTitle" class="movie-search" 
-                       placeholder="영화 제목을 검색하세요"
-                       onkeydown="if(event.keyCode==13) event.preventDefault();"
-                       onkeyup="handleSearch(this, event)" autocomplete="off">
-                <div class="search-results"></div>
-            </div>
-            <button type="button" class="btn" onclick="removeOption(this)" 
-                    style="background:#fee2e2; color:#ef4444; border:none; padding: 10px; cursor:pointer; border-radius:8px;">삭제</button>
-        </div>`;
-    $('#optionList').append(html);
-}
+			// 옵션 추가 
+			function addOption() {
+			    const html = `
+			        <div class="option-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
+			            <div style="flex: 1; position: relative;">
+			                <input type="hidden" name="movieId" class="movie-id-hidden">
+			                <input type="text" name="optionTitle" class="movie-search" 
+			                       placeholder="영화 제목을 검색하세요"
+			                       onkeydown="if(event.keyCode==13) event.preventDefault();"
+			                       onkeyup="handleSearch(this, event)" autocomplete="off">
+			                <div class="search-results"></div>
+			            </div>
+			            <button type="button" class="btn" onclick="removeOption(this)" 
+			                    style="background:#fee2e2; color:#ef4444; border:none; padding: 10px; cursor:pointer; border-radius:8px;">삭제</button>
+			        </div>`;
+			    $('#optionList').append(html);
+			}
             
             // 디바운싱 적용 검색
             function handleSearch(input,e) {
@@ -298,7 +304,7 @@ function addOption() {
                         
                         // a href="...id=123" 형태에서 ID 숫자만 추출
                         const href = $item.attr("href");
-                        const id = href.split('id=')[1];
+                        const id = href.split('movieId=')[1];
                         
                         html += `<div class="result-item"
                         onclick="selectMovie(this, '\${title}', '\${id}')"

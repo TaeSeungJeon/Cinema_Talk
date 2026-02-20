@@ -248,10 +248,10 @@
 
         <div style="width:100%">
          <nav class="v-filter-nav">
-            <button class="filter-btn active" onclick="filterVotes('all', this)">All</button>
-            <button class="filter-btn" onclick="filterVotes('ACTIVE', this)">Ongoing</button>
-            <button class="filter-btn" onclick="filterVotes('READY', this)">Upcoming</button>
-            <button class="filter-btn" onclick="filterVotes('CLOSED', this)">Closed</button>
+            <button class="filter-btn active" onclick="filterVotes('all', this)">전체</button>
+            <button class="filter-btn" onclick="filterVotes('ACTIVE', this)">진행중</button>
+            <button class="filter-btn" onclick="filterVotes('READY', this)">예정</button>
+            <button class="filter-btn" onclick="filterVotes('CLOSED', this)">종료</button>
         </nav>
         
         </div>

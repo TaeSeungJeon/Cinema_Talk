@@ -540,10 +540,6 @@ if(data.userResult != 0 || data.userResult != '0') {
                      </div>
             	 </div>
             	
-                 
-                
-            	
-                 
                 </div>
             `;
             $commentList.append(commentHtml);
@@ -604,11 +600,21 @@ function updateComments(comments) {
     comments.forEach(c => {
 		if(c.commentText){
 html += `
-            <div class="comment-item" style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                <div style="font-weight: bold; color: var(--primary);">\${c.memName}</div>
-                <div style="margin: 5px 0;">\${c.commentText}</div>
-                <div style="font-size: 0.8rem; color: #999;">\${c.createdDate}</div>
-            </div>
+	  <div class="comment-item">
+	<div class="user-avatar"></div>
+	 <div class="comment-content" style="flex: 1;">
+	 	<div style="display: flex; justify-content: space-between; align-items: center;">
+     		<div class="comment-user">\${c.memName}</div>
+     	</div>
+     	 <div id="comment-text-${comm.commentsId}" class="comment-text">\${c.commentText}</div>
+         
+         <div class="comment-utils">
+         <span>\${c.createdDate}</span>
+         </div>
+	 </div>
+	
+    </div>
+           
         `;
 validCommentCount++;
 		}
@@ -708,7 +714,7 @@ validCommentCount++;
 
 									</div>
 
-									<a href="movie_detail.do?id=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
+									<a href="movieDetail.do?movieId=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
 
 
 								</label>

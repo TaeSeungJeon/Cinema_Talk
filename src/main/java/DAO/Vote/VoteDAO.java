@@ -30,4 +30,8 @@ public interface VoteDAO {
 
     boolean insertVoteRegister(VoteRegisterDTO vdto);
 
+	boolean editVoteRegister(VoteRegisterDTO vdto);
+
+	boolean deleteVoteRegister(VoteRegisterDTO vdto);
+
 }

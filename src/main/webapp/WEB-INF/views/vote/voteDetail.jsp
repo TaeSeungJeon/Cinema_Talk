@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -34,7 +35,9 @@ body {
 	gap: 20px;
 }
 
-
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
 
 .glass-panel2 {
 	background: var(--glass-bg);
@@ -78,11 +81,11 @@ body {
 
 /* --- 투표 섹션 레이아웃 --- */
 .vote-section {
-	width: 100%;
-	max-width: 800px;
 	display: flex;
-	flex-direction: column;
 	gap: 30px;
+	align-items: flex-start;
+	max-width: 1200px;
+	margin: 0 auto;
 	
 }
 
@@ -411,6 +414,38 @@ opacity:1;
 	text-align: left;
 }
 
+ .comm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .filter-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            padding: 10px 24px;
+            border-radius: 50px;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: var(--shadow-strong);
+        }
+
 .action-btn:disabled, .disabled-style {
     background-color: #ccc !important;
     border-color: #bbb !important;
@@ -418,6 +453,26 @@ opacity:1;
     cursor: not-allowed; /* 마우스 커서를 금지 모양으로 변경 */
     opacity: 0.7;
 }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: white;
+        color: var(--text-main);
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .back-btn:hover {
+        background: var(--accent-color);
+        color: white;
+    }
 
 /* 활성화된 버튼에만 호버 효과 적용 */
 .cmnt-show-btn:not(:disabled):hover {
@@ -430,6 +485,12 @@ opacity:1;
 	
 	text-align: center;
 }
+.tab-menu { display: flex; gap: 30px; border-bottom: 2px solid var(--border-color); margin: 30px 0; }
+    .tab-item { padding: 12px 0; font-weight: 600; cursor: pointer; color: var(--text-muted); border-bottom: 3px solid transparent; }
+    .tab-item.active { color: var(--accent-color); border-bottom-color: var(--accent-color); }
+.header-content {width:60%; display:flex; flex-direction:column ;margin: 0 auto;}
+   
+   
 </style>
 <!-- 공통스타일시트 -->
  <link rel="stylesheet" 
@@ -630,27 +691,37 @@ validCommentCount++;
 <body>
 		
 <%@ include file="../home/homeHeader.jsp"%>
+<!--  <a href="javascript:history.back();" class="back-btn">← 이전</a> -->
+  <header class="comm-header">
+  
+            <div>
+                <h1 class="poll-title" style="margin:0; font-size: 2rem; font-weight: 800;">${voteInfo.voteTitle}</h1>
+            <p style="color: var(--text-sub); margin-top:10px; font-weight: 500;" class="poll-desc">${voteInfo.voteContent}</p>
+            <div class="meta-stats">
+                <span> <strong>${voteInfo.voterCount}</strong> 참여</span> |
+                <span> <strong>${fn:length(voteRecordList)}</strong> 댓글</span> | 
+                <span> 종료 ${voteInfo.voteEndDate}</span>
+            </div>
+            </div>
+           
+        </header>
+
+       
 
 
-<%-- 
-	     <h3>${voteInfo.vote_title}</h3> 
-	    <h3>${voteInfo.vote_id}</h3> 
-	     <h3>${voteInfo.vote_status}</h3> 
-
-	     <c:forEach var="opt" items="${voteInfo.optionList}">
-	        movie_id : ${opt.movie_id} <br> 
-	        title : ${opt.movie_title} <br> 
-	     </c:forEach> 
-	      <h3>${voteInfo.voted}</h3> 
-	     <h3>${voteInfo.vote_status}</h3> 
-	      <h3>${voteInfo.userChoice}</h3> 
-
-    <hr>  --%>
+		
+	<main style="width: 100%">
 
 
-	<main class="vote-section">
+ <nav class="filter-nav" style="max-width: 1400px">
+            <div class="tab-item active">투표</div>
+            <div class="tab-item">결과</div>
+            <div class="tab-item">댓글 (${fn:length(voteRecordList)})</div>
 
-		<section class="glass-panel2 vote-card-container" style="width: 100%">
+        </nav>
+        
+        <div class="vote-section"  style="width: 100%">
+        	<section class="glass-panel2 vote-card-container" style="width: 60%">
 
 
 			<div class="vote-window">
@@ -779,8 +850,101 @@ validCommentCount++;
 
 					</div>
 		</section>
+<aside class="aside " style="width: 30%;">
+			<div class="glass-panel"
+				style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
+				<div class="sidebar-title"
+					style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+					<span>예정된 투표</span> <a href="voteList.do?filter=READY"
+						style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
+						전체보기 > </a>
+				</div>
+
+				<c:choose>
+					<c:when test="${not empty voteRegisterReady}">
+						<c:forEach var="vote" items="${voteRegisterReady}">
+							<div class="upcoming-item"
+								onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
+								<div style="font-weight: 600;">${vote.voteTitle}</div>
+								<div style="font-size: 0.8rem; color: var(--accent-color);">
+									시작일: ${vote.voteStartDate}</div>
+							</div>
+						</c:forEach>
+					</c:when>
+
+					<c:otherwise>
+						<div class="upcoming-item" style="width: 100%;">예정된 투표가
+							없습니다.</div>
+
+					</c:otherwise>
+
+				</c:choose>
+
+			</div>
+			<br>
+			<br>
+			<div class="glass-panel"
+				style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
+				<div class="sidebar-title"
+					style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+					<span>지난 투표 결과</span> <a href="voteList.do?filter=CLOSED"
+						style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
+						전체보기 > </a>
+				</div>
 
 
+
+				<c:choose>
+					<c:when test="${not empty voteRegisterClosed}">
+						<c:forEach var="vote" items="${voteRegisterClosed}">
+							<div class="glass-panel2 history-card" style="width: 100%"
+								onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
+
+								<div style="font-weight: 700;">${vote.voteTitle}</div>
+
+								<div
+									style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">
+									종료: ${vote.voteEndDate} | 참여
+									<c:set var="done" value="false" />
+									<c:forEach var="res" items="${vote.resultList}">
+										<c:if test="${not done and res.rank == 1}">
+											<span style="font-weight: 600;">
+												${res.totalVoterCount} </span>
+											<c:set var="done" value="true" />
+										</c:if>
+									</c:forEach>
+									명
+								</div>
+
+								<div class="winner-box" style="margin-top: 8px;">
+									<span class="winner-label">최다 득표</span>
+									<c:set var="done" value="false" />
+									<c:forEach var="res" items="${vote.resultList}">
+										<c:if test="${not done and res.rank == 1}">
+											<span style="font-weight: 600;"> ${res.movieTitle} </span>
+											<c:set var="done" value="true" />
+										</c:if>
+									</c:forEach>
+								</div>
+							</div>
+						</c:forEach>
+					</c:when>
+
+					<c:otherwise>
+						<div class="upcoming-item" style="width: 100%;">종료된 투표가
+							없습니다.</div>
+					</c:otherwise>
+				</c:choose>
+
+
+			</div>
+
+
+		</aside>
+	
+        
+        </div>
+	
 	</main>
 	<script src="${pageContext.request.contextPath}/js/vote.js"></script>
 	<script src="${pageContext.request.contextPath}/js/home.js"></script>

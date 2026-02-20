@@ -10,30 +10,42 @@ import Service.Member.MemberServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/* 아이디 중복 검색 컨트롤러 */
+/* 아이디 중복 검색 컨트롤러 (json 응답) */
 public class IdCheckController implements Action {
 
 	@Override
 	public ActionForward execute(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		response.setContentType("text/html; charset=utf-8"); //웹브라우저에 출력되는 문자와 태그 언어코딩 타입 설정
+		response.setContentType("application/json; charset=utf-8"); 
 		PrintWriter out = response.getWriter();
-		MemberService memberService = new MemberServiceImpl(); //서비스 안에서 dao호출하고 db 접근했을테니까 dao를 호출하지 않아도 되겠구나
 		
-		String memId = request.getParameter("mem-id"); 
+		MemberService memberService = new MemberServiceImpl(); 
 		
-		MemberDTO db_id = memberService.idCheck(memId);
+		//JS에서 data : {"memId" : memId}로 보내니까
+		String memId = request.getParameter("memId"); 
+		memId = (memId == null) ? "" : memId.trim();
 		
-		int re = -1; //중복 없음
-		
-		if(db_id != null) { //중복 아이디가 있는 경우
-			re = 1;
+		//아이디 입력 안 했으면
+		if(memId.isEmpty()) {
+			out.println("{\"available\":false,\"msg\":\"아이디를 입력하세요.\"}");
+			out.flush();
+			return null;
 		}
 		
-		out.println(re); //값 반환
+		MemberDTO db_id = memberService.idCheck(memId);	//DB에 있으면 중복
 		
-		return null;
+		boolean available = (db_id == null);
+		
+		String msg = available ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다.";
+		
+		//Json 출력
+		String json = "{\"available\":" + available + ",\"msg\":\"" + msg + "\"}";
+		
+		out.println(json);
+		out.flush();
+		
+		return null; //ajax 응답이라 forward 없음
 	}
 
 }

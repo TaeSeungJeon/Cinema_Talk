@@ -14,7 +14,7 @@
   
   <!-- 중복 아이디 검색 -->
   <select id="idCheck" parameterType="String" resultType="member">
-   select * from member where memId=#{id}
+   select * from member where memId=#{memId}
   </select>
   
   <!-- 입력받은 아이디로 로그인 인증 -->
@@ -41,5 +41,15 @@
   <update id="updatePwd" parameterType="member">
   	update member set memPwd = #{memPwd} where memNo = #{memNo}
   </update>
+  
+  <!-- 전화번호 중복체크 -->
+  <select id="phoneCheck" parameterType="String" resultType="int">
+   select count(*) from member where memPhone = #{memPhone}
+  </select>
+  
+  <!-- 이메일 중복 체크 -->
+  <select id="emailCheck" parameterType="String" resultType="int">
+  	select count(*) from member where memEmail = #{memEmail}
+  </select>
   
   </mapper>

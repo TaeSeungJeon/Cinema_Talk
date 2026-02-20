@@ -1,3 +1,4 @@
+
 --member 테이블 생성
 create table MEMBER(
 	memNo number(38) primary key 				--회원 번호
@@ -13,6 +14,9 @@ create table MEMBER(
 	, memDate date not null					--등록 날짜
 );
 
+-- unique 제약조건 추가 : 이메일 중복 불가 (비밀번호 찾기 기준이 되는 컬럼)
+ALTER TABLE member
+ADD CONSTRAINT uk_member_email UNIQUE (memEmail);
 
 
 select * from MEMBER;

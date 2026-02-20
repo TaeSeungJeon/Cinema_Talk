@@ -40,6 +40,10 @@ body {
 	padding: 25px;
 }
 
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
 .glass-panel {
 	background: var(--glass-bg);
 	backdrop-filter: blur(15px);
@@ -159,12 +163,21 @@ body {
 
 /* 옵션 리스트 내부 스크롤 */
 .vote-options-list {
-	flex: 1;
-	overflow-y: auto;
-	padding-right: 10px;
-	margin-bottom: 15px;
-	scrollbar-width: thin;
-	scrollbar-color: var(--accent-color) transparent;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 15px;
+    
+    /* 1. 크롬, 사파리, 엣지 (Webkit 엔진) */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* 2. 파이어폭스 */
+    scrollbar-width: none;
+
+    /* 3. 인터넷 익스플로러, 구형 엣지 */
+    -ms-overflow-style: none;
 }
 
 .vote-options-list::-webkit-scrollbar {
@@ -520,10 +533,27 @@ opacity:1;
 							<c:forEach var="vote" items="${voteRegisterActive}">
 								<div class="vote-content">
 									<div class="vote-header">
-
-										<strong class="status-badge status-ongoing">진행중</strong> <span>종료:
-											<span id="voteEndDate">${vote.voteEndDate}</span>
-										</span>
+									    <strong class="status-badge status-ongoing">진행중</strong> 
+									    <span>
+									        종료: <span id="voteEndDate">${vote.voteEndDate} 
+									        
+									        <c:if test="${not empty vote.resultList}">
+									            | 참여
+									        
+									        <c:set var="done" value="false" />
+											<c:forEach var="res" items="${vote.resultList}">
+												<c:if test="${not done and res.rank == 1}">
+													<span style="font-weight: 600;">
+														${res.totalVoterCount} </span>
+													<c:set var="done" value="true" />
+												</c:if>
+											</c:forEach>
+											명
+									        </c:if>
+									    
+									        </span>
+									       
+									    </span>
 									</div>
 
 									<h2 class="vote-title">${vote.voteTitle}</h2>

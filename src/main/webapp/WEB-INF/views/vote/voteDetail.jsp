@@ -342,10 +342,32 @@ opacity:1;
 }
 
 .comment-item {
-	border: 1px solid #eee;
-	padding: 15px;
-	border-radius: 10px;
+	 display: flex;
+     gap: 15px;
+     margin-bottom: 25px;
+     padding-bottom: 20px;
+     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
+
+ .comment-user {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            font-size: 0.95rem;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .comment-utils {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            display: flex;
+            gap: 15px;
+        }
 
 .user-meta {
 	display: flex;
@@ -506,12 +528,18 @@ if(data.userResult != 0 || data.userResult != '0') {
         data.comments.forEach(function(cmnt) {
             const commentHtml = `
                 <div class="comment-item">
-                    <div class="user-meta">
-                        <div class="user-avatar"></div>
-                        <span class="username">\${cmnt.writer}</span>
-                        <span class="timestamp">\${cmnt.createdDate}</span>
-                    </div>
-                    <div class="comment-content">\${cmnt.cont}</div>
+            	<div class="user-avatar"></div>
+            	 <div class="comment-content" style="flex: 1;">
+            	 	<div style="display: flex; justify-content: space-between; align-items: center;">
+                 		<div class="comment-user">\${cmnt.writer}</div>
+                 	</div>
+                 	 <div id="comment-text-${comm.commentsId}" class="comment-text">\${cmnt.cont}</div>
+                     
+                     <div class="comment-utils">
+                     <span>\${cmnt.createdDate}</span>
+                     </div>
+            	 </div>
+            	
                 </div>
             `;
             $commentList.append(commentHtml);
@@ -572,11 +600,21 @@ function updateComments(comments) {
     comments.forEach(c => {
 		if(c.commentText){
 html += `
-            <div class="comment-item" style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                <div style="font-weight: bold; color: var(--primary);">\${c.memName}</div>
-                <div style="margin: 5px 0;">\${c.commentText}</div>
-                <div style="font-size: 0.8rem; color: #999;">\${c.createdDate}</div>
-            </div>
+	  <div class="comment-item">
+	<div class="user-avatar"></div>
+	 <div class="comment-content" style="flex: 1;">
+	 	<div style="display: flex; justify-content: space-between; align-items: center;">
+     		<div class="comment-user">\${c.memName}</div>
+     	</div>
+     	 <div id="comment-text-${comm.commentsId}" class="comment-text">\${c.commentText}</div>
+         
+         <div class="comment-utils">
+         <span>\${c.createdDate}</span>
+         </div>
+	 </div>
+	
+    </div>
+           
         `;
 validCommentCount++;
 		}
@@ -608,10 +646,7 @@ validCommentCount++;
 	      <h3>${voteInfo.userChoice}</h3> 
 
     <hr>  --%>
-	<div class="header">
-    <h1 class="page-title">PICK YOUR BEST</h1>
-    <p class="page-desc">치열한 경쟁 속, 당신의 마음을 훔친 단 하나의 영화를 선택해 주세요.</p>
-</div>
+
 
 	<main class="vote-section">
 
@@ -633,13 +668,13 @@ validCommentCount++;
 								
 								<c:when test="${voteInfo.voteStatus eq 'ACTIVE'}">
 								<strong class="status-badge status-ongoing">진행중</strong> <span>종료:
-								<span id="voteEndDate">${voteInfo.voteEndDate}</span>
+								<span id="voteEndDate">${voteInfo.voteEndDate} | 참여 ${voteInfo.voterCount}명</span>
 							</span>
 								</c:when>
 								
 								<c:when test="${voteInfo.voteStatus eq 'CLOSED'}">
 								<strong class="status-badge status-completed">종료</strong> <span>종료:
-								<span id="voteEndDate">${voteInfo.voteEndDate}</span>
+								<span id="voteEndDate">${voteInfo.voteEndDate} | 참여 ${voteInfo.voterCount}명 </span>
 							</span>
 								</c:when>
 
@@ -679,7 +714,7 @@ validCommentCount++;
 
 									</div>
 
-									<a href="movie_detail.do?id=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
+									<a href="movieDetail.do?movieId=${opt.movieId}" class="detail-link">영화 정보 상세보기</a>
 
 
 								</label>
@@ -711,6 +746,8 @@ validCommentCount++;
 
 
 <c:if test="${voteInfo.voteStatus ne 'READY' }">
+
+
 <div class="comment-section" style="display: ${(voteInfo.voted || voteInfo.voteStatus eq 'CLOSED') ? 'block' : 'none'};">
 							<div class="comment-count "></div>
 							<form id="commentForm" action="voteOk.do" method="post">
@@ -739,10 +776,6 @@ validCommentCount++;
 						</div>
 
 </c:if>
-
-
-
-						
 
 					</div>
 		</section>

@@ -64,7 +64,7 @@ public class VoteController implements Action {
 			}
 			
 			//결과 집계
-			if(vote.isVoted() || "CLOSED".equals(vote.getVoteStatus())){
+			if(vote.isVoted() || "CLOSED".equals(vote.getVoteStatus()) || "ACTIVE".equals(vote.getVoteStatus())){
 				List<VoteResultDTO> voteResultList = voteService.getVoteResult(vote.getVoteId());
 				vote.setResultList(voteResultList);
 			}

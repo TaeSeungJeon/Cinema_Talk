@@ -148,6 +148,36 @@ WHERE vr.voteId = #{voteId}
 ORDER BY vr.voteId, vo.movieId
 
 	</select>
+	
+	<insert id="vregIn" parameterType="voteregister">
+	<selectKey keyProperty="voteId" resultType="int" order="BEFORE">
+        SELECT voteIdSeq.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO VOTE_REGISTER (
+        voteId, voteTitle, voteContent, voteStartDate, voteEndDate, voteStatus
+    ) VALUES (
+        #{voteId}, #{voteTitle}, #{voteContent}, #{voteStartDate}, #{voteEndDate}, #{voteStatus}
+    )
+	</insert>
+	
+	<insert id="voptIn" parameterType="java.util.List">
+    INSERT ALL
+    <foreach collection="list" item="opt" separator=" ">
+        INTO VOTE_OPTION (voteId, movieId) VALUES (#{opt.voteId}, #{opt.movieId})
+    </foreach>
+    SELECT * FROM DUAL
+</insert>
+
+<update id="vregUpdate" parameterType="voteregister">
+UPDATE VOTE_REGISTER SET VOTETITLE=#{voteTitle}, votecontent=#{voteContent}, voteStartDate = #{voteStartDate}, voteEndDate = #{voteEndDate} where voteId=#{voteId}   
+</update>
+
+<delete id="voptDel" parameterType="voteregister">
+DELETE from vote_option where voteId=#{voteId}
+</delete>
+
+<delete id="vregDel" parameterType="voteregister">
+delete from vote_register where voteId=#{voteId}</delete>
 
 
 

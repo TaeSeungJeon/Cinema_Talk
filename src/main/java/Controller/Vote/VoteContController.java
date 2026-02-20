@@ -1,14 +1,14 @@
 package Controller.Vote;
 
 import java.io.PrintWriter;
-
+import java.util.List;
 
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
 import DTO.Vote.VoteRecordDTO;
 import DTO.Vote.VoteRegisterDTO;
-
+import DTO.Vote.VoteResultDTO;
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
 import Service.Vote.VoteService;
@@ -54,13 +54,21 @@ public class VoteContController implements Action {
 
 		}
 		
+		List<VoteResultDTO> voteResult = voteService.getVoteResult(voteId);
+		
+		if (voteResult != null && !voteResult.isEmpty()) {
+		    // 리스트의 첫 번째 항목에서 전체 참여자 수를 가져와 주입
+		    int totalCount = voteResult.get(0).getTotalVoterCount();
+		    voteReg.setVoterCount(totalCount); 
+		}
 		
 		if(voteReg.getVoteStatus().equals("CLOSED") || 
 			(voteReg.getVoteStatus().equals("ACTIVE") && voted)) {
 				
-			voteReg.setResultList(voteService.getVoteResult(voteId));
+			voteReg.setResultList(voteResult);
 			request.setAttribute("voteRecordList", voteService.getVoteRecordByVoteId(voteId));
 		}
+	
 
 		voteReg.setVoted(voted);
 		

@@ -12,7 +12,7 @@ public interface MyPageDAO {
 	// 게시글 관련
 	List<BoardDTO> getBoardListByMemNo(int memNo);
 	int getBoardCountByMemNo(int memNo);
-	
+	List<Integer> getBoardCommentCountByMemNo(int boardId);
 	// 댓글 관련
 	List<CommentsDTO> getCommentListByMemNo(int memNo);
 	int getCommentCountByMemNo(int memNo);
@@ -20,6 +20,7 @@ public interface MyPageDAO {
 	// 투표 관련
 	List<VoteRecordDTO> getVoteRecordListByMemNo(int memNo);
 	int getVoteCountByMemNo(int memNo);
+	List<VoteRecordDTO> getVoteCommentListByMemNo(int memNo);
 	void updateMemberInfo(MemberDTO myPageDTO);
 	
 }

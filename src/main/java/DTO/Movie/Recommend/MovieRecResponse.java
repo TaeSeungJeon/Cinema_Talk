@@ -14,7 +14,9 @@ public class MovieRecResponse {
     private int movieRuntime;
     private String moviePosterPath;
     private String movieBackdropPath;
+    private int genreId;
     private String genreName;
+    private String sectionGenreName;
     private Double movieRatingAverage;
     private int movieRecommendCount;
 }

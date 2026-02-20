@@ -173,5 +173,6 @@
     </script>
 </c:if>
 
+<script src="<%=request.getContextPath()%>/js/member.js?v=1"></script>	<!-- javaScript 사용 -->
 </body>
 </html>

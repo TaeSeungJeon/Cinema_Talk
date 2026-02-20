@@ -15,20 +15,8 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public void insertMember(MemberDTO member) {
-		
-		// 사용자가 입력한 비밀번호
-		String memPwd = member.getMemPwd();
-		
-		// BCrypt로 암호화
-		String memPassword = BCrypt.hashpw(memPwd, BCrypt.gensalt(12));
-		
-		// DTO에 암호화된 비밀번호 다시 저장
-		member.setMemPwd(memPassword);
-		
-		// DAO 호출 (DB저장)
 		this.mdao.insertMember(member);
-		
-	}//입력받은 회원정보 저장
+	}//입력받은 회원정보 저장(회원가입)
 
 	@Override
 	public MemberDTO idCheck(String memId) {

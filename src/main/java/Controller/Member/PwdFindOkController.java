@@ -29,6 +29,7 @@ public class PwdFindOkController implements Action {
 		//입력받은 아이디와 전화번호를 기준으로 회원이 존재 확인
 		MemberDTO mdto = memberService.findByIdAndPhone(memId, memPhone);
 		
+		//등록되지 않은 회원일 경우
 		if(mdto == null) {
 			out.println("<script>");
 			out.println("alert('입력하신 정보와 일치하는 회원이 없습니다.');");
@@ -41,18 +42,41 @@ public class PwdFindOkController implements Action {
 		boolean ok = memberService.resetPwdSendEmail(mdto);
 		
 		if(ok) {
-			out.println("<script>");
-			out.println("alert('임시 비밀번호를 이메일로 전송했습니다. 로그인 후 비밀번호를 변경해주세요.');");
-			out.println("location.href='" + request.getContextPath() + "/memberLogin.do';"); //여기 다시 확인
-			out.println("</script>");
+			
+			// 이메일 마스킹 처리
+			String maskedEmail = maskEmail(mdto.getMemEmail());
+			
+			//jsp에 전달(모달 띄울 때 사용)
+			request.setAttribute("sendEmail", maskedEmail);
+			
+			ActionForward forward = new ActionForward();
+			forward.setRedirect(false);
+			forward.setPath("/WEB-INF/views/member/findAccount.jsp");
+			return forward;
+			
 		}else {
-			out.println("<script>");
-			out.println("alert('메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');");
-			out.println("history.back();");
-			out.println("</script>");
+			request.setAttribute("msg", "메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.");
+			
+			ActionForward forward = new ActionForward();
+			forward.setRedirect(false);
+			forward.setPath("/WEB-INF/views/member/findAccount.jsp");
+			return forward;
 		}
-		
-		return null;
 	}
+	
+	//이메일 마스킹 함수 ex) yunhano@gmail.com -> y***o@gmail.com
+			private String maskEmail(String email) {
+				if(email == null || !email.contains("@")) return email;
+				
+				String[] parts = email.split("@");
+				String id = parts[0];
+				String domain = parts[1];
+				
+				if(id.length() <= 2) {
+					return id.charAt(0) + "***@" + domain;
+				}
+				
+				return id.charAt(0) + "***" + id.charAt(id.length()-1) + "@" + domain;
+			}
 
 }

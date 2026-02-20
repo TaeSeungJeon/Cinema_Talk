@@ -169,9 +169,9 @@ $(function(){
 });
 
 //아이디찾기 입력 확인
-function findAccount(){
+function findId(){
 	const memName = $.trim($("#mem-name").val());
-	const memPhone = $.trim($("#mem-phone").val());
+	const memPhone = $.trim($("#id-mem-phone").val());
 	
 	if(memName == "" ){
 		alert("이름을 입력하세요.");
@@ -181,13 +181,58 @@ function findAccount(){
 	
 	if(memPhone == "" ){
 		alert("전화번호를 입력하세요.");
-		$("#mem-phone").focus();	
+		$("#id-mem-phone").focus();	
 		return false;
 	}
+	
+	//전화번호 숫자만 추출
+	const phoneDigits = memPhone.replace(/[^0-9]/g, "");
+	
+	//010시작 + 11자리 확인
+	if(phoneDigits.length !== 11 || !phoneDigits.startsWith("010")){
+		alert("전화번호는 010으로 시작하는 11자리여야 합니다. (예: 010-1234-5678)");
+		$("id-mem-phone").focus();
+		return false;
+	}
+	
+	//하이픈 자동 추가
+	const formattedPhone = phoneDigits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
+	$("#id-mem-phone").val(formattedPhone);
 		
 	return true;
 }
 
 //비밀번호 찾기 입력 확인
-
+function findPwd(){
+	const memId = $.trim($("#mem-id").val());
+	const memPhone = $.trim($("#pwd-mem-phone").val());
+	
+	if(memId == ""){
+		alert("아이디를 입력하세요.");
+		$("#mem-id").focus();
+		return false;
+	}
+	
+	if(memPhone == ""){
+		alert("전화번호를 입력하세요.");
+		$("#pwd-mem-phone").focus();
+		return false;
+	}
+	
+	//전화번호 숫자만 추출
+		const phoneDigits = memPhone.replace(/[^0-9]/g, "");
+		
+	//010시작 + 11자리 확인
+	if(phoneDigits.length !== 11 || !phoneDigits.startsWith("010")){
+		alert("전화번호는 010으로 시작하는 11자리여야 합니다. (예: 010-1234-5678)");
+		$("pwd-mem-phone").focus();
+		return false;
+	}
+		
+	//하이픈 자동 추가
+	const formattedPhone = phoneDigits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
+	$("#pwd-mem-phone").val(formattedPhone);	
+		
+	return true;
+}
 

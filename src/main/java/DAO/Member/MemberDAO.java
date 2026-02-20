@@ -16,10 +16,10 @@ public interface MemberDAO {
 
 	MemberDTO findByIdAndPhone(String memId, String memPhone);
 
-	int updatePwd(MemberDTO mdto);
-
 	int phoneCheck(String memPhone);
 
 	int emailCheck(String memEmail);
+
+	int updatePwd(MemberDTO mdto);
 
 }

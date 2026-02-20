@@ -27,4 +27,11 @@ public interface BoardDAO {
 
     List<BoardDTO> boardListByType(int boardType);
 
+    int getBoardCount();
+
+    List<BoardDTO> boardListPage(int startRow, int endRow);
+
+    List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow);
+
+    int getBoardCountByType(int boardType);
 }

@@ -83,7 +83,31 @@
         ORDER BY boardId DESC
     </select>
 
+    <select id="getBoardCount" resultType="int">
+        SELECT COUNT(*) FROM BOARD
+    </select>
 
+    <select id="boardListPage" parameterType="map" resultType="DTO.Board.BoardDTO">
+        SELECT * FROM (
+        SELECT ROWNUM rnum, b.*
+        FROM (SELECT * FROM BOARD ORDER BY boardId DESC) b
+        WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+        )
+        WHERE rnum >= #{startRow}
+    </select>
+
+    <select id="getBoardCountByType" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM BOARD WHERE BOARDTYPE = #{boardType}
+    </select>
+
+    <select id="boardListPageByType" parameterType="map" resultType="DTO.Board.BoardDTO">
+        SELECT * FROM (
+        SELECT ROWNUM rnum, b.*
+        FROM (SELECT * FROM BOARD WHERE BOARDTYPE = #{boardType} ORDER BY boardId DESC) b
+        WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+        )
+        WHERE rnum >= #{startRow}
+    </select>
 
 
 </mapper>

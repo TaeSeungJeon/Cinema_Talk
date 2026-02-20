@@ -23,6 +23,7 @@ public class MyPageController implements Action {
 		MemberService memberService = new MemberServiceImpl();
 		MyPageService myPageService = new MyPageServiceImpl();
 		HttpSession session = request.getSession(false);
+		String paramMemNo = request.getParameter("memNo");
 		
 		// 세션 체크
 		if (session == null || session.getAttribute("memId") == null) {
@@ -31,13 +32,30 @@ public class MyPageController implements Action {
 			return forward;
 		}
 
-		// 세션에서 memId 꺼내기
-		String memId = (String) session.getAttribute("memId");
+		MemberDTO member;
 
-		// DB에서 사용자 정보 조회
-		MemberDTO member = memberService.loginCheck(memId);
+		if (paramMemNo != null && !paramMemNo.isBlank()) {
+			try {
+				int memNo = Integer.parseInt(paramMemNo);
+				member = memberService.getMemberInfo(memNo);
+			} catch (NumberFormatException e) {
+				forward.setRedirect(true);
+				forward.setPath("freeBoard.do");
+				return forward;
+			}
+		} else {
+			// 세션에서 memId 꺼내기
+			String memId = (String) session.getAttribute("memId");
+			// DB에서 사용자 정보 조회
+			member = memberService.loginCheck(memId);
+		}
 
 		if (member == null) {
+			if (paramMemNo != null && !paramMemNo.isBlank()) {
+				forward.setRedirect(true);
+				forward.setPath("freeBoard.do");
+				return forward;
+			}
 			session.invalidate();
 			forward.setRedirect(true);
 			forward.setPath("memberLogin.do");

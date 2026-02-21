@@ -52,4 +52,49 @@ public class CommentsImpl implements Comments {
         sqlSession.close();
         return result;
     }
+
+    // 댓글 좋아요 추가
+    @Override
+    public int commentsLikeInsert(Map<String, Object> map) {
+        SqlSession sqlSession = factory.openSession(true);
+        int result = sqlSession.insert("Comments.commentsLikeInsert", map);
+        sqlSession.close();
+        return result;
+    }
+
+    // 댓글 좋아요 삭제
+    @Override
+    public int commentsLikeDelete(Map<String, Object> map) {
+        SqlSession sqlSession = factory.openSession(true);
+        int result = sqlSession.delete("Comments.commentsLikeDelete", map);
+        sqlSession.close();
+        return result;
+    }
+
+    // 댓글 좋아요 개수 조회
+    @Override
+    public int commentsLikeCount(int commentsId) {
+        SqlSession sqlSession = factory.openSession(true);
+        int result = sqlSession.selectOne("Comments.commentsLikeCount", commentsId);
+        sqlSession.close();
+        return result;
+    }
+
+    // 사용자의 댓글 좋아요 여부 확인
+    @Override
+    public int commentsLikeCheck(Map<String, Object> map) {
+        SqlSession sqlSession = factory.openSession(true);
+        int result = sqlSession.selectOne("Comments.commentsLikeCheck", map);
+        sqlSession.close();
+        return result;
+    }
+
+    // 좋아요 정보 포함된 댓글 목록 조회
+    @Override
+    public List<CommentsDTO> commentsListWithLike(Map<String, Object> map) {
+        SqlSession sqlSession = factory.openSession(true);
+        List<CommentsDTO> list = sqlSession.selectList("Comments.commentsListWithLike", map);
+        sqlSession.close();
+        return list;
+    }
 }

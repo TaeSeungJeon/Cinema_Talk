@@ -567,7 +567,12 @@
                                 <span class="reply-trigger"
                                       style="cursor:pointer; font-weight:600; color:var(--accent-color);"
                                       onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
-                                <span>좋아요 0</span>
+                                <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
+                                      onclick="toggleCommentLike(${comm.commentsId})"
+                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);">
+                                <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
+                                         좋아요 ${comm.likeCount}
+                                </span>
                             </div>
 
                             <div id="reply-form-${comm.commentsId}" class="reply-form-container">
@@ -707,6 +712,39 @@
                     document.getElementById("likeCount").innerText = res;
                 });
         }
+        function toggleLike(boardId, boardType) {
+            fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
+                .then(r => r.text())
+                .then(res => {
+                    if (res === "LOGIN_REQUIRED") {
+                        alert("로그인 후 이용 가능합니다.");
+                        location.href = "memberLogin.do";
+                        return;
+                    }
+                    document.getElementById("likeCount").innerText = res;
+                });
+        }
+        /* 댓글 좋아요 */
+        function toggleCommentLike(commentsId) {  // ← 바깥으로 빼내야 함
+            fetch('commentsLike.do?commentsId=' + commentsId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'LOGIN_REQUIRED') {
+                        alert('로그인이 필요합니다.');
+                        location.href = 'memberLogin.do';
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
 
 
     </script>

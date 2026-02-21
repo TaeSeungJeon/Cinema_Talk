@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import Controller.Board.CommentsLikeController;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -69,6 +70,9 @@ public class FrontController extends HttpServlet {
 				RequestDispatcher dis = request.getRequestDispatcher(forward.getPath());
 				dis.forward(request, response);
 			}
+		}
+		if (command.equals("/commentsLike.do")) {
+			action = new CommentsLikeController();
 		}
 	}
 }

@@ -11,3 +11,4 @@ ADD recommendCreatedAt DATE DEFAULT SYSDATE;
 
 CREATE INDEX idx_rec_date  
 ON MEMBER_MOVIE_RECOMMEND (recommendCreatedAt, movieId);
+

@@ -23,7 +23,9 @@ public class PostDetailController implements Action {
         BoardDTO cont = service.getBoardDetail(boardId);
 
         CommentsService cService = CommentsServiceImpl.getInstance();
-        List<CommentsDTO> clist = cService.commentsList(boardId);
+
+        Integer memNo = (Integer) request.getSession().getAttribute("memNo");
+        List<CommentsDTO> clist = cService.commentsListWithLike(boardId, memNo);
 
         // 좋아요
         int likeCount = service.getBoardLikeCount(cont.getBoardId(), cont.getBoardType());

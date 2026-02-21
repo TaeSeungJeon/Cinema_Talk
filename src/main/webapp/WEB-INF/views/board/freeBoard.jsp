@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%-- [수정] 500 에러 방지를 위해 memberHeader.jsp와 동일한 Jakarta 버전으로 통일 --%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
@@ -538,7 +537,7 @@
         <div class="pagination">
             <c:if test="${page > 1}">
                 <a href="${pageContext.request.contextPath}/freeBoard.do?page=${page - 1}&filter=${filter}"
-                   class="page-btn">←</a>
+                   class="page-btn"><</a>
             </c:if>
 
             <c:forEach var="i" begin="${startPage}" end="${endPage}">
@@ -561,7 +560,7 @@
 
             <c:if test="${page < maxPage}">
                 <a href="${pageContext.request.contextPath}/freeBoard.do?page=${page + 1}&filter=${filter}"
-                   class="page-btn">→</a>
+                   class="page-btn">></a>
             </c:if>
         </div>
     </main>

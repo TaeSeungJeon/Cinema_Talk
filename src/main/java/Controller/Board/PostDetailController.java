@@ -21,6 +21,14 @@ public class PostDetailController implements Action {
         BoardService service = new BoardServiceImpl();
 
         BoardDTO cont = service.getBoardDetail(boardId);
+        
+        // 게시글이 존재하지 않으면 목록으로 리다이렉트
+        if (cont == null) {
+            ActionForward forward = new ActionForward();
+            forward.setPath("freeBoard.do");
+            forward.setRedirect(true);
+            return forward;
+        }
 
         CommentsService cService = CommentsServiceImpl.getInstance();
 

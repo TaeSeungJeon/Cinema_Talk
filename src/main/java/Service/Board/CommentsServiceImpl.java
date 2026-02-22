@@ -1,5 +1,6 @@
 package Service.Board;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,9 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     public List<CommentsDTO> commentsListWithLike(int boardId, Integer memNo) {
-        Map<String, Object> map = Map.of("boardId", boardId, "memNo", memNo);
+        Map<String, Object> map = new HashMap<>();
+        map.put("boardId", boardId);
+        map.put("memNo", memNo);
         return dao.commentsListWithLike(map);
     }
 

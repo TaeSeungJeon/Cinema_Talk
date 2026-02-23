@@ -8,8 +8,6 @@ CREATE TABLE VOTE_REGISTER (
 	voteStatus	VARCHAR2(20)		NULL
 );
 
-
-
 CREATE TABLE VOTE_OPTION (
 	voteId	NUMBER		NOT NULL,
 	movieId	NUMBER		NOT NULL
@@ -24,7 +22,6 @@ CREATE TABLE VOTE_RECORD (
 	voteCommentText	VARCHAR2(4000)		NULL
 );
 
-
 ALTER TABLE VOTE_OPTION ADD CONSTRAINT PK_VOTE_OPTION PRIMARY KEY (
 	voteId,
 	movieId
@@ -38,7 +35,7 @@ ALTER TABLE VOTE_REGISTER ADD CONSTRAINT PK_VOTE_REGISTER PRIMARY KEY (
 	voteId
 );
 
-
+--on delete cascade 제약조건 추가
 ALTER TABLE VOTE_OPTION ADD CONSTRAINT FK_VOTE_REGISTER_TO_VOTE_OPTION_1 
     FOREIGN KEY (voteId) REFERENCES VOTE_REGISTER (voteId) 
     ON DELETE CASCADE;
@@ -50,6 +47,7 @@ REFERENCES MOVIE (
 	movieId
 );
 
+--on delete cascade 제약조건 추가
 ALTER TABLE VOTE_RECORD ADD CONSTRAINT FK_VOTE_REGISTER_TO_VOTE_RECORD_1 
     FOREIGN KEY (voteId) REFERENCES VOTE_REGISTER (voteId) 
     ON DELETE CASCADE;
@@ -66,9 +64,7 @@ create sequence optionidSeq
 start with 1
 increment by 1
 nocycle
-nocache; 
-
-
+nocache;
 
 create sequence recordIdSeq
 start with 1
@@ -81,4 +77,5 @@ start with 1
 increment by 1
 nocycle
 nocache;
+
 

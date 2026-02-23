@@ -237,6 +237,75 @@ public class BoardDAOImpl implements BoardDAO {
         }
     }
 
+    /* 좋아요 */
+    @Override
+    public int isBoardLiked(int boardId, int boardType, int memNo) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            Map<String, Object> param = new HashMap<>();
+            param.put("boardId", boardId);
+            param.put("boardType", boardType);
+            param.put("memNo", memNo);
+            return sqlSession.selectOne("Board.isBoardLiked", param);
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+    }
+
+    @Override
+    public int insertBoardLike(int boardId, int boardType, int memNo) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            Map<String, Object> param = new HashMap<>();
+            param.put("boardId", boardId);
+            param.put("boardType", boardType);
+            param.put("memNo", memNo);
+            int result = sqlSession.insert("Board.insertBoardLike", param);
+            if (result > 0) sqlSession.commit();
+            return result;
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+    }
+
+    @Override
+    public void deleteBoardLike(int boardId, int memNo) {
+
+    }
+
+    @Override
+    public int deleteBoardLike(int boardId, int boardType, int memNo) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            Map<String, Object> param = new HashMap<>();
+            param.put("boardId", boardId);
+            param.put("boardType", boardType);
+            param.put("memNo", memNo);
+            int result = sqlSession.delete("Board.deleteBoardLike", param);
+            if (result > 0) sqlSession.commit();
+            return result;
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+    }
+
+    @Override
+    public int getBoardLikeCount(int boardId, int boardType) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            Map<String, Object> param = new HashMap<>();
+            param.put("boardId", boardId);
+            param.put("boardType", boardType);
+            return sqlSession.selectOne("Board.getBoardLikeCount", param);
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+    }
+
     @Override
     public List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow) {
         SqlSession sqlSession = null;

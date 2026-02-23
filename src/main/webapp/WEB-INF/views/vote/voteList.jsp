@@ -205,6 +205,31 @@
 	
 	text-align: center;
 }
+
+#noResultMsg {
+    /* 그리드 시스템에서 첫 번째 열부터 마지막 열까지 차지 */
+    grid-column: 1 / -1; 
+    
+    /* 상하좌우 여백 및 정렬 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* 가로 중앙 */
+    justify-content: center; /* 세로 중앙 */
+    min-height: 300px;      /* 최소 높이를 확보하여 중앙 느낌 강조 */
+    
+    padding: 60px 20px;
+   
+    margin: 20px 0;
+}
+
+
+
+.v-empty-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-align: center;
+}
     </style>
 </head>
 
@@ -223,10 +248,10 @@
 
         <div style="width:100%">
          <nav class="v-filter-nav">
-            <button class="filter-btn active" onclick="filterVotes('all', this)">All</button>
-            <button class="filter-btn" onclick="filterVotes('ACTIVE', this)">Ongoing</button>
-            <button class="filter-btn" onclick="filterVotes('READY', this)">Upcoming</button>
-            <button class="filter-btn" onclick="filterVotes('CLOSED', this)">Closed</button>
+            <button class="filter-btn active" onclick="filterVotes('all', this)">전체</button>
+            <button class="filter-btn" onclick="filterVotes('ACTIVE', this)">진행중</button>
+            <button class="filter-btn" onclick="filterVotes('READY', this)">예정</button>
+            <button class="filter-btn" onclick="filterVotes('CLOSED', this)">종료</button>
         </nav>
         
         </div>
@@ -235,6 +260,9 @@
    
 
    <div class="v-grid" id="voteGrid">
+   
+
+   
     <c:forEach var="vote" items="${voteRegisterAll}">
         <div class="v-card" data-status="${vote.voteStatus}" data-vote-id="${vote.voteId}">
             <div class="v-status-row">
@@ -286,6 +314,11 @@
             </div>
         </div>
     </c:forEach>
+    
+    <div id="noResultMsg" class="v-empty-state" style="display: none; grid-column: 1/-1;">
+        
+        <p class="v-empty-text">해당하는 투표 항목이 없습니다.</p>
+    </div>
 </div>
 </div>
 
@@ -297,6 +330,8 @@
         const buttons = document.querySelectorAll('.filter-btn');
         buttons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        let visibleCount = 0;
+        const msg = document.getElementById('noResultMsg');
 
         // 카드 필터링
         const cards = document.querySelectorAll('.v-card');
@@ -304,10 +339,20 @@
             if (status === 'all' || card.getAttribute('data-status') === status) {
                 card.style.display = 'flex';
                 card.style.animation = 'fadeIn 0.4s ease forwards';
+                visibleCount++;
             } else {
                 card.style.display = 'none';
             }
         });
+        
+        if(msg){
+        	if (visibleCount === 0) {
+                msg.style.display = 'block';
+            } else {
+                msg.style.display = 'none';
+            }
+        }
+        
 
        
     }

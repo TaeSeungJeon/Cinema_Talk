@@ -5,3 +5,4 @@ CREATE TABLE PERSON (
     profilePath VARCHAR2(255),
     CONSTRAINT PK_PERSON PRIMARY KEY (personId)
 );
+

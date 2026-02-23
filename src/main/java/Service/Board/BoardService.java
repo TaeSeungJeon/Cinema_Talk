@@ -30,4 +30,9 @@ public interface BoardService {
 
     int getBoardCountByType(int boardType);
     List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow);
+
+    int toggleBoardLike(int boardId, int boardType, int memNo);
+    int getBoardLikeCount(int boardId, int boardType);
+    boolean isBoardLiked(int boardId, int boardType, int memNo);
+
 }

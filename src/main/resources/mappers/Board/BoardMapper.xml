@@ -8,24 +8,29 @@
     <insert id="boardIn" parameterType="DTO.Board.BoardDTO">
         INSERT INTO BOARD
         (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo)
-        VALUES
-            (boardIdSeq.nextval, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
+        VALUES (boardIdSeq.nextval, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
     </insert>
 
     <select id="boardList" resultType="DTO.Board.BoardDTO">
-        SELECT * FROM BOARD ORDER BY boardId DESC
+        /* 좋아요 기능으로인한 수정 */
+        SELECT b.*,
+               (SELECT COUNT(*)
+                FROM BOARD_LIKE l
+                WHERE l.boardId = b.boardId
+                  AND l.boardType = b.boardType) AS likeCount
+        FROM BOARD b
+        ORDER BY b.boardId DESC
     </select>
 
     <select id="boardCont" parameterType="int" resultType="DTO.Board.BoardDTO">
-        SELECT
-            BOARDID as boardId,
-            BOARDTYPE as boardType,
-            BOARDTITLE as boardTitle,
-            BOARDCONTENT as boardContent,
-            BOARDNAME as boardName,
-            BOARDDATE as boardDate,
-            MEMNO as memNo,
-            BOARDRECOMMENDCOUNT as boardRecommendCount
+        SELECT BOARDID             as boardId,
+               BOARDTYPE           as boardType,
+               BOARDTITLE          as boardTitle,
+               BOARDCONTENT        as boardContent,
+               BOARDNAME           as boardName,
+               BOARDDATE           as boardDate,
+               MEMNO               as memNo,
+               BOARDRECOMMENDCOUNT as boardRecommendCount
         FROM BOARD
         WHERE BOARDID = #{boardId}
     </select>
@@ -38,14 +43,14 @@
 
     <update id="updateBoard" parameterType="DTO.Board.BoardDTO">
         UPDATE BOARD
-        SET
-            BOARDTITLE = #{boardTitle},
+        SET BOARDTITLE   = #{boardTitle},
             BOARDCONTENT = #{boardContent}
         WHERE BOARDID = #{boardId}
     </update>
 
     <delete id="deleteBoard" parameterType="int">
-        DELETE FROM BOARD
+        DELETE
+        FROM BOARD
         WHERE BOARDID = #{boardId}
     </delete>
 
@@ -66,47 +71,99 @@
          BOARDDATE,
          MEMNO)
 
-        VALUES
-            (BOARD_SEQ.NEXTVAL,
-             #{boardType},
-             #{boardTitle},
-             #{boardContent},
-             #{boardName},
-             SYSDATE,
-             #{memNo})
+        VALUES (BOARD_SEQ.NEXTVAL,
+                #{boardType},
+                #{boardTitle},
+                #{boardContent},
+                #{boardName},
+                SYSDATE,
+                #{memNo})
 
     </insert>
 
     <select id="boardListByType" parameterType="int" resultType="DTO.Board.BoardDTO">
-        SELECT * FROM BOARD
-        WHERE BOARDTYPE = #{boardType}
-        ORDER BY boardId DESC
+        SELECT b.*,
+               (SELECT COUNT(*)
+                FROM BOARD_LIKE l
+                WHERE l.boardId = b.boardId
+                  AND l.boardType = b.boardType) AS likeCount
+        FROM BOARD b
+        WHERE b.BOARDTYPE = #{boardType}
+        ORDER BY b.boardId DESC
     </select>
 
     <select id="getBoardCount" resultType="int">
-        SELECT COUNT(*) FROM BOARD
+        SELECT COUNT(*)
+        FROM BOARD
     </select>
 
     <select id="boardListPage" parameterType="map" resultType="DTO.Board.BoardDTO">
-        SELECT * FROM (
-        SELECT ROWNUM rnum, b.*
-        FROM (SELECT * FROM BOARD ORDER BY boardId DESC) b
-        WHERE ROWNUM <![CDATA[<=]]> #{endRow}
-        )
+        /* 좋아요 기능으로인한 수정 */
+        SELECT *
+        FROM (SELECT ROWNUM rnum, b.*
+              FROM (SELECT b.*,
+                           (SELECT COUNT(*)
+                            FROM BOARD_LIKE l
+                            WHERE l.boardId = b.boardId
+                              AND l.boardType = b.boardType) AS likeCount
+                    FROM BOARD b
+                    ORDER BY b.boardId DESC) b
+              WHERE ROWNUM <![CDATA[<=]]> #{endRow})
         WHERE rnum >= #{startRow}
     </select>
 
     <select id="getBoardCountByType" parameterType="int" resultType="int">
-        SELECT COUNT(*) FROM BOARD WHERE BOARDTYPE = #{boardType}
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE BOARDTYPE = #{boardType}
     </select>
 
     <select id="boardListPageByType" parameterType="map" resultType="DTO.Board.BoardDTO">
-        SELECT * FROM (
-        SELECT ROWNUM rnum, b.*
-        FROM (SELECT * FROM BOARD WHERE BOARDTYPE = #{boardType} ORDER BY boardId DESC) b
-        WHERE ROWNUM <![CDATA[<=]]> #{endRow}
-        )
+        /* 좋아요 기능으로 인한 수정 */
+        SELECT *
+        FROM (SELECT ROWNUM rnum, b.*
+              FROM (SELECT b.*,
+                           (SELECT COUNT(*)
+                            FROM BOARD_LIKE l
+                            WHERE l.boardId = b.boardId
+                              AND l.boardType = b.boardType) AS likeCount
+                    FROM BOARD b
+                    WHERE b.BOARDTYPE = #{boardType}
+                    ORDER BY b.boardId DESC) b
+              WHERE ROWNUM <![CDATA[<=]]> #{endRow})
         WHERE rnum >= #{startRow}
+    </select>
+
+    <!-- 좋아요 여부 -->
+    <select id="isBoardLiked" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD_LIKE
+        WHERE BOARDID = #{boardId}
+          AND BOARDTYPE = #{boardType}
+          AND MEMNO = #{memNo}
+    </select>
+
+    <!-- 좋아요 추가 -->
+    <insert id="insertBoardLike" parameterType="map">
+        INSERT INTO BOARD_LIKE (BOARDID, BOARDTYPE, MEMNO)
+        VALUES (#{boardId}, #{boardType}, #{memNo})
+    </insert>
+
+    <!-- 좋아요 취소 -->
+    <delete id="deleteBoardLike" parameterType="map">
+        DELETE
+        FROM BOARD_LIKE
+        WHERE BOARDID = #{boardId}
+          AND BOARDTYPE = #{boardType}
+          AND MEMNO = #{memNo}
+    </delete>
+
+    <!-- 좋아요 개수 -->
+    <select id="getBoardLikeCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD_LIKE
+        WHERE BOARDID = #{boardId}
+          AND BOARDTYPE = #{boardType}
     </select>
 
 

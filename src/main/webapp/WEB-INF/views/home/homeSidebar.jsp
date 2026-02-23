@@ -2,9 +2,23 @@
    <aside>
         <div class="side-widget">
             <div style="font-weight:700; display:flex; justify-content:space-between; margin-bottom:15px;">
-                진행중인 투표 <a href="#" style="text-decoration:none; color:#94a3b8; font-size:0.75rem;">전체보기 ></a>
+                진행중인 투표 <a href="voteList.do?filter=ACTIVE" style="text-decoration:none; color:#94a3b8; font-size:0.75rem;">전체보기 ></a>
             </div>
-            <div class="widget-placeholder">VOTE WIDGET</div>
+            <div class="hsidebar-vote-list">
+		        <c:choose>
+		            <c:when test="${not empty activeVoteRegList}">
+		                <c:forEach var="vote" items="${activeVoteRegList}">
+		                    <div class="hsidebar-active-item" onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
+		                        <div class="hsidebar-item-title">${vote.voteTitle}</div>
+		                        <div class="hsidebar-item-date">진행중 (~ ${vote.voteEndDate})</div>
+		                    </div>
+		                </c:forEach>
+		            </c:when>
+		            <c:otherwise>
+		                <div class="hsidebar-no-data">현재 진행 중인 투표가 없습니다.</div>
+		            </c:otherwise>
+		        </c:choose>
+		    </div>
         </div>
 
         <div class="side-widget">

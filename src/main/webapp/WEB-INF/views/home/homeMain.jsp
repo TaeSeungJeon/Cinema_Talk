@@ -7,9 +7,9 @@
 		<h4 style="color: white; font-size: 0.75rem; margin: 0 0 10px 0;">📅
 			예매</h4>
 		<div class="booking-links">
-			<a href="http://www.cgv.co.kr/" target="_blank">CGV</a> <a
+			<a href="https://cgv.co.kr/" target="_blank">CGV</a> <a
 				href="https://www.megabox.co.kr/" target="_blank">메가박스</a> <a
-				href="https://www.lottecinema.co.kr/" target="_blank">롯데시네마</a>
+				href="https://www.lottecinema.co.kr/NLCHS" target="_blank">롯데시네마</a>
 		</div>
 	</div>
 </div>

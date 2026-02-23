@@ -16,7 +16,9 @@
              --info-hover: #0284c7;
         }
         body { font-family: 'Inter', sans-serif; background: var(--bg); padding: 30px; }
-        .admin-container { max-width: 1100px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .admin-container { max-width: 1100px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        display:flex;
+        flex-direction: column;}
         
         /* 테이블 스타일 */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -47,6 +49,15 @@
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
         .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        .v-badge {
+		    padding: 4px 10px;
+		    border-radius: 20px;
+		    font-size: 0.8rem;
+		    font-weight: 600;
+		}
+		.v-badge.ready { background: #dcfce7; color: var(--success); }
+		.v-badge.closed { background: #fee2e2; color: var(--danger); }
     </style>
 </head>
 <body>
@@ -56,8 +67,29 @@
         <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
         
     </div>
-    <div><button class="btn btn-add" onclick="openForm('add')" style="margin-bottom:50px;">신규 투표 등록</button></div>
+    <div><button class="btn btn-add" onclick="openForm('add')" style="margin-bottom:5px;">신규 투표 등록</button></div>
 
+<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;  padding: 5px; border-radius: 10px; margin-bottom: 5px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <label style="font-weight: 600; font-size: 0.9rem;">상태 필터:</label>
+            <select id="filterGenre" onchange="applyFilters()" style="padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <option value="ALL" ${param.genre == 'ALL' ? 'selected' : ''}>전체 보기</option>
+                <option value="ACTIVE" ${param.genre == 'ACTIVE' ? 'selected' : ''}>진행중</option>
+                <option value="CLOSED" ${param.genre == 'CLOSED' ? 'selected' : ''}>종료</option>
+                <option value="READY" ${param.genre == 'READY' ? 'selected' : ''}>예정</option>
+              
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <label style="font-weight: 600; font-size: 0.9rem;">표시 개수:</label>
+            <select id="pageSize" onchange="applyFilters()" style="padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <option value="10" ${param.pageSize == '10' ? 'selected' : ''}>10개씩</option>
+                <option value="20" ${param.pageSize == '20' ? 'selected' : ''}>20개씩</option>
+                <option value="50" ${param.pageSize == '50' ? 'selected' : ''}>50개씩</option>
+            </select>
+        </div>
+    </div>
     <table>
         <thead>
             <tr>
@@ -71,22 +103,29 @@
         <tbody>
     <c:choose>
         <%--  투표 목록이 있을 때 --%>
-        <c:when test="${not empty voteList}">
-            <c:forEach var="vote" items="${voteList}">
+        <c:when test="${not empty voteRegFullList}">
+            <c:forEach var="vote" items="${voteRegFullList}">
                 <tr>
                     <td>${vote.voteId}</td>
                     <td><strong>${vote.voteTitle}</strong></td>
                     <td>${vote.voteStartDate} ~ ${vote.voteEndDate}</td>
                     <td>
-                        <span class="v-badge ${vote.voteStatus.toLowerCase()}">${vote.voteStatus}</span>
+                    <c:choose>
+                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
+                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
+                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
+                    </c:choose>
+                      
                     </td>
                     <td>
                         <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
                         <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
-                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}')">삭제</button>
+                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
                     </td>
                 </tr>
             </c:forEach>
+            
+          
         </c:when>
 
         <%-- 2. 투표 목록이 없을 때 ⭐ --%>
@@ -104,75 +143,30 @@
     </table>
 </div>
 
-<div id="voteModal" class="modal">
-    <div class="modal-content" style="width: 800px;"> <h3 id="modalTitle">투표 등록</h3>
-        <form id="voteForm">
-            <input type="hidden" name="voteId" id="formVoteId">
-            
-            <div class="form-group">
-                <label>투표 제목</label>
-                <input type="text" name="voteTitle" id="formTitle" placeholder="예: 2024 최고의 액션 영화는?" required>
-            </div>
 
-            <div class="form-group">
-                <label>영화 장르</label>
-                <select name="genre" id="formGenre" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
-                    <option value="ACTION">액션</option>
-                    <option value="ROMANCE">로맨스</option>
-                    <option value="HORROR">공포</option>
-                    <option value="COMEDY">코미디</option>
-                    <option value="SF">SF/판타지</option>
-                </select>
-            </div>
-
-            <div class="row" style="display: flex; gap: 10px;">
-                <div class="form-group" style="flex: 1;">
-                    <label>시작일</label>
-                    <input type="date" name="voteStartDate" id="formStartDate" required>
-                </div>
-                <div class="form-group" style="flex: 1;">
-                    <label>종료일</label>
-                    <input type="date" name="voteEndDate" id="formEndDate" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label style="display: flex; justify-content: space-between; align-items: center;">
-                    투표 선택지 (영화 목록)
-                    <button type="button" class="btn" onclick="addOptionField()" style="font-size: 0.8rem; padding: 4px 8px; background: #333; color: #fff;">+ 항목 추가</button>
-                </label>
-                <div id="optionContainer" style="margin-top: 10px;">
-                    <div class="option-item" style="display: flex; gap: 5px; margin-bottom: 8px;">
-                        <input type="text" name="optionTitle" placeholder="영화 제목 입력" style="flex: 3;">
-                        <button type="button" class="btn btn-del" onclick="removeOption(this)" style="padding: 5px 10px;">X</button>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: right; margin-top: 25px;">
-                <button type="button" class="btn" onclick="closeModal()" style="background:#ccc;">취소</button>
-                <button type="button" class="btn btn-add" onclick="saveVote()">저장하기</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 <script>
     const modal = document.getElementById('voteModal');
 
-    function openForm(mode) {
+    function openForm(mode,voteId) {
+    	
       const params = new URLSearchParams();
     params.append('state', mode); // 'add' 또는 'edit'
 
-    if (mode === 'edit' && id) {
-        params.append('voteId', id);
+    if (mode === 'edit' && voteId) {
+        params.append('voteId', voteId);
     }
 
-    location.href = `voteForm.do?${params.toString()}`;
+    location.href = `voteForm.do?\${params.toString()}`;
     }
 
     function closeModal() {
         modal.style.display = 'none';
+    }
+    
+
+    function contVote(id) {
+    	alert("작업 중")
     }
 
    
@@ -181,9 +175,15 @@
     }
 
     // 삭제
-    function deleteVote(id) {
+    function deleteVote(id, status) {
+    	
+    	if (status === 'ACTIVE') {
+            alert("진행 중인 투표는 삭제할 수 없습니다.");
+            return; // 함수 종료 (삭제 로직으로 넘어가지 않음)
+        }
+    	
         if(confirm("정말 이 투표를 삭제하시겠습니까? 데이터는 복구되지 않습니다.")) {
-            location.href = `deleteVote.do?voteId=\${id}`;
+            location.href = `voteOkForm.do?state=delete&voteId=\${id}`;
         }
     }
 
@@ -219,6 +219,10 @@
             alert("최소 한 개의 선택지는 있어야 합니다.");
         }
     }
+    
+  
+    
+    
 </script>
 
 </body>

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
+import DTO.Movie.GenreDTO;
+import DTO.Movie.MovieDTO;
 import DTO.Vote.VoteRecordDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,4 +31,11 @@ public class MyPageDTO {
 	private List<VoteRecordDTO> voteRecordList; // 참여한 투표 목록
 	private List<VoteRecordDTO> voteCommentList; // 투표 댓글 목록
 	private Map<Integer, Integer> boardCommentCount;  	// 게시글-댓글 수
+	
+	// 좋아요 관련
+	private List<MovieDTO> likedMovieList;      // 좋아요 표시한 영화 목록
+	private List<BoardDTO> likedBoardList;      // 좋아요 표시한 게시글 목록
+	
+	// 선호 장르 관련
+	private List<Integer> preferredGenreIds;    // 선호 장르 ID 목록
 }

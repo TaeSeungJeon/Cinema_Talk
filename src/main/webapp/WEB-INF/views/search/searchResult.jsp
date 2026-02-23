@@ -9,7 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>검색 결과 - "${findName}"</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
 <style>
     :root {
         --bg-color: #f0f2f5;
@@ -22,8 +22,6 @@
     }
 
     * {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
     }
 
@@ -34,75 +32,13 @@
         padding: 25px;
         min-height: 100vh;
     }
-
-    .container {
-        max-width: 1200px;
+	.category-nav{
+		gap: 18px;
+	}
+    .search-container {
+        width: 1400px;
         margin: 0 auto;
-    }
-
-    /* 헤더 */
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .logo {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 15px;
-        padding: 10px 25px;
-        font-weight: bold;
-        color: var(--accent-color);
-        text-decoration: none;
-    }
-
-    .search-bar {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 50px;
-        padding: 12px 30px;
-        width: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: var(--shadow-subtle);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .search-bar select {
-        border: none;
-        background: transparent;
-        outline: none;
-        font-size: 0.9rem;
-        color: var(--text-main);
-        cursor: pointer;
-    }
-
-    .search-bar input[type="text"] {
-        border: none;
-        background: none;
-        outline: none;
-        flex: 1;
-        color: var(--text-main);
-        font-size: 0.95rem;
-    }
-
-    .search-bar input[type="submit"] {
-        background: var(--accent-color);
-        color: white;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: 0.3s;
-    }
-
-    .search-bar input[type="submit"]:hover {
-        background: #4f46e5;
+        padding: 0 25px;
     }
 
     /* 검색 결과 정보 */
@@ -111,8 +47,8 @@
         backdrop-filter: blur(15px);
         border: 1px solid rgba(255, 255, 255, 0.4);
         border-radius: var(--radius-soft);
-        padding: 20px 30px;
-        margin-bottom: 25px;
+        padding: 20px 25px;
+        margin: 30px 0;
         box-shadow: var(--shadow-subtle);
     }
 
@@ -332,27 +268,8 @@
 </style>
 </head>
 <body>
-<div class="container">
-    <!-- 헤더 -->
-    <header>
-        <a href="${pageContext.request.contextPath}/Cinema_Talk.jsp" class="logo">영화 로고</a>
-        <div class="search-bar">
-            <form action="${pageContext.request.contextPath}/searchMovie.do" method="get" style="display: flex; align-items: center; width: 100%; gap: 10px;">
-                <select name="search-option">
-                    <option value="0" <c:if test="${findField == 0}">selected</c:if>>제목</option>
-                    <option value="1" <c:if test="${findField == 1}">selected</c:if>>감독</option>
-                    <option value="2" <c:if test="${findField == 2}">selected</c:if>>배우</option>
-                    <option value="3" <c:if test="${findField == 3}">selected</c:if>>장르</option>
-                </select>
-                <input type="text" name="search-words" value="${findName}" placeholder="영화 제목, 감독, 배우, 장르를 검색해보세요">
-                <input type="submit" value="검색">
-            </form>
-        </div>
-    </header>
-
-    <!-- 뒤로가기 -->
-    <a href="${pageContext.request.contextPath}/Cinema_Talk.jsp" class="back-btn">← 메인으로</a>
-
+<%@ include file="../home/homeHeader.jsp" %>
+<div class="search-container">
     <!-- 검색 결과 정보 -->
     <div class="search-info">
         <h2>

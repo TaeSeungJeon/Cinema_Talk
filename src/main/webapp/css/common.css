@@ -212,6 +212,13 @@
 		    display: flex;
 		    flex-direction: column;
 		    gap: 10px;
+		    max-height: 200px;
+		    overflow-y: auto;
+		    scrollbar-width: none;
+		}
+		
+		.hsidebar-vote-list::-webkit-scrollbar {
+		    display: none;
 		}
 		
 		.hsidebar-active-item {
@@ -225,7 +232,7 @@
 		
 		.hsidebar-active-item:hover {
 		    background: #ffffff;
-		    transform: translateX(4px);
+		   
 		    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 		    border-color: #3b82f6; /* 포인트 컬러 (필요시 수정) */
 		}

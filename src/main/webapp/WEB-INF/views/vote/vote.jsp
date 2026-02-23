@@ -323,7 +323,6 @@ aside.glass-panel {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid transparent; /* 호버 시 흔들림 방지 */
-    margin-bottom: 12px;
 }
 
 /* [2] 호버 시 효과 통일 (위로 이동, 그림자, 테두리) */
@@ -539,16 +538,24 @@ opacity:1;
 									        
 									        <c:if test="${not empty vote.resultList}">
 									            | 참여
-									        
+									       <span class="voter-count-span-home" style="font-weight: 600;"> 
 									        <c:set var="done" value="false" />
 											<c:forEach var="res" items="${vote.resultList}">
 												<c:if test="${not done and res.rank == 1}">
-													<span style="font-weight: 600;">
-														${res.totalVoterCount} </span>
+													
+														${res.totalVoterCount}
 													<c:set var="done" value="true" />
 												</c:if>
 											</c:forEach>
+											 </span>
 											명
+									        </c:if>
+									         <c:if test="${empty vote.resultList}">
+									             | 참여
+									       <span class="voter-count-span-home" style="font-weight: 600;"> 
+									       0 
+									       </span>
+									       명
 									        </c:if>
 									    
 									        </span>
@@ -622,7 +629,39 @@ opacity:1;
 			<button class="nav-btn" id="voteNextBtn">&gt;</button>
 		</section>
 
-		<aside class="aside " style="width: 30%;">
+		<aside class="aside" style="width: 30%;">
+			<div class="glass-panel"
+					style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
+					<div class="sidebar-title"
+						style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+						<span>내가 참여한 투표</span> <a href="myPage.do"
+							style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
+							전체보기 > </a>
+					</div>
+	
+					<c:choose>
+						<c:when test="${not empty myVoteRecords}">
+							<c:forEach var="vote" items="${myVoteRecords}">
+								<div class="upcoming-item"
+									onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
+									<div style="font-weight: 600;">${vote.voteTitle}</div>
+									<div style="font-size: 0.8rem; color: var(--accent-color);">
+										나의 픽: ${vote.movieTitle}</div>
+								</div>
+							</c:forEach>
+						</c:when>
+	
+						<c:otherwise>
+							<div class="upcoming-item" style="width: 100%;">참여한 투표 내역이 없습니다.</div>
+	
+						</c:otherwise>
+	
+					</c:choose>
+
+			</div>
+			<br>
+			<br>
+			
 			<div class="glass-panel"
 				style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
 				<div class="sidebar-title"

@@ -34,6 +34,9 @@ public class VoteContController implements Action {
 		//로그인 사용자 정보 가져오기
 		String memId = (String) session.getAttribute("memId"); // 값이 없으면 자동으로 null
 		MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
+		
+		Object filterObj = request.getParameter("filter");
+		String filter = filterObj == null ? null : (String) filterObj;
 
 		VoteRegisterDTO voteReg = voteService.getVoteRegFullById(voteId);
 		voteService.updateVoteStatus(voteReg);
@@ -45,7 +48,7 @@ public class VoteContController implements Action {
 			VoteRecordDTO temp = new VoteRecordDTO();
 			temp.setMemNo(mem.getMemNo());
 			temp.setVoteId(voteId);
-			VoteRecordDTO voteRecord = voteService.getVoteRecordByMemNo(temp);
+			VoteRecordDTO voteRecord = voteService.getVoteRecordByMemNoVoteId(temp);
 
 			if(voteRecord != null) {
 				voteReg.setUserChoice(voteRecord.getMovieId());
@@ -73,6 +76,9 @@ public class VoteContController implements Action {
 		voteReg.setVoted(voted);
 		
 		request.setAttribute("voteInfo", voteReg);
+		
+		if(filter != null)
+			request.setAttribute("filter", filter);
 
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

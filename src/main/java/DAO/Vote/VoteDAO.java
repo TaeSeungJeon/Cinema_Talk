@@ -18,7 +18,7 @@ public interface VoteDAO {
 
 	List<VoteRecordDTO> getVoteRecordList();
 
-	VoteRecordDTO getVoteRecordByMemNo(VoteRecordDTO vrdto);
+	VoteRecordDTO getVoteRecordByMemNoVoteId(VoteRecordDTO vrdto);
 
 	void updateVoteRecord(VoteRecordDTO voteRecord);
 
@@ -33,5 +33,7 @@ public interface VoteDAO {
 	boolean editVoteRegister(VoteRegisterDTO vdto);
 
 	boolean deleteVoteRegister(VoteRegisterDTO vdto);
+
+	List<VoteRecordDTO> getVoteRecordByMemNo(int memNo);
 
 }

@@ -498,6 +498,20 @@ pageEncoding="UTF-8"%>
 				margin:0 auto;
 				max-width:1400px;
 			}
+			
+			.aside .glass-panel {
+				background: var(--glass-bg);
+				backdrop-filter: blur(15px);
+				border: 1px solid rgba(255, 255, 255, 0.4);
+				border-radius: var(--radius-soft);
+				padding: 25px;
+				box-shadow: var(--shadow-subtle);
+				display: block;
+				animation: fadeIn 0.4s ease forwards;
+				 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			}
+			
+			
 		</style>
 		<!-- 공통스타일시트 -->
 		<link rel="stylesheet"
@@ -505,6 +519,7 @@ pageEncoding="UTF-8"%>
 		<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script>
+	      
 			$(document).ready(function() {
 				// 서버에서 받은 resultList를 JS 배열로 변환
 				
@@ -547,7 +562,6 @@ pageEncoding="UTF-8"%>
 					// 3. 위에서 계산한 변수 삽입
 					commentCount: ${validCommentCount}
 				};
-				
 				
 				
 				// 데이터가 있을 때만 실행하는 함수 정의
@@ -675,7 +689,17 @@ pageEncoding="UTF-8"%>
 					$(target).fadeIn(300);
 					
 				});
-			});
+				
+				 // 서버에서 전달된 filter 값 가져오기 (값이 없으면 'all'을 기본값으로)
+		        const serverFilter = "${not empty filter ? filter : 'vote'}";
+		        
+		       if(serverFilter === "comments"){
+		    	  
+		    	   const item = $("[data-target='#comment-content-area']");
+		    	  
+		    	  if(item.length > 0)  item.click();
+		       }
+			});//document ready 종료
 				
 				function updateComments(comments) {
 					let html = "";
@@ -706,6 +730,8 @@ pageEncoding="UTF-8"%>
 					
 					$(".comment-list").hide().html(html).fadeIn();
 					$(".comment-count").text(`댓글 \${validCommentCount}개`);
+					if($(".comment-count-span").length > 0) $(".comment-count-span").html(`<strong>\${validCommentCount}</strong> 댓글`);
+					if($(".filter-cmnt-cnt").length > 0) $(".filter-cmnt-cnt").text(`댓글 (\${validCommentCount})`);
 					
 				}
 
@@ -724,7 +750,7 @@ pageEncoding="UTF-8"%>
 					<h1 class="poll-title" style="margin:0; font-size: 2rem; font-weight: 800;">${voteInfo.voteTitle}</h1>
 					<p style="color: var(--text-sub); margin-top:10px; font-weight: 500;" class="poll-desc">${voteInfo.voteContent}</p>
 					<div class="meta-stats">
-						<span> <strong>${voteInfo.voterCount}</strong> 참여</span> |
+						<span class="voter-count-span"> <strong>${voteInfo.voterCount}</strong> 참여</span> |
 						<span class="comment-count-span"></span> |
 						<span> 종료 ${voteInfo.voteEndDate}</span>
 					</div>
@@ -766,7 +792,7 @@ pageEncoding="UTF-8"%>
 
 										<c:when test="${voteInfo.voteStatus eq 'ACTIVE'}">
 											<strong class="status-badge status-ongoing">진행중</strong> <span>종료:
-											<span id="voteEndDate">${voteInfo.voteEndDate} | 참여 ${voteInfo.voterCount}명</span>
+											<span id="voteEndDate">${voteInfo.voteEndDate} </span> | 참여<span class="voter-count-span-home">  ${voteInfo.voterCount}</span>명
 										</span>
 									</c:when>
 
@@ -875,99 +901,75 @@ pageEncoding="UTF-8"%>
 											</form>
 											<div class="comment-list"></div>
 										</div>
+										
+										<div class="comment-section" style="display: ${(!voteInfo.voted && voteInfo.voteStatus eq 'ACTIVE') ? 'flex' : 'none'};flex-direction: column; 
+								            justify-content: center; 
+								            align-items: center; 
+								            min-height: 400px; 
+								            margin: 0 auto; 
+								            color: #64748b; 
+								            text-align: center;">
+										투표하고 다른 사람들 댓글을 확인하세요
+										</div>
 
+									</c:if>
+									
+									<c:if test="${voteInfo.voteStatus eq 'READY'}">
+										<div class="comment-section" style="display: flex;flex-direction: column; 
+								            justify-content: center; 
+								            align-items: center; 
+								            min-height: 400px; 
+								            margin: 0 auto; 
+								            color: #64748b; 
+								            text-align: center;" >
+											<p style="margin: 0;">투표 시작 전입니다. 시작일 이후 참여 가능합니다.</p>
+										</div>
 									</c:if>
 					</section>
 					<aside class="aside " style="width: 30%;">
-								<div class="glass-panel"
+						<div class="glass-panel"
 								style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
 								<div class="sidebar-title"
 								style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-								<span>예정된 투표</span> <a href="voteList.do?filter=READY"
-								style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
-								전체보기 > </a>
+								<span>투표 정보</span> 
+						</div>
+
+							<div class="upcoming-item" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">투표상태 
+							
+							<span style="font-weight: 600;">
+						        <c:choose>
+						            <c:when test="${voteInfo.voteStatus eq 'READY'}">예정</c:when>
+						            <c:when test="${voteInfo.voteStatus eq 'ACTIVE'}">진행중</c:when>
+						            <c:when test="${voteInfo.voteStatus eq 'CLOSED'}">종료</c:when>
+						            <c:otherwise>${voteInfo.voteStatus}</c:otherwise> <%-- 예외 상황 대비 --%>
+						        </c:choose>
+						    </span>
+							
+							
 							</div>
-
-							<c:choose>
-								<c:when test="${not empty voteRegisterReady}">
-									<c:forEach var="vote" items="${voteRegisterReady}">
-										<div class="upcoming-item"
-										onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
-										<div style="font-weight: 600;">${vote.voteTitle}</div>
-										<div style="font-size: 0.8rem; color: var(--accent-color);">
-											시작일: ${vote.voteStartDate}</div>
-										</div>
-									</c:forEach>
-								</c:when>
-
-								<c:otherwise>
-									<div class="upcoming-item" style="width: 100%;">예정된 투표가
-										없습니다.</div>
-
-									</c:otherwise>
-
-								</c:choose>
+							
+							<div class="upcoming-item" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+							    시작일 
+							    <span class="date-text start-date" style="font-weight: 600;">${voteInfo.voteStartDate}</span>
+							</div>
+							
+							<div class="upcoming-item" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+							    종료일 
+							    <span class="date-text end-date" style="font-weight: 600;">${voteInfo.voteEndDate}</span>
+							</div>
+							
+							<div class="upcoming-item" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">참여자수 
+							<span><span style="font-weight: 600;" class="voter-count-span">${voteInfo.voterCount}   </span> 명</span>
+							</div>
+							
+							<div class="upcoming-item" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">댓글수 
+							<span style="font-weight: 600;" class="comment-count-span"> </span>
+							</div>
 
 							</div>
 							<br>
 							<br>
-							<div class="glass-panel"
-							style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
-							<div class="sidebar-title"
-							style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-							<span>지난 투표 결과</span> <a href="voteList.do?filter=CLOSED"
-							style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
-							전체보기 > </a>
-						</div>
-
-
-
-						<c:choose>
-							<c:when test="${not empty voteRegisterClosed}">
-								<c:forEach var="vote" items="${voteRegisterClosed}">
-									<div class="glass-panel2 history-card" style="width: 100%"
-									onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
-
-									<div style="font-weight: 700;">${vote.voteTitle}</div>
-
-									<div
-									style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">
-									종료: ${vote.voteEndDate} | 참여
-									<c:set var="done" value="false" />
-									<c:forEach var="res" items="${vote.resultList}">
-										<c:if test="${not done and res.rank == 1}">
-											<span style="font-weight: 600;">
-												${res.totalVoterCount} </span>
-												<c:set var="done" value="true" />
-											</c:if>
-										</c:forEach>
-										명
-									</div>
-
-									<div class="winner-box" style="margin-top: 8px;">
-										<span class="winner-label">최다 득표</span>
-										<c:set var="done" value="false" />
-										<c:forEach var="res" items="${vote.resultList}">
-											<c:if test="${not done and res.rank == 1}">
-												<span style="font-weight: 600;"> ${res.movieTitle} </span>
-												<c:set var="done" value="true" />
-											</c:if>
-										</c:forEach>
-									</div>
-								</div>
-							</c:forEach>
-						</c:when>
-
-						<c:otherwise>
-							<div class="upcoming-item" style="width: 100%;">종료된 투표가
-								없습니다.</div>
-							</c:otherwise>
-						</c:choose>
-
-
-						</div>
-
-
+						
 					</aside>
 
 

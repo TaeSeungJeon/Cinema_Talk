@@ -39,6 +39,21 @@ public class VoteController implements Action {
 		
 		final MemberDTO finalMem = mem;
 		
+		//사용자 투표이력 가져오기
+		if(mem != null) {
+			List<VoteRecordDTO> vrecMem = voteService.getVoteRecordByMemNo(mem.getMemNo());
+			System.out.println("==================================");
+			System.out.println(vrecMem.size());
+			if(vrecMem != null){
+				List<VoteRecordDTO> limitedRecords = vrecMem.stream()
+	                    .limit(3)
+	                    .collect(Collectors.toList());
+	                    
+				request.setAttribute("myVoteRecords", limitedRecords);
+			}
+		}
+		
+		
 		//DB에서  VOTE_REGISTER 레코드를 조회
 		List<VoteRegisterDTO> voteRegFullList = voteService.getVoteRegFullList();
 
@@ -54,12 +69,11 @@ public class VoteController implements Action {
 			//로그인했을때만 참여기록 확인
 			if(finalMem != null) {
 				temp.setMemNo(finalMem.getMemNo());
-				VoteRecordDTO vrec = voteService.getVoteRecordByMemNo(temp);
+				VoteRecordDTO vrec = voteService.getVoteRecordByMemNoVoteId(temp);
 				if(vrec != null){
 					vote.setUserChoice(vrec.getMovieId());
 					vote.setVoted(true);
 				}
-				
 				
 			}
 			

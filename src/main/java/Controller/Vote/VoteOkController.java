@@ -2,6 +2,8 @@ package Controller.Vote;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -73,19 +75,22 @@ public class VoteOkController implements Action {
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			Date now = new Date();
+			LocalDate today = LocalDate.now(); // 날짜만 비교하기
 
 			Date start = sdf.parse(voteReg.getVoteStartDate());
 			Date end = sdf.parse(voteReg.getVoteEndDate());
+			
+			LocalDate startDate = start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDate endDate = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-			if (now.before(start)) {
+			if (today.isBefore(startDate)) {
 				out.println("NOT_STARTED");
 				out.flush();
 				return null;
 			}
 
 			// 종료됨
-			if (now.after(end)) {
+			if (today.isAfter(endDate)) {
 				out.println("ENDED");
 				out.flush();
 				return null;
@@ -99,7 +104,7 @@ public class VoteOkController implements Action {
 
 			try {
 				// 투표한적 있는지 판단
-				VoteRecordDTO existingRecord = voteService.getVoteRecordByMemNo(voteRecord);
+				VoteRecordDTO existingRecord = voteService.getVoteRecordByMemNoVoteId(voteRecord);
 
 				if (existingRecord == null) {
 					voteService.insertVoteRecord(voteRecord);

@@ -42,8 +42,6 @@ public class VoteController implements Action {
 		//사용자 투표이력 가져오기
 		if(mem != null) {
 			List<VoteRecordDTO> vrecMem = voteService.getVoteRecordByMemNo(mem.getMemNo());
-			System.out.println("==================================");
-			System.out.println(vrecMem.size());
 			if(vrecMem != null){
 				List<VoteRecordDTO> limitedRecords = vrecMem.stream()
 	                    .limit(3)

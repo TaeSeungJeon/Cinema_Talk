@@ -8,7 +8,7 @@ import DTO.Movie.Recommend.MovieRecResponse;
 
 public class HomeServiceImpl implements HomeService {
 
-	MovieRecDAO movieRecDAO = new MovieRecDAOImpl();
+	private MovieRecDAO movieRecDAO = MovieRecDAOImpl.getInstance();
 	
 	@Override
 	public List<MovieRecResponse> getIndexGenreList(int memNo) {

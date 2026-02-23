@@ -307,7 +307,6 @@
     <!-- HEADER -->
     <header>
             <button class="btn-pill" type="button" onclick="location.href='<%=ctx%>/member/logout.do'">로그아웃</button>
-        </div>
     </header>
 
     <!-- LAYOUT -->

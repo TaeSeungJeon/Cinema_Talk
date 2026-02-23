@@ -39,7 +39,7 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     public int commentsDelete(Map<String, Object> map) {
-        return CommentsDAOImpl.getInstance().commentsDelete(map);
+        return dao.commentsDelete(map);
     }
 
     @Override
@@ -69,5 +69,15 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     public int getCommentsLikeCount(int commentsId) {
         return dao.commentsLikeCount(commentsId);
+    }
+
+    @Override
+    public int deleteCommentLikesByCommentTree(int commentsId) {
+        return dao.deleteCommentLikesByCommentTree(commentsId);
+    }
+
+    @Override
+    public int commentsDeleteTree(Map<String, Object> map) {
+        return dao.commentsDeleteTree(map);
     }
 }

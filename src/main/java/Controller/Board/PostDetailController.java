@@ -50,6 +50,13 @@ public class PostDetailController implements Action {
         request.setAttribute("likeCount", likeCount);
 
         request.setAttribute("cont", cont);
+
+        String rawContent = cont.getBoardContent();
+
+        // 모든 HTML 태그 제거
+        String textOnly = rawContent.replaceAll("<[^>]*>", "");
+        request.setAttribute("textOnlyContent", textOnly);
+
         request.setAttribute("clist", clist);
 
         ActionForward forward = new ActionForward();

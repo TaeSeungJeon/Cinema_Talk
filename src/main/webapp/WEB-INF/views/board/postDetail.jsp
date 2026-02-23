@@ -103,6 +103,21 @@
             font-size: 0.95rem;
             pointer-events: none;
         }
+        /* 공유버튼 */
+        .share-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .share-btn:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
 
         .sub-menu {
             list-style: none;
@@ -466,8 +481,15 @@
                            value="${cont.boardTitle}"
                            style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
 
-                    <textarea name="boardContent"
-                              style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; resize:none;">${cont.boardContent}</textarea>
+                    <!--  수정 영역 -->
+                    <div id="editor"
+                         contenteditable="true"
+                         style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
+                        ${cont.boardContent}
+                    </div>
+
+                    <!-- 실제 전송용 hidden -->
+                    <input type="hidden" name="boardContent" id="hiddenContent">
 
                     <!-- 파일 업로드 -->
                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
@@ -516,18 +538,16 @@
 
             </div>
 
-            <div class="tag-group">
-                <a href="#" class="tag"># 사운드디자인</a>
-                <a href="#" class="tag"># IMAX</a>
-                <a href="#" class="tag"># 한스짐머</a>
-            </div>
+            <%-- 태그 추가하려면 이 라인에 추가 (post-group) --%>
 
             <div class="post-actions">
                 <button class="action-btn" type="button"
                         onclick="toggleLike(${cont.boardId}, ${cont.boardType})">
                     👍 <span id="likeCount">${likeCount}</span>
                 </button>
-                <button class="action-btn">🔗 공유하기</button>
+
+                <button type="button" class="share-btn" id="shareBtn">🔗 공유하기</button>
+
             </div>
         </article>
 
@@ -739,6 +759,7 @@
                     document.getElementById("likeCount").innerText = res;
                 });
         }
+
         function toggleLike(boardId, boardType) {
             fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
                 .then(r => r.text())
@@ -751,28 +772,58 @@
                     document.getElementById("likeCount").innerText = res;
                 });
         }
-        /* 댓글 좋아요 */
-        function toggleCommentLike(commentsId) {  // ← 바깥으로 빼내야 함
-            fetch('commentsLike.do?commentsId=' + commentsId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.text())
-                .then(data => {
-                    if (data === 'LOGIN_REQUIRED') {
-                        alert('로그인이 필요합니다.');
-                        location.href = 'memberLogin.do';
-                    } else {
-                        location.reload();
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+
+
+            (function () {
+            const btn = document.getElementById("shareBtn");
+            if (!btn) return;
+
+            btn.addEventListener("click", async function () {
+            const url = window.location.href;
+            const title = document.title || "게시글";
+
+            // 1) 모바일/지원 브라우저: 네이티브 공유창
+            if (navigator.share) {
+            try {
+            await navigator.share({ title, text: "게시글 공유", url });
+            return;
+        } catch (e) {
+            // 사용자가 취소한 경우도 여기로 들어옴 -> 조용히 넘어가서 복사로 fallback
+        }
         }
 
+            // 2) URL 복사 (HTTPS/localhost에서만 navigator.clipboard가 정상인 경우가 많음)
+            try {
+            if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(url);
+            alert("URL이 복사되었습니다!");
+            return;
+        }
+        } catch (e) {}
 
+            // 3) 구형/비보안 fallback (execCommand)
+            try {
+            const ta = document.createElement("textarea");
+            ta.value = url;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            alert("URL이 복사되었습니다!");
+        } catch (e) {
+            alert("공유/복사가 차단되었습니다. 주소창 URL을 직접 복사해주세요.");
+            console.error(e);
+        }
+        });
+        })();
 
+        document.querySelector("form[action$='boardUpdateOk.do']")
+            .addEventListener("submit", function () {
+                document.getElementById("hiddenContent").value =
+                    document.getElementById("editor").innerHTML;
+            });
 
     </script>
 </div>

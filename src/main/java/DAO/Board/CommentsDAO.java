@@ -15,4 +15,6 @@ public interface CommentsDAO {
     int commentsLikeCount(int commentsId);
     int commentsLikeCheck(Map<String, Object> map);
     List<CommentsDTO> commentsListWithLike(Map<String, Object> map);
+    int deleteCommentLikesByCommentTree(int commentsId);
+    int commentsDeleteTree(Map<String, Object> map);
 }

@@ -96,5 +96,22 @@ public class CommentsDAOImpl implements CommentsDAO {
         List<CommentsDTO> list = sqlSession.selectList("Comments.commentsListWithLike", map);
         sqlSession.close();
         return list;
+
+    }
+
+    @Override
+    public int deleteCommentLikesByCommentTree(int commentsId) {
+        SqlSession sqlSession = factory.openSession(true);
+        int result = sqlSession.delete("Comments.deleteCommentLikesByCommentTree", commentsId);
+        sqlSession.close();
+        return result;
+    }
+
+    @Override
+    public int commentsDeleteTree(Map<String, Object> map) {
+        SqlSession sqlSession = factory.openSession(true);
+        int result = sqlSession.delete("Comments.commentsDeleteTree", map);
+        sqlSession.close();
+        return result;
     }
 }

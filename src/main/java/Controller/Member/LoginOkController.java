@@ -56,7 +56,7 @@ public class LoginOkController implements Action {
 		if(mdto.getMemState() == 3) {
 			request.setAttribute("msg", "탈퇴한 계정입니다.");
 			forward.setRedirect(false);
-			forward.setPath("WEB-INF/views/member/login.jsp");
+			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
 		}
 		if(mdto.getMemState() == 2) {

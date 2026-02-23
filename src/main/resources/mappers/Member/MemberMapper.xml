@@ -19,7 +19,7 @@
   
   <!-- 입력받은 아이디로 로그인 인증 -->
   <select id="loginCheck" parameterType="String" resultType="member">
-  	select * from member where memId = #{id} and memRole=2 and memState=1
+  	select * from member where memId = #{value} and memState=1
   </select>
 
   <!-- 글쓰기 입력할 유저 조회 (?) -->

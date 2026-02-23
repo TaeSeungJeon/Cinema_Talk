@@ -8,16 +8,16 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import DTO.Board.CommentsDTO;
 
-public class CommentsImpl implements Comments {
+public class CommentsDAOImpl implements CommentsDAO {
 
     private SqlSessionFactory factory = DBService.getFactory();
 
     // 싱글톤
-    private static CommentsImpl instance = new CommentsImpl();
-    public static CommentsImpl getInstance() {
+    private static CommentsDAOImpl instance = new CommentsDAOImpl();
+    public static CommentsDAOImpl getInstance() {
         return instance;}
 
-    private CommentsImpl() {}
+    private CommentsDAOImpl() {}
 
     // 메서드명을 매퍼 ID(commentsIn)와 통일
     @Override

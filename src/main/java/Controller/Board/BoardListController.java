@@ -3,8 +3,8 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
-import Service.Board.BoardServiceDAO;
-import Service.Board.BoardServiceImplDAO;
+import Service.Board.BoardService;
+import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -15,7 +15,7 @@ public class BoardListController implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        BoardServiceDAO service = new BoardServiceImplDAO();
+        BoardService service = new BoardServiceImpl();
 
         String filter = request.getParameter("filter");
 

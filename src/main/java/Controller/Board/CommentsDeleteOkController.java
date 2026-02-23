@@ -2,7 +2,7 @@ package Controller.Board;
 
 import Controller.Action;
 import Controller.ActionForward;
-import Service.Board.CommentsServiceImplDAO;
+import Service.Board.CommentsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class CommentsDeleteOkController implements Action {
         // 실행 및 예외처리
         try {
             // 서비스 호출하여 삭제 실행
-            CommentsServiceImplDAO.getInstance().commentsDelete(map);
+            CommentsServiceImpl.getInstance().commentsDelete(map);
         } catch (Exception e) {
             // 삭제 중 에러(예: 외래키 제약조건 위반)가 발생해도 로그만 찍고 멈추지 않음
             System.err.println("댓글 삭제 중 오류 발생: " + e.getMessage());

@@ -6,7 +6,7 @@ import DTO.Board.BoardDTO;
 
 import java.util.List;
 
-public class BoardServiceImplDAO implements BoardServiceDAO {
+public class BoardServiceImpl implements BoardService {
 
     private BoardDAO bdao = BoardDAOImpl.getInstance();
 

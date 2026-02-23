@@ -2,8 +2,8 @@ package Controller.Board;
 
 import Controller.Action;
 import Controller.ActionForward;
-import Service.Board.CommentsServiceDAO;
-import Service.Board.CommentsServiceImplDAO;
+import Service.Board.CommentsService;
+import Service.Board.CommentsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -25,7 +25,7 @@ public class CommentsLikeController implements Action {
         int commentsId = Integer.parseInt(request.getParameter("commentsId"));
         int memNo = (int) session.getAttribute("memNo");
 
-        CommentsServiceDAO service = CommentsServiceImplDAO.getInstance();
+        CommentsService service = CommentsServiceImpl.getInstance();
         int result = service.toggleCommentsLike(commentsId, memNo);
 
         // 좋아요 개수 반환

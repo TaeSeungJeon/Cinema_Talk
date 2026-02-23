@@ -4,7 +4,7 @@ import DTO.Board.BoardDTO;
 
 import java.util.List;
 
-public interface BoardServiceDAO {
+public interface BoardService {
 
     int boardIn(BoardDTO bdto);
 

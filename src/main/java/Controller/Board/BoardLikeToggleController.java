@@ -3,8 +3,8 @@ package Controller.Board;
 
 import Controller.Action;
 import Controller.ActionForward;
-import Service.Board.BoardServiceDAO;
-import Service.Board.BoardServiceImplDAO;
+import Service.Board.BoardService;
+import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -28,7 +28,7 @@ public class BoardLikeToggleController implements Action {
         int boardType = Integer.parseInt(request.getParameter("boardType"));
         int memNo = (int) session.getAttribute("memNo");
 
-        BoardServiceDAO service = new BoardServiceImplDAO();
+        BoardService service = new BoardServiceImpl();
         int likeCount = service.toggleBoardLike(boardId, boardType, memNo);
 
         out.print(likeCount);

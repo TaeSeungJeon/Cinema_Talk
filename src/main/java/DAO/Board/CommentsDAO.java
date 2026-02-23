@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import DTO.Board.CommentsDTO;
 
-public interface Comments {
+public interface CommentsDAO {
     int commentsIn(CommentsDTO cdto);
     List<CommentsDTO> commentsList(int boardId);
     int commentsUpdate(CommentsDTO cdto);

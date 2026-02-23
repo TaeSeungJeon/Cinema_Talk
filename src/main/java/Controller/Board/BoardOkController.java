@@ -6,8 +6,8 @@ import DTO.Board.BoardDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import Service.Board.BoardServiceDAO;
-import Service.Board.BoardServiceImplDAO;
+import Service.Board.BoardService;
+import Service.Board.BoardServiceImpl;
 
 import java.io.PrintWriter;
 
@@ -69,7 +69,7 @@ public class BoardOkController implements Action {
         bdto.setBoardName(memId); // 세션에서 바로 사용
 
         try {
-            BoardServiceDAO boardService = new BoardServiceImplDAO();
+            BoardService boardService = new BoardServiceImpl();
             boardService.boardIn(bdto);
 
             out.println("<script>");

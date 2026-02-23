@@ -4,21 +4,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import DAO.Board.Comments;
-import DAO.Board.CommentsImpl;
+import DAO.Board.CommentsDAO;
+import DAO.Board.CommentsDAOImpl;
 import DTO.Board.CommentsDTO;
 
-public class CommentsServiceImplDAO implements CommentsServiceDAO {
+public class CommentsServiceImpl implements CommentsService {
 
     // [싱글톤 설정]
-    private static CommentsServiceImplDAO instance = new CommentsServiceImplDAO();
-    private CommentsServiceImplDAO() {}
-    public static CommentsServiceImplDAO getInstance() {
+    private static CommentsServiceImpl instance = new CommentsServiceImpl();
+    private CommentsServiceImpl() {}
+    public static CommentsServiceImpl getInstance() {
         return instance;
     }
 
     // DAO 객체 가져오기
-    private Comments dao = CommentsImpl.getInstance();
+    private CommentsDAO dao = CommentsDAOImpl.getInstance();
 
     @Override
     public int commentsIn(CommentsDTO cdto) {
@@ -39,7 +39,7 @@ public class CommentsServiceImplDAO implements CommentsServiceDAO {
 
     @Override
     public int commentsDelete(Map<String, Object> map) {
-        return CommentsImpl.getInstance().commentsDelete(map);
+        return CommentsDAOImpl.getInstance().commentsDelete(map);
     }
 
     @Override

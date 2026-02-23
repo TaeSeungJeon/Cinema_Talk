@@ -3,7 +3,7 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.CommentsDTO;
-import Service.Board.CommentsServiceImplDAO;
+import Service.Board.CommentsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -52,7 +52,7 @@ public class CommentsOkController implements Action {
         cdto.setParentBoardNo(pNo == 0 ? null : pNo);
         cdto.setCommentsNo(cNo);
 
-        int result = CommentsServiceImplDAO.getInstance().commentsIn(cdto);
+        int result = CommentsServiceImpl.getInstance().commentsIn(cdto);
 
         ActionForward forward = new ActionForward();
         if (result > 0) {

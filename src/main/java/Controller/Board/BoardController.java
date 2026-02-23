@@ -3,8 +3,8 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
-import Service.Board.BoardServiceDAO;
-import Service.Board.BoardServiceImplDAO;
+import Service.Board.BoardService;
+import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -19,7 +19,7 @@ public class BoardController implements Action {
             throws Exception {
 
         // 서비스 객체 생성
-        BoardServiceDAO service = new BoardServiceImplDAO();
+        BoardService service = new BoardServiceImpl();
 
         // 게시글 전체 목록 가져오기 로직 수행
         List<BoardDTO> list = service.boardList();

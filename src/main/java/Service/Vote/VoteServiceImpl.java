@@ -50,9 +50,9 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public VoteRecordDTO getVoteRecordByMemNo(VoteRecordDTO vrdto) {
+	public VoteRecordDTO getVoteRecordByMemNoVoteId(VoteRecordDTO vrdto) {
 
-		return this.vdao.getVoteRecordByMemNo(vrdto);
+		return this.vdao.getVoteRecordByMemNoVoteId(vrdto);
 	}
 
 	@Override
@@ -169,6 +169,11 @@ return voteRegFullList.stream()
 	@Override
 	public boolean deleteVoteRegister(VoteRegisterDTO vdto) {
 		return this.vdao.deleteVoteRegister(vdto);
+	}
+
+	@Override
+	public List<VoteRecordDTO> getVoteRecordByMemNo(int memNo) {
+		return this.vdao.getVoteRecordByMemNo(memNo);
 	}
 
 }

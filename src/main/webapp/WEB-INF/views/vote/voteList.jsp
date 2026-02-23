@@ -241,18 +241,18 @@
 
 <div class="vote-list-container">
 
- <div class="v-title-group">
+ 		<div class="v-title-group">
              <h1 class="page-title">투표 목록</h1>
               <p class="page-desc">당신의 한 표가 커뮤니티가 인정하는 진정한 명작의 순위를 결정합니다.</p>
         </div>
 
         <div style="width:100%">
-         <nav class="v-filter-nav">
-            <button class="filter-btn active" onclick="filterVotes('all', this)">전체</button>
-            <button class="filter-btn" onclick="filterVotes('ACTIVE', this)">진행중</button>
-            <button class="filter-btn" onclick="filterVotes('READY', this)">예정</button>
-            <button class="filter-btn" onclick="filterVotes('CLOSED', this)">종료</button>
-        </nav>
+	         <nav class="v-filter-nav">
+	            <button class="filter-btn active" onclick="filterVotes('all', this)">전체</button>
+	            <button class="filter-btn" onclick="filterVotes('ACTIVE', this)">진행중</button>
+	            <button class="filter-btn" onclick="filterVotes('READY', this)">예정</button>
+	            <button class="filter-btn" onclick="filterVotes('CLOSED', this)">종료</button>
+	        </nav>
         
         </div>
 
@@ -260,9 +260,7 @@
    
 
    <div class="v-grid" id="voteGrid">
-   
-
-   
+  
     <c:forEach var="vote" items="${voteRegisterAll}">
         <div class="v-card" data-status="${vote.voteStatus}" data-vote-id="${vote.voteId}">
             <div class="v-status-row">

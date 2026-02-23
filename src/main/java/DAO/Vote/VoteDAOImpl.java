@@ -110,7 +110,7 @@ public class VoteDAOImpl implements VoteDAO {
 	}
 
 	@Override
-	public VoteRecordDTO getVoteRecordByMemNo(VoteRecordDTO vrdto) {
+	public VoteRecordDTO getVoteRecordByMemNoVoteId(VoteRecordDTO vrdto) {
 		SqlSession sqlSession = null;
 
 		try {
@@ -269,5 +269,21 @@ public class VoteDAOImpl implements VoteDAO {
 		}
 
 		return isSuccess;
+	}
+
+	@Override
+	public List<VoteRecordDTO> getVoteRecordByMemNo(int memNo) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("MyPage.getVoteRecordListByMemNo", memNo);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
 	}
 }

@@ -37,34 +37,34 @@
 	<select id="vrecResult" resultType="voteresult"
 		parameterType="int">
 		SELECT
-    #{voteId} as voteId,
-    r.movieId,
-    
-    r.count,
-    r.totalVoterCount,
-    ROUND(r.count * 100.0 / r.totalCount, 1) AS percentage,
-    RANK() OVER (ORDER BY r.count DESC) AS rank,
-    m.movieTitle as movieTitle
-
-FROM (
-    SELECT
-        movieId,
-        count,
-        SUM(count) OVER() AS totalCount,
-        SUM(voterCnt) OVER() AS totalVoterCount
-    FROM (
-        SELECT
-            movieId,
-            COUNT(*) AS count,
-            COUNT(DISTINCT memNo) AS voterCnt
-        FROM vote_record
-        WHERE voteId = #{voteId}
-        GROUP BY movieId
-    )
-) r
-
-JOIN movie m
-ON r.movieId = m.movieId
+		    #{voteId} as voteId,
+		    r.movieId,
+		    
+		    r.count,
+		    r.totalVoterCount,
+		    ROUND(r.count * 100.0 / r.totalCount, 1) AS percentage,
+		    RANK() OVER (ORDER BY r.count DESC) AS rank,
+		    m.movieTitle as movieTitle
+		
+		FROM (
+		    SELECT
+		        movieId,
+		        count,
+		        SUM(count) OVER() AS totalCount,
+		        SUM(voterCnt) OVER() AS totalVoterCount
+		    FROM (
+		        SELECT
+		            movieId,
+		            COUNT(*) AS count,
+		            COUNT(DISTINCT memNo) AS voterCnt
+		        FROM vote_record
+		        WHERE voteId = #{voteId}
+		        GROUP BY movieId
+		    )
+		) r
+		
+		JOIN movie m
+		ON r.movieId = m.movieId
 
 	</select>
 
@@ -88,6 +88,7 @@ ON r.movieId = m.movieId
 		select * from
 		vote_record where memNo=#{memNo} and voteId=#{voteId}
 	</select>
+
 
 	<update id="vrecUpdate">
 		update vote_record set recordCreatedDate=sysdate,
@@ -119,33 +120,33 @@ ON r.movieId = m.movieId
 	</select>
 
 	<select id="vrecListVoteId" resultType="voterecord">
-	SELECT 
-    vr.*, 
-    m.memName 
-FROM VOTE_RECORD vr
-JOIN MEMBER m ON vr.memNo = m.memNo
-WHERE vr.voteId = #{voteId}
-ORDER BY vr.recordId DESC
+		SELECT 
+	    vr.*, 
+	    m.memName 
+	FROM VOTE_RECORD vr
+	JOIN MEMBER m ON vr.memNo = m.memNo
+	WHERE vr.voteId = #{voteId}
+	ORDER BY vr.recordId DESC
 	</select>
 	
 	<select id="vregFullByVoteId" resultMap="voteRegisterMap">
 
 		SELECT
-    vr.voteId,
-    vr.voteTitle,
-    vr.voteContent,
-    TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
-    TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
-    vr.voteStatus,
-    vo.movieId,
-    m.movieTitle,
-    TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
-    m.moviePosterPath
-FROM vote_register vr
-JOIN vote_option vo ON vr.voteId = vo.voteId
-JOIN movie m ON vo.movieId = m.movieId
-WHERE vr.voteId = #{voteId}
-ORDER BY vr.voteId, vo.movieId
+		    vr.voteId,
+		    vr.voteTitle,
+		    vr.voteContent,
+		    TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
+		    TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
+		    vr.voteStatus,
+		    vo.movieId,
+		    m.movieTitle,
+		    TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
+		    m.moviePosterPath
+		FROM vote_register vr
+		JOIN vote_option vo ON vr.voteId = vo.voteId
+		JOIN movie m ON vo.movieId = m.movieId
+		WHERE vr.voteId = #{voteId}
+		ORDER BY vr.voteId, vo.movieId
 
 	</select>
 	
@@ -161,23 +162,23 @@ ORDER BY vr.voteId, vo.movieId
 	</insert>
 	
 	<insert id="voptIn" parameterType="java.util.List">
-    INSERT ALL
-    <foreach collection="list" item="opt" separator=" ">
-        INTO VOTE_OPTION (voteId, movieId) VALUES (#{opt.voteId}, #{opt.movieId})
-    </foreach>
-    SELECT * FROM DUAL
-</insert>
+	    INSERT ALL
+	    <foreach collection="list" item="opt" separator=" ">
+	        INTO VOTE_OPTION (voteId, movieId) VALUES (#{opt.voteId}, #{opt.movieId})
+	    </foreach>
+	    SELECT * FROM DUAL
+	</insert>
 
-<update id="vregUpdate" parameterType="voteregister">
-UPDATE VOTE_REGISTER SET VOTETITLE=#{voteTitle}, votecontent=#{voteContent}, voteStartDate = #{voteStartDate}, voteEndDate = #{voteEndDate} where voteId=#{voteId}   
-</update>
+	<update id="vregUpdate" parameterType="voteregister">
+	UPDATE VOTE_REGISTER SET VOTETITLE=#{voteTitle}, votecontent=#{voteContent}, voteStartDate = #{voteStartDate}, voteEndDate = #{voteEndDate} where voteId=#{voteId}   
+	</update>
 
-<delete id="voptDel" parameterType="voteregister">
-DELETE from vote_option where voteId=#{voteId}
-</delete>
-
-<delete id="vregDel" parameterType="voteregister">
-delete from vote_register where voteId=#{voteId}</delete>
+	<delete id="voptDel" parameterType="voteregister">
+	DELETE from vote_option where voteId=#{voteId}
+	</delete>
+	
+	<delete id="vregDel" parameterType="voteregister">
+	delete from vote_register where voteId=#{voteId}</delete>
 
 
 

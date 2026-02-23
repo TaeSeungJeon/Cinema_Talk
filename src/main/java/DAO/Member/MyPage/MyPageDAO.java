@@ -5,6 +5,8 @@ import java.util.List;
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
 import DTO.Member.MemberDTO;
+import DTO.Movie.GenreDTO;
+import DTO.Movie.MovieDTO;
 import DTO.Vote.VoteRecordDTO;
 
 public interface MyPageDAO {
@@ -23,4 +25,13 @@ public interface MyPageDAO {
 	List<VoteRecordDTO> getVoteCommentListByMemNo(int memNo);
 	void updateMemberInfo(MemberDTO myPageDTO);
 	
+	// 좋아요 관련
+	List<MovieDTO> getLikedMoviesByMemNo(int memNo);
+	List<BoardDTO> getLikedBoardsByMemNo(int memNo);
+	
+	// 선호 장르 관련
+	List<GenreDTO> getAllGenres();
+	List<Integer> getPreferredGenreIds(int memNo);
+	void deletePreferredGenres(int memNo);
+	void insertPreferredGenre(int memNo, int genreId);
 }

@@ -72,6 +72,9 @@ public class MyPageController implements Action {
 		request.setAttribute("member", member);
 		request.setAttribute("myPageInfo", myPageInfo);
 		
+		// 전체 장르 목록 (선호 장르 선정 화면용)
+		request.setAttribute("allGenreList", myPageService.getAllGenres());
+		
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;

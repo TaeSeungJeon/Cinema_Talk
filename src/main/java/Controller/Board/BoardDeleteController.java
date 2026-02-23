@@ -3,8 +3,8 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
-import Service.Board.BoardService;
-import Service.Board.BoardServiceImpl;
+import Service.Board.BoardServiceDAO;
+import Service.Board.BoardServiceImplDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -28,7 +28,7 @@ public class BoardDeleteController implements Action {
 
         int boardId = Integer.parseInt(request.getParameter("boardId"));
 
-        BoardService boardService = new BoardServiceImpl();
+        BoardServiceDAO boardService = new BoardServiceImplDAO();
         BoardDTO bdto = boardService.getBoardCont(boardId);
 
         // 글 존재 여부 체크

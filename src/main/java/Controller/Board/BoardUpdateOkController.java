@@ -3,8 +3,8 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
-import Service.Board.BoardService;
-import Service.Board.BoardServiceImpl;
+import Service.Board.BoardServiceDAO;
+import Service.Board.BoardServiceImplDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -31,7 +31,7 @@ public class BoardUpdateOkController implements Action {
         String boardTitle = request.getParameter("boardTitle");
         String boardContent = request.getParameter("boardContent");
 
-        BoardService boardService = new BoardServiceImpl();
+        BoardServiceDAO boardService = new BoardServiceImplDAO();
 
         // 기존 글 조회
         BoardDTO originalBoard = boardService.getBoardCont(boardId);

@@ -4,7 +4,7 @@ import DTO.Board.CommentsDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface CommentsService {
+public interface CommentsServiceDAO {
     // 댓글 등록
     public int commentsIn(CommentsDTO dto);
 

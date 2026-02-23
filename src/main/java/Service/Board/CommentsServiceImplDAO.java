@@ -8,12 +8,12 @@ import DAO.Board.Comments;
 import DAO.Board.CommentsImpl;
 import DTO.Board.CommentsDTO;
 
-public class CommentsServiceImpl implements CommentsService {
+public class CommentsServiceImplDAO implements CommentsServiceDAO {
 
     // [싱글톤 설정]
-    private static CommentsServiceImpl instance = new CommentsServiceImpl();
-    private CommentsServiceImpl() {}
-    public static CommentsServiceImpl getInstance() {
+    private static CommentsServiceImplDAO instance = new CommentsServiceImplDAO();
+    private CommentsServiceImplDAO() {}
+    public static CommentsServiceImplDAO getInstance() {
         return instance;
     }
 

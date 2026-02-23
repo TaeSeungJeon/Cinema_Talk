@@ -3,7 +3,7 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.CommentsDTO;
-import Service.Board.CommentsServiceImpl;
+import Service.Board.CommentsServiceImplDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -20,7 +20,7 @@ public class CommentsUpdateOkController implements Action {
         cdto.setCommentsContent(content);
         cdto.setMemNo(memNo);
 
-        int result = CommentsServiceImpl.getInstance().commentsUpdate(cdto);
+        int result = CommentsServiceImplDAO.getInstance().commentsUpdate(cdto);
 
         ActionForward forward = new ActionForward();
         forward.setPath("postDetail.do?boardId=" + bId);

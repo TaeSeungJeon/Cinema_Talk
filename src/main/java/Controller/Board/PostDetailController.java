@@ -4,10 +4,10 @@ import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
-import Service.Board.BoardService;
-import Service.Board.BoardServiceImpl;
-import Service.Board.CommentsService;
-import Service.Board.CommentsServiceImpl;
+import Service.Board.BoardServiceDAO;
+import Service.Board.BoardServiceImplDAO;
+import Service.Board.CommentsServiceDAO;
+import Service.Board.CommentsServiceImplDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -18,7 +18,7 @@ public class PostDetailController implements Action {
 
         int boardId = Integer.parseInt(request.getParameter("boardId"));
 
-        BoardService service = new BoardServiceImpl();
+        BoardServiceDAO service = new BoardServiceImplDAO();
 
         BoardDTO cont = service.getBoardDetail(boardId);
         
@@ -30,7 +30,7 @@ public class PostDetailController implements Action {
             return forward;
         }
 
-        CommentsService cService = CommentsServiceImpl.getInstance();
+        CommentsServiceDAO cService = CommentsServiceImplDAO.getInstance();
 
         Integer memNo = (Integer) request.getSession().getAttribute("memNo");
         List<CommentsDTO> clist = cService.commentsListWithLike(boardId, memNo);

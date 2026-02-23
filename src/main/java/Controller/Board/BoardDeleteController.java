@@ -36,6 +36,7 @@ public class BoardDeleteController implements Action {
             forward.setPath("freeBoard.do");
             forward.setRedirect(true);
             return forward;
+
         }
 
         // 작성자 검증

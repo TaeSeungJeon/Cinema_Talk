@@ -15,6 +15,6 @@ public interface MovieRecService {
 	List<MovieRecResponse> getLikeRecList(int memNo);
 	
 	// 회원 선호 제외 장르별 영화 추천 리스트 조회
-	List<GenreMovieSection> getGenreRecList(int memNo);
+	List<GenreMovieSection> getRecGenreList(int memNo);
 
 }

@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import DTO.Board.AddFileDTO;
+import Service.Board.AddFileService;
+import Service.Board.AddFileServiceImpl;
+
 public class PostDetailController implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -21,7 +25,7 @@ public class PostDetailController implements Action {
         BoardService service = new BoardServiceImpl();
 
         BoardDTO cont = service.getBoardDetail(boardId);
-        
+
         // 게시글이 존재하지 않으면 목록으로 리다이렉트
         if (cont == null) {
             ActionForward forward = new ActionForward();
@@ -29,6 +33,11 @@ public class PostDetailController implements Action {
             forward.setRedirect(true);
             return forward;
         }
+
+        /* 첨부파일 기능 */
+        AddFileService fileService = AddFileServiceImpl.getInstance();
+        List<AddFileDTO> fileList = fileService.listByBoard(cont.getBoardId(), cont.getBoardType());
+        request.setAttribute("fileList", fileList);
 
         CommentsService cService = CommentsServiceImpl.getInstance();
 

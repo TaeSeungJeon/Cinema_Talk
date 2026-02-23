@@ -6,9 +6,13 @@
 <mapper namespace="Board">
 
     <insert id="boardIn" parameterType="DTO.Board.BoardDTO">
+        <selectKey keyProperty="boardId" resultType="int" order="BEFORE">
+            SELECT boardIdseq.nextval FROM dual
+        </selectKey>
+
         INSERT INTO BOARD
         (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo)
-        VALUES (boardIdSeq.nextval, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
+        VALUES (#{boardId}, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
     </insert>
 
     <select id="boardList" resultType="DTO.Board.BoardDTO">

@@ -1,12 +1,16 @@
 package DAO.Member.MyPage;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
 import DTO.Member.MemberDTO;
+import DTO.Movie.GenreDTO;
+import DTO.Movie.MovieDTO;
 import DTO.Vote.VoteRecordDTO;
 import mybatis.DBService;
 
@@ -98,7 +102,7 @@ public class MyPageDAOImpl implements MyPageDAO {
 			}
 		}
 	}
-	
+
 	@Override
 	public void updateMemberInfo(MemberDTO mdto) {
 		SqlSession sqlSession = getSqlSession();
@@ -129,6 +133,83 @@ public class MyPageDAOImpl implements MyPageDAO {
 		SqlSession sqlSession = getSqlSession();
 		try {
 			return sqlSession.selectList("MyPage.getVoteCommentListByMemNo", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<MovieDTO> getLikedMoviesByMemNo(int memNo) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			return sqlSession.selectList("MyPage.getLikedMoviesByMemNo", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<BoardDTO> getLikedBoardsByMemNo(int memNo) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			return sqlSession.selectList("MyPage.getLikedBoardsByMemNo", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<GenreDTO> getAllGenres() {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			return sqlSession.selectList("MyPage.getAllGenres");
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<Integer> getPreferredGenreIds(int memNo) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			return sqlSession.selectList("MyPage.getPreferredGenreIds", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public void deletePreferredGenres(int memNo) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			sqlSession.delete("MyPage.deletePreferredGenres", memNo);
+			sqlSession.commit();
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public void insertPreferredGenre(int memNo, int genreId) {
+		SqlSession sqlSession = getSqlSession();
+		try {
+			Map<String, Integer> params = new HashMap<>();
+			params.put("memNo", memNo);
+			params.put("genreId", genreId);
+			sqlSession.insert("MyPage.insertPreferredGenre", params);
+			sqlSession.commit();
 		} finally {
 			if (sqlSession != null) {
 				sqlSession.close();

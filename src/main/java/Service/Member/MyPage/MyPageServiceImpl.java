@@ -10,6 +10,7 @@ import DAO.Member.MyPage.MyPageDAOImpl;
 import DTO.Board.BoardDTO;
 import DTO.Member.MemberDTO;
 import DTO.Member.MyPage.MyPageDTO;
+import DTO.Movie.GenreDTO;
 
 public class MyPageServiceImpl implements MyPageService {
 	
@@ -41,12 +42,42 @@ public class MyPageServiceImpl implements MyPageService {
 		    boardCommentCountMap.put(boardId, totalComments);
 		});
 		myPageDTO.setBoardCommentCount(boardCommentCountMap);
+		
+		// 좋아요 목록 조회
+		myPageDTO.setLikedMovieList(myPageDAO.getLikedMoviesByMemNo(memNo));
+		myPageDTO.setLikedBoardList(myPageDAO.getLikedBoardsByMemNo(memNo));
+		
+		// 선호 장르 ID 목록 조회
+		myPageDTO.setPreferredGenreIds(myPageDAO.getPreferredGenreIds(memNo));
+		
 		return myPageDTO;
 	}
 	
 	@Override
 	public void updateMemberInfo(MemberDTO mdto) {
 		myPageDAO.updateMemberInfo(mdto);
+	}
+	
+	@Override
+	public List<GenreDTO> getAllGenres() {
+		return myPageDAO.getAllGenres();
+	}
+	
+	@Override
+	public void savePreferredGenres(int memNo, List<Integer> genreIds) {
+		// 기존 선호 장르 삭제
+		myPageDAO.deletePreferredGenres(memNo);
+		
+		for(int genreId : genreIds) {
+			System.out.println("선호 장르 ID: " + genreId);
+		}
+
+		// 새로 저장
+		if (genreIds != null) {
+			for (int genreId : genreIds) {
+				myPageDAO.insertPreferredGenre(memNo, genreId);
+			}
+		}
 	}
 	
 }

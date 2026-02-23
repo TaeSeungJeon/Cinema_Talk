@@ -128,7 +128,7 @@
 	</select>
 
 	<!-- 회원 선호 장르를 제외한 장르 추출 -->
-	<select id="selGenre" parameterType="map" resultType="Integer">
+	<select id="selRecGenre" parameterType="map" resultType="Integer">
 		SELECT genreId FROM (
 			SELECT G.GENREID AS genreId
 			FROM GENRE G

@@ -99,7 +99,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Vote/VoteMapper.xml"/>
 		<mapper resource="mappers/Board/BoardMapper.xml"/>
 		<mapper resource="mappers/Board/CommentsMapper.xml"/>
-		<mapper resource="mappers/Board/AddFileMapper.xml"/>
 	</mappers>
 
 </configuration>

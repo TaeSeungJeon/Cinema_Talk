@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%-- [수정] 500 에러 방지를 위해 memberHeader.jsp와 동일한 Jakarta 버전으로 통일 --%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
@@ -284,7 +283,7 @@
             font-size: 0.8rem;
             color: var(--text-sub);
             position: absolute;
-            left: 25px;
+            left: 127px;
             bottom: 18px;
         }
 
@@ -458,6 +457,81 @@
             padding: 6px 8px;
             color: #94a3b8;
         }
+
+        /* 모달 폰트 강제 적용 */
+        .write-modal,
+        .write-modal * {
+            font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        }
+
+        .post-content img {
+            display: none;
+        }
+
+        .post-preview > div:first-of-type {
+            width: 96px;
+            height: 96px;
+            position: absolute;
+            left: 15px;
+            top: 18px;
+        }
+
+        .post-preview > div:first-of-type img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .post-preview > div {
+            margin: 0 !important;
+        }
+
+        .post-card-header,
+        .post-content {
+            padding-left: 112px;
+        }
+
+        .post-card::after {
+            content: "";
+            position: absolute;
+            left: 123px;
+            top: 18px;
+            width: 1px;
+            height: 96px;
+            background: rgba(148, 163, 184, 0.35);
+        }
+
+        .post-preview {
+            margin: 6px 0 0 0;
+            overflow: hidden;
+            line-height: 1.4;
+            max-height: 2.8em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            text-align: left;
+        }
+
+        .post-preview::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .post-content h2 {
+            margin: 0;
+            text-align: left;
+        }
+
+        .post-card-header {
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -529,7 +603,7 @@
                                style="text-decoration: none; color: inherit;">
                                     ${board.boardTitle} </a>
                         </h2>
-                        <p>${board.boardContent}</p>
+                        <div class="post-preview">${board.boardContent}</div>
                     </div>
                 </article>
             </c:forEach>
@@ -538,7 +612,7 @@
         <div class="pagination">
             <c:if test="${page > 1}">
                 <a href="${pageContext.request.contextPath}/freeBoard.do?page=${page - 1}&filter=${filter}"
-                   class="page-btn">←</a>
+                   class="page-btn"><</a>
             </c:if>
 
             <c:forEach var="i" begin="${startPage}" end="${endPage}">
@@ -561,7 +635,7 @@
 
             <c:if test="${page < maxPage}">
                 <a href="${pageContext.request.contextPath}/freeBoard.do?page=${page + 1}&filter=${filter}"
-                   class="page-btn">→</a>
+                   class="page-btn">></a>
             </c:if>
         </div>
     </main>
@@ -619,6 +693,7 @@
 
         <form method="post"
               action="${pageContext.request.contextPath}/boardOk.do"
+              enctype="multipart/form-data"
               class="write-form"
               style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
 
@@ -649,7 +724,18 @@
                 <span style="cursor:pointer; font-style: italic;">I</span>
                 <span style="cursor:pointer; text-decoration: underline;">U</span>
                 <span style="cursor:pointer;">🔗 링크</span>
-                <span style="cursor:pointer;">🖼️ 사진첨부</span>
+
+                <span id="attachTrigger" style="cursor:pointer;">🖼️ 사진첨부</span>
+                <input id="attachInput"
+                       type="file"
+                       name="uploadFiles"
+                       accept="image/*"
+                       multiple
+                       style="display:none;" />
+            </div>
+
+            <div id="attachName"
+                 style="font-size:0.78rem; color:#94a3b8; padding:6px 4px 10px 4px; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">
             </div>
 
             <!-- 내용 -->
@@ -768,6 +854,27 @@
         el.textContent = toRelativeTime(t);
     });
 
+    /* 파일 선택 시 여러 파일명 표시 */
+    (function () {
+        const trigger = document.getElementById('attachTrigger');
+        const input = document.getElementById('attachInput');
+        const name = document.getElementById('attachName');
+
+        if (!trigger || !input || !name) return;
+
+        trigger.addEventListener('click', function (){
+            input.click();
+        });
+
+        input.addEventListener('change', function (){
+            if (!input.files || input.files.length === 0) {
+                name.textContent = '';
+                return;
+            }
+            const filenames = Array.from(input.files).map(f => f.name);
+            name.textContent = filenames.join(', ');
+        });
+    })();
 
 </script>
 

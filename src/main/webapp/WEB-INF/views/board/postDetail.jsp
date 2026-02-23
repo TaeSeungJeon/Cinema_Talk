@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -436,9 +438,28 @@
             <div class="post-body" id="post-body">
                 ${cont.boardContent}
             </div>
+                <%-- 첨부파일 기능 --%>
+            <c:if test="${not empty fileList}">
+                <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
+                    <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
+
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <c:forEach var="f" items="${fileList}">
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <a href="${pageContext.request.contextPath}${f.filePath}"
+                                   target="_blank"
+                                   style="text-decoration:none; font-weight:700; color:#374151;">
+                                        ${f.fileName}
+                                </a>
+
+                                                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
 
             <div id="update-form" style="display:none; margin-top:20px;">
-                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post">
+                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="boardId" value="${cont.boardId}">
 
                     <input type="text" name="boardTitle"
@@ -447,6 +468,12 @@
 
                     <textarea name="boardContent"
                               style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; resize:none;">${cont.boardContent}</textarea>
+
+                    <!-- 파일 업로드 -->
+                    <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
+                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
+                        <input type="file" name="uploadFiles" multiple style="margin-bottom:8px;">
+                    </div>
 
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
                         <button type="button"
@@ -567,7 +594,12 @@
                                 <span class="reply-trigger"
                                       style="cursor:pointer; font-weight:600; color:var(--accent-color);"
                                       onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
-                                <span>좋아요 0</span>
+                                <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
+                                      onclick="toggleCommentLike(${comm.commentsId})"
+                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);">
+                                <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
+                                         좋아요 ${comm.likeCount}
+                                </span>
                             </div>
 
                             <div id="reply-form-${comm.commentsId}" class="reply-form-container">
@@ -707,6 +739,39 @@
                     document.getElementById("likeCount").innerText = res;
                 });
         }
+        function toggleLike(boardId, boardType) {
+            fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
+                .then(r => r.text())
+                .then(res => {
+                    if (res === "LOGIN_REQUIRED") {
+                        alert("로그인 후 이용 가능합니다.");
+                        location.href = "memberLogin.do";
+                        return;
+                    }
+                    document.getElementById("likeCount").innerText = res;
+                });
+        }
+        /* 댓글 좋아요 */
+        function toggleCommentLike(commentsId) {  // ← 바깥으로 빼내야 함
+            fetch('commentsLike.do?commentsId=' + commentsId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'LOGIN_REQUIRED') {
+                        alert('로그인이 필요합니다.');
+                        location.href = 'memberLogin.do';
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
 
 
     </script>

@@ -23,11 +23,11 @@ public class MovieRecController implements Action {
 	    
 	    HttpSession session = request.getSession();
 	    Object memNoObj = session.getAttribute("memNo");
-	    int memNo = (memNoObj != null) ? (int)memNoObj : -1;//로그인한 상태면 회원 번호 구함
+	    int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함
 	    
 	    List<MovieRecResponse> popularRecList = movieRecService.getPopularRecList();
 	    List<MovieRecResponse> likeRecList = movieRecService.getLikeRecList(memNo);
-	    List<GenreMovieSection> genreSections = movieRecService.getGenreRecList(memNo);
+	    List<GenreMovieSection> genreSections = movieRecService.getRecGenreList(memNo);
 	    
 	    request.setAttribute("likeRecList", likeRecList);
 	    request.setAttribute("popularRecList", popularRecList);

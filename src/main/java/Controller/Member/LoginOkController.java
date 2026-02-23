@@ -52,9 +52,23 @@ public class LoginOkController implements Action {
 			return forward;
 		}
 		
+		//계정 상태 체크(memState)
+		if(mdto.getMemState() == 3) {
+			request.setAttribute("msg", "탈퇴한 계정입니다.");
+			forward.setRedirect(false);
+			forward.setPath("WEB-INF/views/member/login.jsp");
+			return forward;
+		}
+		if(mdto.getMemState() == 2) {
+			request.setAttribute("mag", "휴먼 계정입니다. 관리자에게 문의하세요");
+			forward.setRedirect(false);
+			forward.setPath("/WEB-INF/views/member/login.jsp");
+			return forward;
+		}
+		
 		//비밀번호 검증(BCrypt)
 		if(!BCrypt.checkpw(pwd, mdto.getMemPwd())) {
-			request.setAttribute("msg", "비밀번호가 다릅니다.");
+			request.setAttribute("msg", "비밀번호가 일치하지 않습니다.");
 			forward.setRedirect(false);
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
@@ -65,10 +79,17 @@ public class LoginOkController implements Action {
 		session.setAttribute("memNo", mdto.getMemNo()); // 세션에 저장할 키이름 : memNo, 저장할 값 : No
 		session.setAttribute("memId", mdto.getMemId()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
 		session.setAttribute("memName", mdto.getMemName()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
-
+		session.setAttribute("memRole", mdto.getMemRole());
+		session.setAttribute("memState", mdto.getMemState());
+		
+		// 관리자/일반회원 이동
 		forward.setRedirect(true);
-		forward.setPath(request.getContextPath() + "/index.do"); // JSP로 forward 시도
-
+		
+		if(mdto.getMemRole() == 1) { //관리자일 때
+			forward.setPath(request.getContextPath() + "/adminMypage.do");
+		}else { //일반회원인 경우
+			forward.setPath(request.getContextPath() + "/index.do");
+		}
 		return forward;
 	}
 

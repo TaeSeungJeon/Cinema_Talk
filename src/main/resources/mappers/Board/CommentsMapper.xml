@@ -27,13 +27,25 @@
         WHERE COMMENTSID = #{commentsId} AND MEMNO = #{memNo}
     </update>
 
+    <delete id="deleteCommentLikesByCommentTree" parameterType="int">
+        DELETE FROM COMMENTS_LIKE
+        WHERE COMMENTSID IN (
+            SELECT COMMENTSID
+            FROM COMMENTS
+            START WITH COMMENTSID = #{value}
+            CONNECT BY PRIOR COMMENTSID = PARENTBOARDID
+        )
+    </delete>
     <!-- 댓글 삭제 -->
-    <delete id="commentsDelete" parameterType="map">
+    <delete id="commentsDeleteTree" parameterType="map">
         DELETE FROM COMMENTS
-        WHERE (COMMENTSID = #{commentsId} OR PARENTBOARDID = #{commentsId})
-          AND (MEMNO = #{memNo} OR EXISTS (
-            SELECT 1 FROM COMMENTS
-            WHERE COMMENTSID = #{commentsId} AND MEMNO = #{memNo}))
+        WHERE COMMENTSID IN (
+            SELECT COMMENTSID
+            FROM COMMENTS
+            START WITH COMMENTSID = #{commentsId}
+            CONNECT BY PRIOR COMMENTSID = PARENTBOARDID
+        )
+          AND #{memNo} = (SELECT MEMNO FROM COMMENTS WHERE COMMENTSID = #{commentsId})
     </delete>
 
     <!-- 댓글 좋아요 -->
@@ -73,5 +85,6 @@
     CONNECT BY PRIOR c.COMMENTSID = c.PARENTBOARDID
     ORDER SIBLINGS BY c.COMMENTSID ASC
     </select>
+
 
 </mapper>

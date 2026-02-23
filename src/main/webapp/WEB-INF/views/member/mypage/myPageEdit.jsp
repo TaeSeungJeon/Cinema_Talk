@@ -142,7 +142,26 @@
         .footer-link a:hover {
             text-decoration: underline;
         }
-        
+
+		.id-check-msg{
+		    display: block;
+		    margin-top: 8px;
+		    margin-left: 5px;
+		    font-size: 0.85rem;
+		    font-weight: 600;
+		}
+		.id-check-msg.ok { color: #22c55e; }     /* 사용 가능 */
+		.id-check-msg.bad { color: #ef4444; }    /* 중복/불가 */
+		
+		.field-msg{
+    	display:block;
+	    margin-top:8px;
+	    margin-left:5px;
+	    font-size:0.85rem;
+	    font-weight:600;
+		}
+		.field-msg.bad{ color:#ef4444; }
+		
     </style>
 </head>
 <body>

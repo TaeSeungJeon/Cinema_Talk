@@ -14,6 +14,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
 
 <style>
+    /* Ensure vertical scrollbar space is always reserved to prevent horizontal shift when switching tabs */
+    body.page-mypage {
+        overflow-y: scroll;
+    }
+
     /* 마이페이지 전용 스타일 */
     .mypage-container {
         max-width: 1000px;
@@ -420,15 +425,15 @@
 
     <!-- 탭 네비게이션 -->
     <div class="tab-nav">
-        <button class="tab-btn active" onclick="showTab('board')">게시글</button>
+        <button class="tab-btn active" data-tab="board" onclick="showTab('board')">게시글</button>
         <div class="tab-dropdown">
-            <button class="tab-btn" onclick="showTab('comment')">댓글 ▾</button>
-            <div class="tab-dropdown-menu">
-                <button class="tab-dropdown-item" onclick="showTab('comment')">게시판 댓글</button>
-                <button class="tab-dropdown-item" onclick="showTab('voteComment')">투표 댓글</button>
-            </div>
-        </div>
-        <button class="tab-btn" onclick="showTab('vote')">투표참여</button>
+            <button class="tab-btn" data-tab="comment" onclick="showTab('comment')">댓글 ▾</button>
+             <div class="tab-dropdown-menu">
+                 <button class="tab-dropdown-item" onclick="showTab('comment')">게시판 댓글</button>
+                 <button class="tab-dropdown-item" onclick="showTab('voteComment')">투표 댓글</button>
+             </div>
+         </div>
+        <button class="tab-btn" data-tab="vote" onclick="showTab('vote')">투표참여</button>
     </div>
 
     <!-- 게시글 탭 -->
@@ -443,7 +448,7 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="board" items="${myPageInfo.boardList}">
-                        <a href="boardDetail.do?boardId=${board.boardId}">
+                        <a href="postDetail.do?boardId=${board.boardId}">
                             <div class="list-item">
                                 <div class="list-item-title">글 제목: ${board.boardTitle}</div>
                                 <div class="list-item-meta">작성일: ${board.boardDate}</div>
@@ -470,15 +475,16 @@
                 <c:otherwise>
                     <c:forEach var="comment" items="${myPageInfo.commentList}">
                         <div class="comment-card">
-                            <div class="comment-avatar">💬</div>
-                            
-                            <div class="comment-body">
-                                <div class="comment-header">
-                                    <span class="comment-board-title">게시글 제목: ${comment.boardTitle}</span>
-                                    <span class="comment-date">${comment.commentsDate}</span>
-                                </div>
-                                <div class="comment-content">${comment.commentsContent}</div>
-                            </div>
+	                            <div class="comment-avatar">💬</div>
+	                            <a href="postDetail.do?boardId=${comment.boardId}">
+	                            <div class="comment-body">
+	                                <div class="comment-header">
+	                                    <span class="comment-board-title">게시글 제목: ${comment.boardTitle}</span>
+	                                    <span class="comment-date">${comment.commentsDate}</span>
+	                                </div>
+	                                <div class="comment-content">${comment.commentsContent}</div>
+	                            </a>
+	                            </div>
                         </div>
                     </c:forEach>
                 </c:otherwise>
@@ -500,6 +506,7 @@
                     <c:forEach var="vc" items="${myPageInfo.voteCommentList}">
                         <div class="comment-card">
                             <div class="comment-avatar">🗳️</div>
+                            <a href="voteCont.do?voteId=${vc.voteId}">
                             <div class="comment-body">
                                 <div class="comment-header">
                                     <span class="comment-board-title">투표 제목: ${vc.voteTitle}</span>
@@ -507,6 +514,7 @@
                                 </div>
                                 <div class="comment-content">${vc.voteCommentText}</div>
                             </div>
+                            </a>
                         </div>
                     </c:forEach>
                 </c:otherwise>
@@ -527,13 +535,15 @@
                 <c:otherwise>
                     <c:forEach var="vote" items="${myPageInfo.voteRecordList}">
                         <div class="vote-card">
-                            <div class="vote-icon">🗳️</div>
-                            <div class="vote-info">
-                                <div class="vote-title">${vote.voteTitle}</div>
-                                <div class="vote-meta">투표일: ${vote.recordCreatedDate}</div>
-                            </div>
-                            <div class="vote-choice">${vote.movieTitle}</div>
-                            <div class="vote-end-date">종료: ${vote.voteEndDate}</div>
+	                            <div class="vote-icon">🗳️</div>
+	                            <a href="voteCont.do?voteId=${vote.voteId}">
+	                            <div class="vote-info">
+	                                <div class="vote-title">${vote.voteTitle}</div>
+	                                <div class="vote-meta">투표일: ${vote.recordCreatedDate}</div>
+	                            </div>
+	                            <div class="vote-choice">${vote.movieTitle}</div>
+	                            <div class="vote-end-date">종료: ${vote.voteEndDate}</div>
+	                            </a>
                         </div>
                     </c:forEach>
                 </c:otherwise>
@@ -561,17 +571,21 @@
     });
 
     function showTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        
+        // switch tab contents
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+        // set the correct tab button active by matching data-tab (avoid relying on event.target)
         document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
+            if (btn.dataset.tab === tabName) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         });
-        
-        document.getElementById(tabName + '-tab').classList.add('active');
-        event.target.classList.add('active');
-    }
+
+        const content = document.getElementById(tabName + '-tab');
+        if (content) content.classList.add('active');
+     }
 </script>
 
 </body>

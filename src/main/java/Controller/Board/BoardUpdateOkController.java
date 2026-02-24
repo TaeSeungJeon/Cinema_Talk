@@ -3,11 +3,20 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
+import DTO.Board.AddFileDTO;
+import Service.Board.AddFileService;
+import Service.Board.AddFileServiceImpl;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.UUID;
 
 public class BoardUpdateOkController implements Action {
 
@@ -48,6 +57,46 @@ public class BoardUpdateOkController implements Action {
             forward.setPath("freeBoard.do");
             forward.setRedirect(true);
             return forward;
+        }
+
+        // 파일 업로드 처리
+        try {
+            AddFileService fileService = AddFileServiceImpl.getInstance();
+            Collection<Part> parts = request.getParts();
+            if (parts != null) {
+                String uploadDirPath = request.getServletContext().getRealPath("/upload/board");
+                File uploadDir = new File(uploadDirPath);
+                if (!uploadDir.exists()) uploadDir.mkdirs();
+
+                for (Part part : parts) {
+                    if (!"uploadFiles".equals(part.getName())) continue;
+                    if (part.getSize() <= 0) continue;
+
+                    String originalName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+
+                    String ext = "";
+                    int dot = originalName.lastIndexOf('.');
+                    if (dot >= 0) ext = originalName.substring(dot);
+
+                    String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
+                    File dest = new File(uploadDir, savedName);
+
+                    part.write(dest.getAbsolutePath());
+
+                    String savedRelativePath = "/upload/board/" + savedName;
+
+                    AddFileDTO fdto = new AddFileDTO();
+                    fdto.setBoardId(boardId);
+                    fdto.setBoardType(originalBoard.getBoardType());
+                    fdto.setFileName(originalName);
+                    fdto.setFilePath(savedRelativePath);
+                    fdto.setFileSize((int) part.getSize());
+
+                    fileService.insertFile(fdto);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // 수정 DTO 세팅

@@ -1,14 +1,16 @@
-create table ADD_FILE
+CREATE TABLE ADD_FILE
 (
-    fileNo          NUMBER primary key NOT NULL, -- 파일 번호
-    boardId         NUMBER             NOT NULL, -- 게시판 아이디
-    boardType       NUMBER             NOT NULL, -- 게시판 종류
-    fileName        VARCHAR2(255)      NULL,     -- 첨부 파일명
-    filePath        VARCHAR2(1000)     NULL,     -- 펌부 파일 경로
-    fileSize        NUMBER             NULL,     -- 첨부 파일 크기
-    fileUploadDate DATE               NULL      -- 첨부 파일 등록 날짜
+    FILENO     NUMBER               NOT NULL,
+    BOARDID    NUMBER               NOT NULL,
+    BOARDTYPE  NUMBER               NOT NULL,
+    FILENAME   VARCHAR2(255)        NOT NULL,
+    FILEPATH   VARCHAR2(500)        NOT NULL,
+    FILESIZE   NUMBER               NOT NULL,
+    UPLOADDATE DATE DEFAULT SYSDATE NOT NULL,
+    CONSTRAINT PK_ADD_FILE PRIMARY KEY (FILENO),
+    CONSTRAINT FK_ADD_FILE_BOARD FOREIGN KEY (BOARDID, BOARDTYPE)
+        REFERENCES BOARD (BOARDID, BOARDTYPE)
 );
-    alter table ADD_FILE add constraint fk_board_ref foreign key (boardId, boardType)
-        references board (boardId, boardType);
 
+CREATE SEQUENCE FILE_NO_SEQ NOCACHE;
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Board/ADD_FILE.sql" value="efea8413-dc9a-4488-9a6b-58b192c2d711" />
     <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Board/BOARD_LIKE.sql" value="efea8413-dc9a-4488-9a6b-58b192c2d711" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Board/COMMENTS_LIKE.sql" value="efea8413-dc9a-4488-9a6b-58b192c2d711" />
     <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Member/MEMBER.sql" value="efea8413-dc9a-4488-9a6b-58b192c2d711" />
     <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Member/MEMBER_GENRE.sql" value="efea8413-dc9a-4488-9a6b-58b192c2d711" />
     <file url="file://$PROJECT_DIR$/src/main/resources/SQL/Member/MEMBER_MOVIE_RECOMMEND.sql" value="efea8413-dc9a-4488-9a6b-58b192c2d711" />

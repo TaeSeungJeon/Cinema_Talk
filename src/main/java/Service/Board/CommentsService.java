@@ -14,4 +14,15 @@ public interface CommentsService {
     int commentsUpdate(CommentsDTO dto);
 
     int commentsDelete(Map<String, Object> map);
+
+    // 댓글 좋아요 토글
+    int toggleCommentsLike(int commentsId, int memNo);
+
+    // 좋아요 정보 포함된 댓글 목록
+    List<CommentsDTO> commentsListWithLike(int boardId, Integer memNo);
+
+    int getCommentsLikeCount(int commentsId);
+
+    int deleteCommentLikesByCommentTree(int commentsId);
+    int commentsDeleteTree(Map<String, Object> map);
 }

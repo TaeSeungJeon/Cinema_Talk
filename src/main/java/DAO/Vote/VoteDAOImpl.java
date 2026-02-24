@@ -62,12 +62,12 @@ public class VoteDAOImpl implements VoteDAO {
 	}
 
 	@Override
-	public List<VoteRegisterDTO> getVoteRegList() {
+	public List<VoteRegisterDTO> getVoteRegList(VoteRegisterDTO findVoteReg) {
 		SqlSession sqlSession = null;
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectList("vregList");
+			return sqlSession.selectList("vregList", findVoteReg);
 
 
 		} finally {
@@ -278,6 +278,22 @@ public class VoteDAOImpl implements VoteDAO {
 		try {
 			sqlSession = getSqlSession();
 			return sqlSession.selectList("MyPage.getVoteRecordListByMemNo", memNo);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public int getRowCount(VoteRegisterDTO findVoteReg) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("voteRegCount", findVoteReg);
 
 
 		} finally {

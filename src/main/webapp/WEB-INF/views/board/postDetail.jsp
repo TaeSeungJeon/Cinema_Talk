@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -100,6 +102,21 @@
             font-weight: 700;
             font-size: 0.95rem;
             pointer-events: none;
+        }
+        /* 공유버튼 */
+        .share-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .share-btn:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
         }
 
         .sub-menu {
@@ -436,17 +453,49 @@
             <div class="post-body" id="post-body">
                 ${cont.boardContent}
             </div>
+                <%-- 첨부파일 기능 --%>
+            <c:if test="${not empty fileList}">
+                <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
+                    <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
+
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <c:forEach var="f" items="${fileList}">
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <a href="${pageContext.request.contextPath}${f.filePath}"
+                                   target="_blank"
+                                   style="text-decoration:none; font-weight:700; color:#374151;">
+                                        ${f.fileName}
+                                </a>
+
+                                                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
 
             <div id="update-form" style="display:none; margin-top:20px;">
-                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post">
+                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="boardId" value="${cont.boardId}">
 
                     <input type="text" name="boardTitle"
                            value="${cont.boardTitle}"
                            style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
 
-                    <textarea name="boardContent"
-                              style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; resize:none;">${cont.boardContent}</textarea>
+                    <!--  수정 영역 -->
+                    <div id="editor"
+                         contenteditable="true"
+                         style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
+                        ${cont.boardContent}
+                    </div>
+
+                    <!-- 실제 전송용 hidden -->
+                    <input type="hidden" name="boardContent" id="hiddenContent">
+
+                    <!-- 파일 업로드 -->
+                    <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
+                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
+                        <input type="file" name="uploadFiles" multiple style="margin-bottom:8px;">
+                    </div>
 
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
                         <button type="button"
@@ -489,18 +538,16 @@
 
             </div>
 
-            <div class="tag-group">
-                <a href="#" class="tag"># 사운드디자인</a>
-                <a href="#" class="tag"># IMAX</a>
-                <a href="#" class="tag"># 한스짐머</a>
-            </div>
+            <%-- 태그 추가하려면 이 라인에 추가 (post-group) --%>
 
             <div class="post-actions">
                 <button class="action-btn" type="button"
                         onclick="toggleLike(${cont.boardId}, ${cont.boardType})">
                     👍 <span id="likeCount">${likeCount}</span>
                 </button>
-                <button class="action-btn">🔗 공유하기</button>
+
+                <button type="button" class="share-btn" id="shareBtn">🔗 공유하기</button>
+
             </div>
         </article>
 
@@ -567,7 +614,12 @@
                                 <span class="reply-trigger"
                                       style="cursor:pointer; font-weight:600; color:var(--accent-color);"
                                       onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
-                                <span>좋아요 0</span>
+                                <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
+                                      onclick="toggleCommentLike(${comm.commentsId})"
+                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);">
+                                <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
+                                         좋아요 ${comm.likeCount}
+                                </span>
                             </div>
 
                             <div id="reply-form-${comm.commentsId}" class="reply-form-container">
@@ -708,6 +760,70 @@
                 });
         }
 
+        function toggleLike(boardId, boardType) {
+            fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
+                .then(r => r.text())
+                .then(res => {
+                    if (res === "LOGIN_REQUIRED") {
+                        alert("로그인 후 이용 가능합니다.");
+                        location.href = "memberLogin.do";
+                        return;
+                    }
+                    document.getElementById("likeCount").innerText = res;
+                });
+        }
+
+
+            (function () {
+            const btn = document.getElementById("shareBtn");
+            if (!btn) return;
+
+            btn.addEventListener("click", async function () {
+            const url = window.location.href;
+            const title = document.title || "게시글";
+
+            // 1) 모바일/지원 브라우저: 네이티브 공유창
+            if (navigator.share) {
+            try {
+            await navigator.share({ title, text: "게시글 공유", url });
+            return;
+        } catch (e) {
+            // 사용자가 취소한 경우도 여기로 들어옴 -> 조용히 넘어가서 복사로 fallback
+        }
+        }
+
+            // 2) URL 복사 (HTTPS/localhost에서만 navigator.clipboard가 정상인 경우가 많음)
+            try {
+            if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(url);
+            alert("URL이 복사되었습니다!");
+            return;
+        }
+        } catch (e) {}
+
+            // 3) 구형/비보안 fallback (execCommand)
+            try {
+            const ta = document.createElement("textarea");
+            ta.value = url;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            alert("URL이 복사되었습니다!");
+        } catch (e) {
+            alert("공유/복사가 차단되었습니다. 주소창 URL을 직접 복사해주세요.");
+            console.error(e);
+        }
+        });
+        })();
+
+        document.querySelector("form[action$='boardUpdateOk.do']")
+            .addEventListener("submit", function () {
+                document.getElementById("hiddenContent").value =
+                    document.getElementById("editor").innerHTML;
+            });
 
     </script>
 </div>

@@ -3,6 +3,7 @@ package Service.Board;
 import DTO.Board.BoardDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BoardService {
 
@@ -11,6 +12,8 @@ public interface BoardService {
     List<BoardDTO> boardList();
     // 게시글 단순 조회 (수정/삭제용)
     BoardDTO getBoardCont(int boardId);
+
+    Map<String, Object> getBoardDetailWithPreview(int boardNo);
 
     void plusReadCount(int boardId);
 
@@ -34,5 +37,7 @@ public interface BoardService {
     int toggleBoardLike(int boardId, int boardType, int memNo);
     int getBoardLikeCount(int boardId, int boardType);
     boolean isBoardLiked(int boardId, int boardType, int memNo);
+    // 실시간 인기글
+    List<BoardDTO> hotBoardList(int limit);
 
 }

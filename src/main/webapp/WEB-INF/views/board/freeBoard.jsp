@@ -368,7 +368,7 @@
 
         .hot-text {
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 700;
             color: var(--text-main);
             cursor: pointer;
         }
@@ -530,7 +530,66 @@
             justify-content: flex-start;
             gap: 10px;
         }
+        /* 링크 */
+        .link-preview-card {
+            display: flex;
+            gap: 12px;
+            border: 1px solid #e2e8f0;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            align-items: center;
+        }
 
+        .link-preview-thumb {
+            width: 120px;
+            height: 70px;
+            border-radius: 10px;
+            background: #334155;
+            flex: 0 0 auto;
+            overflow: hidden;
+        }
+
+        .link-preview-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .link-preview-body {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .link-preview-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-preview-desc {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .link-preview-url {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
     </style>
 </head>
@@ -641,18 +700,7 @@
     </main>
 
     <aside>
-        <div class="side-widget">
-            <div class="widget-title">
-                <span>🔥 실시간 인기글</span>
-                <a href="#" class="widget-link">더보기</a>
-            </div>
-            <ul class="hot-list">
-                <li class="hot-item"><span class="rank-num">1</span> <span class="hot-text">범죄도시4 빌런 예상 (스포주의)</span>
-                </li>
-                <li class="hot-item"><span class="rank-num">2</span> <span class="hot-text">이번 주말 넷플릭스 추천 영화</span></li>
-                <li class="hot-item"><span class="rank-num">3</span> <span class="hot-text">인터스텔라 재개봉 일정 공유</span></li>
-            </ul>
-        </div>
+        <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
 
         <div class="side-widget">
             <div class="widget-title">
@@ -723,7 +771,7 @@
                 <span style="cursor:pointer; font-weight: 800;">B</span>
                 <span style="cursor:pointer; font-style: italic;">I</span>
                 <span style="cursor:pointer; text-decoration: underline;">U</span>
-                <span style="cursor:pointer;">🔗 링크</span>
+                <span id="linkTrigger" style="cursor:pointer;">🔗 링크</span>
 
                 <span id="attachTrigger" style="cursor:pointer;">🖼️ 사진첨부</span>
                 <input id="attachInput"
@@ -741,7 +789,9 @@
             <!-- 내용 -->
             <textarea rows="12" placeholder="영화에 대한 솔직한 생각을 들려주세요..."
                       style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;"
-                      name="boardContent" required></textarea>
+                      name="boardContent" id="boardContent" required></textarea>
+
+            <div id="linkPreviewArea" style="display:none; margin-top: 10px;"></div>
 
             <!-- 가이드라인-->
             <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
@@ -760,6 +810,8 @@
         </form>
     </div>
 </div>
+
+<jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 
 <script>
     function toggleMenu(element) {
@@ -787,6 +839,96 @@
         document.getElementById('writeModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
+    /* 링크 활성화 */
+    const linkTrigger = document.getElementById("linkTrigger");
+    const contentEl = document.getElementById("boardContent");
+    const previewArea = document.getElementById("linkPreviewArea");
+
+    let currentPreviewUrl = "";
+
+    function insertTextAtCursor(textarea, text) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const before = textarea.value.substring(0, start);
+        const after = textarea.value.substring(end);
+
+        textarea.value = before + text + after;
+        const newPos = start + text.length;
+        textarea.focus();
+        textarea.setSelectionRange(newPos, newPos);
+    }
+
+    async function fetchLinkPreview(url) {
+        const res = await fetch(contextPath + "/linkPreview.do?url=" + encodeURIComponent(url));
+        return await res.json();
+    }
+
+    function renderPreviewCard(data) {
+        previewArea.style.display = "block";
+
+        const title = data.title || data.url;
+        const desc = data.description || "";
+        const img = data.image || "";
+
+        const thumbHtml = img
+            ? '<div class="link-preview-thumb"><img src="' + img + '" alt=""></div>'
+            : '<div class="link-preview-thumb"></div>';
+
+        previewArea.innerHTML =
+            '<div class="link-preview-card" id="linkPreviewCard">' +
+            thumbHtml +
+            '<div class="link-preview-body">' +
+            '<div class="link-preview-title">' + escapeHtml(title) + '</div>' +
+            '<div class="link-preview-desc">' + escapeHtml(desc) + '</div>' +
+            '<div class="link-preview-url">' + escapeHtml(data.url) + '</div>' +
+            '</div>' +
+            '</div>';
+
+        document.getElementById("linkPreviewCard").onclick = function() {
+            window.open(data.url, "_blank");
+        };
+    }
+
+    function clearPreviewCard() {
+        previewArea.style.display = "none";
+        previewArea.innerHTML = "";
+        currentPreviewUrl = "";
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll("\"", "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    async function onClickLink() {
+        const url = prompt("붙여넣을 URL을 입력하세요");
+        if (!url) return;
+
+        const textToInsert = "\n" + url.trim() + "\n";
+        insertTextAtCursor(contentEl, textToInsert);
+
+        const normalized = url.trim().startsWith("http") ? url.trim() : "https://" + url.trim();
+        if (currentPreviewUrl === normalized) return;
+
+        try {
+            const data = await fetchLinkPreview(normalized);
+            if (!data.ok) {
+                clearPreviewCard();
+                return;
+            }
+            currentPreviewUrl = data.url;
+            renderPreviewCard(data);
+        } catch (e) {
+            clearPreviewCard();
+        }
+    }
+
+    linkTrigger.addEventListener("click", onClickLink);
 
     function closeModal() {
         document.getElementById('writeModal').style.display = 'none';

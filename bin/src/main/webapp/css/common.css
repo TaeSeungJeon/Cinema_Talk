@@ -1,0 +1,265 @@
+ :root {
+            --bg-color: #f0f2f5;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --accent-color: #6366f1;
+            --text-main: #1f2937;
+            --radius-soft: 24px;
+            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
+            --shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1100;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-subtle);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-bar {
+            background: white;
+            border-radius: 50px;
+            padding: 12px 30px;
+            width: 40%;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--shadow-subtle);
+        }
+        .search-bar form { width: 100%; display: flex; align-items: center; gap: 10px; }
+        .search-bar select {
+            border: none;
+            background: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .search-bar input[type="text"] { 
+            border: none; 
+            background: none; 
+            outline: none; 
+            flex: 1; 
+            text-align: center; 
+            color: var(--text-main); 
+            font-size: 0.95rem; 
+        }
+        .search-bar input[type="submit"] {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .search-bar input[type="submit"]:hover {
+            background: #4f46e5;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        /* --- [복원] 4개 메뉴 카테고리 --- */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1050;
+        }
+        .category-bubble {
+            flex: 1; height: 45px; cursor: pointer; transition: 0.3s;
+            position: relative; background: white; border-radius: 50px;
+            box-shadow: var(--shadow-subtle); display: flex; align-items: center; justify-content: center;
+        }
+        .category-bubble:hover { transform: translateY(-2px); box-shadow: var(--shadow-strong); }
+        .cat-title { font-weight: 600; font-size: 0.95rem; pointer-events: none; }
+
+        .sub-menu {
+            list-style: none; padding: 0; margin: 0; position: absolute; top: 110%; left: 0; right: 0;
+            background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-height: 0; overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999; border: 1px solid rgba(0, 0, 0, 0.05); text-align: center;
+        }
+        .category-bubble.active .sub-menu { max-height: 300px; padding: 15px 0; }
+        .sub-menu li a {
+            text-decoration: none; color: #64748b; display: block; padding: 10px 0;
+            margin: 0 10px; border-radius: 12px; transition: 0.2s; font-size: 0.9rem;
+        }
+        .sub-menu li a:hover { background: var(--accent-color); color: white; }
+
+        /* --- Layout --- */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 35px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+
+        .quick-booking-aside {
+            position: absolute; left: -160px; top: 400px; width: 130px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 100;
+        }
+        .booking-box { background: #1a1a1b; border-radius: 18px; padding: 12px 10px; text-align: center; }
+        .booking-links a {
+            text-decoration: none; color: #d1d5db; font-size: 0.75rem; display: block;
+            padding: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; margin-top: 5px; transition: 0.3s;
+        }
+        .booking-links a:hover { background: var(--accent-color); color: white; transform: translateX(4px); }
+
+        /* --- Components --- */
+        .notice-bar {
+            background: white; border-radius: 50px; padding: 15px 30px;
+            margin-bottom: 25px; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow-subtle);
+        }
+        .board-card {
+            background: white; border-radius: var(--radius-soft); padding: 25px;
+            margin-bottom: 25px; box-shadow: var(--shadow-subtle);
+        }
+        .post-item {
+            display: flex; gap: 20px; padding: 20px; border-radius: 15px;
+            background: #f8fafc; text-decoration: none; color: inherit; transition: 0.3s; margin-top: 10px;
+        }
+        .post-item:hover { background: #f1f5f9; transform: translateX(5px); }
+        .post-thumb {
+            width: 100px; height: 100px; background: #e2e8f0; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #94a3b8; flex-shrink: 0;
+        }
+        .post-content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 5px; }
+        .post-main-title { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+        .post-stats { margin-top: 5px; font-size: 0.85rem; color: var(--accent-color); display: flex; gap: 15px; }
+
+        .side-widget {
+            background: white; border-radius: var(--radius-soft); padding: 20px;
+            min-height: 250px; box-shadow: var(--shadow-subtle); margin-bottom: 25px;
+        }
+        .widget-placeholder {
+            border: 2px dashed #f1f5f9; border-radius: 15px; height: 180px;
+            display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-weight: 700;
+        }
+
+        .hero-section {
+            position: relative; height: 450px; background: #1e1b4b;
+            border-radius: var(--radius-soft); color: white; display: flex; align-items: flex-end; overflow: hidden; margin-bottom: 25px;
+        }
+        .hero-content { padding: 40px; z-index: 2; width: 100%; }
+        .slide-controls {
+            position: absolute; bottom: 30px; right: 30px; display: flex; align-items: center; gap: 15px;
+            background: rgba(0, 0, 0, 0.3); padding: 8px 15px; border-radius: 30px; backdrop-filter: blur(5px); z-index: 10;
+        }
+        .nav-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+
+        .movie-list-container { background: white; border-radius: var(--radius-soft); padding: 20px; box-shadow: var(--shadow-subtle); margin-bottom: 25px; }
+        .movie-slider-wrapper { display: flex; align-items: center; gap: 15px; position: relative; }
+        .movie-track-container { overflow: hidden; width: 930px; }
+        .movie-grid { display: flex; gap: 20px; transition: transform 0.5s; padding: 15px 5px; }
+
+        .movie-card-small {
+            flex: 0 0 170px; width: 170px; background: #f8fafc; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.3s; text-decoration: none;
+        }
+        .movie-card-small:hover { transform: translateY(-8px); }
+        .poster-area { width: 100%; height: 250px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: var(--accent-color); font-weight: bold; }
+        .movie-title-area { padding: 12px; text-align: center; font-size: 0.9rem; font-weight: 700; color: #1e2937; }
+        .list-nav-btn { background: white; border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; color: var(--accent-color); }
+
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 20px; }
+        .review-card { background: #f8fafc; border-radius: 20px; height: 80px; padding: 20px; display: flex; align-items: center; text-decoration: none; color: inherit; transition: 0.3s; }
+        .review-card:hover { background: white; box-shadow: var(--shadow-subtle); }
+
+        @media (max-width: 1600px) { .quick-booking-aside { display: none; } }
+        
+         /* 사이드바 전용 투표 위젯 스타일 */
+		.hsidebar-vote-list {
+		    display: flex;
+		    flex-direction: column;
+		    gap: 10px;
+		    max-height: 200px;
+		    overflow-y: auto;
+		    scrollbar-width: none;
+		}
+		
+		.hsidebar-vote-list::-webkit-scrollbar {
+		    display: none;
+		}
+		
+		.hsidebar-active-item {
+		    padding: 12px 15px;
+		    background: rgba(255, 255, 255, 0.6);
+		    border-radius: 10px;
+		    border: 1px solid rgba(0, 0, 0, 0.05);
+		    cursor: pointer;
+		    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+		
+		.hsidebar-active-item:hover {
+		    background: #ffffff;
+		   
+		    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+		    border-color: #3b82f6; /* 포인트 컬러 (필요시 수정) */
+		}
+		
+		.hsidebar-item-title {
+		    font-size: 0.85rem;
+		    font-weight: 600;
+		    color: #1e293b;
+		    margin-bottom: 3px;
+		    /* 긴 제목 처리 */
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		}
+		
+		.hsidebar-item-date {
+		    font-size: 0.75rem;
+		    color: #3b82f6;
+		    font-weight: 500;
+		}
+		
+		.hsidebar-no-data {
+		    text-align: center;
+		    padding: 30px 10px;
+		    font-size: 0.8rem;
+		    color: #94a3b8;
+		    background: rgba(0, 0, 0, 0.02);
+		    border-radius: 10px;
+		    border: 1px dashed #cbd5e1;
+		}

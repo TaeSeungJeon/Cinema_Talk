@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.MovieDAO">
+	<insert id="insertMovie" parameterType="movie">
+		INSERT INTO MOVIE (
+		movieId, movieTitle, movieOriginalTitle, movieOverview,
+		movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+		movieRatingAverage, movieRatingCount, movieCreatedAt
+		) VALUES (
+		#{movieId}, #{movieTitle}, #{movieOriginalTitle}, #{movieOverview},
+		#{movieReleaseDate}, #{movieRuntime}, #{moviePosterPath},
+		#{movieBackdropPath},
+		#{movieRatingAverage}, #{movieRatingCount}, SYSDATE)
+		)
+	</insert>
+
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeMovie" parameterType="movie">
+		MERGE INTO MOVIE m
+		USING
+		(SELECT #{movieId} AS movieId FROM DUAL) src
+		ON (m.movieId =
+		src.movieId)
+		WHEN MATCHED THEN
+		UPDATE SET
+		m.movieTitle = #{movieTitle},
+		m.movieOriginalTitle = #{movieOriginalTitle},
+		m.movieOverview = #{movieOverview},
+		m.movieReleaseDate = #{movieReleaseDate},
+		m.movieRuntime = #{movieRuntime},
+		m.moviePosterPath = #{moviePosterPath},
+		m.movieBackdropPath = #{movieBackdropPath},
+		m.movieRatingAverage = #{movieRatingAverage},
+		m.movieRatingCount = #{movieRatingCount}
+		WHEN NOT MATCHED THEN
+		INSERT (movieId, movieTitle, movieOriginalTitle, movieOverview,
+		movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+		movieRatingAverage, movieRatingCount, movieCreatedAt)
+		VALUES (#{movieId}, #{movieTitle}, #{movieOriginalTitle}, #{movieOverview},
+		#{movieReleaseDate}, #{movieRuntime}, #{moviePosterPath},
+		#{movieBackdropPath},
+		#{movieRatingAverage}, #{movieRatingCount}, SYSDATE)
+	</insert>
+
+	<select id="selectMovieById" parameterType="int"
+		resultType="movie">
+		SELECT movieId, movieTitle, movieOriginalTitle,
+		movieOverview,
+		movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+		movieRatingAverage, movieRatingCount, movieCreatedAt
+		FROM MOVIE
+		WHERE movieId = #{movieId}
+	</select>
+
+	<!-- Title로 영화 검색 (부분 일치, 대소문자 구분 없음, 페이징) -->
+	<select id="searchByTitle" parameterType="map"
+		resultType="movie">
+		SELECT * FROM (
+		SELECT ROWNUM AS rnum, sub.* FROM (
+		SELECT movieId, movieTitle, movieOriginalTitle, movieOverview,
+		movieReleaseDate, movieRuntime, moviePosterPath, movieBackdropPath,
+		movieRatingAverage, movieRatingCount, movieCreatedAt
+		FROM MOVIE
+		WHERE
+		<foreach collection="wordList" item="word" separator="OR">
+			LOWER(movieTitle) LIKE '%' || LOWER(#{word}) || '%'
+		</foreach>
+		ORDER BY movieTitle ASC
+		) sub
+		WHERE ROWNUM &lt; = #{endrow}
+		)
+		WHERE rnum &gt; = #{startrow}
+	</select>
+
+	<!-- Director로 영화 검색 (페이징) -->
+	<select id="searchByDirector" parameterType="map"
+		resultType="movie">
+		SELECT * FROM (
+		SELECT ROWNUM AS rnum, sub.* FROM (
+		SELECT m.movieId, m.movieTitle, m.movieOriginalTitle, m.movieOverview,
+		m.movieReleaseDate, m.movieRuntime, m.moviePosterPath,
+		m.movieBackdropPath,
+		m.movieRatingAverage, m.movieRatingCount, m.movieCreatedAt
+		FROM MOVIE m
+		WHERE EXISTS (
+		SELECT 1 FROM MOVIE_CREW mc
+		JOIN PERSON p ON mc.personId = p.personId
+		WHERE mc.movieId = m.movieId
+		AND LOWER(mc.crewJob) LIKE '%director%'
+		AND (
+		<foreach collection="wordList" item="word" separator="OR">
+			LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+		</foreach>
+		)
+		)
+		ORDER BY m.movieTitle ASC
+		) sub
+		WHERE ROWNUM &lt; = #{endrow}
+		)
+		WHERE rnum &gt; = #{startrow}
+	</select>
+
+	<!-- Actor로 영화 검색 (페이징) -->
+	<select id="searchByActor" parameterType="map"
+		resultType="movie">
+		SELECT * FROM (
+		SELECT ROWNUM AS rnum, sub.* FROM (
+		SELECT m.movieId, m.movieTitle, m.movieOriginalTitle, m.movieOverview,
+		m.movieReleaseDate, m.movieRuntime, m.moviePosterPath,
+		m.movieBackdropPath,
+		m.movieRatingAverage, m.movieRatingCount, m.movieCreatedAt
+		FROM MOVIE m
+		WHERE EXISTS (
+		SELECT 1 FROM MOVIE_CAST mc
+		JOIN PERSON p ON mc.personId = p.personId
+		WHERE mc.movieId = m.movieId
+		AND (
+		<foreach collection="wordList" item="word" separator="OR">
+			LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+		</foreach>
+		)
+		)
+		ORDER BY m.movieTitle ASC
+		) sub
+		WHERE ROWNUM &lt; = #{endrow}
+		)
+		WHERE rnum &gt; = #{startrow}
+	</select>
+
+	<!-- Genre로 영화 검색 (페이징) -->
+	<select id="searchByGenre" parameterType="map"
+		resultType="movie">
+		SELECT * FROM (
+		SELECT ROWNUM AS rnum, sub.*
+		FROM (
+		SELECT m.movieId, m.movieTitle, m.movieOriginalTitle, m.movieOverview,
+		m.movieReleaseDate, m.movieRuntime, m.moviePosterPath,
+		m.movieBackdropPath,
+		m.movieRatingAverage, m.movieRatingCount, m.movieCreatedAt
+		FROM MOVIE m
+		WHERE EXISTS (
+		SELECT 1
+		FROM MOVIE_GENRE mg
+		JOIN GENRE g ON mg.genreId = g.genreId
+		WHERE mg.movieId = m.movieId
+		AND (
+		<foreach collection="wordList" item="word" separator="OR">
+			LOWER(g.genreName) LIKE '%' || LOWER(#{word}) || '%'
+		</foreach>
+		)
+		)
+		ORDER BY m.movieTitle ASC
+		) sub
+		WHERE ROWNUM &lt; = #{endrow}
+		)
+		WHERE rnum &gt; = #{startrow}
+	</select>
+
+	<!-- 검색 전후 레코드 개수 -->
+	<select id="movie_count" parameterType="map" resultType="int">
+		<choose>
+			<when test="searchOption == 0">
+				<!-- Title 검색 -->
+				SELECT COUNT(movieId) FROM MOVIE
+				WHERE
+				(
+				<foreach collection="wordList" item="word" separator="OR">
+					LOWER(movieTitle) LIKE '%' || LOWER(#{word}) || '%'
+				</foreach>
+				)
+			</when>
+			<when test="searchOption == 1">
+				<!-- Director 검색 -->
+				SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
+				WHERE EXISTS (
+				SELECT 1 FROM MOVIE_CREW mc
+				JOIN PERSON p ON mc.personId = p.personId
+				WHERE mc.movieId = m.movieId
+				AND LOWER(mc.crewJob) LIKE '%director%'
+				AND (
+				<foreach collection="wordList" item="word" separator="OR">
+					LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+				</foreach>
+				)
+				)
+			</when>
+			<when test="searchOption == 2">
+				<!-- Actor 검색 -->
+				SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
+				WHERE EXISTS (
+				SELECT 1 FROM MOVIE_CAST mc
+				JOIN PERSON p ON mc.personId = p.personId
+				WHERE mc.movieId = m.movieId
+				AND (
+				<foreach collection="wordList" item="word" separator="OR">
+					LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+				</foreach>
+				)
+				)
+			</when>
+			<when test="searchOption == 3">
+				<!-- Genre 검색 -->
+				SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
+				WHERE EXISTS (
+				SELECT 1 FROM MOVIE_GENRE mg
+				JOIN GENRE g ON mg.genreId = g.genreId
+				WHERE mg.movieId = m.movieId
+				AND (
+				<foreach collection="wordList" item="word" separator="OR">
+					LOWER(g.genreName) LIKE '%' || LOWER(#{word}) || '%'
+				</foreach>
+				)
+				)
+			</when>
+		</choose>
+	</select>
+
+	<!-- 관리자 영화 관리용 검색 -->
+	<select id="searchAdminMovies" parameterType="map" resultType="movie">
+		SELECT *
+    FROM (
+        SELECT
+            movieId,
+            movieTitle,
+            movieOriginalTitle,
+            moviePosterPath,
+            movieRatingAverage,
+            movieRuntime
+        FROM MOVIE
+        <where>
+            <if test="keyword != null and keyword != ''">
+                LOWER(movieTitle) LIKE '%' || LOWER(#{keyword}) || '%'
+                OR LOWER(movieOriginalTitle) LIKE '%' || LOWER(#{keyword}) || '%'
+            </if>
+        </where>
+        ORDER BY movieTitle ASC
+    )
+    WHERE ROWNUM &lt;= 30
+	</select>
+</mapper>

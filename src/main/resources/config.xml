@@ -37,6 +37,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     <typeAlias type="DTO.Board.BoardDTO" alias="bdto" />
 		<typeAlias type="DTO.Board.CommentsDTO" alias="cdto"/>
     <typeAlias type="DTO.Member.MyPage.MyPageDTO" alias="mypage" />
+    <typeAlias type="DTO.Admin.AdminMovieDetailDTO" alias="adminmoviedetail" />
+    <typeAlias type="DTO.Admin.MovieSaveDTO" alias="moviesave" />
 	</typeAliases>
 
 	<!-- 마이바티스의 실행 환경을 세팅한 구간 특히 이 구간에서는 마이바티스가 JDBC 수준에서 트랜잭션을 관리(transactionManager)하게 
@@ -97,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Board/BoardMapper.xml"/>
 		<mapper resource="mappers/Board/CommentsMapper.xml"/>
 		<mapper resource="mappers/Board/AddFileMapper.xml"/>
+		<mapper resource="mappers/Admin/AdminMovieMapper.xml"/>
 	</mappers>
 
 </configuration>

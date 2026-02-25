@@ -39,4 +39,9 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 		
 		return movieDAO.getRowCount(words, searchOption);
 	}
+
+	@Override
+	public List<MovieDTO> searchAdminMovies(String keyword) {
+		return movieDAO.searchAdminMovies(keyword);
+	}
 }

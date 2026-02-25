@@ -22,7 +22,13 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 			return null;
 		}
 		
-		return movieDAO.getMovieDTOList(words, searchOption, movieDTO.getStartrow(), movieDTO.getEndrow());
+		List<MovieDTO> movies = movieDAO.getMovieDTOList(words, searchOption, movieDTO.getStartrow(), movieDTO.getEndrow());
+		for (MovieDTO movie : movies) {
+				String originalDate = movie.getMovieReleaseDate();
+				String fixedDate = originalDate.substring(0, 10);
+				movie.setMovieReleaseDate(fixedDate);
+		}		
+		return movies;
 	}
 
 	@Override

@@ -25,4 +25,12 @@ public class VoteRegisterDTO {
 	
 	//참여자 수
 	private int voterCount;
+	
+	//페이징 쪽 나누기 관련변수
+	private int startrow;
+	private int endrow;
+	
+	//정렬을 위한 변수
+	private String sortCol;
+	private String sortDir;
 }

@@ -36,9 +36,8 @@ h2 {
 	margin-bottom: 30px;
 	font-size: 1.5rem;
 	color: #1e293b;
-	border-left: 5px solid var(--primary);
-	padding-left: 15px;
 }
+	
 
 .section-title {
 	font-weight: 700;
@@ -136,7 +135,7 @@ input[type="text"], input[type="date"], select, textarea {
 	<div class="form-container">
 		<h2>${empty vote ? '새 투표 등록' : '투표 정보 수정'}</h2>
 
-		<form action="voteOkForm.do?state=${not empty vote ? 'edit' : 'add'}" method="post" id="voteForm">
+		<form action="voteOkForm.do?state=${not empty vote ? 'edit' : 'add'}" method="post" id="voteForm" onsubmit="return validateForm()">
 			<input type="hidden" name="voteId" value="${vote.voteId}"> <label
 				class="section-title">투표 제목</label> <input type="text"
 				name="voteTitle" value="${vote.voteTitle}"
@@ -183,29 +182,20 @@ input[type="text"], input[type="date"], select, textarea {
 										value="${opt.movieTitle}"
 										onkeydown="if(event.keyCode==13) event.preventDefault();"
 										onkeyup="handleSearch(this, event)" autocomplete="off">
+										<div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+									        DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
+									    </div>
 									<div class="search-results"></div>
 								</div>
 								<button type="button" class="btn" onclick="removeOption(this)"
-									style="background: #fee2e2; color: #ef4444; border: none; padding: 10px; cursor: pointer; border-radius: 8px;">삭제</button>
+									style="height: 45px; align-self: flex-start; background: #fee2e2; color: #ef4444; border: none; padding: 10px; cursor: pointer; border-radius: 8px;">삭제</button>
 							</div>
 						</c:forEach>
 					</c:when>
 
 					<%-- 등록 모드: 빈 입력창 하나를 기본으로 노출 --%>
 					<c:otherwise>
-						<div class="option-item"
-							style="display: flex; gap: 10px; margin-bottom: 10px;">
-							<div style="flex: 1; position: relative;">
-								<input type="hidden" name="movieId" class="movie-id-hidden">
-								<input type="text" name="optionTitle" class="movie-search"
-									placeholder="영화 제목을 검색하세요"
-									onkeydown="if(event.keyCode==13) event.preventDefault();"
-									onkeyup="handleSearch(this, event)" autocomplete="off">
-								<div class="search-results"></div>
-							</div>
-							<button type="button" class="btn" onclick="removeOption(this)"
-								style="background: #fee2e2; color: #ef4444; border: none; padding: 10px; cursor: pointer; border-radius: 8px;">삭제</button>
-						</div>
+						영화를 추가해주세요
 					</c:otherwise>
 				</c:choose>
 			</div>
@@ -220,71 +210,81 @@ input[type="text"], input[type="date"], select, textarea {
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
-            let searchTimer;
-            let currentFocus = -1; // 현재 선택된 항목의 인덱스
-            
-           // 옵션 삭제 (최소 1개 유지)
-			function removeOption(btn) {
-			    const $items = $('.option-item');
-			    if ($items.length > 1) {
-			        $(btn).closest('.option-item').remove();
-			    } else {
-			        alert("투표 선택지는 최소 1개 이상 있어야 합니다.");
-			        
-			    }
-			}
+       let searchTimer;
+       let currentFocus = -1; // 현재 선택된 항목의 인덱스
+        
+        // 옵션 삭제
+		function removeOption(btn) {
+		    
+		    $(btn).closest('.option-item').remove();
+		    if($('.option-item').length == 0)  $('#optionList').html("영화를 추가해주세요")
+		   
+		}
 
-			// 옵션 추가 
-			function addOption() {
-			    const html = `
-			        <div class="option-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
-			            <div style="flex: 1; position: relative;">
-			                <input type="hidden" name="movieId" class="movie-id-hidden">
-			                <input type="text" name="optionTitle" class="movie-search" 
-			                       placeholder="영화 제목을 검색하세요"
-			                       onkeydown="if(event.keyCode==13) event.preventDefault();"
-			                       onkeyup="handleSearch(this, event)" autocomplete="off">
-			                <div class="search-results"></div>
-			            </div>
-			            <button type="button" class="btn" onclick="removeOption(this)" 
-			                    style="background:#fee2e2; color:#ef4444; border:none; padding: 10px; cursor:pointer; border-radius:8px;">삭제</button>
-			        </div>`;
-			    $('#optionList').append(html);
+		// 옵션 추가 
+		function addOption() {
+			const optItem = document.getElementsByClassName("option-item");
+			if(optItem.length == 0){
+				 $('#optionList').empty();
 			}
-            
-            // 디바운싱 적용 검색
-            function handleSearch(input,e) {
-                const $results = $(input).next('.search-results');
-                const items = $results.find('.result-item');
-                
-                // 방향키 위(38), 아래(40), 엔터(13) 처리
-                if (e.keyCode == 40) { // Down
-                currentFocus++;
-                addActive(items);
-                return;
-            } else if (e.keyCode == 38) { // Up
-            currentFocus--;
-            addActive(items);
-            return;
-        } else if (e.keyCode == 13) { // Enter
-        e.preventDefault();
-        if (currentFocus > -1) {
-            if (items[currentFocus]) items[currentFocus].click();
-        }
-        return;
-    }
+			
+			
+		    const html = `
+		        <div class="option-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
+		            <div style="flex: 1; position: relative;">
+		                <input type="hidden" name="movieId" class="movie-id-hidden">
+		                <input type="text" name="optionTitle" class="movie-search" 
+		                       placeholder="영화 제목을 검색하세요"
+		                       onkeydown="if(event.keyCode==13) event.preventDefault();"
+		                       onkeyup="handleSearch(this, event)" autocomplete="off">
+		                <div class="search-results"></div>
+		                <div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+			                DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
+			            </div>
+		            </div>
+		            <button type="button" class="btn" onclick="removeOption(this)" 
+		                    style="height: 45px; align-self: flex-start; background:#fee2e2; color:#ef4444; border:none; padding: 10px; cursor:pointer; border-radius:8px;">삭제</button>
+		        </div>`;
+		    $('#optionList').append(html);
+		}
+          
+          // 디바운싱 적용 검색
+        function handleSearch(input,e) {
+        	  const query = $(input).val().trim();
+              const $results = $(input).next('.search-results');
+              const items = $results.find('.result-item');
+              const $container = $(input).closest('div');
+              const $errorMsg = $container.find('.db-error-msg');
+              const $movieId = $container.find('.movie-id-hidden');
+              
+              // 방향키 위(38), 아래(40), 엔터(13) 처리
+              if (e.keyCode == 40) { // Down
+	              currentFocus++;
+	              addActive(items);
+	              return;
+		      } else if (e.keyCode == 38) { // Up
+		          currentFocus--;
+		          addActive(items);
+				         return;
+				     } else if (e.keyCode == 13) { // Enter
+				     e.preventDefault();
+				     if (currentFocus > -1) {
+				         if (items[currentFocus]) items[currentFocus].click();
+				     }
+				     return;
+				 }
+		    
+		    //  일반 글자 입력 시
+		    if (searchTimer) clearTimeout(searchTimer);
+		   
+		    
+		    if (query.length < 2) {
+		        $results.hide();
+		        return;
+		    }
     
-    //  일반 글자 입력 시
-    if (searchTimer) clearTimeout(searchTimer);
-    const query = $(input).val().trim();
-    
-    if (query.length < 2) {
-        $results.hide();
-        return;
-    }
-    
-    searchTimer = setTimeout(() => {
-        $.ajax({
+    		searchTimer = setTimeout(() => {
+        	$.ajax({
             url: '${pageContext.request.contextPath}/searchMovie.do',
             data: { "search-words": query, "search-option": 0 },
             dataType: 'html',
@@ -297,6 +297,7 @@ input[type="text"], input[type="date"], select, textarea {
                 currentFocus = -1;
                 
                 if ($movieItems.length > 0) {
+                	$errorMsg.hide();
                     $movieItems.each(function() {
                         const $item = $(this);
                         const title = $item.find("h3").text().trim();
@@ -313,6 +314,8 @@ input[type="text"], input[type="date"], select, textarea {
                     });
                     $results.html(html).show();
                     } else {
+                    	$errorMsg.show();
+                        $movieId.val("");
                         html += `<div class="result-item"
                        
                         style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
@@ -324,6 +327,7 @@ input[type="text"], input[type="date"], select, textarea {
             });
         }, 300);
     }
+          
     function addActive(items) {
         if (!items) return false;
         removeActive(items);
@@ -366,6 +370,63 @@ input[type="text"], input[type="date"], select, textarea {
             $('.search-results').hide();
         }
     });
+    
+    //시작일이 오늘 이전 선택 안되게 하는 함수
+    const endDateInput = document.querySelector('input[name="voteEndDate"]');
+    
+    document.querySelector('input[name="voteStartDate"]').addEventListener('change', function() {
+    const selectedDate = this.value; // YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (selectedDate < today) {
+        alert("시작일은 오늘 이전 날짜를 선택할 수 없습니다.");
+        this.value = today; // 오늘 날짜로 강제 리셋
+    }
+    
+    endDateInput.min = this.value;
+    
+    });
+ 
+    //종료일이 시작일 이전 선택 안되게 하는 함수
+    const startDateInput = document.querySelector('input[name="voteStartDate"]');
+ 
+    endDateInput.addEventListener('input', function(){
+    	
+    	//시작일이 선택되지 않으면
+    	if(startDateInput.value == ""){
+    		alert("시작일을 먼저 선택해주세요.");
+    		this.value = "";
+            startDateInput.focus();
+    		return;
+    	}
+    	
+    	if (endDateInput.value && endDateInput.value < this.value) {
+        	alert("종료일은 시작일 이전 날짜를 선택할 수 없습니다.");
+            endDateInput.value = this.value;
+        }
+    });
+    
+    //유효성 검사
+    function validateForm(){
+    	const optItems = document.getElementsByClassName("option-item");
+    	if (optItems.length <=1) {
+    		alert("영화 선택지 최소 2개를 추가해주세요")
+    		return false;
+    	}
+    	
+    	$('.movie-id-hidden').each(function() {
+            if ($(this).val() === "") {
+                alert("DB에 존재하지 않는 영화가 포함되어 있습니다. 검색 결과에서 선택해주세요.");
+                $(this).siblings('.movie-search').focus();
+                
+                return false; // each 반복 중단
+            }
+        });
+    	
+    }
+    
+
+
 </script>
 </body>
 </html>

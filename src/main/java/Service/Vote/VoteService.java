@@ -12,7 +12,7 @@ public interface VoteService {
 
 	List<VoteResultDTO> getVoteResult(int voteId);
 
-	List<VoteRegisterDTO> getVoteRegList();
+	List<VoteRegisterDTO> getVoteRegList(VoteRegisterDTO findVoteReg);
 
 	VoteRegisterDTO getVoteRegById(int voteId);
 
@@ -43,6 +43,8 @@ public interface VoteService {
 	boolean deleteVoteRegister(VoteRegisterDTO vdto);
 
 	List<VoteRecordDTO> getVoteRecordByMemNo(int memNo);
+
+	int getRowCount(VoteRegisterDTO findVoteReg);
 
 	
 

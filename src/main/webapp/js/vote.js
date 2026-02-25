@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         const results = data.results;
 						
                         results.forEach(function(item) {
-                            const $input = $(`input[data-movie-id="${item.movieId}"][name="movie-vote-11"]`);
+                            const $input = $(`input[data-movie-id="${item.movieId}"][name="movie-vote-${voteId}"]`);
                             const $label = $input.closest('.movie-option');
 
                             if ($label.length > 0) {

@@ -69,7 +69,25 @@
 	</select>
 
 	<select id="vregList" resultType="voteregister">
-		select * from vote_register
+		SELECT * FROM (
+        SELECT ROWNUM AS rnum, T.* FROM (
+            SELECT 
+                voteId, voteTitle, voteContent, 
+                TO_CHAR(voteStartDate,'YYYY-MM-DD') AS voteStartDate,
+                TO_CHAR(voteEndDate,'YYYY-MM-DD') AS voteEndDate,
+                voteStatus
+            FROM vote_register
+            	<choose>
+	                <when test="sortCol == 'startDate'">ORDER BY voteStartDate ${sortDir}</when> <!--sortDir은 asc, desc-->
+	                <when test="sortCol == 'endDate'">ORDER BY voteEndDate ${sortDir}</when>
+	                <when test="sortCol == 'status'">ORDER BY voteStatus ${sortDir}</when>
+	                <when test="sortCol == 'voteId'">ORDER BY voteId ${sortDir}</when> 
+	                <otherwise>ORDER BY voteId DESC</otherwise>
+	            </choose>
+	        ) T
+	        WHERE ROWNUM &lt;= #{endrow}
+	    )
+	    WHERE rnum &gt;= #{startrow}
 
 	</select>
 
@@ -179,6 +197,10 @@
 	
 	<delete id="vregDel" parameterType="voteregister">
 	delete from vote_register where voteId=#{voteId}</delete>
+	
+	<select id="voteRegCount" parameterType="voteregister" resultType="int">
+	 select count(voteId) from vote_register
+	</select>
 
 
 

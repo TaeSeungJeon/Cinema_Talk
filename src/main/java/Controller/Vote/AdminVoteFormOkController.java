@@ -6,12 +6,16 @@ import java.util.List;
 
 import Controller.Action;
 import Controller.ActionForward;
+import DTO.Member.MemberDTO;
 import DTO.Vote.VoteOptionDTO;
 import DTO.Vote.VoteRegisterDTO;
+import Service.Member.MemberService;
+import Service.Member.MemberServiceImpl;
 import Service.Vote.VoteService;
 import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class AdminVoteFormOkController implements Action {
 
@@ -19,8 +23,25 @@ public class AdminVoteFormOkController implements Action {
   public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	  
 	  
-	  response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out=response.getWriter();
+	response.setContentType("text/html;charset=UTF-8");
+  	PrintWriter out=response.getWriter();
+	
+  	HttpSession session = request.getSession();
+    	
+	MemberService memberService = new MemberServiceImpl();
+	
+	//로그인 사용자 정보 가져오기
+	String memId = (String) session.getAttribute("memId"); 
+	MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
+	
+	if(mem == null || mem.getMemRole() != 1) {
+		String contextPath = request.getContextPath();
+		out.println("<script>");
+		out.println("alert('관리자로 다시 로그인 하세요!');");
+		out.println("location='" + contextPath + "/memberLogin.do';");
+		out.println("</script>");
+		return null;
+	}
 
     VoteService voteService = new VoteServiceImpl();
 
@@ -77,12 +98,12 @@ public class AdminVoteFormOkController implements Action {
     	    if(isSuccess) {
     	    	out.println("<script>");
     	    	out.println("alert('" + msg + "');");
-    	    	out.println("location.href='vote.do';");
+    	    	out.println("location.href='voteList.do';");
     			out.println("</script>");
     	    }else {
     	    	out.println("<script>");
     	    	out.println("alert('문제가 발생했습니다');");
-    	    	out.println("location.href='vote.do';");
+    	    	out.println("location.href='voteList.do';");
     			out.println("</script>");
     	    }
 
@@ -91,6 +112,7 @@ public class AdminVoteFormOkController implements Action {
 		e.printStackTrace();
 		out.println("<script>");
 		out.println("alert('문제가 발생했습니다');");
+		out.println("history.go(-1);");
 		out.println("</script>");
 	}
 

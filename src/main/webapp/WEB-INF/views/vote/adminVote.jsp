@@ -22,8 +22,35 @@
         
         /* 테이블 스타일 */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #f8fafc; color: #64748b; padding: 12px; border-bottom: 2px solid #e2e8f0; text-align: left; }
+        th { background: #f8fafc; color: #64748b; padding: 12px; border-bottom: 2px solid #e2e8f0; }
         td { padding: 15px 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+        /* 테이블 스타일 고정 */
+		.vote-table {
+		    width: 100%;
+		    table-layout: fixed; /* 컬럼 넓이 고정을 위해 필수 */
+		    border-collapse: collapse;
+		}
+		
+		/* 각 컬럼 넓이 설정 */
+		.vote-table th:nth-child(1) { width: 60px; }  /* ID */
+		.vote-table th:nth-child(2) { width: auto; }  /* 제목 (가장 길므로 유동적) */
+		.vote-table th:nth-child(3) { width: 160px; } /* 시작일 */
+		.vote-table th:nth-child(4) { width: 160px; } /* 종료일 */
+		.vote-table th:nth-child(5) { width: 100px; } /* 상태 */
+		.vote-table th:nth-child(6) { width: 180px; } /* 관리 버튼 */
+		
+		/* 제목이 너무 길 경우 말줄임표(...) 처리 */
+		.vote-table td {
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		    white-space: nowrap;
+		    padding: 12px 8px;
+		    text-align: center;
+		}
+		
+		.vote-table td:nth-child(2) {
+		    text-align: left; /* 제목은 왼쪽 정렬 */
+		}
         
         /* 버튼 스타일 */
         .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
@@ -58,7 +85,137 @@
 		}
 		.v-badge.ready { background: #dcfce7; color: var(--success); }
 		.v-badge.closed { background: #fee2e2; color: var(--danger); }
+		.custom-select-wrapper {
+		    position: relative;
+		    width: 150px;
+		    user-select: none;
+		}
+		
+		.custom-select-trigger {
+		    padding: 10px 15px;
+		    background: #fff;
+		    border: 1px solid #cbd5e1;
+		    border-radius: 8px;
+		    cursor: pointer;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    font-size: 0.9rem;
+		    transition: all 0.3s;
+		}
+		
+		.custom-select-trigger:hover { border-color: #3b82f6; }
+		
+		/* 옵션 리스트 초기 상태 (숨김 & 위로 살짝 이동) */
+		.custom-options {
+		    position: absolute;
+		    top: 110%;
+		    left: 0;
+		    right: 0;
+		    background: #fff;
+		    border: 1px solid #e2e8f0;
+		    border-radius: 8px;
+		    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+		    z-index: 100;
+		    overflow: hidden;
+		    
+		    /* 애니메이션 핵심 */
+		    opacity: 0;
+		    visibility: hidden;
+		    transform: translateY(-10px);
+		    transition: all 0.3s ease; 
+		    padding: 5px 0;
+		}
+		
+		/* 드롭다운 열렸을 때 상태 */
+		.custom-select-wrapper.open .custom-options {
+		    opacity: 1;
+		    visibility: visible;
+		    transform: translateY(0);
+		}
+		
+		.custom-option {
+		    padding: 10px 15px;
+		    font-size: 0.9rem;
+		    color: #475569;
+		    transition: background 0.2s;
+		    cursor: pointer;
+		}
+		
+		.custom-option:hover {
+		    background-color: #eff6ff;
+		    color: #3b82f6;
+		}
+		
+		/* 화살표 아이콘 애니메이션 */
+		.arrow-icon::after {
+		    content: '▼';
+		    font-size: 0.7rem;
+		    transition: transform 0.3s;
+		}
+		.custom-select-wrapper.open .arrow-icon::after {
+		    transform: rotate(180deg);
+		}
+		
+		 /* 페이징 */
+	    .pagination {
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	        gap: 8px;
+	        margin-top: 30px;
+	        flex-wrap: wrap;
+	    }
+	
+	    .pagination a, .pagination span {
+	        display: inline-flex;
+	        align-items: center;
+	        justify-content: center;
+	        min-width: 40px;
+	        height: 40px;
+	        padding: 0 12px;
+	        border-radius: 12px;
+	        text-decoration: none;
+	        font-weight: 500;
+	        transition: 0.3s;
+	    }
+	
+	    .pagination a {
+	        background: white;
+	        color: var(--text-main);
+	        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	    }
+	
+	    .pagination a:hover {
+	        background: #6366f1;
+	        color: white;
+	    }
+	
+	    .pagination .current {
+	        background: #6366f1;
+	        color: white;
+	        box-shadow: var(--shadow-strong);
+	    }
+	
+	    .pagination .nav-btn {
+	        background: #6366f1;
+	        color: white;
+	        font-weight: 600;
+	        padding: 0 20px;
+	    }
+	
+	    .pagination .nav-btn:hover {
+	        background: #4f46e5;
+	    }
+	
+	    .pagination .nav-btn.disabled {
+	        background: #e2e8f0;
+	        color: #94a3b8;
+	        pointer-events: none;
+	    }
     </style>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
 
@@ -67,80 +224,123 @@
         <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
         
     </div>
-    <div><button class="btn btn-add" onclick="openForm('add')" style="margin-bottom:5px;">신규 투표 등록</button></div>
+    <div><button class="btn btn-add" onclick="openForm('add')" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
 
-<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;  padding: 5px; border-radius: 10px; margin-bottom: 5px;">
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <label style="font-weight: 600; font-size: 0.9rem;">상태 필터:</label>
-            <select id="filterGenre" onchange="applyFilters()" style="padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                <option value="ALL" ${param.genre == 'ALL' ? 'selected' : ''}>전체 보기</option>
-                <option value="ACTIVE" ${param.genre == 'ACTIVE' ? 'selected' : ''}>진행중</option>
-                <option value="CLOSED" ${param.genre == 'CLOSED' ? 'selected' : ''}>종료</option>
-                <option value="READY" ${param.genre == 'READY' ? 'selected' : ''}>예정</option>
-              
-            </select>
-        </div>
-        
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <label style="font-weight: 600; font-size: 0.9rem;">표시 개수:</label>
-            <select id="pageSize" onchange="applyFilters()" style="padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                <option value="10" ${param.pageSize == '10' ? 'selected' : ''}>10개씩</option>
-                <option value="20" ${param.pageSize == '20' ? 'selected' : ''}>20개씩</option>
-                <option value="50" ${param.pageSize == '50' ? 'selected' : ''}>50개씩</option>
-            </select>
-        </div>
+	<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;   border-radius: 10px;">
+        <div style="display: flex; gap: 12px; align-items: center;   border-radius: 10px;">
+		    <label for="filterStatus" style="font-weight: 700; font-size: 0.85rem; color: #475569; letter-spacing: -0.02em;">
+		        상태 필터
+		    </label>
+		    
+		   <div class="custom-select-wrapper">
+			    <div class="custom-select-trigger" onclick="toggleDropdown()">
+			        <span id="selectedText">전체 보기</span>
+			        <span class="arrow-icon"></span>
+			    </div>
+			    <ul class="custom-options">
+			        <li class="custom-option" onclick="selectOption('ALL', '전체 보기')">전체 보기</li>
+			        <li class="custom-option" onclick="selectOption('ACTIVE', '진행중')">진행중</li>
+			        <li class="custom-option" onclick="selectOption('CLOSED', '종료')">종료</li>
+			        <li class="custom-option" onclick="selectOption('READY', '예정')">예정</li>
+			    </ul>
+			    <input type="hidden" id="filterStatus" name="genre" value="${param.genre != null ? param.genre : 'ALL'}">
+			</div>
+		</div>
+	
     </div>
-    <table>
+    <div style="display:flex; width:100%;  justify-content: right;">
+     <p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
+    </div>
+    <table class="vote-table">
         <thead>
             <tr>
-                <th>ID</th>
+                <th onclick="sortTable('voteId')" style="cursor:pointer;">ID <span class="sort-icon">↕</span></th>
                 <th>제목</th>
-                <th>기간</th>
-                <th>상태</th>
+                <th onclick="sortTable('startDate')" style="cursor:pointer;">시작일 <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable('endDate')" style="cursor:pointer;">종료일 <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable('status')" style="cursor:pointer;">상태 <span class="sort-icon">↕</span></th>
                 <th>관리</th>
             </tr>
         </thead>
         <tbody>
-    <c:choose>
-        <%--  투표 목록이 있을 때 --%>
-        <c:when test="${not empty voteRegFullList}">
-            <c:forEach var="vote" items="${voteRegFullList}">
-                <tr>
-                    <td>${vote.voteId}</td>
-                    <td><strong>${vote.voteTitle}</strong></td>
-                    <td>${vote.voteStartDate} ~ ${vote.voteEndDate}</td>
-                    <td>
-                    <c:choose>
-                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
-                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
-                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
-                    </c:choose>
-                      
-                    </td>
-                    <td>
-                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
-                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
-                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
-                    </td>
-                </tr>
-            </c:forEach>
-            
-          
-        </c:when>
-
-        <%-- 2. 투표 목록이 없을 때 ⭐ --%>
-        <c:otherwise>
-            <tr>
-                <td colspan="5" style="text-align: center; padding: 100px 0; color: #94a3b8;">
-                    
-                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
-                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
-                </td>
-            </tr>
-        </c:otherwise>
-    </c:choose>
-</tbody>
+		    <c:choose>
+		        <%--  투표 목록이 있을 때 --%>
+		        <c:when test="${not empty voteRegFullList}">
+		            <c:forEach var="vote" items="${voteRegFullList}">
+		                <tr class="vote-row" data-status="${vote.voteStatus}">
+		                    <td>${vote.voteId}</td>
+		                    <td><strong>${vote.voteTitle}</strong></td>
+		                    <td>${vote.voteStartDate}</td>
+		                    <td>${vote.voteEndDate}</td>
+		                    <td>
+		                    <c:choose>
+		                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
+		                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
+		                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
+		                    </c:choose>
+		                      
+		                    </td>
+		                    <td>
+		                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
+		                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
+		                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
+		                    </td>
+		                </tr>
+		            </c:forEach>
+		            
+		          
+		        </c:when>
+		
+		        <%-- 투표 목록이 없을 때 ⭐ --%>
+		        <c:otherwise>
+		            <tr>
+		                <td colspan="5" style="text-align: center; padding: 100px 0; color: #94a3b8;">
+		                    
+		                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
+		                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
+		                </td>
+		            </tr>
+		        </c:otherwise>
+		    </c:choose>
+		</tbody>
     </table>
+    
+     <!-- 페이징 -->
+     <div class="pagination">
+         <!-- 이전 버튼 -->
+         <c:choose>
+             <c:when test="${page > 1}">
+                 <a href="javascript:void(0);" onclick="pagingOnClick(${page -1})" 
+                    class="nav-btn">← 이전</a>
+             </c:when>
+             <c:otherwise>
+                 <span class="nav-btn disabled">← 이전</span>
+             </c:otherwise>
+         </c:choose>
+
+         <!-- 페이지 번호 -->
+         <c:forEach var="i" begin="${startpage}" end="${endpage}">
+             <c:choose>
+                 <c:when test="${i == page}">
+                     <span class="current">${i}</span>
+                 </c:when>
+                 <c:otherwise>
+                     <a href="javascript:void(0);" onclick="pagingOnClick(${i})">${i}</a>
+                 </c:otherwise>
+             </c:choose>
+         </c:forEach>
+
+         <!-- 다음 버튼 -->
+         <c:choose>
+             <c:when test="${page < maxpage}">
+                 <a href="javascript:void(0);" onclick="pagingOnClick(${page + 1})" 
+                    class="nav-btn">다음 →</a>
+             </c:when>
+             <c:otherwise>
+                 <span class="nav-btn disabled">다음 →</span>
+             </c:otherwise>
+         </c:choose>
+     </div>
 </div>
 
 
@@ -218,6 +418,82 @@
         } else {
             alert("최소 한 개의 선택지는 있어야 합니다.");
         }
+    }
+    
+    function toggleDropdown() {
+        $('.custom-select-wrapper').toggleClass('open');
+    }
+
+    function selectOption(value, text) {
+        // 표시 텍스트 변경
+        $('#selectedText').text(text);
+        
+        // hidden input 값 변경
+        $('#filterStatus').val(value);
+        
+        // 드롭다운 닫기
+        $('.custom-select-wrapper').removeClass('open');
+        
+        // 기존 필터 함수 실행
+        applyFilters();
+    }
+    
+    function applyFilters(){
+    	const selectedStatus = $('#filterStatus').val();
+    	
+    	$('.vote-row').each(function() {
+            const rowStatus = $(this).data('status'); 
+
+            if (selectedStatus === 'ALL') {
+                $(this).show(); 
+            } else if (rowStatus === selectedStatus) {
+                $(this).show(); 
+            } else {
+                $(this).hide(); 
+            }
+        });
+    	
+    	
+    }
+
+    // 드롭다운 외부 클릭 시 닫기
+    $(document).click(function(e) {
+        if (!$(e.target).closest('.custom-select-wrapper').length) {
+            $('.custom-select-wrapper').removeClass('open');
+        }
+    });
+    
+    //정렬 기능
+    let ascOrder = true; //오름차순
+    const urlParams = new URLSearchParams(window.location.search);
+    function sortTable(column){
+    	
+    	let currentDir = urlParams.get('sortDir') === 'ASC' ? 'DESC' : 'ASC';
+    	urlParams.set('sortCol', column);
+        urlParams.set('sortDir', currentDir);
+        urlParams.set('page', '1');
+        
+        location.href = window.location.pathname + "?" + urlParams.toString();
+
+        // 다음 클릭을 위해 방향 전환
+        ascOrder = !ascOrder;
+       
+        updateSortIcons(colIdx, ascOrder);
+    }
+    
+    function updateSortIcons(idx, order) {
+        const icons = document.querySelectorAll(".sort-icon");
+        icons.forEach(icon => icon.innerText = "↕"); // 초기화
+        
+        // 현재 클릭한 컬럼의 아이콘만 변경
+        const currentIcon = document.querySelectorAll("th")[idx].querySelector(".sort-icon");
+        currentIcon.innerText = order ? "▲" : "▼";
+    }
+    
+    function pagingOnClick(page){
+		urlParams.set('page', page);
+        
+        location.href = window.location.pathname + "?" + urlParams.toString();
     }
     
   

@@ -1,21 +1,23 @@
 package Service.Member.MyPage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import DAO.Member.MovieRecommend.MemberMovieRecommendDAO;
+import DAO.Member.MovieRecommend.MemberMovieRecommendDAOImpl;
 import DAO.Member.MyPage.MyPageDAO;
 import DAO.Member.MyPage.MyPageDAOImpl;
 import DTO.Board.BoardDTO;
 import DTO.Member.MemberDTO;
 import DTO.Member.MyPage.MyPageDTO;
 import DTO.Movie.GenreDTO;
+import DTO.Movie.MovieDTO;
 
 public class MyPageServiceImpl implements MyPageService {
 	
 	private MyPageDAO myPageDAO = MyPageDAOImpl.getInstance();
-	
+	private MemberMovieRecommendDAO mmrdao = MemberMovieRecommendDAOImpl.getInstance();
 	@Override
 	public MyPageDTO getMyPageInfo(int memNo) {
 		MyPageDTO myPageDTO = new MyPageDTO();
@@ -44,7 +46,13 @@ public class MyPageServiceImpl implements MyPageService {
 		myPageDTO.setBoardCommentCount(boardCommentCountMap);
 		
 		// 좋아요 목록 조회
-		myPageDTO.setLikedMovieList(myPageDAO.getLikedMoviesByMemNo(memNo));
+		List<MovieDTO> likedMovies = myPageDAO.getLikedMoviesByMemNo(memNo);
+		for (MovieDTO movie : likedMovies) {
+		    int movieId = movie.getMovieId();
+		    int likeCount = mmrdao.getFavoriteCount(movieId);
+		    movie.setMovieRecommendCount(likeCount);
+		}
+		myPageDTO.setLikedMovieList(likedMovies);
 		myPageDTO.setLikedBoardList(myPageDAO.getLikedBoardsByMemNo(memNo));
 		
 		// 선호 장르 ID 목록 조회

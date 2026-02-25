@@ -96,4 +96,11 @@ public class GenreDAOImpl implements GenreDAO {
 			}
 		}
 	}
+
+	@Override
+	public List<GenreDTO> getAllGenres() {
+		try (SqlSession session = getSqlSession()) {
+			return session.selectList("DAO.Movie.GenreDAO.getAllGenres");
+		} 
+	}
 }

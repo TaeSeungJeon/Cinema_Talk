@@ -223,6 +223,11 @@
         padding: 15px 20px;
         border-radius: 12px;
     }
+    
+    .director-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.1);
+    }
 
     .director-photo {
         width: 60px;
@@ -412,7 +417,7 @@
             <h2 class="section-title">🎬 감독</h2>
             <div class="directors-list">
                 <c:forEach var="director" items="${directors}">
-                    <div class="director-card">
+                    <div class="director-card" onclick="searchByDirector('${director.personName}')">
                         <div class="director-photo">
                             <c:choose>
                                 <c:when test="${not empty director.profilePath}">
@@ -440,7 +445,7 @@
             <h2 class="section-title">🎭 출연진</h2>
             <div class="cast-list">
                 <c:forEach var="cast" items="${casts}" end="11">
-                    <div class="cast-card">
+                    <div class="cast-card" onclick="searchByActor('${cast.personName}')">
                         <div class="cast-photo">
                             <c:choose>
                                 <c:when test="${not empty cast.profilePath}">
@@ -466,6 +471,12 @@
 <script>
     var movieId = ${movie.movieId};
     
+    function searchByDirector(personName) {
+        window.location.href = 'searchMovie.do?search-option=1&search-words=' + encodeURIComponent(personName);
+    }
+    function searchByActor(personName) {
+        window.location.href = 'searchMovie.do?search-option=2&search-words=' + encodeURIComponent(personName);
+    }
     function searchByGenre(genreName) {
         window.location.href = 'searchMovie.do?search-option=3&search-words=' + encodeURIComponent(genreName);
     }

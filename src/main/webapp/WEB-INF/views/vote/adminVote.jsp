@@ -11,14 +11,39 @@
             --primary: #6366f1;
             --danger: #ef4444;
             --success: #22c55e;
-            --bg: #f1f5f9;
+            --bg: #f0f2f5;
             --info: #0ea5e9; /* 시원한 하늘색 (상세 보기용) */
              --info-hover: #0284c7;
+             --bg-color: #f0f2f5;
+			--glass-bg: rgba(255, 255, 255, 0.7);
+			--accent-color: #6366f1;
+			--text-main: #1f2937;
+			--radius-soft: 24px;
+			--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
+			--shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); padding: 30px; }
-        .admin-container { max-width: 1100px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-        display:flex;
-        flex-direction: column;}
+        
+         * {
+			box-sizing: border-box;
+		}
+        body {
+			font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-main);
+			margin: 0;
+		}
+		
+		body::-webkit-scrollbar {
+		    display: none;
+		}
+        .admin-content {
+			background: white;
+			border-radius: var(--radius-soft);
+			box-shadow: var(--shadow-subtle);
+			padding: 22px;
+			min-height: 760px;
+		} 
+       
         
         /* 테이블 스타일 */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -37,7 +62,7 @@
 		.vote-table th:nth-child(3) { width: 160px; } /* 시작일 */
 		.vote-table th:nth-child(4) { width: 160px; } /* 종료일 */
 		.vote-table th:nth-child(5) { width: 100px; } /* 상태 */
-		.vote-table th:nth-child(6) { width: 180px; } /* 관리 버튼 */
+		.vote-table th:nth-child(6) { width: 280px; } /* 관리 버튼 */
 		
 		/* 제목이 너무 길 경우 말줄임표(...) 처리 */
 		.vote-table td {
@@ -213,134 +238,185 @@
 	        color: #94a3b8;
 	        pointer-events: none;
 	    }
+	    
+/* 	    공통스타일 */
+		/* 전체 래퍼 */
+		.admin-wrap {
+			max-width: 1650px; 
+			margin: 0 auto;
+			padding: 25px;
+			width: 100%;
+		}
+		.admin-container {
+			display: grid;
+			grid-template-columns: 240px 1fr;
+			gap: 24px;
+		}
+	
+		
     </style>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <body>
 
-<div class="admin-container">
-    <div style="overflow: hidden; margin-bottom: 20px;">
-        <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
-        
-    </div>
-    <div><button class="btn btn-add" onclick="openForm('add')" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
+<div class="admin-wrap">
 
-	<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;   border-radius: 10px;">
-        <div style="display: flex; gap: 12px; align-items: center;   border-radius: 10px;">
-		    <label for="filterStatus" style="font-weight: 700; font-size: 0.85rem; color: #475569; letter-spacing: -0.02em;">
-		        상태 필터
-		    </label>
-		    
-		   <div class="custom-select-wrapper">
-			    <div class="custom-select-trigger" onclick="toggleDropdown()">
-			        <span id="selectedText">전체 보기</span>
-			        <span class="arrow-icon"></span>
-			    </div>
-			    <ul class="custom-options">
-			        <li class="custom-option" onclick="selectOption('ALL', '전체 보기')">전체 보기</li>
-			        <li class="custom-option" onclick="selectOption('ACTIVE', '진행중')">진행중</li>
-			        <li class="custom-option" onclick="selectOption('CLOSED', '종료')">종료</li>
-			        <li class="custom-option" onclick="selectOption('READY', '예정')">예정</li>
-			    </ul>
-			    <input type="hidden" id="filterStatus" name="genre" value="${param.genre != null ? param.genre : 'ALL'}">
-			</div>
-		</div>
+	<!-- HEADER -->
+	<jsp:include page="/WEB-INF/views/admin/adminHeader.jsp"></jsp:include>
 	
-    </div>
-    <div style="display:flex; width:100%;  justify-content: right;">
-     <p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
-    </div>
-    <table class="vote-table">
-        <thead>
-            <tr>
-                <th onclick="sortTable('voteId')" style="cursor:pointer;">ID <span class="sort-icon">↕</span></th>
-                <th>제목</th>
-                <th onclick="sortTable('startDate')" style="cursor:pointer;">시작일 <span class="sort-icon">↕</span></th>
-                <th onclick="sortTable('endDate')" style="cursor:pointer;">종료일 <span class="sort-icon">↕</span></th>
-                <th onclick="sortTable('status')" style="cursor:pointer;">상태 <span class="sort-icon">↕</span></th>
-                <th>관리</th>
-            </tr>
-        </thead>
-        <tbody>
-		    <c:choose>
-		        <%--  투표 목록이 있을 때 --%>
-		        <c:when test="${not empty voteRegFullList}">
-		            <c:forEach var="vote" items="${voteRegFullList}">
-		                <tr class="vote-row" data-status="${vote.voteStatus}">
-		                    <td>${vote.voteId}</td>
-		                    <td><strong>${vote.voteTitle}</strong></td>
-		                    <td>${vote.voteStartDate}</td>
-		                    <td>${vote.voteEndDate}</td>
-		                    <td>
-		                    <c:choose>
-		                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
-		                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
-		                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
-		                    </c:choose>
-		                      
-		                    </td>
-		                    <td>
-		                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
-		                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
-		                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
-		                    </td>
-		                </tr>
-		            </c:forEach>
-		            
-		          
-		        </c:when>
+	<div class="admin-container">
+	
+	
+		<!-- SIDEBAR -->
+		<jsp:include page="/WEB-INF/views/admin/adminSidebar.jsp"></jsp:include>
+	
+		<main class="admin-content">
+			 <div style="overflow: hidden; margin-bottom: 20px;">
+		        <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
+		        
+		    </div>
+		    <div><button class="btn btn-add" onclick="openForm('add')" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
 		
-		        <%-- 투표 목록이 없을 때 ⭐ --%>
-		        <c:otherwise>
-		            <tr>
-		                <td colspan="5" style="text-align: center; padding: 100px 0; color: #94a3b8;">
-		                    
-		                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
-		                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
-		                </td>
-		            </tr>
-		        </c:otherwise>
+			<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;   border-radius: 10px;">
+		        <div style="display: flex; gap: 12px; align-items: center;   border-radius: 10px;">
+				    <label for="filterStatus" style="font-weight: 700; font-size: 0.85rem; color: #475569; letter-spacing: -0.02em;">
+				        상태 필터
+				    </label>
+				    
+				   <div class="custom-select-wrapper">
+					    <div class="custom-select-trigger" onclick="toggleDropdown()">
+					        <span id="selectedText">전체 보기</span>
+					        <span class="arrow-icon"></span>
+					    </div>
+					    <ul class="custom-options">
+					        <li class="custom-option" onclick="selectOption('ALL', '전체 보기')">전체 보기</li>
+					        <li class="custom-option" onclick="selectOption('ACTIVE', '진행중')">진행중</li>
+					        <li class="custom-option" onclick="selectOption('ENDED', '종료')">종료</li>
+					        <li class="custom-option" onclick="selectOption('READY', '예정')">예정</li>
+					    </ul>
+					    <input type="hidden" id="filterStatus" name="genre" value="${param.genre != null ? param.genre : 'ALL'}">
+					</div>
+				</div>
+			
+		    </div>
+		    <div style="display:flex; width:100%;  justify-content: right;">
+		    <c:choose>
+			    <c:when test="${filter == 'ACTIVE'}">
+			    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인 투표 수: ${totalCount }개</p>
+			    </c:when>
+			    
+			     <c:when test="${filter == 'ENDED'}">
+			    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">종료된 투표 수: ${totalCount }개</p>
+			    </c:when>
+			    
+			     <c:when test="${filter == 'READY'}">
+			    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">예정된 투표 수: ${totalCount }개</p>
+			    </c:when>
+			    
+			    <c:otherwise>
+			     	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
+			    </c:otherwise>
 		    </c:choose>
-		</tbody>
-    </table>
-    
-     <!-- 페이징 -->
-     <div class="pagination">
-         <!-- 이전 버튼 -->
-         <c:choose>
-             <c:when test="${page > 1}">
-                 <a href="javascript:void(0);" onclick="pagingOnClick(${page -1})" 
-                    class="nav-btn">← 이전</a>
-             </c:when>
-             <c:otherwise>
-                 <span class="nav-btn disabled">← 이전</span>
-             </c:otherwise>
-         </c:choose>
+		    
+		    </div>
+		    <table class="vote-table">
+		        <thead>
+		            <tr>
+		                <th onclick="sortTable('voteId')" style="cursor:pointer;">ID <span class="sort-icon">↕</span></th>
+		                <th>제목</th>
+		                <th onclick="sortTable('startDate')" style="cursor:pointer;">시작일 <span class="sort-icon">↕</span></th>
+		                <th onclick="sortTable('endDate')" style="cursor:pointer;">종료일 <span class="sort-icon">↕</span></th>
+		                <th>상태</th>
+		                <th>관리</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+				    <c:choose>
+				        <%--  투표 목록이 있을 때 --%>
+				        <c:when test="${not empty voteRegFullList}">
+				            <c:forEach var="vote" items="${voteRegFullList}">
+				                <tr class="vote-row" data-status="${vote.voteStatus}">
+				                    <td>${vote.voteId}</td>
+				                    <td><strong>${vote.voteTitle}</strong></td>
+				                    <td>${vote.voteStartDate}</td>
+				                    <td>${vote.voteEndDate}</td>
+				                    <td>
+				                    <c:choose>
+				                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
+				                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
+				                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
+				                    </c:choose>
+				                      
+				                    </td>
+				                    <td>
+				                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
+				                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
+				                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
+				                    </td>
+				                </tr>
+				            </c:forEach>
+				            
+				          
+				        </c:when>
+				
+				        <%-- 투표 목록이 없을 때 ⭐ --%>
+				        <c:otherwise>
+				            <tr>
+				                <td colspan="5" style="text-align: center; padding: 100px 0; color: #94a3b8;">
+				                    
+				                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
+				                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
+				                </td>
+				            </tr>
+				        </c:otherwise>
+				    </c:choose>
+				</tbody>
+		    </table>
+		    
+		     <!-- 페이징 -->
+		     <div class="pagination">
+		         <!-- 이전 버튼 -->
+		         <c:choose>
+		             <c:when test="${page > 1}">
+		                 <a href="javascript:void(0);" onclick="pagingOnClick(${page -1})" 
+		                    class="nav-btn">← 이전</a>
+		             </c:when>
+		             <c:otherwise>
+		                 <span class="nav-btn disabled">← 이전</span>
+		             </c:otherwise>
+		         </c:choose>
+		
+		         <!-- 페이지 번호 -->
+		         <c:forEach var="i" begin="${startpage}" end="${endpage}">
+		             <c:choose>
+		                 <c:when test="${i == page}">
+		                     <span class="current">${i}</span>
+		                 </c:when>
+		                 <c:otherwise>
+		                     <a href="javascript:void(0);" onclick="pagingOnClick(${i})">${i}</a>
+		                 </c:otherwise>
+		             </c:choose>
+		         </c:forEach>
+		
+		         <!-- 다음 버튼 -->
+		         <c:choose>
+		             <c:when test="${page < maxpage}">
+		                 <a href="javascript:void(0);" onclick="pagingOnClick(${page + 1})" 
+		                    class="nav-btn">다음 →</a>
+		             </c:when>
+		             <c:otherwise>
+		                 <span class="nav-btn disabled">다음 →</span>
+		             </c:otherwise>
+		         </c:choose>
+		     </div>
+		
+		
+		</main>
+  
+	</div>
 
-         <!-- 페이지 번호 -->
-         <c:forEach var="i" begin="${startpage}" end="${endpage}">
-             <c:choose>
-                 <c:when test="${i == page}">
-                     <span class="current">${i}</span>
-                 </c:when>
-                 <c:otherwise>
-                     <a href="javascript:void(0);" onclick="pagingOnClick(${i})">${i}</a>
-                 </c:otherwise>
-             </c:choose>
-         </c:forEach>
-
-         <!-- 다음 버튼 -->
-         <c:choose>
-             <c:when test="${page < maxpage}">
-                 <a href="javascript:void(0);" onclick="pagingOnClick(${page + 1})" 
-                    class="nav-btn">다음 →</a>
-             </c:when>
-             <c:otherwise>
-                 <span class="nav-btn disabled">다음 →</span>
-             </c:otherwise>
-         </c:choose>
-     </div>
+		
 </div>
 
 
@@ -441,17 +517,22 @@
     function applyFilters(){
     	const selectedStatus = $('#filterStatus').val();
     	
-    	$('.vote-row').each(function() {
-            const rowStatus = $(this).data('status'); 
+		urlParams.set('filter', selectedStatus);
+        
+        location.href = window.location.pathname + "?" + urlParams.toString();
+    	
+    	
+//     	$('.vote-row').each(function() {
+//             const rowStatus = $(this).data('status'); 
 
-            if (selectedStatus === 'ALL') {
-                $(this).show(); 
-            } else if (rowStatus === selectedStatus) {
-                $(this).show(); 
-            } else {
-                $(this).hide(); 
-            }
-        });
+//             if (selectedStatus === 'ALL') {
+//                 $(this).show(); 
+//             } else if (rowStatus === selectedStatus) {
+//                 $(this).show(); 
+//             } else {
+//                 $(this).hide(); 
+//             }
+//         });
     	
     	
     }

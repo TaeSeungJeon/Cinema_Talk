@@ -15,9 +15,12 @@ public class BoardListController implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        BoardService service = new BoardServiceImpl();
+        BoardService service = BoardServiceImpl.getInstance();
 
         String filter = request.getParameter("filter");
+        if (filter == null || filter.trim().isEmpty()) {
+            filter = "all";
+        }
 
         int page = 1;
         int limit = 10;

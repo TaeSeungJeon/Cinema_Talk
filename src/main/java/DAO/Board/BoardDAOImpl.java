@@ -84,7 +84,7 @@ public class BoardDAOImpl implements BoardDAO {
         try {
             sqlSession = getSqlSession();
             result = sqlSession.update("Board.updateReadCount", boardId);
-            if(result > 0) {
+            if (result > 0) {
                 sqlSession.commit();
             }
         } catch (Exception e) {
@@ -303,6 +303,23 @@ public class BoardDAOImpl implements BoardDAO {
             return sqlSession.selectOne("Board.getBoardLikeCount", param);
         } finally {
             if (sqlSession != null) sqlSession.close();
+        }
+    }
+
+    // 실시간 인기 글
+    @Override
+    public List<BoardDTO> hotBoardList(int limit) {
+
+        SqlSession sqlSession = null;
+
+        try {
+            sqlSession = getSqlSession();
+            return sqlSession.selectList("Board.hotBoardList", limit);
+
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
         }
     }
 

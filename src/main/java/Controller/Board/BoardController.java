@@ -19,7 +19,7 @@ public class BoardController implements Action {
             throws Exception {
 
         // 서비스 객체 생성
-        BoardService service = new BoardServiceImpl();
+        BoardService service = BoardServiceImpl.getInstance();
 
         // 게시글 전체 목록 가져오기 로직 수행
         List<BoardDTO> list = service.boardList();

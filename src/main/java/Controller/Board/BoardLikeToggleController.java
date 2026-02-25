@@ -28,7 +28,7 @@ public class BoardLikeToggleController implements Action {
         int boardType = Integer.parseInt(request.getParameter("boardType"));
         int memNo = (int) session.getAttribute("memNo");
 
-        BoardService service = new BoardServiceImpl();
+        BoardService service = BoardServiceImpl.getInstance();
         int likeCount = service.toggleBoardLike(boardId, boardType, memNo);
 
         out.print(likeCount);

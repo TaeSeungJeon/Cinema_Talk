@@ -80,7 +80,7 @@ public class BoardOkController implements Action {
         bdto.setBoardName(memId); // 세션에서 바로 사용
 
         try {
-            BoardService boardService = new BoardServiceImpl();
+            BoardService boardService = BoardServiceImpl.getInstance();
             boardService.boardIn(bdto);
 
             // 첨부 이미지를 본문에 삽입하기 위해 업로드가 끝난 뒤 한 번에 누적 문자열을 붙인다.

@@ -54,8 +54,13 @@ public class MemberMovieRecommendController implements Action {
         dto.setMovieId(Integer.parseInt(movieIdParam));
         
         MemberMovieRecommendService favoriteService = new MemberMovieRecommendServiceImpl();
+        boolean isFavorite = favoriteService.isFavorite(dto);
+        
         if ("add".equals(action)) {
-            favoriteService.addRecommend(dto);
+        	if (isFavorite) {
+            } else {
+            	favoriteService.addRecommend(dto);
+            }
         } else if ("remove".equals(action)) {
             favoriteService.removeRecommend(dto);
         }

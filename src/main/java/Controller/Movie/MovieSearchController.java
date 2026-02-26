@@ -18,7 +18,6 @@ public class MovieSearchController implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		HttpSession session = request.getSession();
 		
 		//검색 창의 문자열을 가져와 저장
 		String searchWords = request.getParameter("search-words");

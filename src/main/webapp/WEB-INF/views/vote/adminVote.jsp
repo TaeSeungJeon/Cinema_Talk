@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html lang="ko">
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <head>
     <meta charset="UTF-8">
     <title>Admin - 투표 관리 시스템</title>
@@ -21,6 +20,7 @@
 			--radius-soft: 24px;
 			--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
 			--shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
+			--border: #e2e8f0;
         }
         
          * {
@@ -36,17 +36,30 @@
 		body::-webkit-scrollbar {
 		    display: none;
 		}
+		
+		.vote-mgmt-page {
+		   padding:0.5rem 2rem;
+		    height: calc(100vh - 12rem);
+		    background-color: white;
+		    border-radius: 1rem;
+		   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		   display:flex;
+		   flex-direction:column;
+		}
+		
         .admin-content {
 			background: white;
 			border-radius: var(--radius-soft);
 			box-shadow: var(--shadow-subtle);
 			padding: 22px;
 			min-height: 760px;
+			display:flex;
+			flex-direction: column;
 		} 
        
         
         /* 테이블 스타일 */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse;}
         th { background: #f8fafc; color: #64748b; padding: 12px; border-bottom: 2px solid #e2e8f0; }
         td { padding: 15px 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
         /* 테이블 스타일 고정 */
@@ -190,6 +203,7 @@
 	        gap: 8px;
 	        margin-top: 30px;
 	        flex-wrap: wrap;
+	        flex-shrink: 0;
 	    }
 	
 	    .pagination a, .pagination span {
@@ -239,19 +253,152 @@
 	        pointer-events: none;
 	    }
 	    
-/* 	    공통스타일 */
-		/* 전체 래퍼 */
-		.admin-wrap {
-			max-width: 1650px; 
-			margin: 0 auto;
-			padding: 25px;
-			width: 100%;
-		}
+
 		.admin-container {
 			display: grid;
 			grid-template-columns: 240px 1fr;
 			gap: 24px;
 		}
+		
+		.tbl-page-container{
+			flex:1;
+			display:flex;
+			flex-direction:column;
+			overflow:hidden;
+			min-height:0;
+		}
+		
+		.tbl-container {
+			flex:1;
+			overflow-y:auto;
+/* 			border-bottom: 1px solid #e2e8f0; */
+		}
+		
+		.vote-table {
+		    width: 100%;
+		    border-collapse: collapse;
+		}
+		
+		.vote-table thead th {
+		    position: sticky;  
+		    top: 0;
+		    z-index: 10;
+		}
+		
+		 .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 6000;
+        }
+        
+        .form-container {
+			background: white;
+            width: 90%;
+            max-width: 750px;
+            padding: 35px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+		}
+		
+		input[type="text"], input[type="date"], select, textarea {
+			width: 100%;
+			padding: 12px;
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			font-size: 1rem;
+			box-sizing: border-box;
+		}
+		
+		.section-title {
+			font-weight: 700;
+			margin-top: 25px;
+			margin-bottom: 10px;
+			display: block;
+			color: #475569;
+		}
+		
+		.btn-group {
+			margin-top: 40px;
+			display: flex;
+			gap: 10px;
+			justify-content: flex-end;
+		}
+		
+		.btn {
+			padding: 12px 24px;
+			border-radius: 8px;
+			font-weight: 600;
+			cursor: pointer;
+			border: none;
+			transition: 0.2s;
+		}
+		
+		.btn-save {
+			background: var(--primary);
+			color: white;
+		}
+		
+		.btn-cancel {
+			background: #e2e8f0;
+			color: #64748b;
+		}
+
+		.btn-add-opt {
+			background: #334155;
+			color: white;
+			font-size: 0.85rem;
+		}
+		
+		/* 선택지(옵션) 아이템 스타일 */
+		.option-wrapper {
+			background: #f1f5f9;
+			padding: 20px;
+			border-radius: 12px;
+			margin-top: 10px;
+		}
+		
+		.option-item {
+			display: flex;
+			gap: 10px;
+			margin-bottom: 10px;
+			position: relative;
+		}
+		
+		/* 자동완성 결과창 */
+		.search-results {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 100%;
+			background: white;
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			z-index: 10;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			display: none;
+			max-height: 200px;
+			overflow-y: auto;
+		}
+		
+		.result-item {
+			padding: 10px 15px;
+			cursor: pointer;
+			transition: 0.2s;
+		}
+		
+		.result-item:hover {
+			background: #f0f4ff;
+			color: var(--primary);
+		}
+		
 	
 		
     </style>
@@ -260,19 +407,8 @@
 </head>
 <body>
 
-<div class="admin-wrap">
-
-	<!-- HEADER -->
-	<jsp:include page="/WEB-INF/views/admin/adminHeader.jsp"></jsp:include>
-	
-	<div class="admin-container">
-	
-	
-		<!-- SIDEBAR -->
-		<jsp:include page="/WEB-INF/views/admin/adminSidebar.jsp"></jsp:include>
-	
-		<main class="admin-content">
-			 <div style="overflow: hidden; margin-bottom: 20px;">
+	<div class="vote-mgmt-page">
+			 <div>
 		        <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
 		        
 		    </div>
@@ -298,142 +434,276 @@
 					    <input type="hidden" id="filterStatus" name="genre" value="${param.genre != null ? param.genre : 'ALL'}">
 					</div>
 				</div>
+				
+				<c:choose>
+				    <c:when test="${filter == 'ACTIVE'}">
+				    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인 투표 수: ${totalCount }개</p>
+				    </c:when>
+				    
+				     <c:when test="${filter == 'ENDED'}">
+				    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">종료된 투표 수: ${totalCount }개</p>
+				    </c:when>
+				    
+				     <c:when test="${filter == 'READY'}">
+				    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">예정된 투표 수: ${totalCount }개</p>
+				    </c:when>
+				    
+				    <c:otherwise>
+				     	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
+				    </c:otherwise>
+			    </c:choose>
 			
 		    </div>
-		    <div style="display:flex; width:100%;  justify-content: right;">
-		    <c:choose>
-			    <c:when test="${filter == 'ACTIVE'}">
-			    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인 투표 수: ${totalCount }개</p>
-			    </c:when>
-			    
-			     <c:when test="${filter == 'ENDED'}">
-			    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">종료된 투표 수: ${totalCount }개</p>
-			    </c:when>
-			    
-			     <c:when test="${filter == 'READY'}">
-			    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">예정된 투표 수: ${totalCount }개</p>
-			    </c:when>
-			    
-			    <c:otherwise>
-			     	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
-			    </c:otherwise>
-		    </c:choose>
-		    
-		    </div>
-		    <table class="vote-table">
-		        <thead>
-		            <tr>
-		                <th onclick="sortTable('voteId')" style="cursor:pointer;">ID <span class="sort-icon">↕</span></th>
-		                <th>제목</th>
-		                <th onclick="sortTable('startDate')" style="cursor:pointer;">시작일 <span class="sort-icon">↕</span></th>
-		                <th onclick="sortTable('endDate')" style="cursor:pointer;">종료일 <span class="sort-icon">↕</span></th>
-		                <th>상태</th>
-		                <th>관리</th>
-		            </tr>
-		        </thead>
-		        <tbody>
-				    <c:choose>
-				        <%--  투표 목록이 있을 때 --%>
-				        <c:when test="${not empty voteRegFullList}">
-				            <c:forEach var="vote" items="${voteRegFullList}">
-				                <tr class="vote-row" data-status="${vote.voteStatus}">
-				                    <td>${vote.voteId}</td>
-				                    <td><strong>${vote.voteTitle}</strong></td>
-				                    <td>${vote.voteStartDate}</td>
-				                    <td>${vote.voteEndDate}</td>
-				                    <td>
-				                    <c:choose>
-				                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
-				                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
-				                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
-				                    </c:choose>
-				                      
-				                    </td>
-				                    <td>
-				                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
-				                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
-				                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
-				                    </td>
-				                </tr>
-				            </c:forEach>
-				            
-				          
-				        </c:when>
-				
-				        <%-- 투표 목록이 없을 때 ⭐ --%>
-				        <c:otherwise>
+		   
+		    <div class="tbl-page-container">
+			    <div class="tbl-container">
+			     	 <table class="vote-table">
+				        <thead>
 				            <tr>
-				                <td colspan="5" style="text-align: center; padding: 100px 0; color: #94a3b8;">
-				                    
-				                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
-				                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
-				                </td>
+				                <th onclick="sortTable('voteId',0)" style="cursor:pointer;">ID <span class="sort-icon">↕</span></th>
+				                <th>제목</th>
+				                <th onclick="sortTable('startDate',2)" style="cursor:pointer;">시작일 <span class="sort-icon">↕</span></th>
+				                <th onclick="sortTable('endDate',3)" style="cursor:pointer;">종료일 <span class="sort-icon">↕</span></th>
+				                <th>상태</th>
+				                <th>관리</th>
 				            </tr>
-				        </c:otherwise>
-				    </c:choose>
-				</tbody>
-		    </table>
-		    
-		     <!-- 페이징 -->
-		     <div class="pagination">
-		         <!-- 이전 버튼 -->
-		         <c:choose>
-		             <c:when test="${page > 1}">
-		                 <a href="javascript:void(0);" onclick="pagingOnClick(${page -1})" 
-		                    class="nav-btn">← 이전</a>
-		             </c:when>
-		             <c:otherwise>
-		                 <span class="nav-btn disabled">← 이전</span>
-		             </c:otherwise>
-		         </c:choose>
-		
-		         <!-- 페이지 번호 -->
-		         <c:forEach var="i" begin="${startpage}" end="${endpage}">
-		             <c:choose>
-		                 <c:when test="${i == page}">
-		                     <span class="current">${i}</span>
-		                 </c:when>
-		                 <c:otherwise>
-		                     <a href="javascript:void(0);" onclick="pagingOnClick(${i})">${i}</a>
-		                 </c:otherwise>
-		             </c:choose>
-		         </c:forEach>
-		
-		         <!-- 다음 버튼 -->
-		         <c:choose>
-		             <c:when test="${page < maxpage}">
-		                 <a href="javascript:void(0);" onclick="pagingOnClick(${page + 1})" 
-		                    class="nav-btn">다음 →</a>
-		             </c:when>
-		             <c:otherwise>
-		                 <span class="nav-btn disabled">다음 →</span>
-		             </c:otherwise>
-		         </c:choose>
-		     </div>
-		
-		
-		</main>
-  
-	</div>
-
-		
+				        </thead>
+				        <tbody>
+						    <c:choose>
+						        <%--  투표 목록이 있을 때 --%>
+						        <c:when test="${not empty voteRegFullList}">
+						            <c:forEach var="vote" items="${voteRegFullList}">
+						                <tr class="vote-row" data-status="${vote.voteStatus}">
+						                    <td>${vote.voteId}</td>
+						                    <td><strong>${vote.voteTitle}</strong></td>
+						                    <td>${vote.voteStartDate}</td>
+						                    <td>${vote.voteEndDate}</td>
+						                    <td>
+						                    <c:choose>
+						                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
+						                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
+						                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
+						                    </c:choose>
+						                      
+						                    </td>
+						                    <td>
+						                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
+						                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
+						                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
+						                    </td>
+						                </tr>
+						            </c:forEach>
+						            
+						          
+						        </c:when>
+						
+						        <%-- 투표 목록이 없을 때 ⭐ --%>
+						        <c:otherwise>
+						            <tr>
+						                <td colspan="6" style="text-align: center; padding: 100px 0; color: #94a3b8;">
+						                    
+						                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
+						                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
+						                </td>
+						            </tr>
+						        </c:otherwise>
+						    </c:choose>
+						</tbody>
+				    </table>
+			    
+			    </div>
+			    
+			     <!-- 페이징 -->
+			     <div class="pagination">
+			         <!-- 이전 버튼 -->
+			         <c:choose>
+			             <c:when test="${page > 1}">
+			                 <a href="javascript:void(0);" onclick="pagingOnClick(${page -1})" 
+			                    class="nav-btn">← 이전</a>
+			             </c:when>
+			             <c:otherwise>
+			                 <span class="nav-btn disabled">← 이전</span>
+			             </c:otherwise>
+			         </c:choose>
+			
+			         <!-- 페이지 번호 -->
+			         <c:forEach var="i" begin="${startpage}" end="${endpage}">
+			             <c:choose>
+			                 <c:when test="${i == page}">
+			                     <span class="current">${i}</span>
+			                 </c:when>
+			                 <c:otherwise>
+			                     <a href="javascript:void(0);" onclick="pagingOnClick(${i})">${i}</a>
+			                 </c:otherwise>
+			             </c:choose>
+			         </c:forEach>
+			
+			         <!-- 다음 버튼 -->
+			         <c:choose>
+			             <c:when test="${page < maxpage}">
+			                 <a href="javascript:void(0);" onclick="pagingOnClick(${page + 1})" 
+			                    class="nav-btn">다음 →</a>
+			             </c:when>
+			             <c:otherwise>
+			                 <span class="nav-btn disabled">다음 →</span>
+			             </c:otherwise>
+			         </c:choose>
+			     </div>
+			  
+		    </div>
+		   
 </div>
 
 
 
+	<div class="modal-overlay" id="voteModal">
+
+		<div class="form-container">
+				<h2 id="vote-modal-header">투표 등록</h2>
+		
+				<form id="voteForm" >
+					<input type="hidden" name="voteId" value="${vote.voteId}"> <label
+						class="section-title">투표 제목</label> <input type="text"
+						name="voteTitle" value="${vote.voteTitle}"
+						placeholder="사용자에게 보여질 투표 제목을 입력하세요" required> <label
+						class="section-title">투표 내용</label> <input type="text"
+						name="voteContent" value="${vote.voteContent}"
+						placeholder="이 투표에 대한 설명을 입력하세요" required>
+		
+		
+					<div style="display: flex; gap: 20px;">
+					    <div style="flex: 1;">
+					        <label class="section-title">시작일</label> 
+					        <input type="date" name="voteStartDate" 
+					               value="${not empty vote ? fn:substring(vote.voteStartDate, 0, 10) : ''}" 
+					               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
+					               required>
+					    </div>
+					    <div style="flex: 1;">
+					        <label class="section-title">종료일</label> 
+					        <input type="date" name="voteEndDate" 
+					               value="${not empty vote ? fn:substring(vote.voteEndDate, 0, 10) : ''}" 
+					               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
+					               required>
+					    </div>
+					</div>
+					<div
+						style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
+						<label class="section-title">투표 선택지 (영화)</label>
+						<button type="button" class="btn btn-add-opt" onclick="addOption()">+
+							영화 추가</button>
+					</div>
+		
+					<div id="optionList" class="option-wrapper">
+						<c:choose>
+							<%--  수정 모드: 기존 옵션이 있는 경우 --%>
+							<c:when test="${not empty vote.optionList}">
+								<c:forEach var="opt" items="${vote.optionList}">
+									<div class="option-item"
+										style="display: flex; gap: 10px; margin-bottom: 10px;">
+										<div style="flex: 1; position: relative;">
+											<input type="hidden" name="movieId" class="movie-id-hidden"
+												value="${opt.movieId}"> <input type="text"
+												name="optionTitle" class="movie-search"
+												value="${opt.movieTitle}"
+												onkeydown="if(event.keyCode==13) event.preventDefault();"
+												onkeyup="handleSearch(this, event)" autocomplete="off">
+												
+											<div class="search-results"></div>
+											<div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+											        DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
+											    </div>
+										</div>
+										<button type="button" class="btn" onclick="removeOption(this)"
+											style="height: 45px; align-self: flex-start; background: #fee2e2; color: #ef4444; border: none; padding: 10px; cursor: pointer; border-radius: 8px;">삭제</button>
+									</div>
+								</c:forEach>
+							</c:when>
+		
+							<%-- 등록 모드: 빈 입력창 하나를 기본으로 노출 --%>
+							<c:otherwise>
+								영화를 추가해주세요
+							</c:otherwise>
+						</c:choose>
+					</div>
+		
+					<div class="btn-group">
+						<button type="button" class="btn btn-cancel"
+							onclick="closeModal()">취소</button>
+						<button type="button"  class="btn btn-save">등록</button>
+					</div>
+				</form>
+			</div>
+		
+		
+		</div>
+	
+
+
 <script>
-    const modal = document.getElementById('voteModal');
+
+	
+    var modal = document.getElementById('voteModal');
+    
 
     function openForm(mode,voteId) {
     	
-      const params = new URLSearchParams();
-    params.append('state', mode); // 'add' 또는 'edit'
-
-    if (mode === 'edit' && voteId) {
-        params.append('voteId', voteId);
-    }
-
-    location.href = `voteForm.do?\${params.toString()}`;
+    	console.log("openForm" + mode)
+    	
+    	document.getElementById('voteModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        //폼 초기화
+        $("#voteForm")[0].reset();
+        $("#voteForm input[type='hidden']").val("");
+        $('#optionList').html("영화를 추가해주세요");
+        
+        $("#vote-modal-header").text(mode === 'edit' ? "투표 수정" : "투표 등록");
+		$(".btn-save").data("mode", mode).text(mode === 'edit' ? '수정' : '등록');
+        
+        if(mode === 'edit'){
+        	//투표정보조회
+        	 $.ajax({
+     			url : "${pageContext.request.contextPath}/admin/voteForm.do",
+     			type : "GET",
+     			data : {
+     				state : mode,
+     				voteId : voteId
+     			},
+     			headers : {
+     				"X-Requested-With" : "XMLHttpRequest"
+     			},
+     			success : function(response) {
+     				
+     				let vote = typeof response === "string" ? JSON.parse(response) : response;
+     				
+     				$("input[name='voteId']").val(vote.voteId);
+     				$("input[name='voteTitle']").val(vote.voteTitle);
+     			    $("input[name='voteContent']").val(vote.voteContent);
+     			    
+     			   if (vote.voteStartDate) {
+     			        $("input[name='voteStartDate']").val(vote.voteStartDate);
+     			    }
+     			    
+     			    if (vote.voteEndDate) {
+     			        $("input[name='voteEndDate']").val(vote.voteStartDate);
+     			    }
+     			
+     			    
+     			    //option list
+     			   const $optionList = $("#optionList");
+     			   $optionList.empty();
+     			   vote.optionList.forEach(function(opt) {
+     			       addOption(opt["movieId"], opt["movieTitle"])
+     			    });
+     			},
+     			error : function(xhr) {
+     				alert("문제가 발생했습니다.")
+     			}
+     		});
+        	
+        }
+    	
     }
 
     function closeModal() {
@@ -463,13 +733,6 @@
         }
     }
 
-    // 저장 (등록/수정)
-    function saveVote() {
-        const formData = new FormData(document.getElementById('voteForm'));
-        // 폼 데이터를 서버로 전송하는 로직 (fetch 또는 $.ajax)
-        alert("투표 데이터가 저장되었습니다.");
-        closeModal();
-    }
 
     function addOptionField() {
         const container = document.getElementById('optionContainer');
@@ -501,8 +764,7 @@
     }
 
     function selectOption(value, text) {
-        // 표시 텍스트 변경
-        $('#selectedText').text(text);
+        
         
         // hidden input 값 변경
         $('#filterStatus').val(value);
@@ -511,55 +773,86 @@
         $('.custom-select-wrapper').removeClass('open');
         
         // 기존 필터 함수 실행
-        applyFilters();
+        applyFilters(text);
     }
     
-    function applyFilters(){
+    function applyFilters(text){
     	const selectedStatus = $('#filterStatus').val();
     	
-		urlParams.set('filter', selectedStatus);
-        
-        location.href = window.location.pathname + "?" + urlParams.toString();
-    	
-    	
-//     	$('.vote-row').each(function() {
-//             const rowStatus = $(this).data('status'); 
-
-//             if (selectedStatus === 'ALL') {
-//                 $(this).show(); 
-//             } else if (rowStatus === selectedStatus) {
-//                 $(this).show(); 
-//             } else {
-//                 $(this).hide(); 
-//             }
-//         });
-    	
-    	
+        $.ajax({
+			url : "${pageContext.request.contextPath}/admin/voteList.do",
+			type : "GET",
+			data : {
+				filter : selectedStatus
+			},
+			headers : {
+				"X-Requested-With" : "XMLHttpRequest"
+			},
+			success : function(response) {
+				$(".admin-content").html(response);
+				// 표시 텍스트 변경
+		        $('#selectedText').text(text);
+		        $('#filterStatus').val(selectedStatus);
+			},
+			error : function(xhr) {
+				alert("문제가 발생했습니다.")
+			}
+		});
+    
     }
 
-    // 드롭다운 외부 클릭 시 닫기
+    
     $(document).click(function(e) {
+    	// 드롭다운 외부 클릭 시 닫기
         if (!$(e.target).closest('.custom-select-wrapper').length) {
             $('.custom-select-wrapper').removeClass('open');
         }
+    	
+     // 모달 외부 클릭 시 닫기 
+        if (e.target == document.getElementById('voteModal')) closeModal();
     });
     
     //정렬 기능
-    let ascOrder = true; //오름차순
-    const urlParams = new URLSearchParams(window.location.search);
-    function sortTable(column){
+    var ascOrder = true; //오름차순
+   
+    function sortTable(column, colIdx){
     	
-    	let currentDir = urlParams.get('sortDir') === 'ASC' ? 'DESC' : 'ASC';
-    	urlParams.set('sortCol', column);
-        urlParams.set('sortDir', currentDir);
-        urlParams.set('page', '1');
-        
-        location.href = window.location.pathname + "?" + urlParams.toString();
-
-        // 다음 클릭을 위해 방향 전환
-        ascOrder = !ascOrder;
+    	let isAsc = $(".vote-table").hasClass("asc");
+    	 var currentDir = isAsc ? 'DESC' : 'ASC';
+    	 const selectedStatus = $('#filterStatus').val();
+    	 const selectedText = $('#selectedText').text();
+    	
+        $.ajax({
+			url : "${pageContext.request.contextPath}/admin/voteList.do",
+			type : "GET",
+			data : {
+				sortCol : column,
+				sortDir : currentDir,
+				page : 1,
+				filter:selectedStatus
+			},
+			headers : {
+				"X-Requested-With" : "XMLHttpRequest"
+			},
+			success : function(response) {
+				$(".admin-content").html(response);
+				if(isAsc){
+		    		$(".vote-table").removeClass("asc").addClass("desc");
+		    	}else{
+		    		$(".vote-table").removeClass("desc").addClass("asc");
+		    	}
+				
+				 $('#filterStatus').val(selectedStatus);
+				 $('#selectedText').text(selectedText);
+				
+				 updateSortIcons(colIdx, isAsc);
+			},
+			error : function(xhr) {
+				alert("문제가 발생했습니다.")
+			}
+		});
        
-        updateSortIcons(colIdx, ascOrder);
+      
     }
     
     function updateSortIcons(idx, order) {
@@ -572,15 +865,276 @@
     }
     
     function pagingOnClick(page){
-		urlParams.set('page', page);
         
-        location.href = window.location.pathname + "?" + urlParams.toString();
+        $.ajax({
+			url : "${pageContext.request.contextPath}/admin/voteList.do",
+			type : "GET",
+			data : {
+				page : page
+			},
+			headers : {
+				"X-Requested-With" : "XMLHttpRequest"
+			},
+			success : function(response) {
+				$(".admin-content").html(response);
+				
+			},
+			error : function(xhr) {
+				alert("문제가 발생했습니다.")
+			}
+		});
     }
     
-  
-    
-    
+    // ---------------투표등록모달-----------------
+    var searchTimer;
+    var currentFocus = -1; // 현재 선택된 항목의 인덱스
+     
+     // 옵션 삭제
+		function removeOption(btn) {
+		    
+		    $(btn).closest('.option-item').remove();
+		    if($('.option-item').length == 0)  $('#optionList').html("영화를 추가해주세요")
+		   
+		}
+
+		// 옵션 추가 
+		function addOption(movieId = '', movieTitle = '') {
+			
+		    const optItem = $(".option-item");
+		    if(optItem.length == 0){
+		         $('#optionList').empty();
+		    }
+		    
+		    // 데이터가 있을 때와 없을 때의 placeholder/value 처리를 합니다.
+		    const html = `
+		        <div class="option-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
+		            <div style="flex: 1; position: relative;">
+		                <input type="hidden" name="movieId" class="movie-id-hidden" value="\${movieId}">
+		                <input type="text" name="optionTitle" class="movie-search" 
+		                       placeholder="영화 제목을 검색하세요"
+		                       value="\${movieTitle}"
+		                       onkeydown="if(event.keyCode==13) event.preventDefault();"
+		                       onkeyup="handleSearch(this, event)" autocomplete="off">
+		                <div class="search-results"></div>
+		                <div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+		                    DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
+		                </div>
+		            </div>
+		            <button type="button" class="btn" onclick="removeOption(this)" 
+		                    style="height: 45px; align-self: flex-start; background:#fee2e2; color:#ef4444; border:none; padding: 10px; cursor:pointer; border-radius:8px;">삭제</button>
+		        </div>`;
+		    $('#optionList').append(html);
+		}
+       
+       // 디바운싱 적용 검색
+		     function handleSearch(input,e) {
+		     	  const query = $(input).val().trim();
+		           const $results = $(input).next('.search-results');
+		           const items = $results.find('.result-item');
+		           const $container = $(input).closest('div');
+		           const $errorMsg = $container.find('.db-error-msg');
+		           const $movieId = $container.find('.movie-id-hidden');
+		           
+		           // 방향키 위(38), 아래(40), 엔터(13) 처리
+		           if (e.keyCode == 40) { // Down
+			              currentFocus++;
+			              addActive(items);
+			              return;
+				      } else if (e.keyCode == 38) { // Up
+				          currentFocus--;
+				          addActive(items);
+						         return;
+						     } else if (e.keyCode == 13) { // Enter
+						     e.preventDefault();
+						     if (currentFocus > -1) {
+						         if (items[currentFocus]) items[currentFocus].click();
+						     }
+						     return;
+						 }
+				    
+				    //  일반 글자 입력 시
+				    if (searchTimer) clearTimeout(searchTimer);
+				   
+				    
+				    if (query.length < 2) {
+				        $results.hide();
+				        return;
+				    }
+		 
+		 		searchTimer = setTimeout(() => {
+		     	$.ajax({
+		         url: '${pageContext.request.contextPath}/searchMovie.do',
+		         data: { "search-words": query, "search-option": 0 },
+		         dataType: 'html',
+		         success: function(response) {
+		             const $html = $(response);
+		             // 모든 .movie-item (a 태그)을 찾습니다.
+		             const $movieItems = $html.find(".movie-item");
+		             
+		             let html = '';
+		             currentFocus = -1;
+		             
+		             if ($movieItems.length > 0) {
+		             	$errorMsg.hide();
+		                 $movieItems.each(function() {
+		                     const $item = $(this);
+		                     const title = $item.find("h3").text().trim();
+		                     
+		                     // a href="...id=123" 형태에서 ID 숫자만 추출
+		                     const href = $item.attr("href");
+		                     const id = href.split('movieId=')[1];
+		                     
+		                     html += `<div class="result-item"
+		                     onclick="selectMovie(this, '\${title}', '\${id}')"
+		                     style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
+		                     \${title}
+		                     </div>`;
+		                 });
+		                 
+		                 $results.html(html).show();
+		                 } else {
+		                 	$errorMsg.show();
+		                     $movieId.val("");
+		                     html += `<div class="result-item"
+		                    
+		                     style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
+		                     검색 결과가 없습니다.
+		                     </div>`;
+		                     $results.html(html).show();
+		                 }
+		             }
+		         });
+		     }, 300);
+		 }
+       
+			 function addActive(items) {
+			     if (!items) return false;
+			     removeActive(items);
+			     if (currentFocus >= items.length) currentFocus = 0;
+			     if (currentFocus < 0) currentFocus = (items.length - 1);
+			     
+			     $(items[currentFocus]).addClass("item-active").css({
+			         "background-color": "#f0f4ff",
+			         "color": "#4f46e5"
+			     });
+			     
+			     // 포커스된 항목으로 스크롤 이동
+			     items[currentFocus].scrollIntoView({ block: 'nearest' });
+			 }
+			 
+			 function removeActive(items) {
+			     $(items).removeClass("item-active").css({
+			         "background-color": "white",
+			         "color": "black"
+			     });
+			 }
+			 
+			 function selectMovie(element, title, id) {
+			     const $container = $(element).closest('.option-item');
+			     
+			     // 제목 입력창에 텍스트 세팅
+			     $container.find('.movie-search').val(title);
+			     
+			     // hidden 필드에 movieId 세팅
+			     $container.find('.movie-id-hidden').val(id);
+			     
+			     // 결과창 닫기
+			     $('.search-results').hide();
+			     console.log("선택된 영화 ID:", id); // 확인용
+			 }
+			 
+			 // 결과창 외 클릭 시 닫기
+			 $(document).on('click', function(e) {
+			     if (!$(e.target).hasClass('movie-search')) {
+			         $('.search-results').hide();
+			     }
+			 });
+			 
+			 //시작일이 오늘 이전 선택 안되게 하는 함수
+			 var endDateInput = document.querySelector('input[name="voteEndDate"]');
+			 
+			 document.querySelector('input[name="voteStartDate"]').addEventListener('change', function() {
+			 var selectedDate = this.value; // YYYY-MM-DD
+			 var today = new Date().toISOString().split('T')[0];
+			 
+			 if (selectedDate < today) {
+			     alert("시작일은 오늘 이전 날짜를 선택할 수 없습니다.");
+			     this.value = today; // 오늘 날짜로 강제 리셋
+			 }
+			 
+			 endDateInput.min = this.value;
+			 
+			 });
+			
+			 //종료일이 시작일 이전 선택 안되게 하는 함수
+			 var startDateInput = document.querySelector('input[name="voteStartDate"]');
+			
+			 endDateInput.addEventListener('input', function(){
+			 	
+			 	//시작일이 선택되지 않으면
+			 	if(startDateInput.value == ""){
+			 		alert("시작일을 먼저 선택해주세요.");
+			 		this.value = "";
+			         startDateInput.focus();
+			 		return;
+			 	}
+			 	
+			 	if (endDateInput.value && endDateInput.value < this.value) {
+			     	alert("종료일은 시작일 이전 날짜를 선택할 수 없습니다.");
+			         endDateInput.value = this.value;
+			     }
+			 });
+			 
+			 $(document).off("click", ".btn-save").on("click", ".btn-save", function() {
+			    const mode = $(this).data("mode"); 
+			    console.log("전체 .btn-save 개수:", $(".btn-save").length);
+			    validateForm(mode);
+			});
+			 
+			 //유효성 검사
+			 function validateForm(state){
+				 
+				 console.log("validateForm" + state)
+			 	
+		 		const optItems = document.getElementsByClassName("option-item");
+			 	if (optItems.length <=1) {
+			 		alert("영화 선택지 최소 2개를 추가해주세요")
+			 		return false;
+			 	}
+			 	
+			 	let validated = true;
+			 	$('.movie-id-hidden').each(function() {
+			         if ($(this).val() === "") {
+			             alert("DB에 존재하지 않는 영화가 포함되어 있습니다. 검색 결과에서 선택해주세요.");
+			             $(this).siblings('.movie-search').focus();
+			             validated = false;
+			             return false; // each 반복 중단
+			         }
+			     });
+			 	
+			 	if(!validated) return false;
+			 	
+			 	let formData = $("#voteForm").serialize();
+			 	formData += "&state=" + state;
+			 	
+			    $.ajax({
+					url : "${pageContext.request.contextPath}/admin/voteOkForm.do",
+					type : "POST",
+					data : formData,
+					headers : {
+						"X-Requested-With" : "XMLHttpRequest"
+					},
+					success : function(response) {
+						alert(state === 'add' ? "투표가 성공적으로 등록되었습니다" : "투표가 성공적으로 수정되었습니다");
+						selectOption('ALL', '전체 보기');
+						
+					},
+					error : function(xhr) {
+						alert("문제가 발생했습니다.")
+					}
+				});
+			 	
+			 }
 </script>
 
 </body>
-</html>

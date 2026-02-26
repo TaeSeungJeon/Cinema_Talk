@@ -2,9 +2,13 @@ package Controller.Vote;
 
 import java.io.PrintWriter;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
+import DTO.Vote.VoteOptionDTO;
 import DTO.Vote.VoteRegisterDTO;
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
@@ -39,21 +43,44 @@ public class AdminVoteFormController implements Action {
 		}
     			
     	
-    	ActionForward forward = new ActionForward();
+    	//ActionForward forward = new ActionForward();
     
-    String state = request.getParameter("state");
-    String voteIdstr = request.getParameter("voteId");
-    if(state != null && "edit".equals(state) && voteIdstr != null) {
-    	int voteId = Integer.parseInt(voteIdstr);
-    	VoteService voteService = new VoteServiceImpl();
-    	
-    	VoteRegisterDTO voteReg = voteService.getVoteRegFullById(voteId);
-    	voteService.updateVoteStatus(voteReg);
-    	request.setAttribute("vote", voteReg);
-    }
-		forward.setRedirect(false);
-		forward.setPath("/WEB-INF/views/vote/adminVoteForm.jsp");
-		return forward;
-    }
+	    String state = request.getParameter("state");
+	    String voteIdstr = request.getParameter("voteId");
+	    if(state != null && "edit".equals(state) && voteIdstr != null) {
+	    	int voteId = Integer.parseInt(voteIdstr);
+	    	VoteService voteService = new VoteServiceImpl();
+	    	
+	    	VoteRegisterDTO voteReg = voteService.getVoteRegFullById(voteId);
+	    	voteService.updateVoteStatus(voteReg);
+	    	
+//	    	request.setAttribute("vote", voteReg); --ajax할때 쓸수 없어서 json을 던짐
+	    	
+	    	JSONObject jsonObj = new JSONObject();
+			jsonObj.put("voteId", voteReg.getVoteId());
+			jsonObj.put("voteTitle", voteReg.getVoteTitle());
+			jsonObj.put("voteContent", voteReg.getVoteContent());
+			jsonObj.put("voteStartDate", voteReg.getVoteStartDate());
+			jsonObj.put("voteEndDate", voteReg.getVoteEndDate());
+			
+			JSONArray jsonOptList = new JSONArray();
+
+			if (voteReg.getOptionList() != null) {
+			    for (VoteOptionDTO opt : voteReg.getOptionList()) {
+			        JSONObject optObj = new JSONObject();
+			        optObj.put("movieId", opt.getMovieId());
+			        optObj.put("movieTitle", opt.getMovieTitle());
+			        
+			        jsonOptList.put(optObj); 
+			    }
+			}
+
+			jsonObj.put("optionList", jsonOptList);
+			
+			out.print(jsonObj.toString());
+			
+	    }
+			return null;
+	 }
     
 }

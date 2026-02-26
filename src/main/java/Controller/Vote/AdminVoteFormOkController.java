@@ -86,34 +86,19 @@ public class AdminVoteFormOkController implements Action {
     	      isSuccess = voteService.insertVoteRegister(vdto);
     	      msg = "투표가 성공적으로 추가되었습니다";
     	    } else if ("edit".equals(state) && voteId != null) {
-    	    	
     	     isSuccess = voteService.editVoteRegister(vdto);
     	     msg = "투표가 성공적으로 수정되었습니다";
-    	    } else if ("delete".equals(state) && voteId != null) {
-    	    	
+    	    } else if ("delete".equals(state) && voteId != null) {	
     	     isSuccess = voteService.deleteVoteRegister(vdto);
     	     msg = "투표가 성공적으로 삭제되었습니다";
     	    }
     	   
-    	    if(isSuccess) {
-    	    	out.println("<script>");
-    	    	out.println("alert('" + msg + "');");
-    	    	out.println("location.href='voteList.do';");
-    			out.println("</script>");
-    	    }else {
-    	    	out.println("<script>");
-    	    	out.println("alert('문제가 발생했습니다');");
-    	    	out.println("location.href='voteList.do';");
-    			out.println("</script>");
-    	    }
+    	   
 
     	   
 	} catch (Exception e) {
 		e.printStackTrace();
-		out.println("<script>");
-		out.println("alert('문제가 발생했습니다');");
-		out.println("history.go(-1);");
-		out.println("</script>");
+		
 	}
 
  

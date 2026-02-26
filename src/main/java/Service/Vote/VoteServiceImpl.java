@@ -32,9 +32,9 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public List<VoteRegisterDTO> getVoteRegList() {
+	public List<VoteRegisterDTO> getVoteRegList(VoteRegisterDTO findVoteReg) {
 
-		return this.vdao.getVoteRegList();
+		return this.vdao.getVoteRegList(findVoteReg);
 	}
 
 	@Override
@@ -174,6 +174,11 @@ return voteRegFullList.stream()
 	@Override
 	public List<VoteRecordDTO> getVoteRecordByMemNo(int memNo) {
 		return this.vdao.getVoteRecordByMemNo(memNo);
+	}
+
+	@Override
+	public int getRowCount(VoteRegisterDTO findVoteReg) {
+		return this.vdao.getRowCount(findVoteReg);
 	}
 
 }

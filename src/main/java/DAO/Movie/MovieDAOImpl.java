@@ -168,4 +168,11 @@ public class MovieDAOImpl implements MovieDAO {
 			}
 		}
 	}
+
+	@Override
+	public List<MovieDTO> searchAdminMovies(String keyword) {
+		try (SqlSession session = getSqlSession()) {
+	        return session.selectList("searchAdminMovies", keyword);
+	    }
+	}
 }

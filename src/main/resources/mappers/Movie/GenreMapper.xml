@@ -29,4 +29,10 @@
 		FROM GENRE
 		WHERE genreId = #{genreId}
 	</select>
+	
+	<select id="getAllGenres" resultType="genre">
+        SELECT genreId, genreName
+        FROM GENRE
+        ORDER BY genreId ASC
+    </select>
 </mapper>

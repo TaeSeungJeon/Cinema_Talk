@@ -165,5 +165,22 @@ public class MemberDAOImpl implements MemberDAO {
 		}
 	}//emailCheck() -> 이메일 중복 체크
 
+	@Override
+	public int updateLastLogin(String memId) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			int result = sqlSession.update("updateLastLogin", memId);
+			sqlSession.commit();
+			return result;
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//updateLastLogin() -> 마지막 로그인 날짜 업데이트
+
+
 
 }

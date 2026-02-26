@@ -22,4 +22,7 @@ public interface MemberDAO {
 
 	int updatePwd(MemberDTO mdto);
 
+	int updateLastLogin(String memId);
+
+
 }

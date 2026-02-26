@@ -15,13 +15,13 @@ create table BOARD(
 );
 -- bbs_file_no 컬럼에 정수 숫자 레코드 값으로 활용할 시퀀스 생성
 create sequence boardIdSeq      -- file_no_seq 시퀀스 생성
-nocache;                    -- start with 1, increment by 1, nocycle 옵션은 기본값이어서 생략.
+nocache;                        -- start with 1, increment by 1, nocycle 옵션은 기본값이어서 생략.
 
 select boardIdSeq.nextval as "boardIdSeq 다음 시퀀스 번호값 확인" from dual;
-
 
 alter table board add constraint fk_mem_no foreign key (memNo)
 references MEMBER (memNo);
 
 -- MOVIEID 컬럼을 NULL 허용으로 변경
 ALTER TABLE BOARD MODIFY (MOVIEID NULL);
+

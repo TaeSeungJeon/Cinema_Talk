@@ -58,9 +58,7 @@
         WHERE BOARDID = #{boardId}
     </delete>
 
-    
     <insert id="boardInsert">
-
         INSERT INTO BOARD
         (BOARDID,
          BOARDTYPE,
@@ -77,7 +75,6 @@
                 #{boardName},
                 SYSDATE,
                 #{memNo})
-
     </insert>
 
     <select id="boardListByType" parameterType="int" resultType="DTO.Board.BoardDTO">
@@ -163,6 +160,35 @@
         FROM BOARD_LIKE
         WHERE BOARDID = #{boardId}
           AND BOARDTYPE = #{boardType}
+    </select>
+
+    <!-- 최근 게시글: 최신순 TOP N -->
+    <select id="recentBoardList" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (
+                 SELECT
+                     b.BOARDID AS boardId,
+                     b.BOARDTYPE AS boardType,
+                     b.BOARDTITLE AS boardTitle,
+                     b.BOARDCONTENT AS boardContent,
+                     b.BOARDNAME AS boardName,
+                     b.BOARDDATE AS boardDate,
+                     NVL(b.BOARDRECOMMENDCOUNT, 0) AS boardRecommendCount,
+
+                     (SELECT COUNT(*)
+                      FROM COMMENTS c
+                      WHERE c.BOARDID = b.BOARDID
+                        AND c.BOARDTYPE = b.BOARDTYPE) AS commentCount,
+
+                     (SELECT COUNT(*)
+                      FROM BOARD_LIKE l
+                      WHERE l.BOARDID = b.BOARDID
+                        AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
+
+                 FROM BOARD b
+                 ORDER BY b.BOARDDATE DESC NULLS LAST, b.BOARDID DESC
+             )
+        WHERE ROWNUM <![CDATA[<=]]> #{limit}
     </select>
 
     <!-- 실시간 인기글: 좋아요/조회수 기반 TOP -->

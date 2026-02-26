@@ -170,4 +170,9 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardDTO> hotBoardList(int limit) {
         return bdao.hotBoardList(limit);
     }
+
+    @Override
+    public List<BoardDTO> recentBoardList(int limit) {
+        return bdao.recentBoardList(limit);
+    }
 }

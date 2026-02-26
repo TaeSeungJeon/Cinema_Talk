@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>프리미엄 영화 큐레이션 - 커뮤니티</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Black+Han+Sans&family=Gaegu&family=Jua&family=Cute+Font&family=Do+Hyeon&family=Gugi&family=Sunflower:wght@300;500;700&family=Gothic+A1:wght@400;700&family=Stylish&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f0f2f5;
@@ -60,116 +60,8 @@
             transform: translateY(-2px);
         }
 
-        .search-bar {
-            background: white;
-            border-radius: 50px;
-            padding: 12px 30px;
-            width: 40%;
-            display: flex;
-            align-items: center;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .search-bar input[type="text"] {
-            border: none;
-            background: none;
-            outline: none;
-            width: 100%;
-            text-align: center;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .search-bar input[type="submit"] {
-            width: auto;
-        }
-
-        .category-nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            position: relative;
-            z-index: 5000;
-        }
-
-        .category-bubble {
-            flex: 1;
-            height: 50px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            background: white;
-            border-radius: 50px;
-            box-shadow: var(--shadow-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .category-bubble:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-strong);
-        }
-
-        .category-bubble.active {
-            background: var(--accent-color) !important;
-            color: white !important;
-        }
-
-        .cat-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            pointer-events: none;
-        }
-
-        .sub-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            top: 110%;
-            left: 0;
-            right: 0;
-            background: #ffffff !important;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 9999;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: center;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .category-bubble.active .sub-menu {
-            max-height: 400px;
-            padding: 15px 0;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .sub-menu li a {
-            text-decoration: none;
-            color: #64748b !important;
-            display: block;
-            padding: 12px 0;
-            margin: 2px 10px;
-            border-radius: 12px;
-            transition: 0.2s;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .sub-menu li a:hover {
-            background: var(--accent-color) !important;
-            color: white !important;
-        }
-
+        
+        
         .container {
             display: grid;
             grid-template-columns: 1fr 300px;
@@ -213,13 +105,7 @@
             box-shadow: var(--shadow-strong);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
+        
         .avatar {
             width: 44px;
             height: 44px;
@@ -341,38 +227,7 @@
             color: #94a3b8;
             text-decoration: none;
         }
-
-        .hot-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .hot-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .hot-item:last-child {
-            border: none;
-        }
-
-        .rank-num {
-            font-weight: 800;
-            color: var(--accent-color);
-            font-style: italic;
-        }
-
-        .hot-text {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-main);
-            cursor: pointer;
-        }
-
+        
         .widget-placeholder {
             background: #f8fafc;
             border: 2px dashed #e2e8f0;
@@ -459,13 +314,9 @@
         }
 
         /* 모달 폰트 강제 적용 */
-        .write-modal,
-        .write-modal * {
+        /* 모달 폰트 강제 적용 */
+        .write-modal {
             font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-        }
-
-        .post-content img {
-            display: none;
         }
 
         .post-preview > div:first-of-type {
@@ -477,7 +328,6 @@
         }
 
         .post-preview > div:first-of-type img {
-            display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -489,8 +339,7 @@
             margin: 0 !important;
         }
 
-        .post-card-header,
-        .post-content {
+        .post-card-header, .post-content {
             padding-left: 112px;
         }
 
@@ -514,13 +363,18 @@
             -webkit-box-orient: vertical;
             text-align: left;
         }
-
+        /* 썸네일 이미지를 제외한 게시글 안의 이미지 비침 현상 수정*/
+        .post-preview img{
+            display: none;
+        }
+        .post-preview > div:first-of-type img{
+            display: block;/* 썸네일만 다시 살림 */
+        }
         .post-preview::after {
             content: "";
             display: block;
             clear: both;
         }
-
         .post-content h2 {
             margin: 0;
             text-align: left;
@@ -590,6 +444,109 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        /* 글쓰기 텍스트박스 이미지 */
+        #imagePreviewArea{
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #imagePreviewArea .pv-item{
+            width: 92px;
+            height: 92px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        #imagePreviewArea .pv-item img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #imagePreviewArea .pv-item img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #boardContentEditor:empty:before {
+            content: attr(data-placeholder);
+            color:#94a3b8;
+            pointer-events: none;
+        }
+
+        /* 커스텀 폰트 드롭다운 */
+        .font-select-wrapper {
+            position: relative;
+        }
+
+        .font-select-trigger {
+            padding: 4px 28px 4px 8px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #374151;
+            cursor: pointer;
+            background: white;
+            min-width: 110px;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+        }
+
+        .font-select-trigger::after {
+            content: "▾";
+            position: absolute;
+            right: 8px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .font-select-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            z-index: 9999;
+            min-width: 160px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .font-select-dropdown.open {
+            display: block;
+        }
+
+        .font-option {
+            padding: 9px 14px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #374151;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+
+        .font-option:hover {
+            background: #f1f5f9;
+        }
+
+        .font-option.selected {
+            background: #ede9fe;
+            color: #6366f1;
+        }
+    </style>
 
     </style>
 </head>
@@ -757,7 +714,7 @@
 
                 <input type="text"
                        name="boardTag"
-                       placeholder="태그 입력 (예: #듄, #추천)"
+                       placeholder="영화 제목을 입력해주세요."
                        style="flex: 2; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
             </div>
 
@@ -767,12 +724,31 @@
                    name="boardTitle" required>
 
             <!-- 툴바 -->
-            <div style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; gap: 15px; color: #64748b; font-size: 0.9rem;">
-                <span style="cursor:pointer; font-weight: 800;">B</span>
-                <span style="cursor:pointer; font-style: italic;">I</span>
-                <span style="cursor:pointer; text-decoration: underline;">U</span>
+            <div style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; gap: 15px; color: #64748b; font-size: 0.9rem; align-items: center; flex-wrap: wrap;">
+                <div class="font-select-wrapper" id="fontSelectWrapper">
+                    <div class="font-select-trigger" id="fontSelectTrigger"
+                         onmousedown="event.preventDefault(); toggleFontDropdown()">
+                        <span id="fontSelectLabel" style="font-family: 'Inter', sans-serif;">Inter (기본)</span>
+                    </div>
+                    <div class="font-select-dropdown" id="fontSelectDropdown">
+                        <div class="font-option selected" style="font-family: 'Inter', sans-serif;"        data-value="'Inter', sans-serif">Inter (기본)</div>
+                        <div class="font-option" style="font-family: 'Noto Sans KR', sans-serif;"          data-value="'Noto Sans KR', sans-serif">노토 산스</div>
+                        <div class="font-option" style="font-family: 'Noto Serif KR', serif;"              data-value="'Noto Serif KR', serif">노토 세리프</div>
+                        <div class="font-option" style="font-family: 'Gothic A1', sans-serif;"             data-value="'Gothic A1', sans-serif">고딕 A1</div>
+                        <div class="font-option" style="font-family: 'Do Hyeon', sans-serif;"              data-value="'Do Hyeon', sans-serif">도현체</div>
+                        <div class="font-option" style="font-family: 'Jua', sans-serif;"                   data-value="'Jua', sans-serif">주아체</div>
+                        <div class="font-option" style="font-family: 'Gugi', cursive;"                     data-value="'Gugi', cursive">구기체</div>
+                        <div class="font-option" style="font-family: 'Sunflower', sans-serif;"             data-value="'Sunflower', sans-serif">해바라기체</div>
+                        <div class="font-option" style="font-family: 'Stylish', sans-serif;"               data-value="'Stylish', sans-serif">스타일리시</div>
+                        <div class="font-option" style="font-family: 'Black Han Sans', sans-serif;"        data-value="'Black Han Sans', sans-serif">블랙 한 산스</div>
+                        <div class="font-option" style="font-family: 'Cute Font', cursive;"                data-value="'Cute Font', cursive">귀여운 폰트</div>
+                        <div class="font-option" style="font-family: 'Gaegu', cursive;"                    data-value="'Gaegu', cursive">개구체</div>
+                    </div>
+                </div>
+                <span style="cursor:pointer; font-weight: 800;" onmousedown="event.preventDefault(); execCmd('bold')">B</span>
+                <span style="cursor:pointer; font-style: italic;" onmousedown="event.preventDefault(); execCmd('italic')">I</span>
+                <span style="cursor:pointer; text-decoration: underline;" onmousedown="event.preventDefault(); execCmd('underline')">U</span>
                 <span id="linkTrigger" style="cursor:pointer;">🔗 링크</span>
-
                 <span id="attachTrigger" style="cursor:pointer;">🖼️ 사진첨부</span>
                 <input id="attachInput"
                        type="file"
@@ -786,11 +762,21 @@
                  style="font-size:0.78rem; color:#94a3b8; padding:6px 4px 10px 4px; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">
             </div>
 
-            <!-- 내용 -->
-            <textarea rows="12" placeholder="영화에 대한 솔직한 생각을 들려주세요..."
-                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;"
-                      name="boardContent" id="boardContent" required></textarea>
+            <!-- 내용(미리보기 + 텍스트를 하나의 입력박스로 보이게) -->
+            <div id="contentBox"
+                 style="border: 1px solid #e2e8f0; border-radius: 0 0 12px 12px; overflow: hidden;">
 
+                <div id="imagePreviewArea"
+                     style="display:none; padding: 12px; border-bottom: 1px solid #e2e8f0; background:#fff;"></div>
+
+                <div id="boardContentEditor"
+                     contenteditable="true"
+                     style="padding: 15px; min-height: 220px; line-height: 1.6; outline: none; font-size: 1rem; font-family: 'Inter', sans-serif; white-space: pre-wrap; word-break: break-word;"
+                     data-placeholder="영화에 대한 솔직한 생각을 들려주세요...">
+                </div>
+
+                <input type="hidden" name="boardContent" id="boardContent">
+            </div>
             <div id="linkPreviewArea" style="display:none; margin-top: 10px;"></div>
 
             <!-- 가이드라인-->
@@ -814,26 +800,6 @@
 <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 
 <script>
-    function toggleMenu(element) {
-        const isActive = element.classList.contains('active');
-        document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
-        if (!isActive) {
-            element.classList.add('active');
-        }
-    }
-
-    document.querySelectorAll('.sub-menu a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    });
-
-    window.addEventListener('click', function (e) {
-        if (!e.target.closest('.category-bubble')) {
-            document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
-        }
-        if (e.target == document.getElementById('writeModal')) closeModal();
-    });
 
     function openModal() {
         document.getElementById('writeModal').style.display = 'flex';
@@ -841,21 +807,23 @@
     }
     /* 링크 활성화 */
     const linkTrigger = document.getElementById("linkTrigger");
-    const contentEl = document.getElementById("boardContent");
+    const contentEl = document.getElementById("boardContentEditor");
     const previewArea = document.getElementById("linkPreviewArea");
 
     let currentPreviewUrl = "";
 
-    function insertTextAtCursor(textarea, text) {
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const before = textarea.value.substring(0, start);
-        const after = textarea.value.substring(end);
-
-        textarea.value = before + text + after;
-        const newPos = start + text.length;
-        textarea.focus();
-        textarea.setSelectionRange(newPos, newPos);
+    function insertTextAtCursor(el, text) {
+        el.focus();
+        const sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        const textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
     }
 
     async function fetchLinkPreview(url) {
@@ -935,19 +903,6 @@
         document.body.style.overflow = 'auto';
     }
 
-    function gotofreeBoard() {
-        const form = document.getElementById("boardForm");
-
-        if (form.boardTitle && form.boardTitle.value === "") {
-            alert("제목을 입력해주세요.");
-            return;
-        }
-
-        form.action = "${pageContext.request.contextPath}/boardOk.do";
-        form.method = "post";
-        form.submit();
-    }
-
     /*뒤로가기 캐시 복원 시 새로고침*/
     window.addEventListener("pageshow", function (e) {
         const nav = performance.getEntriesByType("navigation")[0];
@@ -996,6 +951,67 @@
         el.textContent = toRelativeTime(t);
     });
 
+    // contenteditable 글꼴/서식 (전역 선언 - 툴바 onclick에서 호출 가능)
+    const editor = document.getElementById("boardContentEditor");
+
+    function execCmd(cmd) {
+        editor.focus();
+        // 선택 영역이 없으면 전체 선택 후 실행
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+            const range = document.createRange();
+            range.selectNodeContents(editor);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+        document.execCommand(cmd, false, null);
+    }
+
+    function applyFont(fontFamily) {
+        editor.style.fontFamily = fontFamily;
+    }
+
+    function toggleFontDropdown() {
+        const dropdown = document.getElementById("fontSelectDropdown");
+        dropdown.classList.toggle("open");
+    }
+
+    // 드롭다운 옵션 클릭 이벤트
+    document.querySelectorAll(".font-option").forEach(function(option) {
+        option.addEventListener("mousedown", function(e) {
+            e.preventDefault();
+            const fontFamily = this.getAttribute("data-value");
+            const label = this.textContent;
+            const fontStyle = this.style.fontFamily;
+
+            // 트리거 라벨 업데이트
+            const trigger = document.getElementById("fontSelectLabel");
+            trigger.textContent = label;
+            trigger.style.fontFamily = fontStyle;
+
+            // selected 클래스 이동
+            document.querySelectorAll(".font-option").forEach(o => o.classList.remove("selected"));
+            this.classList.add("selected");
+
+            // 드롭다운 닫기 & 폰트 적용
+            document.getElementById("fontSelectDropdown").classList.remove("open");
+            applyFont(fontFamily);
+        });
+    });
+
+    // 드롭다운 외부 클릭 시 닫기
+    document.addEventListener("mousedown", function(e) {
+        const wrapper = document.getElementById("fontSelectWrapper");
+        if (wrapper && !wrapper.contains(e.target)) {
+            document.getElementById("fontSelectDropdown").classList.remove("open");
+        }
+    });
+
+    // 폼 제출 시 editor 내용을 hidden input에 복사
+    document.querySelector(".write-form").addEventListener("submit", function () {
+        document.getElementById("boardContent").value = editor.innerHTML;
+    });
+
     /* 파일 선택 시 여러 파일명 표시 */
     (function () {
         const trigger = document.getElementById('attachTrigger');
@@ -1004,19 +1020,51 @@
 
         if (!trigger || !input || !name) return;
 
-        trigger.addEventListener('click', function (){
+        trigger.addEventListener('click', function () {
             input.click();
         });
 
-        input.addEventListener('change', function (){
+        input.addEventListener('change', function () {
+            const preview = document.getElementById("imagePreviewArea");
+
             if (!input.files || input.files.length === 0) {
                 name.textContent = '';
+                preview.style.display = "none";
+                preview.innerHTML = "";
                 return;
             }
-            const filenames = Array.from(input.files).map(f => f.name);
-            name.textContent = filenames.join(', ');
+
+            const files = Array.from(input.files);
+            name.textContent = files.map(f => f.name).join(', ');
+
+            preview.innerHTML = "";
+            let hasImage = false;
+
+            files.forEach(f => {
+                if (!f.type || !f.type.startsWith("image/")) return;
+
+                hasImage = true;
+
+                const url = URL.createObjectURL(f);
+
+                const box = document.createElement("div");
+                box.className = "pv-item";
+
+                const img = document.createElement("img");
+                img.src = url;
+                img.alt = f.name;
+
+                img.onload = () => URL.revokeObjectURL(url);
+
+                box.appendChild(img);
+                preview.appendChild(box);
+            });
+
+            preview.style.display = hasImage ? "flex" : "none";
         });
+
     })();
+
 
 </script>
 

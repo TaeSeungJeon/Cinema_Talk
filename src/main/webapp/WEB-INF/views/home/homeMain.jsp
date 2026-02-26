@@ -24,21 +24,21 @@
 		<!-- 영화 데이터를 숨겨진 div에 저장 -->
 		<c:forEach var="m" items="${indexTrendMovieList}" varStatus="status">
 			<div class="hero-movie-data" style="display: none;"
-				data-movie-id="${m.movieId}"
-				data-movie-title="<c:out value='${m.movieTitle}'/>"
-				data-movie-backdrop-path="${m.movieBackdropPath}"
-				data-genre-name="<c:out value='${m.genreName}'/>"
-				data-movie-rating-average="${m.movieRatingAverage}"
-				data-movie-recommend-count="${m.movieRecommendCount}"></div>
+				 data-movie-id="${m.movieId}"
+				 data-movie-title="<c:out value='${m.movieTitle}'/>"
+				 data-movie-backdrop-path="${m.movieBackdropPath}"
+				 data-genre-name="<c:out value='${m.genreName}'/>"
+				 data-movie-rating-average="${m.movieRatingAverage}"
+				 data-movie-recommend-count="${m.movieRecommendCount}"></div>
 		</c:forEach>
 
 		<section class="hero-section" id="hero-banner"
-			style="background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280${indexTrendMovieList[0].movieBackdropPath}'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;">
+				 style="background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280${indexTrendMovieList[0].movieBackdropPath}'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;">
 			<div class="hero-content">
 				<a
-					href="${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}"
-					id="movie-title-link"
-					style="text-decoration: none; color: inherit; display: inline-block;">
+						href="${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}"
+						id="movie-title-link"
+						style="text-decoration: none; color: inherit; display: inline-block;">
 					<h1 id="movie-title"
 						style="margin: 0; font-size: 3rem; cursor: pointer;">
 						<c:out value="${indexTrendMovieList[0].movieTitle}" />
@@ -47,17 +47,17 @@
 				<p id="movie-info" style="opacity: 0.8; margin-top: 10px;">
 					<c:out value="${indexTrendMovieList[0].genreName}" />
 					• ⭐ ${indexTrendMovieList[0].movieRatingAverage} • 💖
-					${indexTrendMovieList[0].movieRecommendCount}
+						${indexTrendMovieList[0].movieRecommendCount}
 				</p>
 				<button id="objBtn"
-					style="margin-top: 20px; background: rgba(255, 255, 255, 0.2); border: 1px solid white; color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer;"
-					onclick="location.href='${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}'">상세
+						style="margin-top: 20px; background: rgba(255, 255, 255, 0.2); border: 1px solid white; color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer;"
+						onclick="location.href='${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}'">상세
 					보기</button>
 			</div>
 			<div class="slide-controls">
 				<button class="nav-btn" id="prevBtn">&#10094;</button>
 				<span class="page-indicator" id="pageIdx">1 /
-					${fn:length(indexTrendMovieList)}</span>
+						${fn:length(indexTrendMovieList)}</span>
 				<button class="nav-btn" id="nextBtn">&#10095;</button>
 			</div>
 		</section>
@@ -108,8 +108,8 @@
 								.setAttribute(
 										'style',
 										"background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280"
-												+ movie.movieBackdropPath
-												+ "'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;");
+										+ movie.movieBackdropPath
+										+ "'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;");
 					}
 
 					titleEl.textContent = movie.movieTitle;
@@ -166,7 +166,7 @@
 	</c:if>
 	<section class="movie-list-container">
 		<div
-			style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
 			<h3 style="margin: 0;">추천 영화 리스트</h3>
 			<span style="font-size: 0.8rem; color: #94a3b8;">포스터를 클릭하면 상세
 				페이지로 이동합니다.</span>
@@ -184,17 +184,14 @@
 
 					<c:forEach var="m" items="${homeGenreMovieList}">
 						<a href="${pageContext.request.contextPath}/movieDetail.do?movieId=${m.movieId}"
-							class="movie-card-small">
+						   class="movie-card-small">
 							<div class="poster-area"
-								style="border-radius: 12px; overflow: hidden; background: #e5e7eb;">
+								 style="border-radius: 12px; overflow: hidden; background: #e5e7eb;">
 								<img src="https://images.tmdb.org/t/p/w300/${m.moviePosterPath}"
-									alt="${m.movieTitle}"
-									onerror="this.onerror=null; this.src='https://via.placeholder.com/230x330?text=No+Image';"
-									style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+									 alt="${m.movieTitle}"
+									 onerror="this.onerror=null; this.src='https://via.placeholder.com/230x330?text=No+Image';"
+									 style="width: 100%; height: 100%; object-fit: cover; display: block;" />
 							</div>
-							<%-- <div class="movie-title-area">
-								<c:out value="${m.movieTitle}" />
-							</div> --%>
 						</a>
 					</c:forEach>
 
@@ -209,35 +206,52 @@
 
 	<div class="board-card">
 		<div
-			style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
 			<h3 style="margin: 0;">최근 게시글</h3>
-			<a href="#"
-				style="text-decoration: none; color: #94a3b8; font-size: 0.85rem;">전체보기
+			<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
+			   style="text-decoration: none; color: #94a3b8; font-size: 0.85rem;">전체보기
 				></a>
 		</div>
-		<a href="#" class="post-item">
-			<div class="post-thumb">썸네일</div>
-			<div class="post-content">
-				<div style="display: flex; justify-content: space-between;">
-					<span
-						style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700;">자유게시판</span>
-					<span style="font-size: 0.85rem; color: #94a3b8;">2026.02.10</span>
+
+		<c:if test="${empty recentBoardList}">
+			<div style="padding: 12px; color: #64748b;">최근 게시글이 없습니다.</div>
+		</c:if>
+
+		<c:forEach var="b" items="${recentBoardList}">
+			<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
+			   class="post-item">
+				<div class="post-thumb">썸네일</div>
+				<div class="post-content">
+					<div style="display: flex; justify-content: space-between;">
+						<span
+								style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700;">
+							<c:out value="${b.boardType == 1 ? '자유게시판' : (b.boardType == 2 ? '영화 추천/후기' : '게시판')}" />
+						</span>
+						<span style="font-size: 0.85rem; color: #94a3b8;">
+							<c:out value="${b.boardDate}" />
+						</span>
+					</div>
+					<div class="post-main-title">
+						<c:out value="${b.boardTitle}" />
+					</div>
+					<div style="font-size: 0.9rem; color: #64748b;">
+						<c:out value="${fn:substring(b.boardContent, 0, 60)}" />
+						<c:if test="${fn:length(b.boardContent) > 60}">...</c:if>
+					</div>
+					<div class="post-stats">
+						<span>💬 댓글 <c:out value="${b.commentCount}" /></span>
+						<span>👍 좋아요 <c:out value="${b.likeCount}" /></span>
+					</div>
 				</div>
-				<div class="post-main-title">이번에 개봉한 영화 진짜 대박이네요... 꼭 보세요!</div>
-				<div style="font-size: 0.9rem; color: #64748b;">주말에 가족들과 함께 보고
-					왔는데 스토리도 탄탄하고 연출이 정말 예술입니다.</div>
-				<div class="post-stats">
-					<span>💬 댓글 12</span><span>👁️ 조회수 450</span>
-				</div>
-			</div>
-		</a>
+			</a>
+		</c:forEach>
 	</div>
 
 	<section class="board-card" style="margin-top: 10px;">
 		<h3 style="margin-top: 0;">최근 리뷰</h3>
 		<div class="sub-grid">
 			<a href="#" class="review-card">로그인 후 나만의 리뷰를 작성해보세요.</a> <a href="#"
-				class="review-card">영상미가 정말 훌륭했습니다! 👍</a>
+																		 class="review-card">영상미가 정말 훌륭했습니다! 👍</a>
 		</div>
 	</section>
 </main>

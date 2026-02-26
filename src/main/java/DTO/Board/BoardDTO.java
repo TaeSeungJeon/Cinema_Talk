@@ -16,4 +16,5 @@ public class BoardDTO {
     private Integer memNo;
     private int movieId;
     private int likeCount;
+    private int commentCount;
 }

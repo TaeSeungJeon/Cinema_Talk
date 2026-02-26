@@ -5,20 +5,23 @@
 <c:forEach var="movie" items="${movieList}">
 	<div class="movie-card" data-id="${movie.movieId}">
 		<c:choose>
-			<c:when test="${not empty movie.moviePosterPath}">
-				<img src="https://image.tmdb.org/t/p/w200${movie.moviePosterPath}"
+			<c:when test="${empty movie.moviePosterPath}">
+				<img src="${pageContext.request.contextPath}/Image/nullPoster.png"
 					class="card-poster">
 			</c:when>
 			<c:otherwise>
-				<img src="${pageContext.request.contextPath}/images/no-image.png"
+				<img
+					src="https://image.tmdb.org/t/p/w500${movie.moviePosterPath}"
 					class="card-poster">
 			</c:otherwise>
 		</c:choose>
 		<div class="card-info">
 			<div class="card-title">${movie.movieTitle}</div>
 			<div class="card-subtitle">${movie.movieOriginalTitle}</div>
-			<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 5px;">📅	${movie.movieReleaseDate}</div>
-			<div style="font-size: 0.75rem; color: #6b7280;"> ⏱️ ${movie.movieRuntime}분 </div>
+			<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 5px;">📅
+				${movie.movieReleaseDate}</div>
+			<div style="font-size: 0.75rem; color: #6b7280;">⏱️
+				${movie.movieRuntime}분</div>
 		</div>
 	</div>
 </c:forEach>

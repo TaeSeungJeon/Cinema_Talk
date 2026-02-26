@@ -162,7 +162,6 @@
 	box-shadow: none;
 }
 
-
 /* 아이콘 컬러 */
 .meta-item i {
 	color: #6366f1;
@@ -186,14 +185,14 @@
 }
 
 .icon {
-    font-weight: 800;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    gap: 5px;
-    color: #64748b;
-    white-space: nowrap;
+	font-weight: 800;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 14px;
+	gap: 5px;
+	color: #64748b;
+	white-space: nowrap;
 }
 /* 러닝타임 숫자 정렬 */
 .runtime-input {
@@ -628,11 +627,13 @@ form {
 	border-radius: 1rem;
 	display: block; /* ⭐ flex 제거 */
 }
+
 .info-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;   /* ⭐ 두 줄 사이 간격 유지 */
+	display: flex;
+	flex-direction: column;
+	gap: 1rem; /* ⭐ 두 줄 사이 간격 유지 */
 }
+
 .info-row {
 	display: flex;
 	gap: 2.5rem;
@@ -757,25 +758,28 @@ h3 {
 }
 
 .custom-tooltip {
-	position: fixed;
-	background: #111827;
-	color: white;
-	font-size: 12px;
-	padding: 6px 10px;
-	border-radius: 6px;
-	white-space: nowrap;
-	pointer-events: none;
-	opacity: 0;
-	transform: translateY(-6px);
-	transition: opacity 0.15s ease, transform 0.15s ease;
-	z-index: 99999;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #111827;
+    color: white;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 99999;
 }
 .custom-tooltip img {
-    width: 190px;
-    border-radius: 6px;
-    display: block;
+	width: 190px;
+	border-radius: 6px;
+	display: block;
 }
 </style>
+
 <form action="${pageContext.request.contextPath}/admin/movie/save.do"
 	method="post">
 	<input type="hidden" name="movieId" value="${adminMovie.movieId}">
@@ -795,7 +799,7 @@ h3 {
 
 			<div class="header-actions">
 				<button type="submit" class="btn-edit">수정</button>
-				<button class="btn-delete">삭제</button>
+				<button type="button" class="btn-delete" onclick="deleteMovie()">삭제</button>
 			</div>
 		</div>
 
@@ -819,10 +823,19 @@ h3 {
 		<div class="content-grid">
 			<div class="poster-section">
 				<div>
-					<img
-						src="https://image.tmdb.org/t/p/w500${adminMovie.moviePosterPath}"
-						class="main-poster"> <input type="text"
-						name="moviePosterPath" class="field-input"
+					<c:choose>
+						<c:when test="${empty adminMovie.moviePosterPath}">
+							<img
+								src="${pageContext.request.contextPath}/Image/nullPoster.png"
+								class="main-poster">
+						</c:when>
+						<c:otherwise>
+							<img
+								src="https://image.tmdb.org/t/p/w500${adminMovie.moviePosterPath}"
+								class="main-poster">
+						</c:otherwise>
+					</c:choose>
+					<input type="text" name="moviePosterPath" class="field-input"
 						style="margin-top: 0.75rem;" value="${adminMovie.moviePosterPath}">
 
 					<div class="genre-section">
@@ -854,10 +867,10 @@ h3 {
 								</div>
 
 								<div class="info-item-inline">
-									<span class="label-inline">참여자 수</span>  <span class="icon">👥</span>
-									<input type="number"
-										name="movieRatingCount" value="${adminMovie.movieRatingCount}"
-										class="number-input"> <span class="unit">명</span>
+									<span class="label-inline">참여자 수</span> <span class="icon">👥</span>
+									<input type="number" name="movieRatingCount"
+										value="${adminMovie.movieRatingCount}" class="number-input">
+									<span class="unit">명</span>
 								</div>
 
 							</div>
@@ -892,8 +905,19 @@ h3 {
 						<c:forEach var="director" items="${adminMovie.directors}">
 							<div class="person-card">
 								<input type="hidden" name="crewPersonIds"
-									value="${director.personId}"> <img
-									src="https://image.tmdb.org/t/p/w200${director.profilePath}">
+									value="${director.personId}">
+								<c:choose>
+									<c:when test="${not empty director.profilePath}">
+										<img
+											src="https://image.tmdb.org/t/p/w200${director.profilePath}"
+											alt="제작진 프로필">
+									</c:when>
+									<c:otherwise>
+										<img
+											src="${pageContext.request.contextPath}/Image/nullprofile.png"
+											alt="기본 프로필">
+									</c:otherwise>
+								</c:choose>
 
 								<div class="person-info">
 									<span class="person-text person-name-text">
@@ -934,8 +958,19 @@ h3 {
 						<c:forEach var="cast" items="${adminMovie.casts}">
 							<div class="person-card">
 								<input type="hidden" name="castPersonIds"
-									value="${cast.personId}"> <img
-									src="https://image.tmdb.org/t/p/w200${cast.profilePath}">
+									value="${cast.personId}">
+								<c:choose>
+									<c:when test="${not empty cast.profilePath}">
+										<img
+											src="https://image.tmdb.org/t/p/w200${cast.profilePath}"
+											alt="출연진 프로필">
+									</c:when>
+									<c:otherwise>
+										<img
+											src="${pageContext.request.contextPath}/Image/nullprofile.png"
+											alt="기본 프로필">
+									</c:otherwise>
+								</c:choose>
 
 								<div class="person-info">
 									<span class="person-text person-name-text">
@@ -1163,61 +1198,145 @@ document.addEventListener("click", function(e) {
         list.style.display = "none";
     });
 });
-//🔥 커스텀 툴팁
-const tooltip = document.createElement("div");
-tooltip.className = "custom-tooltip";
-document.body.appendChild(tooltip);
+//🔥 커스텀 툴팁 (중복 방지)
+if (!window.__tooltipInitialized) {
 
-document.addEventListener("mouseover", function (e) {
+    window.__tooltipInitialized = true;
 
-    // 1️⃣ 사람 이름 툴팁
-    if (e.target.classList.contains("person-name-text")) {
+    let tooltip = document.querySelector(".custom-tooltip");
 
-        const el = e.target;
+    if (!tooltip) {
+        tooltip = document.createElement("div");
+        tooltip.className = "custom-tooltip";
+        document.body.appendChild(tooltip);
+    }
 
-        if (el.scrollWidth > el.clientWidth) {
-            tooltip.innerText = el.innerText;
-            tooltip.dataset.type = "text";
+    // =========================
+    // 툴팁 표시
+    // =========================
+    document.addEventListener("mouseover", function (e) {
+
+        if (e.target.classList.contains("person-name-text")) {
+
+            const el = e.target;
+
+            if (el.scrollWidth > el.clientWidth) {
+                tooltip.innerText = el.innerText;
+                tooltip.dataset.type = "text";
+                tooltip.style.opacity = "1";
+            }
+        }
+
+        if (e.target.classList.contains("backdrop-label")) {
+
+            const input = document.querySelector(".backdrop-input");
+            const path = input?.value;
+
+            if (!path) return;
+
+            const fullUrl = "https://image.tmdb.org/t/p/w500" + path;
+
+            tooltip.innerHTML = "<img src='" + fullUrl + "'>";
+            tooltip.dataset.type = "image";
             tooltip.style.opacity = "1";
         }
-    }
+    });
 
-    // 2️⃣ 배경 이미지 툴팁
-    if (e.target.classList.contains("backdrop-label")) {
+    // =========================
+    // 🔥 여기 추가 (마우스 따라다니기)
+    // =========================
+    document.addEventListener("mousemove", function (e) {
 
-        const input = document.querySelector(".backdrop-input");
-        const path = input.value;
+        if (tooltip.style.opacity !== "1") return;
 
-        if (!path) return;
+        const offset = 16;
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
 
-        const fullUrl = "https://image.tmdb.org/t/p/w500" + path;
+        let x = e.clientX + offset;
+        let y = e.clientY + offset;
 
-        tooltip.innerHTML = "<img src='" + fullUrl + "'>";
-        tooltip.dataset.type = "image";
-        tooltip.style.opacity = "1";
-    }
-});
+        // 화면 오른쪽 넘으면 반대로
+        if (x + width > window.innerWidth) {
+            x = e.clientX - width - offset;
+        }
 
+        // 화면 아래쪽 넘으면 위로
+        if (y + height > window.innerHeight) {
+            y = e.clientY - height - offset;
+        }
 
-document.addEventListener("mousemove", function (e) {
-    if (tooltip.style.opacity === "1") {
-        tooltip.style.left = e.pageX + 12 + "px";
-        tooltip.style.top = e.pageY - 30 + "px";
-    }
-});
+        tooltip.style.left = x + "px";
+        tooltip.style.top  = y + "px";
+    });
 
+    // =========================
+    // 툴팁 숨김
+    // =========================
+    document.addEventListener("mouseout", function (e) {
 
-document.addEventListener("mouseout", function (e) {
+        if (
+            e.target.classList.contains("person-name-text") ||
+            e.target.classList.contains("backdrop-label")
+        ) {
+            tooltip.style.opacity = "0";
+            tooltip.innerHTML = "";
+            tooltip.innerText = "";
+            delete tooltip.dataset.type;
+        }
+    });
+}
+//검색어 불러오기
+function reloadMovieList(keyword) {
 
-    if (
-        e.target.classList.contains("person-name-text") ||
-        e.target.classList.contains("backdrop-label")
-    ) {
-        tooltip.style.opacity = "0";
-        tooltip.innerHTML = "";
-        tooltip.innerText = "";
-        delete tooltip.dataset.type;
-    }
-});
+    fetch("${pageContext.request.contextPath}/admin/movieSearch.do?keyword=" + keyword, {
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(res => res.text())
+    .then(html => {
+        document.getElementById("movie-list-area").innerHTML = html;
+    });
+}
+
+// 영화 삭제
+function deleteMovie() {
+
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    const movieId = "${adminMovie.movieId}";
+
+    fetch("${pageContext.request.contextPath}/admin/movie/delete.do", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: "movieId=" + movieId
+    })
+    .then(response => response.text())
+    .then(result => {
+
+        const clean = result.trim();   // ⭐ 이거 추가
+
+        console.log("서버 응답:", "[" + clean + "]");
+
+        if (clean === "success") {
+
+            const keyword = document.querySelector(".search-input")?.value || "";
+
+            reloadMovieList(keyword);
+
+            document.getElementById("movie-detail-area").innerHTML =
+                "<div style='padding:2rem; color:#9ca3af;'>왼쪽에서 영화를 선택하세요.</div>";
+
+            showToast("✔ 영화가 삭제되었습니다.");
+        } else {
+            showToast("삭제 실패", "error");
+        }
+    });
+}
+
 </script>
 </form>

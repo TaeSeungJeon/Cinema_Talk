@@ -9,8 +9,6 @@ import DTO.Movie.MovieDTO;
 public interface AdminMovieDAO {
 	boolean existsMovie(SqlSession session, int movieId);
 
-    void insertMovie(SqlSession session, MovieDTO movie);
-
     void updateMovie(SqlSession session, MovieDTO movie);
 
     void deleteMovieGenres(SqlSession session, int movieId);
@@ -24,4 +22,6 @@ public interface AdminMovieDAO {
     void deleteMovieCrews(SqlSession session, int movieId);
 
     void insertMovieCrew(SqlSession session, int movieId, CrewSaveDTO crew);
+
+	int deleteMovie(SqlSession session, int movieId);
 }

@@ -157,4 +157,31 @@
         WHERE rnum >= #{startrow}
     </select>
 
+    <!-- ============================================== -->
+    <!-- 특정 영화의 게시글 카운트 -->
+    <!-- ============================================== -->
+    <select id="boardCountByMovieId" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE MOVIEID = #{movieId}
+    </select>
+
+    <!-- ============================================== -->
+    <!-- 특정 영화의 게시글 목록 페이징 -->
+    <!-- ============================================== -->
+    <select id="boardListPageByMovieId" parameterType="map" resultType="bdto">
+        SELECT *
+        FROM (SELECT ROWNUM rnum, b.*
+              FROM (SELECT b.*,
+                           (SELECT COUNT(*)
+                            FROM BOARD_LIKE l
+                            WHERE l.boardId = b.boardId
+                              AND l.boardType = b.boardType) AS likeCount
+                    FROM BOARD b
+                    WHERE b.MOVIEID = #{movieId}
+                    ORDER BY b.boardId DESC) b
+              WHERE ROWNUM <![CDATA[<=]]> #{endrow})
+        WHERE rnum >= #{startrow}
+    </select>
+
 </mapper>

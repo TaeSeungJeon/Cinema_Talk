@@ -167,6 +167,7 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public int withdrawMember(int memNo) {
+	public int updateLastLogin(String memId) {
 		SqlSession sqlSession = null;
 		
 		try {
@@ -214,5 +215,16 @@ public class MemberDAOImpl implements MemberDAO {
 			}
 		}
 	}//updateProfilePhotoPath() -> 프로필 사진 경로 업데이트
+			int result = sqlSession.update("updateLastLogin", memId);
+			sqlSession.commit();
+			return result;
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//updateLastLogin() -> 마지막 로그인 날짜 업데이트
+
+
 
 }

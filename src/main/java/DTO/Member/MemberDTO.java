@@ -1,5 +1,7 @@
 package DTO.Member;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,4 +22,5 @@ public class MemberDTO {
 	private String memDate; //회원 가입날짜
 	private String memProfilePhoto; //프로필 사진 상대 경로 (예: members/123/20260226/20260226-uuid.jpg)
 	
+	private Date memLastLogin; //마지막 로그인 날짜
 }

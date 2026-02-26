@@ -85,4 +85,34 @@ public class BoardSearchDAOImpl implements BoardSearchDAO {
 		}
 		return boards;
 	}
+
+	@Override
+	public int getBoardCountByMovieId(int movieId) {
+		SqlSession sqlSession = null;
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("BoardSearch.boardCountByMovieId", movieId);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<BoardDTO> boardListPageByMovieId(int movieId, int startRow, int endRow) {
+		SqlSession session = null;
+		try {
+			session = getSqlSession();
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("movieId", movieId);
+			paramMap.put("startrow", startRow);
+			paramMap.put("endrow", endRow);
+			return session.selectList("BoardSearch.boardListPageByMovieId", paramMap);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+	}
 }

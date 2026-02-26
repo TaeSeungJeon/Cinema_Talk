@@ -52,5 +52,15 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 				
 		return boardSearchDAO.boardListPageByTypeAndWord(type, startRow, endRow, words, searchOption);
 	}
+
+	@Override
+	public int getBoardCountByMovieId(int movieId) {
+		return boardSearchDAO.getBoardCountByMovieId(movieId);
+	}
+
+	@Override
+	public List<BoardDTO> boardListPageByMovieId(int movieId, int startRow, int endRow) {
+		return boardSearchDAO.boardListPageByMovieId(movieId, startRow, endRow);
+	}
 	
 }

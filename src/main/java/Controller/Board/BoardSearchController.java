@@ -30,8 +30,15 @@ public class BoardSearchController implements Action {
 		//검색어 리스트 박스
 		int searchOption = Integer.parseInt(request.getParameter("search-option"));
 		
+		//영화 id 기반 검색
+		String movieIdParam = request.getParameter("movieId");
+		if(movieIdParam == null || movieIdParam.trim().isEmpty()) {
+			movieIdParam = "0";
+		}
+		int movieId = Integer.parseInt(request.getParameter("movieId"));
+		
 		//검색어 유효성 검사		
-		if(searchWords == null) {
+		if(searchWords == null && movieId == 0) {
 			out.println("<script>");
 			out.println("alert('검색어를 입력하세요.');");
 			out.println("history.back();");
@@ -61,18 +68,23 @@ public class BoardSearchController implements Action {
 
 	        int totalCount;
 	        List<BoardDTO> list;
-
-	        if ("free".equals(filter)) {
-	            totalCount = service.getBoardCountByTypeAndWord(1, searchWords, searchOption);
-	            list = service.boardListPageByTypeAndWord(1, startRow, endRow, searchWords, searchOption);
-	        } else if ("hot".equals(filter)) {
-	            totalCount = service.getBoardCountByTypeAndWord(2, searchWords, searchOption);
-	            list = service.boardListPageByTypeAndWord(2, startRow, endRow, searchWords, searchOption);
+	        
+	        if(movieId != 0) {
+	        	totalCount = service.getBoardCountByMovieId(movieId);
+	        	list = service.boardListPageByMovieId(movieId, startRow, endRow);
 	        } else {
-	            totalCount = service.getBoardCountByTypeAndWord(0, searchWords, searchOption);
-	            list = service.boardListPageByTypeAndWord(0, startRow, endRow, searchWords, searchOption);
+	        	if ("free".equals(filter)) {
+		            totalCount = service.getBoardCountByTypeAndWord(1, searchWords, searchOption);
+		            list = service.boardListPageByTypeAndWord(1, startRow, endRow, searchWords, searchOption);
+		        } else if ("hot".equals(filter)) {
+		            totalCount = service.getBoardCountByTypeAndWord(2, searchWords, searchOption);
+		            list = service.boardListPageByTypeAndWord(2, startRow, endRow, searchWords, searchOption);
+		        } else {
+		            totalCount = service.getBoardCountByTypeAndWord(0, searchWords, searchOption);
+		            list = service.boardListPageByTypeAndWord(0, startRow, endRow, searchWords, searchOption);
+		        }
 	        }
-
+	        
 	        int maxPage = (totalCount + limit - 1) / limit;
 
 	        // 10페이지 블록

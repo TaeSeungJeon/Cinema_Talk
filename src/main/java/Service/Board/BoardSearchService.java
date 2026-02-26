@@ -10,4 +10,8 @@ public interface BoardSearchService {
 
 	List<BoardDTO> boardListPageByTypeAndWord(int i, int startRow, int endRow, String searchWords, int searchOption);
 
+	int getBoardCountByMovieId(int movieId);
+
+	List<BoardDTO> boardListPageByMovieId(int movieId, int startRow, int endRow);
+
 }

@@ -17,8 +17,8 @@
 		<div class="card-info">
 			<div class="card-title">${movie.movieTitle}</div>
 			<div class="card-subtitle">${movie.movieOriginalTitle}</div>
-			<div style="font-size: 0.75rem; color: #6b7280;">⭐
-				${movie.movieRatingAverage} • ${movie.movieRuntime}분</div>
+			<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 5px;">📅	${movie.movieReleaseDate}</div>
+			<div style="font-size: 0.75rem; color: #6b7280;"> ⏱️ ${movie.movieRuntime}분 </div>
 		</div>
 	</div>
 </c:forEach>

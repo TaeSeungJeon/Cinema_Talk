@@ -29,8 +29,10 @@ select memNoSeq.nextval as "다음 시퀀스 번호값" from dual;
 
 -- 관리자 데이터 추가
 insert into member (memNo, memId, memPwd, memName, memPhone, memEmail, memRole, memState, memDate)
-values(memNoSeq.nextval, 'admin', '$2a$10$Fr//bMkKNVxhjxU6RUR6uezZ1T.S4sDTUrNx5j/2eje1UDAsHC3ju', '전태승',
-'010-5888-7040', 'yunhano48@gmail.com', 1, 1, sysdate);
+values(memNoSeq.nextval, 'admin', '$2a$10$2XSxqZfK.eccyl.pogMgguklaQOFvI/nRccNvdNIRSO0EOVw449ES', '관리자',
+'010-3333-3333', 'admin@gmail.com', 1, 1, sysdate);
+
+delete from member where memNo = 3;
 
 -- member테이블 삭제
 drop table member;

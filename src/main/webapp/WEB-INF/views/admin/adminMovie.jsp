@@ -149,11 +149,12 @@
 }
 
 .detail-header-fixed {
-    padding: 1.5rem 2rem;
+    padding: 0.8rem 2rem 0.4rem 2rem;
     border-bottom: 1px solid #f3f4f6;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
+    margin-bottom: 0.5rem;
 }
 .header-top {
     display: flex;

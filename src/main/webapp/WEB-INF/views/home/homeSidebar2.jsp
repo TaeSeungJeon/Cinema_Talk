@@ -1,44 +1,107 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-    <aside>
-        <div class="side-widget">
-            <div class="widget-title">
-                <span>🔥 실시간 인기글</span>
-                <a href="#" class="widget-link">더보기</a>
-            </div>
-            <ul class="hot-list">
-                <li class="hot-item"><span class="rank-num">1</span> <span class="hot-text">범죄도시4 빌런 예상 (스포주의)</span></li>
-                <li class="hot-item"><span class="rank-num">2</span> <span class="hot-text">이번 주말 넷플릭스 추천 영화</span></li>
-                <li class="hot-item"><span class="rank-num">3</span> <span class="hot-text">인터스텔라 재개봉 일정 공유</span></li>
-            </ul>
-        </div>
 
-        <div class="side-widget">
-            <div class="widget-title">
-                <span>📊 영화 투표</span>
-            </div>
-            <div class="widget-placeholder">
-                <div style="text-align: center;">
-                    <p style="margin:0; font-size: 0.8rem;">올해 최고의 기대작은?</p>
-                    <button style="margin-top:10px; font-size:0.7rem; padding:5px 10px; border-radius:8px; border:none; background:var(--accent-color); color:white; cursor:pointer;">
-                        투표하기
-                    </button>
-                </div>
-            </div>
-        </div>
+<div class="side-widget" id="hotWidget">
+    <div class="widget-title">
+        <span>🔥 실시간 인기글</span>
+        <a href="#" class="widget-link" id="hotToggleBtn">더보기</a>
+    </div>
 
-        <div class="side-widget">
-            <div class="widget-title">
-                <span>🏆 우수 리뷰어</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width:32px; height:32px; border-radius:50%; background:#ddd;"></div>
-                    <span style="font-size:0.85rem; font-weight:600;">MovieMaster</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width:32px; height:32px; border-radius:50%; background:#ccc;"></div>
-                    <span style="font-size:0.85rem; font-weight:600;">Critic_Lee</span>
-                </div>
-            </div>
-        </div>
-    </aside>
+    <ul class="hot-list" id="hotList">
+        <li class="hot-item">
+            <span class="rank-num">1</span>
+            <span class="hot-text">로딩중</span>
+        </li>
+    </ul>
+</div>
+
+<script>
+    const contextPath = '<%=request.getContextPath()%>';
+
+    const collapsedLimit = 5;
+    const expandedLimit = 10;
+
+    let hotData = [];
+    let isExpanded = false;
+    let loadedLimit = 0;
+
+    async function loadHotPosts(limit) {
+        try {
+            const res = await fetch(contextPath + '/hotBoard.do?limit=' + limit);
+            const data = await res.json();
+
+            hotData = data.items || [];
+            loadedLimit = limit;
+
+            renderHotList();
+        } catch (e) {
+            const list = document.getElementById('hotList');
+            list.innerHTML =
+                '<li class="hot-item">' +
+                '<span class="rank-num">-</span>' +
+                '<span class="hot-text">불러오기 실패</span>' +
+                '</li>';
+        }
+    }
+
+    function renderHotList() {
+        const list = document.getElementById('hotList');
+        list.innerHTML = '';
+
+        if (!hotData || hotData.length === 0) {
+            list.innerHTML =
+                '<li class="hot-item">' +
+                '<span class="rank-num">-</span>' +
+                '<span class="hot-text">데이터 없음</span>' +
+                '</li>';
+            return;
+        }
+
+        hotData.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'hot-item';
+
+            li.innerHTML =
+                '<span class="rank-num">' + (index + 1) + '</span>' +
+                '<span class="hot-text">' + item.title + '</span>';
+
+            li.onclick = function() {
+                location.href = contextPath +
+                    '/postDetail.do?boardId=' + item.boardId +
+                    '&boardType=' + item.boardType;
+            };
+
+            list.appendChild(li);
+        });
+    }
+
+    function applyExpandedUI() {
+        const widget = document.getElementById('hotWidget');
+        const btn = document.getElementById('hotToggleBtn');
+
+        if (isExpanded) {
+            widget.classList.add('is-expanded');
+            btn.textContent = '접기';
+        } else {
+            widget.classList.remove('is-expanded');
+            btn.textContent = '더보기';
+        }
+    }
+
+    function toggleHotList(e) {
+        e.preventDefault();
+
+        isExpanded = !isExpanded;
+        applyExpandedUI();
+
+        const targetLimit = isExpanded ? expandedLimit : collapsedLimit;
+
+        if (loadedLimit !== targetLimit) {
+            loadHotPosts(targetLimit);
+        }
+    }
+
+    document.getElementById('hotToggleBtn').addEventListener('click', toggleHotList);
+
+    applyExpandedUI();
+    loadHotPosts(collapsedLimit);
+</script>

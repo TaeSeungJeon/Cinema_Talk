@@ -165,5 +165,22 @@
           AND BOARDTYPE = #{boardType}
     </select>
 
+    <!-- 실시간 인기글: 좋아요/조회수 기반 TOP -->
+    <select id="hotBoardList" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (SELECT b.BOARDID                         AS boardId,
+                     b.BOARDTYPE                       AS boardType,
+                     b.BOARDTITLE                      AS boardTitle,
+                     b.BOARDRECOMMENDCOUNT             AS boardRecommendCount,
+                     (SELECT COUNT(*)
+                      FROM BOARD_LIKE l
+                      WHERE l.BOARDID = b.BOARDID
+                        AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
+              FROM BOARD b
+              ORDER BY likeCount DESC,
+                       NVL(b.BOARDRECOMMENDCOUNT, 0) DESC,
+                       b.BOARDID DESC)
+        WHERE ROWNUM <![CDATA[<=]]> #{limit}
+    </select>
 
 </mapper>

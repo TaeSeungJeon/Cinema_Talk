@@ -30,4 +30,6 @@ public interface BoardDAO {
     void deleteBoardLike(int boardId, int memNo);
     int deleteBoardLike(int boardId, int boardType, int memNo);
     int getBoardLikeCount(int boardId, int boardType);
+    // 실시간 인기글
+    List<BoardDTO> hotBoardList(int limit);
 }

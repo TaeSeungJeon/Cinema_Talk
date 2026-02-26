@@ -15,9 +15,8 @@ public class BoardSearchController implements Action {
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-        
         
         String filter = request.getParameter("filter");
         if (filter == null || filter.trim().isEmpty()) {
@@ -26,6 +25,7 @@ public class BoardSearchController implements Action {
 		
 		//검색 창의 문자열을 가져와 저장
 		String searchWords = request.getParameter("search-words");
+		searchWords = searchWords.trim();  // 양쪽 공백 제거
 		
 		//검색어 리스트 박스
 		int searchOption = Integer.parseInt(request.getParameter("search-option"));

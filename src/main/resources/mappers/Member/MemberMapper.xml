@@ -52,4 +52,19 @@
   	select count(*) from member where memEmail = #{memEmail}
   </select>
   
+  <!-- 회원 탈퇴 (상태값 변경: 1 -> 3) -->
+  <update id="updateMemberState" parameterType="map">
+  	update member set memState = #{memState} where memNo = #{memNo}
+  </update>
+  
+  <!-- 프로필 사진 상대 경로 조회 -->
+  <select id="findProfilePhotoPath" parameterType="int" resultType="String">
+    SELECT memProfilePhoto FROM member WHERE memNo = #{memNo}
+  </select>
+  
+  <!-- 프로필 사진 경로 업데이트 -->
+  <update id="updateProfilePhotoPath" parameterType="map">
+    UPDATE member SET memProfilePhoto = #{memProfilePhoto} WHERE memNo = #{memNo}
+  </update>
+  
   </mapper>

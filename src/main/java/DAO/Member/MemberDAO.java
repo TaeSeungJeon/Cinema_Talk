@@ -22,4 +22,10 @@ public interface MemberDAO {
 
 	int updatePwd(MemberDTO mdto);
 
+	int withdrawMember(int memNo);
+
+	String findProfilePhotoPath(int memNo);
+
+	int updateProfilePhotoPath(int memNo, String relativePath);
+
 }

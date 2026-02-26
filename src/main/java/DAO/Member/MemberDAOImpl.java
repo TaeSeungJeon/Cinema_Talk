@@ -165,5 +165,54 @@ public class MemberDAOImpl implements MemberDAO {
 		}
 	}//emailCheck() -> 이메일 중복 체크
 
+	@Override
+	public int withdrawMember(int memNo) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> param = new HashMap<>();
+			param.put("memNo", memNo);
+			param.put("memState", 3); // 3: 탈퇴 상태
+			int result = sqlSession.update("Member.updateMemberState", param);
+			sqlSession.commit();
+			return result;
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//withdrawMember() -> 회원 탈퇴 (상태값 3으로 변경)
+
+	@Override
+	public String findProfilePhotoPath(int memNo) {
+		SqlSession sqlSession = null;
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("Member.findProfilePhotoPath", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//findProfilePhotoPath() -> 프로필 사진 상대경로 조회
+
+	@Override
+	public int updateProfilePhotoPath(int memNo, String relativePath) {
+		SqlSession sqlSession = null;
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> param = new HashMap<>();
+			param.put("memNo", memNo);
+			param.put("memProfilePhoto", relativePath);
+			int result = sqlSession.update("Member.updateProfilePhotoPath", param);
+			sqlSession.commit();
+			return result;
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//updateProfilePhotoPath() -> 프로필 사진 경로 업데이트
 
 }

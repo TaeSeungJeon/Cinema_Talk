@@ -145,6 +145,15 @@
             <version>1.17.2</version>
         </dependency>
 
+        <!-- ========================= -->
+        <!-- Thumbnailator (썸네일 생성) -->
+        <!-- ========================= -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.20</version>
+        </dependency>
+
     </dependencies>
 
 

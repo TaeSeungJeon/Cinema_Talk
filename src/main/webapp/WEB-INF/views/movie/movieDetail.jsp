@@ -500,7 +500,9 @@
 
 <script>
     var movieId = ${movie.movieId};
-    var movieTitle = ${movie.movieTitle};
+    var movieTitle = "${fn:escapeXml(movie.movieTitle)}";
+    movieTitle = movieTitle.replace(" ","").replace(/ /g,"");
+    
     function searchByDirector(personName) {
         window.location.href = 'searchMovie.do?search-option=1&search-words=' + encodeURIComponent(personName);
     }
@@ -514,6 +516,7 @@
         var action = event.target.value === 'true' ? 'add' : 'remove';
         window.location.href = 'MemberMovieRecommend.do?movieId=' + movieId + '&redirect=movieDetail.do?movieId=' + movieId + '&action=' + action;
     }
+    
 	function searchBoardByMovieId() {
         window.location.href = 'searchBoard.do?search-option=0&search-words=' + movieTitle + '&movieId=' + movieId;
     }

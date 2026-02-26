@@ -757,6 +757,7 @@ aside {
 								<div class="custom-select-option" data-value="2">내용</div>
 								<div class="custom-select-option" data-value="3">글쓴이</div>
 							</div>
+							<input type="hidden" name="movieId" value="0">
 						</div>
 						<input type="text" name="search-words"
 							placeholder="찾고 싶은 게시글을 검색해보세요"> <input
@@ -774,8 +775,6 @@ aside {
 					class="filter-btn ${filter=='free' ? 'active' : ''}">자유게시판</a> <a
 					href="${pageContext.request.contextPath}/freeBoard.do?filter=hot"
 					class="filter-btn ${filter=='hot' ? 'active' : ''}">영화 추천/후기</a>
-
-
 			</nav>
 
 			<div class="post-list">

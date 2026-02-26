@@ -21,4 +21,6 @@ public interface MemberService {
 
 	int emailCheck(String memEmail);
 
+	int updateLastLogin(String memId);
+
 }

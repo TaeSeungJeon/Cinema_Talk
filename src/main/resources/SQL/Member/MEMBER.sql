@@ -18,6 +18,11 @@ create table MEMBER(
 ALTER TABLE member
 ADD CONSTRAINT uk_member_email UNIQUE (memEmail);
 
+--휴면계정 처리를 위해 memLastLogin 컬럼추가
+alter table member add memLastLogin date;
+
+-- 기존 회원은 가입일로 초기 세팅 (새 컬럼 값이 null이라 일단 가입일을 넣어 초기값으로 씀)
+update member set memLastLogin = memDate where memLastLogin is null;
 
 select * from MEMBER;
 
@@ -31,6 +36,7 @@ select memNoSeq.nextval as "다음 시퀀스 번호값" from dual;
 insert into member (memNo, memId, memPwd, memName, memPhone, memEmail, memRole, memState, memDate)
 values(memNoSeq.nextval, 'admin', '$2a$10$Fr//bMkKNVxhjxU6RUR6uezZ1T.S4sDTUrNx5j/2eje1UDAsHC3ju', '전태승',
 '010-5888-7040', 'yunhano48@gmail.com', 1, 1, sysdate);
+
 
 -- member테이블 삭제
 drop table member;

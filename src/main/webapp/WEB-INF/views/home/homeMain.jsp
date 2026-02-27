@@ -220,7 +220,7 @@
 		<c:forEach var="b" items="${recentBoardList}">
 			<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
 			   class="post-item">
-				<div class="post-thumb">썸네일</div>
+				<div class="post-thumb">썸네일</div>	<%-- 여기가 최근게시글 이미지 깨지는 부분 --%>
 				<div class="post-content">
 					<div style="display: flex; justify-content: space-between;">
 						<span
@@ -236,7 +236,7 @@
 					</div>
 					<div style="font-size: 0.9rem; color: #64748b;">
 						<c:out value="${fn:substring(b.boardContent, 0, 60)}" />
-						<c:if test="${fn:length(b.boardContent) > 60}">...</c:if>
+						<c:if test="${fn:length(b.boardContent) > 60}">...</c:if>  <%--여기가 최근게시글 이미지 경로 깨지는 부분 --%>
 					</div>
 					<div class="post-stats">
 						<span>💬 댓글 <c:out value="${b.commentCount}" /></span>

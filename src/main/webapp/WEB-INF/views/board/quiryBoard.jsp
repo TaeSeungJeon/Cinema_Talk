@@ -723,7 +723,7 @@ aside {
 								<svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">
 									<path d="M1.5 12s4-7 10.5-7 10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" />
 									<circle cx="12" cy="12" r="3.5" />
-								</svg> ${board.boardRecommendCount}
+								</svg> ${board.boardViewCount}
 							</span>
 							<span class="post-meta-item">
 								<svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">

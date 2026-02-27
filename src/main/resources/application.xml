@@ -1,1 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <!-- ===== 프로필 사진 설정 ===== -->
+    
+    <!-- 프로필 사진이 저장될 외부 디렉토리 (끝에 / 필수) -->
+    <property name="profile.photo.external-dir" value="C:/dev/cinema_talk/profile_photos/" />
+    
+    <!-- 정적 제공 시 매핑될 URL prefix -->
+    <property name="profile.photo.base-url" value="/Cinema_Talk/profilePhoto" />
+    
+    <!-- 허용되는 MIME 타입 -->
+    <property name="profile.photo.allowed-types" value="image/jpeg,image/png,image/gif" />
+    
+    <!-- 최대 파일 크기 (바이트) : 5MB -->
+    <property name="profile.photo.max-bytes" value="5242880" />
+    
+    <!-- 썸네일 가로/세로 크기 (px) -->
+    <property name="profile.photo.thumbnail-width" value="150" />
+    <property name="profile.photo.thumbnail-height" value="150" />
+    
+    <!-- 기본 아바타 파일 경로 (contextPath 기준) -->
+    <property name="profile.photo.default-filename" value="/images/default-avatar.png" />
+</application>

@@ -12,12 +12,16 @@ create table MEMBER(
 	, memState number(1) not null
 		check (memState in (1,2,3))			--회원 상태 : 1(정상계정), 2(휴먼계정), 3(탈퇴계정)
 	, memDate date not null					--등록 날짜
+	, memProfilePhoto varchar2(1000)
+	
 );
 
 -- unique 제약조건 추가 : 이메일 중복 불가 (비밀번호 찾기 기준이 되는 컬럼)
 ALTER TABLE member
 ADD CONSTRAINT uk_member_email UNIQUE (memEmail);
 
+ALTER TABLE member
+ADD memProfilePhoto varchar2(1000);
 --휴면계정 처리를 위해 memLastLogin 컬럼추가
 alter table member add memLastLogin date;
 

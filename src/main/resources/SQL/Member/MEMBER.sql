@@ -22,6 +22,7 @@ ADD CONSTRAINT uk_member_email UNIQUE (memEmail);
 
 ALTER TABLE member
 ADD memProfilePhoto varchar2(1000);
+
 --휴면계정 처리를 위해 memLastLogin 컬럼추가
 alter table member add memLastLogin date;
 

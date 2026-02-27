@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프리미엄 영화 큐레이션 - 게시글 상세</title>
+    <title>프리미엄 영화 큐레이션 - 문의 상세</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -32,7 +32,6 @@
             gap: 20px;
         }
 
-        /* --- 상단 헤더 --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -62,7 +61,6 @@
             transform: translateY(-2px);
         }
 
-        /* --- 카테고리 네비게이션 --- */
         .category-nav {
             display: flex;
             justify-content: center;
@@ -102,22 +100,6 @@
             font-weight: 700;
             font-size: 0.95rem;
             pointer-events: none;
-        }
-
-        /* 공유버튼 */
-        .share-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background-color: #6366f1;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .share-btn:hover {
-            background-color: #4f46e5;
-            transform: translateY(-2px);
         }
 
         .sub-menu {
@@ -165,7 +147,6 @@
             color: white !important;
         }
 
-        /* --- 게시판 레이아웃 설정 --- */
         .layout-wrapper {
             max-width: 1400px;
             margin: 0 auto;
@@ -190,7 +171,6 @@
             display: block !important;
         }
 
-        /* --- 게시글 본문 스타일 --- */
         .post-header {
             margin-bottom: 30px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -252,7 +232,6 @@
             box-shadow: var(--shadow-strong);
         }
 
-        /* --- 댓글 섹션 --- */
         .comment-section {
             margin-top: 25px;
         }
@@ -304,13 +283,11 @@
 
         .side-item {
             font-size: 0.9rem;
-            color: black;
+            color: var(--text-sub);
             padding: 8px 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.03);
             cursor: pointer;
             transition: 0.2s;
-            text-decoration:none;
-            display:block;
         }
 
         .side-item:hover {
@@ -352,89 +329,18 @@
             display: none;
         }
 
-        /* 링크 영역 */
-        .link-preview {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            margin-top: 14px;
-        }
-
-        .preview-card {
-            display: flex;
-            gap: 14px;
-            background: black;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 18px;
-            padding: 14px;
-            box-shadow: var(--shadow-subtle);
-            transition: 0.2s;
-        }
-
-        .preview-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        .preview-thumb {
-            width: 150px;
-            min-width: 150px;
-            height: 110px;
-            border-radius: 14px;
-            background-size: cover;
-            background-position: center;
-            background-color: #e2e8f0;
-        }
-
-        .preview-content {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 0;
-            flex: 1;
-        }
-
-        .preview-domain {
-            font-size: 0.78rem;
-            color: #94a3b8;
+        .admin-badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.7rem;
             font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-left: 8px;
+            vertical-align: middle;
         }
 
-        .preview-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.35;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .preview-desc {
-            font-size: 0.9rem;
-            color: #cbd5e1;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .preview-url {
-            font-size: 0.8rem;
-            color: #818cf8;
-            font-weight: 700;
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* ========== 실시간 인기글: freeBoard.jsp 스타일/두께/기울임/로직 동일 ========== */
         .side-widget {
             background: white;
             border-radius: var(--radius-soft);
@@ -451,46 +357,10 @@
             justify-content: space-between;
             align-items: center;
         }
-
-        .widget-link {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .widget-placeholder {
-            background: #f8fafc;
-            border: 2px dashed #e2e8f0;
-            border-radius: 16px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #cbd5e1;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
-        .reply-to {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .reply-to-name {
-            color: #a5b4fc;
-            font-weight: 700;
-        }
-
-
     </style>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
 </head>
 <body>
 
-<%-- include 헤더/네비 유지 --%>
 <%@ include file="../home/homeHeader.jsp" %>
 
 <div class="layout-wrapper">
@@ -498,32 +368,29 @@
         <div class="glass-panel">
             <div class="side-title">👤 작성자 정보</div>
             <div style="text-align: center; padding: 10px 0;">
-                <div class="avatar" style="width: 60px; height: 60px; margin: 0 auto 10px auto;"></div>
-                <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
+					<div class="avatar"
+						style="width: 60px; height: 60px; margin: 0 auto 10px auto;">
+					</div>
+					<a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
                    style="font-weight: 700; color: var(--text-main); text-decoration: none;">
                     ${cont.boardName}
                 </a>
-                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 댓글 42</div>
             </div>
-            <div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
-            <a href="${pageContext.request.contextPath}/myPage.do?" class="side-item">작성자의 다른 글 보기</a>
-            <div class="side-item">팔로우 하기</div>
-        </div>
         </div>
         <div class="glass-panel">
-            <div class="side-title">📋 카테고리 이동</div>
-            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=free" class="side-item">자유게시판</a>
-            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=hot" class="side-item">영화 추천/후기</a>
-            <a href="${pageContext.request.contextPath}/vote.do?" class="side-item">오늘의 투표</a>
-            <a href="${pageContext.request.contextPath}/voteList.do?" class="side-item">투표 목록</a>
+            <div class="side-title">📋 문의 안내</div>
+            <div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+                <p style="margin: 0;">• 관리자가 댓글로 답변합니다.</p>
+                <p style="margin: 0;">• 추가 문의는 대댓글로 남겨주세요.</p>
+                <p style="margin: 0;">• 개인정보 노출에 주의해주세요.</p>
+            </div>
         </div>
-
     </aside>
 
     <main class="main-content">
         <article class="glass-panel">
             <div class="post-header">
-                <span class="post-category">리뷰 · ${cont.boardName}</span>
+                <span class="post-category">💬 문의사항 · ${cont.boardName}</span>
                 <h1 class="post-title">${cont.boardTitle}</h1>
             </div>
 
@@ -537,83 +404,43 @@
                 ${cont.boardContent}
             </div>
 
+            <c:if test="${not empty fileList}">
+                <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
+                    <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <c:forEach var="f" items="${fileList}">
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <a href="${pageContext.request.contextPath}${f.filePath}"
+                                   target="_blank"
+                                   style="text-decoration:none; font-weight:700; color:#374151;">
+                                        ${f.fileName}
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
+
+            <%-- 수정/삭제: 작성자 본인만 --%>
             <div id="update-form" style="display:none; margin-top:20px;">
                 <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="boardId" value="${cont.boardId}">
-
-                    <input type="text" name="boardTitle"
-                           value="${cont.boardTitle}"
+                    <input type="text" name="boardTitle" value="${cont.boardTitle}"
                            style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
-
-                    <div id="editor"
-                         contenteditable="true"
+                    <div id="editor" contenteditable="true"
                          style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
                         ${cont.boardContent}
                     </div>
-
                     <input type="hidden" name="boardContent" id="hiddenContent">
-
-                    <c:if test="${not empty preview}">
-                        <a href="${preview.url}" target="_blank" class="link-preview">
-                            <div class="preview-card">
-                                <c:if test="${not empty preview.image}">
-                                    <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
-                                </c:if>
-
-                                <div class="preview-content">
-                                    <div class="preview-domain">
-                                        <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
-                                    </div>
-
-                                    <c:if test="${not empty preview.title}">
-                                        <div class="preview-title">${preview.title}</div>
-                                    </c:if>
-
-                                    <c:if test="${not empty preview.description}">
-                                        <div class="preview-desc">${preview.description}</div>
-                                    </c:if>
-
-                                    <div class="preview-url">${preview.url}</div>
-                                </div>
-                            </div>
-                        </a>
-                    </c:if>
-
-
                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
                         <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
                         <input type="file" name="uploadFiles" multiple style="margin-bottom:8px;">
                     </div>
-
-                    <c:if test="${not empty fileList}">
-                        <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
-                            <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
-
-                            <div style="display:flex; flex-direction:column; gap:12px;">
-                                <c:forEach var="f" items="${fileList}">
-                                    <div style="display:flex; flex-direction:column; gap:8px;">
-                                        <a href="${pageContext.request.contextPath}${f.filePath}"
-                                           target="_blank"
-                                           style="text-decoration:none; font-weight:700; color:#374151;">
-                                                ${f.fileName}
-                                        </a>
-                                    </div>
-                                </c:forEach>
-                            </div>
-                        </div>
-                    </c:if>
-
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
-                        <button type="button"
-                                onclick="hideUpdateForm()"
-                                style="padding:8px 18px; border-radius:10px; border:none; background:#9ca3af; color:white; font-weight:600; cursor:pointer;">
-                            취소
-                        </button>
-
+                        <button type="button" onclick="hideUpdateForm()"
+                                style="padding:8px 18px; border-radius:10px; border:none; background:#9ca3af; color:white; font-weight:600; cursor:pointer;">취소</button>
                         <button type="submit"
-                                style="padding:8px 18px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:700; cursor:pointer;">
-                            수정완료
-                        </button>
+                                style="padding:8px 18px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:700; cursor:pointer;">수정완료</button>
                     </div>
                 </form>
             </div>
@@ -622,51 +449,46 @@
                  style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
                 <button type="button" class="btn-list"
                         style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
-                        onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
-                </button>
+                        onclick="location.href='${pageContext.request.contextPath}/quiry.do'">목록으로</button>
 
                 <c:if test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
                     <div class="right-actions" style="display: flex; gap: 10px;">
                         <button type="button" class="btn-edit"
                                 style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
-                                onclick="showUpdateForm()">
-                            수정하기
-                        </button>
+                                onclick="showUpdateForm()">수정하기</button>
                         <button type="button" class="btn-delete"
                                 onclick="deletePost(${cont.boardId})"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">
-                            삭제하기
-                        </button>
+                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">삭제하기</button>
                     </div>
                 </c:if>
             </div>
-
-            <div class="post-actions">
-                <button class="action-btn" type="button"
-                        onclick="toggleLike(${cont.boardId}, ${cont.boardType})">
-                    👍 <span id="likeCount">${likeCount}</span>
-                </button>
-
-                <button type="button" class="share-btn" id="shareBtn">🔗 공유하기</button>
-            </div>
         </article>
 
+        <%-- ===================== 댓글(답변) 섹션 ===================== --%>
         <section class="glass-panel comment-section">
-            <div class="comment-count">댓글 ${clist.size()}개</div>
+            <div class="comment-count">답변 ${clist.size()}개</div>
 
-            <div class="comment-write">
-                <form action="commentsOk.do" method="post">
-                    <input type="hidden" name="boardId" value="${cont.boardId}">
-                    <input type="hidden" name="boardType" value="${cont.boardType}">
-                    <input type="hidden" name="parentBoardId" value="0">
-                    <input type="hidden" name="parentBoardNo" value="0">
-                    <input type="hidden" name="commentsNo" value="1">
-                    <textarea name="commentsContent" placeholder="댓글을 남겨보세요..." required></textarea>
-                    <div style="display: flex; justify-content: flex-end;">
-                        <button type="submit" class="btn-submit">등록</button>
-                    </div>
-                </form>
-            </div>
+            <%--
+                댓글 작성 폼 노출 조건:
+                1) 관리자(memRole==1) → 모든 문의에 답변(댓글) 가능
+                2) 일반회원(memRole==2) → 본인 문의글에만 대댓글 가능 (아래 답글 달기에서 처리)
+                   → 최상위 댓글 작성은 관리자만 가능
+            --%>
+            <c:if test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
+                <div class="comment-write">
+                    <form action="commentsOk.do" method="post">
+                        <input type="hidden" name="boardId" value="${cont.boardId}">
+                        <input type="hidden" name="boardType" value="${cont.boardType}">
+                        <input type="hidden" name="parentBoardId" value="0">
+                        <input type="hidden" name="parentBoardNo" value="0">
+                        <input type="hidden" name="commentsNo" value="1">
+                        <textarea name="commentsContent" placeholder="관리자 답변을 작성해주세요..." required></textarea>
+                        <div style="display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-submit">답변 등록</button>
+                        </div>
+                    </form>
+                </div>
+            </c:if>
 
             <div class="comment-list">
                 <c:forEach var="comm" items="${clist}">
@@ -677,31 +499,26 @@
                         <div class="comment-content" style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div class="comment-user">
-                                        ${comm.commentsName}
-                                    <c:if test="${comm.parentBoardId > 0}">
-                                        <c:forEach var="parent" items="${clist}">
-                                            <c:if test="${parent.commentsId == comm.parentBoardId}">
-                                                <span class="reply-to">
-                                                    ↩ <span class="reply-to-name">@${parent.commentsName}</span>
-                                                </span>
-                                            </c:if>
-                                        </c:forEach>
+                                    ${comm.commentsName}
+                                    <%-- 관리자 댓글에 배지 표시 (commentsNo==1이 최상위 댓글이므로 관리자 답변) --%>
+                                    <c:if test="${comm.commentsNo == 1 && comm.parentBoardId == null}">
+                                        <span class="admin-badge">관리자 답변</span>
                                     </c:if>
                                 </div>
 
+                                <%-- 수정/삭제: 댓글 작성자 본인만 --%>
                                 <c:if test="${not empty sessionScope.memNo and sessionScope.memNo == comm.memNo}">
                                     <div class="comment-edit-delete" style="font-size: 0.75rem; color:var(--text-sub);">
-                                        <span style="cursor:pointer;"
-                                              onclick="showEditForm(${comm.commentsId})">수정</span>
+                                        <span style="cursor:pointer;" onclick="showEditForm(${comm.commentsId})">수정</span>
                                         <span style="margin: 0 3px;">|</span>
-                                        <span style="cursor:pointer;"
-                                              onclick="deleteComment(${comm.commentsId}, ${cont.boardId})">삭제</span>
+                                        <span style="cursor:pointer;" onclick="deleteComment(${comm.commentsId}, ${cont.boardId})">삭제</span>
                                     </div>
                                 </c:if>
                             </div>
 
                             <div id="comment-text-${comm.commentsId}" class="comment-text">${comm.commentsContent}</div>
 
+                            <%-- 댓글 수정 폼 --%>
                             <div id="edit-form-${comm.commentsId}" style="display:none; margin-top:10px;">
                                 <form action="commentsUpdateOk.do" method="post">
                                     <input type="hidden" name="commentsId" value="${comm.commentsId}">
@@ -711,28 +528,38 @@
                                     <div style="display: flex; justify-content: flex-end; gap:5px;">
                                         <button type="button" class="btn-submit"
                                                 style="background:var(--text-sub); padding:4px 12px; font-size:0.8rem;"
-                                                onclick="hideEditForm(${comm.commentsId})">취소
-                                        </button>
+                                                onclick="hideEditForm(${comm.commentsId})">취소</button>
                                         <button type="submit" class="btn-submit"
-                                                style="padding:4px 12px; font-size:0.8rem;">수정완료
-                                        </button>
+                                                style="padding:4px 12px; font-size:0.8rem;">수정완료</button>
                                     </div>
                                 </form>
                             </div>
 
                             <div class="comment-utils">
                                 <span>${comm.commentsDate}</span>
-                                <span class="reply-trigger"
-                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);"
-                                      onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
+
+                                <%--
+                                    답글 달기 노출 조건:
+                                    1) 관리자(memRole==1) → 모든 댓글에 답글 가능
+                                    2) 일반회원(memRole==2) → 자신의 문의글(cont.memNo == sessionScope.memNo)일 때만 대댓글 가능
+                                    3) 타인의 문의에는 일반회원 대댓글 불가
+                                --%>
+                                <c:if test="${(sessionScope.memRole == '1' || sessionScope.memRole == 1) || 
+                                             ((sessionScope.memRole == '2' || sessionScope.memRole == 2) && sessionScope.memNo == cont.memNo)}">
+                                    <span class="reply-trigger"
+                                          style="cursor:pointer; font-weight:600; color:var(--accent-color);"
+                                          onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
+                                </c:if>
+
                                 <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
-                                      onclick="toggleCommentLike(${comm.commentsId}, this)"
+                                      onclick="toggleCommentLike(${comm.commentsId})"
                                       style="cursor:pointer; font-weight:600; color:var(--accent-color);">
                                     <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
                                     좋아요 ${comm.likeCount}
                                 </span>
                             </div>
 
+                            <%-- 대댓글 폼 --%>
                             <div id="reply-form-${comm.commentsId}" class="reply-form-container">
                                 <div class="comment-write"
                                      style="background: #f8fafc; border: 1px solid var(--accent-color); margin-top: 10px;">
@@ -746,8 +573,7 @@
                                         <div style="display: flex; justify-content: flex-end; gap: 10px;">
                                             <button type="button" class="btn-submit"
                                                     style="background: var(--text-sub);"
-                                                    onclick="hideReplyForm(${comm.commentsId})">취소
-                                            </button>
+                                                    onclick="hideReplyForm(${comm.commentsId})">취소</button>
                                             <button type="submit" class="btn-submit">답글 등록</button>
                                         </div>
                                     </form>
@@ -758,17 +584,17 @@
                 </c:forEach>
 
                 <c:if test="${empty clist}">
-                    <div style="text-align: center; color: var(--text-sub); padding: 20px;">첫 번째 댓글을 남겨보세요!</div>
+                    <div style="text-align: center; color: var(--text-sub); padding: 20px;">
+                        아직 답변이 없습니다. 관리자가 곧 답변해드립니다.
+                    </div>
                 </c:if>
             </div>
         </section>
-        <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
     </main>
 
     <aside class="side-panel">
         <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
     </aside>
-
 
     <script>
         function toggleMenu(element) {
@@ -813,12 +639,10 @@
                 const form = document.createElement("form");
                 form.method = "post";
                 form.action = "<c:url value='/boardDelete.do'/>";
-
                 const input = document.createElement("input");
                 input.type = "hidden";
                 input.name = "boardId";
                 input.value = boardId;
-
                 form.appendChild(input);
                 document.body.appendChild(form);
                 form.submit();
@@ -835,8 +659,8 @@
             document.getElementById("update-form").style.display = "none";
         }
 
-        function toggleLike(boardId, boardType) {
-            fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
+        function toggleCommentLike(commentsId) {
+            fetch("commentsLike.do?commentsId=" + commentsId)
                 .then(r => r.text())
                 .then(res => {
                     if (res === "LOGIN_REQUIRED") {
@@ -844,91 +668,9 @@
                         location.href = "memberLogin.do";
                         return;
                     }
-                    document.getElementById("likeCount").innerText = res;
+                    location.reload();
                 });
         }
-
-        const CTX = "${pageContext.request.contextPath}";
-
-        function toggleLike(boardId, boardType) {
-            fetch(CTX + "/boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
-                .then(r => r.text())
-                .then(res => {
-                    if (res === "LOGIN_REQUIRED") {
-                        alert("로그인 후 이용 가능합니다.");
-                        location.href = CTX + "/memberLogin.do";
-                        return;
-                    }
-                    document.getElementById("likeCount").innerText = res;
-                });
-        }
-
-        function toggleCommentLike(commentsId, btnEl) {
-            fetch(CTX + "/commentsLike.do?commentsId=" + commentsId)
-                .then(r => r.text())
-                .then(res => {
-                    if (res === "LOGIN_REQUIRED") {
-                        alert("로그인 후 이용 가능합니다.");
-                        location.href = CTX + "/memberLogin.do";
-                        return;
-                    }
-                    var isLiked = btnEl.classList.contains("liked");
-                    var likeCount = parseInt(res);
-                    var newIcon = !isLiked ? '❤️' : '🤍';
-
-                    if (isLiked) {
-                        btnEl.classList.remove("liked");
-                    } else {
-                        btnEl.classList.add("liked");
-                    }
-
-                    btnEl.innerHTML =
-                        '<span class="like-icon">' + newIcon + '</span> 좋아요 ' + likeCount;
-
-                    // innerHTML 교체 후 onclick 재등록
-                    btnEl.onclick = function() { toggleCommentLike(commentsId, btnEl); };
-                });
-        }
-
-        (function () {
-            const btn = document.getElementById("shareBtn");
-            if (!btn) return;
-
-            btn.addEventListener("click", async function () {
-                const url = window.location.href;
-                const title = document.title || "게시글";
-
-                if (navigator.share) {
-                    try {
-                        await navigator.share({ title, text: "게시글 공유", url });
-                        return;
-                    } catch (e) {}
-                }
-
-                try {
-                    if (navigator.clipboard && window.isSecureContext) {
-                        await navigator.clipboard.writeText(url);
-                        alert("URL이 복사되었습니다!");
-                        return;
-                    }
-                } catch (e) {}
-
-                try {
-                    const ta = document.createElement("textarea");
-                    ta.value = url;
-                    ta.style.position = "fixed";
-                    ta.style.left = "-9999px";
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand("copy");
-                    document.body.removeChild(ta);
-                    alert("URL이 복사되었습니다!");
-                } catch (e) {
-                    alert("공유/복사가 차단되었습니다. 주소창 URL을 직접 복사해주세요.");
-                    console.error(e);
-                }
-            });
-        })();
 
         const updateForm = document.querySelector("form[action$='boardUpdateOk.do']");
         if (updateForm) {
@@ -938,24 +680,13 @@
             });
         }
 
-        /* 실시간 인기글: 더보기 누르면 10개 (5개 추가 노출), 다시 누르면 접기 */
-        (function () {
-            const btn = document.getElementById("hotMoreBtn");
-            const listBox = document.getElementById("hotListBox");
-            if (!btn || !listBox) return;
-
-            let expanded = false;
-
-            btn.addEventListener("click", function () {
-                expanded = !expanded;
-
-                listBox.querySelectorAll(".hot-hidden").forEach(el => {
-                    el.style.display = expanded ? "flex" : "none";
-                });
-
-                btn.textContent = expanded ? "접기" : "더보기";
-            });
-        })();
+        /*뒤로가기 캐시 복원 시 새로고침*/
+        window.addEventListener("pageshow", function (e) {
+            const nav = performance.getEntriesByType("navigation")[0];
+            if (e.persisted || (nav && nav.type === "back_forward")) {
+                location.reload();
+            }
+        });
     </script>
 </div>
 

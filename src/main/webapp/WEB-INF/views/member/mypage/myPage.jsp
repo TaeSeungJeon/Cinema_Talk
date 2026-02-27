@@ -22,7 +22,7 @@ body.page-mypage {
 
 /* ===== 마이페이지 2-컬럼 레이아웃 ===== */
 .mypage-layout {
-	max-width: 1200px;
+	max-width: 1400px;
 	margin: 0 auto;
 	width: 100%;
 	display: grid;
@@ -1052,60 +1052,67 @@ body.page-mypage {
 	</div>
 
 	<script>
-    /* ===== 카테고리 메뉴 토글 (헤더 용) ===== */
-    function toggleMenu(element) {
-        document.querySelectorAll('.category-bubble').forEach(function(bubble) {
-            if (bubble !== element) {
-                bubble.classList.remove('active');
-            }
-        });
-        element.classList.toggle('active');
-    }
+		/* ===== 카테고리 메뉴 토글 (헤더 용) ===== */
+		function toggleMenu(element) {
+			document.querySelectorAll('.category-bubble').forEach(
+					function(bubble) {
+						if (bubble !== element) {
+							bubble.classList.remove('active');
+						}
+					});
+			element.classList.toggle('active');
+		}
 
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.category-bubble')) {
-            document.querySelectorAll('.category-bubble').forEach(function(bubble) {
-                bubble.classList.remove('active');
-            });
-        }
-    });
+		document.addEventListener('click', function(e) {
+			if (!e.target.closest('.category-bubble')) {
+				document.querySelectorAll('.category-bubble').forEach(
+						function(bubble) {
+							bubble.classList.remove('active');
+						});
+			}
+		});
 
-    /* ===== 사이드바 섹션 전환 ===== */
-    function showSection(sectionName) {
-        // 모든 섹션 패널 숨김
-        document.querySelectorAll('.section-panel').forEach(function(panel) {
-            panel.classList.remove('active');
-        });
-        // 모든 사이드바 버튼 비활성
-        document.querySelectorAll('.sidebar-item').forEach(function(btn) {
-            btn.classList.remove('active');
-        });
+		/* ===== 사이드바 섹션 전환 ===== */
+		function showSection(sectionName) {
+			// 모든 섹션 패널 숨김
+			document.querySelectorAll('.section-panel').forEach(
+					function(panel) {
+						panel.classList.remove('active');
+					});
+			// 모든 사이드바 버튼 비활성
+			document.querySelectorAll('.sidebar-item').forEach(function(btn) {
+				btn.classList.remove('active');
+			});
 
-        // 선택한 섹션 표시
-        var panel = document.getElementById('section-' + sectionName);
-        if (panel) panel.classList.add('active');
+			// 선택한 섹션 표시
+			var panel = document.getElementById('section-' + sectionName);
+			if (panel)
+				panel.classList.add('active');
 
-        // 선택한 사이드바 버튼 활성
-        document.querySelectorAll('.sidebar-item').forEach(function(btn) {
-            if (btn.dataset.section === sectionName) {
-                btn.classList.add('active');
-            }
-        });
+			// 선택한 사이드바 버튼 활성
+			document.querySelectorAll('.sidebar-item').forEach(function(btn) {
+				if (btn.dataset.section === sectionName) {
+					btn.classList.add('active');
+				}
+			});
 
-        // 스크롤을 상단으로
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+			// 스크롤을 상단으로
+			window.scrollTo({
+				top : 0,
+				behavior : 'smooth'
+			});
+		}
 
-    /* ===== 회원 탈퇴 확인 ===== */
-    function confirmWithdraw() {
-        var pwd = document.getElementById('withdrawPwd').value;
-        if (!pwd || pwd.trim() === '') {
-            alert('비밀번호를 입력해주세요.');
-            return false;
-        }
-        return confirm('정말로 탈퇴하시겠습니까?\n탈퇴 후에는 계정을 복구할 수 없습니다.');
-    }
-</script>
+		/* ===== 회원 탈퇴 확인 ===== */
+		function confirmWithdraw() {
+			var pwd = document.getElementById('withdrawPwd').value;
+			if (!pwd || pwd.trim() === '') {
+				alert('비밀번호를 입력해주세요.');
+				return false;
+			}
+			return confirm('정말로 탈퇴하시겠습니까?\n탈퇴 후에는 계정을 복구할 수 없습니다.');
+		}
+	</script>
 
 </body>
 </html>

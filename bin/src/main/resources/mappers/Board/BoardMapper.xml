@@ -34,14 +34,14 @@
                BOARDNAME           as boardName,
                BOARDDATE           as boardDate,
                MEMNO               as memNo,
-               BOARDRECOMMENDCOUNT as boardRecommendCount
+               BOARDVIEWCOUNT as boardviewCount
         FROM BOARD
         WHERE BOARDID = #{boardId}
     </select>
 
     <update id="updateReadCount" parameterType="int">
         UPDATE BOARD
-        SET BOARDRECOMMENDCOUNT = NVL(BOARDRECOMMENDCOUNT, 0) + 1
+        SET BOARDVIEWCOUNT = NVL(boardviewCount, 0) + 1
         WHERE BOARDID = #{boardId}
     </update>
 

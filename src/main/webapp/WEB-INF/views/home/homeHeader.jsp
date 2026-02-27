@@ -111,14 +111,14 @@ header {
     font-weight: 600;
 }
 
-.search-bar input[type="text"] { 
-    border: none; 
-    background: none; 
-    outline: none; 
-    flex: 1; 
-    text-align: center; 
-    color: #1f2937; 
-    font-size: 0.95rem; 
+.search-bar input[type="text"] {
+    border: none;
+    background: none;
+    outline: none;
+    flex: 1;
+    text-align: center;
+    color: #1f2937;
+    font-size: 0.95rem;
 }
 .search-bar input[type="submit"] {
     background: #6366f1;
@@ -194,8 +194,8 @@ header {
             <input type="submit" value="검색">
         </form>
     </div>
-    <div style="display: flex; gap: 10px;">         
-    	<c:if test="${not empty sessionScope.memId}"><a href="memberLogout.do" 
+    <div style="display: flex; gap: 10px;">
+    	<c:if test="${not empty sessionScope.memId}"><a href="memberLogout.do"
     		class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
     				<a href="myPage.do" class="glass-panel" style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a></c:if>
 		<c:if test="${empty sessionScope.memId}">
@@ -204,33 +204,34 @@ header {
 </header>
 
 <nav class="category-nav">
-    <div class="category-bubble" onclick="location.href='${pageContext.request.contextPath}/movieRecommend.do'">
-        <div class="cat-title">추천 영화</div>
-        <ul class="sub-menu">
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">커뮤니티 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="freeBoard.do?filter=free">자유 게시판</a></li>
-            <li><a href="freeBoard.do?filter=hot">영화 추천/후기</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">투표 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="vote.do">오늘의 투표</a></li>
-            <li><a href="voteList.do">투표목록</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">고객센터 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="faq.jsp">자주 묻는 질문</a></li>
-            <li><a href="notice.jsp">공지사항 전체보기</a></li>
-            <li><a href="inquiry.jsp">1:1 문의</a></li>
-        </ul>
-    </div>
+	<div class="category-bubble"
+		onclick="location.href='${pageContext.request.contextPath}/movieRecommend.do'">
+		<div class="cat-title">추천 영화</div>
+		<ul class="sub-menu">
+		</ul>
+	</div>
+	<div class="category-bubble" onclick="toggleMenu(this)">
+		<div class="cat-title">커뮤니티 ▾</div>
+		<ul class="sub-menu">
+			<li><a href="community.jsp?tab=best">인기 리뷰</a></li>
+			<li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
+		</ul>
+	</div>
+	<div class="category-bubble" onclick="toggleMenu(this)">
+		<div class="cat-title">투표 ▾</div>
+		<ul class="sub-menu">
+			<li><a href="vote.do">오늘의 투표</a></li>
+			<li><a href="voteList.do">투표목록</a></li>
+		</ul>
+	</div>
+	<div class="category-bubble" onclick="toggleMenu(this)">
+		<div class="cat-title">고객센터 ▾</div>
+		<ul class="sub-menu">
+			<li><a href="faq.jsp">자주 묻는 질문</a></li>
+			<li><a href="notice.jsp">공지사항 전체보기</a></li>
+			<li><a href="inquiry.jsp">1:1 문의</a></li>
+		</ul>
+	</div>
 </nav>
 
 <script>

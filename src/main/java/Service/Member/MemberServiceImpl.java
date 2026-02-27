@@ -1,5 +1,6 @@
 package Service.Member;
 
+import java.util.List;
 import java.util.Random;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -98,6 +99,11 @@ public class MemberServiceImpl implements MemberService {
 	public int updateLastLogin(String memId) {
 		return mdao.updateLastLogin(memId);
 	}//마지막 로그인 날짜 업데이트
+
+	@Override
+	public List<MemberDTO> getMemberList() {
+		return mdao.getMemberList();
+	}//회원목록 조회
 
 }
 

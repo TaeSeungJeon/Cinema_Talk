@@ -26,7 +26,7 @@ public class IndexController implements Action {
 
 		Object memNoObj = session.getAttribute("mem_no");
 		int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함
-	    
+		
 	    List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
 	    List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList(memNo);
 	    

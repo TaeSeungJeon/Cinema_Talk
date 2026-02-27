@@ -1,4 +1,4 @@
-package Controller.Member.AdminMyPage;
+package Controller.Admin;
 
 import Controller.Action;
 import Controller.ActionForward;

@@ -1,5 +1,7 @@
 package DAO.Member;
 
+import java.util.List;
+
 import DTO.Member.MemberDTO;
 
 public interface MemberDAO {
@@ -27,7 +29,10 @@ public interface MemberDAO {
 	String findProfilePhotoPath(int memNo);
 
 	int updateProfilePhotoPath(int memNo, String relativePath);
+	
 	int updateLastLogin(String memId);
+
+	List<MemberDTO> getMemberList();
 
 
 }

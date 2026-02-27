@@ -415,7 +415,7 @@
 
 	<main class="movie-detail-content">
 		<div id="movie-detail-area">
-			<!-- ✅ 기본 Empty State -->
+			<!-- 기본 Empty State -->
 			<div class="detail-empty">
 				<div class="detail-empty-inner">
 					<div class="detail-empty-icon">

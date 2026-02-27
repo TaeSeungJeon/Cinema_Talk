@@ -32,7 +32,7 @@
                         <div class="list-item">
                             <div class="list-item-title">글 제목: ${board.boardTitle}</div>
                             <div class="list-item-meta">작성일: ${board.boardDate}</div>
-                            <div class="list-item-recommend-count">좋아요👍: ${board.boardRecommendCount}</div>
+                            <div class="list-item-recommend-count">좋아요👍: ${board.boardViewCount}</div>
                             <div class="list-item-comments-count">댓글💬: ${myPageInfo.boardCommentCount[board.boardId]}</div>
                         </div>
                     </a>

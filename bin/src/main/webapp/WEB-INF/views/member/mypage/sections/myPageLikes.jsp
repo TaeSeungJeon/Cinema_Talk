@@ -64,7 +64,7 @@
                         <div class="list-item">
                             <div class="list-item-title">${board.boardTitle}</div>
                             <div class="list-item-meta">작성자: ${board.boardName} | 작성일: ${board.boardDate}</div>
-                            <div class="list-item-recommend-count">좋아요👍: ${board.boardRecommendCount}</div>
+                            <div class="list-item-recommend-count">좋아요👍: ${board.boardViewCount}</div>
                         </div>
                     </a>
                 </c:forEach>

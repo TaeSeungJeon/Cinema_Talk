@@ -175,7 +175,7 @@
                      b.BOARDCONTENT AS boardContent,
                      b.BOARDNAME AS boardName,
                      b.BOARDDATE AS boardDate,
-                     NVL(b.BOARDRECOMMENDCOUNT, 0) AS boardRecommendCount,
+                     NVL(b.boardViewCount, 0) AS boardViewCount,
 
                      (SELECT COUNT(*)
                       FROM COMMENTS c

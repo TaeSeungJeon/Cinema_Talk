@@ -5,7 +5,7 @@ create table BOARD(
     boardTitle           VARCHAR2(200) null,     -- 게시판 제목
     boardContent         CLOB          null,     -- 게시판 내용
     boardName            VARCHAR2(50)  not null, -- 게시판 글쓴이
-    boardRecommendCount NUMBER        null,     -- 게시판 추천 수
+    boardViewCount NUMBER        null,     -- 게시판 추천 수
     boardDate            DATE          null,     -- 게시판 작성일
     memNo                NUMBER        null,     -- 회원번호
     movieId              NUMBER        null,  -- 영화 고유 ID

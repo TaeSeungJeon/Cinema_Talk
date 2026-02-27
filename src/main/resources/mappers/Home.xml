@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Home">
+
+	<update id="increaseTodayDau">
+		MERGE INTO DAILY_VISIT d
+		USING (
+		SELECT TRUNC(SYSDATE) AS STATDATE
+		FROM dual
+		) t
+		ON (d.STATDATE = t.STATDATE)
+
+		WHEN MATCHED THEN
+		UPDATE SET d.DAUCOUNT = d.DAUCOUNT + 1
+
+		WHEN NOT MATCHED THEN
+		INSERT (STATDATE, DAUCOUNT)
+		VALUES (t.STATDATE, 1)
+	</update>
+
+</mapper>

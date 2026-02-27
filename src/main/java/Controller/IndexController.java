@@ -26,6 +26,15 @@ public class IndexController implements Action {
 
 		Object memNoObj = session.getAttribute("memNo");
 		int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함
+
+		String todayKey = "visited_" + java.time.LocalDate.now();
+
+	    if (session.getAttribute(todayKey) == null) {
+
+	        homeService.increaseTodayDau();
+
+	        session.setAttribute(todayKey, true);
+	    }
 	    
 	    List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
 	    List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList(memNo);

@@ -10,4 +10,6 @@ public interface HomeService {
 
 	List<MovieRecResponse> getIndexTrendList();
 
+	void increaseTodayDau();
+
 }

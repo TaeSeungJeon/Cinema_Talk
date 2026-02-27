@@ -32,7 +32,7 @@ public class AdminMyPageController implements Action {
 		}
 		
 		forward.setRedirect(false); //기존매핑주소 유지하며 이동
-		forward.setPath("/WEB-INF/views/admin/adminMyPage.jsp"); //뷰페이지 경로 설정
+		forward.setPath("/WEB-INF/views/admin/adminMyPage.jsp"); //관리자 마이페이지로 이동
 		
 		return forward;
 	}

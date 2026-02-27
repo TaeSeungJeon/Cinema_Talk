@@ -12,12 +12,21 @@ create table MEMBER(
 	, memState number(1) not null
 		check (memState in (1,2,3))			--회원 상태 : 1(정상계정), 2(휴먼계정), 3(탈퇴계정)
 	, memDate date not null					--등록 날짜
+	, memProfilePhoto varchar2(1000)
+	
 );
 
 -- unique 제약조건 추가 : 이메일 중복 불가 (비밀번호 찾기 기준이 되는 컬럼)
 ALTER TABLE member
 ADD CONSTRAINT uk_member_email UNIQUE (memEmail);
 
+ALTER TABLE member
+ADD memProfilePhoto varchar2(1000);
+--휴면계정 처리를 위해 memLastLogin 컬럼추가
+alter table member add memLastLogin date;
+
+-- 기존 회원은 가입일로 초기 세팅 (새 컬럼 값이 null이라 일단 가입일을 넣어 초기값으로 씀)
+update member set memLastLogin = memDate where memLastLogin is null;
 
 select * from MEMBER;
 
@@ -33,6 +42,7 @@ values(memNoSeq.nextval, 'admin', '$2a$10$2XSxqZfK.eccyl.pogMgguklaQOFvI/nRccNvd
 '010-3333-3333', 'admin@gmail.com', 1, 1, sysdate);
 
 delete from member where memNo = 3;
+
 
 -- member테이블 삭제
 drop table member;

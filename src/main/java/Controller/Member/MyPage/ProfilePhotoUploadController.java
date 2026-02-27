@@ -1,7 +1,5 @@
 package Controller.Member.MyPage;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
@@ -17,74 +15,69 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
-public class MemberEditOkController implements Action {
+/**
+ * 프로필 사진 업로드 처리 컨트롤러.
+ * multipart/form-data로 전송된 profilePhoto 파일을 처리한다.
+ */
+public class ProfilePhotoUploadController implements Action {
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
-		
+
 		ActionForward forward = new ActionForward();
 		HttpSession session = request.getSession(false);
-		
+
+		// 세션 체크
+		if (session == null || session.getAttribute("memNo") == null) {
+			forward.setRedirect(true);
+			forward.setPath("memberLogin.do");
+			return forward;
+		}
+
+		int memNo = (int) session.getAttribute("memNo");
+		ProfilePhotoService photoService = new ProfilePhotoServiceImpl();
 		MemberService memberService = new MemberServiceImpl();
 		MyPageService myPageService = new MyPageServiceImpl();
-		ProfilePhotoService photoService = new ProfilePhotoServiceImpl();
-		
-		int memNo = (int) session.getAttribute("memNo");
-		String memId = request.getParameter("mem-id"); //회원 아이디
-		String memPwd = request.getParameter("mem-pwd"); //회원 비밀번호
-		String memPassword = BCrypt.hashpw(memPwd, BCrypt.gensalt(12));
-		String memName = request.getParameter("mem-name"); //회원 이름
-		String memPhone = request.getParameter("mem-phone"); //회원 전화번호
-		String memEmail = request.getParameter("mem-email"); //회원 이메일
-		
-		MemberDTO member = memberService.getMemberInfo(memNo); // 아이디로 회원 정보 조회 (비밀번호 검증을 위해)
-		member.setMemNo(memNo);
-		member.setMemId(memId);
-		// DTO에 암호화된 비밀번호 다시 저장
-		member.setMemPwd(memPassword);
-		member.setMemName(memName);
-		member.setMemPhone(memPhone);
-		member.setMemEmail(memEmail);
-		
-		myPageService.updateMemberInfo(member);
-		
-		// 프로필 사진 업로드 처리 (파일이 선택된 경우에만)
+
 		try {
+			// multipart에서 파일 파트 추출
 			Part filePart = request.getPart("profilePhoto");
+
 			if (filePart != null && filePart.getSize() > 0) {
+				String contentType = filePart.getContentType();
+				long fileSize = filePart.getSize();
+
 				photoService.updateMemberProfilePhoto(
 						memNo,
 						filePart.getInputStream(),
-						filePart.getContentType(),
-						filePart.getSize()
+						contentType,
+						fileSize
 				);
+
+				request.setAttribute("profileMsg", "프로필 사진이 업데이트되었습니다.");
+			} else {
+				request.setAttribute("profileMsg", "파일을 선택해주세요.");
 			}
 		} catch (Exception e) {
-			// 프로필 사진 업로드 실패는 회원정보 수정과 별개로 처리
 			request.setAttribute("profileError", e.getMessage());
 			e.printStackTrace();
 		}
-		
-		// 수정된 회원정보 다시 조회
-		member = memberService.getMemberInfo(memNo);
-		
-		// 마이페이지 정보 조회 (게시글, 댓글, 투표 목록 및 통계)
-		MyPageDTO myPageInfo = myPageService.getMyPageInfo(member.getMemNo());
+
+		// 마이페이지 정보 재조회하여 뷰에 전달
+		MemberDTO member = memberService.getMemberInfo(memNo);
+		MyPageDTO myPageInfo = myPageService.getMyPageInfo(memNo);
 		myPageInfo.setMemId(member.getMemId());
 		myPageInfo.setMemName(member.getMemName());
 		myPageInfo.setMemDate(member.getMemDate());
-		
-		// 뷰에 데이터 전달
+
 		request.setAttribute("member", member);
 		request.setAttribute("myPageInfo", myPageInfo);
-		
+		request.setAttribute("allGenreList", myPageService.getAllGenres());
+
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;
 	}
-
-	
-
 }

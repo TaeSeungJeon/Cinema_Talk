@@ -24,7 +24,7 @@ public class MyPageController implements Action {
 		MyPageService myPageService = new MyPageServiceImpl();
 		HttpSession session = request.getSession(false);
 		String paramMemNo = request.getParameter("memNo");
-		
+
 		// 세션 체크
 		if (session == null || session.getAttribute("memId") == null) {
 			forward.setRedirect(true);
@@ -74,7 +74,7 @@ public class MyPageController implements Action {
 		
 		// 전체 장르 목록 (선호 장르 선정 화면용)
 		request.setAttribute("allGenreList", myPageService.getAllGenres());
-		
+
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;

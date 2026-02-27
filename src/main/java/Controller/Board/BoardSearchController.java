@@ -69,20 +69,23 @@ public class BoardSearchController implements Action {
 	        int totalCount;
 	        List<BoardDTO> list;
 	        
+	        int type = 0; // 전체 검색
+	        
+	        String requestedURL = "freeBoard.jsp";
 	        if(movieId != 0) {
 	        	totalCount = service.getBoardCountByMovieId(movieId);
 	        	list = service.boardListPageByMovieId(movieId, startRow, endRow);
 	        } else {
 	        	if ("free".equals(filter)) {
-		            totalCount = service.getBoardCountByTypeAndWord(1, searchWords, searchOption);
-		            list = service.boardListPageByTypeAndWord(1, startRow, endRow, searchWords, searchOption);
+	        		type = 1;
 		        } else if ("hot".equals(filter)) {
-		            totalCount = service.getBoardCountByTypeAndWord(2, searchWords, searchOption);
-		            list = service.boardListPageByTypeAndWord(2, startRow, endRow, searchWords, searchOption);
-		        } else {
-		            totalCount = service.getBoardCountByTypeAndWord(0, searchWords, searchOption);
-		            list = service.boardListPageByTypeAndWord(0, startRow, endRow, searchWords, searchOption);
+		        	type = 2;
+		        } else if ("notice".equals(filter)) {
+		        	type = 10;
+		        	requestedURL = "noticeBoard.jsp";
 		        }
+	        	totalCount = service.getBoardCountByTypeAndWord(type, searchWords, searchOption);
+	            list = service.boardListPageByTypeAndWord(type, startRow, endRow, searchWords, searchOption);
 	        }
 	        
 	        int maxPage = (totalCount + limit - 1) / limit;
@@ -100,7 +103,7 @@ public class BoardSearchController implements Action {
 	        request.setAttribute("filter", filter);
 
 	        ActionForward forward = new ActionForward();
-	        forward.setPath("/WEB-INF/views/board/freeBoard.jsp");
+	        forward.setPath("/WEB-INF/views/board/" + requestedURL);
 	        forward.setRedirect(false);
 
 	        return forward;

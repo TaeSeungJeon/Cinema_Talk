@@ -340,5 +340,18 @@ public class BoardDAOImpl implements BoardDAO {
         }
     }
 
+    @Override
+    public List<BoardDTO> recentBoardList(int limit) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            return sqlSession.selectList("Board.recentBoardList", limit);
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
 
 }

@@ -27,7 +27,7 @@ public class AdminMovieServiceImpl implements AdminMovieService {
 	}
     
     @Override
-    public void saveMovie(MovieSaveDTO saveDTO) {
+    public void updateMovie(MovieSaveDTO saveDTO) {
 
         SqlSession session = getSqlSession();
 
@@ -35,17 +35,16 @@ public class AdminMovieServiceImpl implements AdminMovieService {
 
             MovieDTO movie = saveDTO.getMovie();
 
-            boolean exists = false;
-
-            if (movie.getMovieId() != 0) {
-                exists = dao.existsMovie(session, movie.getMovieId());
+            if (movie.getMovieId() == 0) {
+                throw new IllegalArgumentException("수정할 movieId가 없습니다.");
             }
 
-            if (exists) {
-                dao.updateMovie(session, movie);
-            } else {
-                dao.insertMovie(session, movie);
+            boolean exists = dao.existsMovie(session, movie.getMovieId());
+            if (!exists) {
+                throw new IllegalArgumentException("존재하지 않는 영화입니다.");
             }
+
+            dao.updateMovie(session, movie);
 
             int movieId = movie.getMovieId();
 
@@ -77,10 +76,30 @@ public class AdminMovieServiceImpl implements AdminMovieService {
 
         } catch (Exception e) {
             session.rollback();
-            throw new RuntimeException("AdminMovie save 실패", e);
+            throw new RuntimeException("AdminMovie update 실패", e);
         } finally {
             session.close();
         }
     }
+
+	@Override
+	public void deleteMovie(int movieId) {
+		SqlSession session = getSqlSession();
+
+	    try {
+	    	
+	        dao.deleteMovie(session, movieId);
+
+	        session.commit();
+
+	    } catch (Exception e) {
+
+	        session.rollback();
+	        throw new RuntimeException("AdminMovie delete 실패", e);
+
+	    } finally {
+	        session.close();
+	    }
+	}
 
 }

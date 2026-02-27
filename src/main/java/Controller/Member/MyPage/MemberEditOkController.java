@@ -8,11 +8,14 @@ import DTO.Member.MemberDTO;
 import DTO.Member.MyPage.MyPageDTO;
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
+import Service.Member.ProfilePhotoService;
+import Service.Member.ProfilePhotoServiceImpl;
 import Service.Member.MyPage.MyPageService;
 import Service.Member.MyPage.MyPageServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 public class MemberEditOkController implements Action {
 
@@ -26,6 +29,7 @@ public class MemberEditOkController implements Action {
 		
 		MemberService memberService = new MemberServiceImpl();
 		MyPageService myPageService = new MyPageServiceImpl();
+		ProfilePhotoService photoService = new ProfilePhotoServiceImpl();
 		
 		int memNo = (int) session.getAttribute("memNo");
 		String memId = request.getParameter("mem-id"); //회원 아이디
@@ -45,6 +49,27 @@ public class MemberEditOkController implements Action {
 		member.setMemEmail(memEmail);
 		
 		myPageService.updateMemberInfo(member);
+		
+		// 프로필 사진 업로드 처리 (파일이 선택된 경우에만)
+		try {
+			Part filePart = request.getPart("profilePhoto");
+			if (filePart != null && filePart.getSize() > 0) {
+				photoService.updateMemberProfilePhoto(
+						memNo,
+						filePart.getInputStream(),
+						filePart.getContentType(),
+						filePart.getSize()
+				);
+			}
+		} catch (Exception e) {
+			// 프로필 사진 업로드 실패는 회원정보 수정과 별개로 처리
+			request.setAttribute("profileError", e.getMessage());
+			e.printStackTrace();
+		}
+		
+		// 수정된 회원정보 다시 조회
+		member = memberService.getMemberInfo(memNo);
+		
 		// 마이페이지 정보 조회 (게시글, 댓글, 투표 목록 및 통계)
 		MyPageDTO myPageInfo = myPageService.getMyPageInfo(member.getMemNo());
 		myPageInfo.setMemId(member.getMemId());

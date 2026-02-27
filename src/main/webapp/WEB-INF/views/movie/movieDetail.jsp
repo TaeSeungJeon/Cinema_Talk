@@ -81,11 +81,38 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         transition: 0.3s;
-        margin-bottom: 30px;
+        margin-bottom: 0; /* moved spacing to .top-controls */
     }
 
     .back-btn:hover {
         background: var(--accent-color);
+    }
+    
+    .searchreview{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--glass-bg);
+        color: var(--text-main);
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: 0.3s;
+        margin-bottom: 0; /* moved spacing to .top-controls */
+    }
+    .searchreview:hover {
+        background: var(--accent-color);
+    }
+    
+    /* 상단의 뒤로가기/리뷰 버튼을 좌우로 배치 */
+    .top-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px; /* 기존 개별 버튼의 margin-bottom을 여기로 일괄 관리 */
     }
 
     /* 영화 기본 정보 */
@@ -343,8 +370,11 @@
 </c:if>
 
 <div class="container">
-    <!-- 뒤로가기 -->
-    <a href="javascript:history.back()" class="back-btn">← 뒤로가기</a>
+    <!-- 상단 컨트롤: 왼쪽 뒤로가기, 오른쪽 리뷰 버튼 -->
+    <div class="top-controls">
+        <a href="javascript:history.back()" class="back-btn">← 뒤로가기</a>
+        <button class="searchreview" onclick="searchBoardByMovieId()">리뷰 게시글 보기</button>
+    </div>
 
     <!-- 영화 기본 정보 -->
     <div class="movie-header">
@@ -470,6 +500,8 @@
 
 <script>
     var movieId = ${movie.movieId};
+    var movieTitle = "${fn:escapeXml(movie.movieTitle)}";
+    movieTitle = movieTitle.replace(" ","").replace(/ /g,"");
     
     function searchByDirector(personName) {
         window.location.href = 'searchMovie.do?search-option=1&search-words=' + encodeURIComponent(personName);
@@ -484,7 +516,10 @@
         var action = event.target.value === 'true' ? 'add' : 'remove';
         window.location.href = 'MemberMovieRecommend.do?movieId=' + movieId + '&redirect=movieDetail.do?movieId=' + movieId + '&action=' + action;
     }
-
+    
+	function searchBoardByMovieId() {
+        window.location.href = 'searchBoard.do?search-option=0&search-words=' + movieTitle + '&movieId=' + movieId;
+    }
 </script>
 </body>
 </html>

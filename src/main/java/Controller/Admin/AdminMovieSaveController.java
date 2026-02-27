@@ -28,9 +28,10 @@ public class AdminMovieSaveController implements Action {
         MovieDTO movie = new MovieDTO();
 
         String movieIdStr = request.getParameter("movieId");
-        if (movieIdStr != null && !movieIdStr.isEmpty()) {
-            movie.setMovieId(Integer.parseInt(movieIdStr));
+        if (movieIdStr == null || movieIdStr.isEmpty()) {
+            throw new IllegalArgumentException("movieId가 전달되지 않았습니다.");
         }
+        movie.setMovieId(Integer.parseInt(movieIdStr));
 
         movie.setMovieTitle(request.getParameter("movieTitle"));
         movie.setMovieOriginalTitle(request.getParameter("movieOriginalTitle"));
@@ -77,7 +78,9 @@ public class AdminMovieSaveController implements Action {
                 CastSaveDTO cast = new CastSaveDTO();
 
                 cast.setPersonId(Integer.parseInt(castPersonIds[i]));
-                cast.setCharacterName(characterNames[i]);
+                if (characterNames != null && characterNames.length > i) {
+                    cast.setCharacterName(characterNames[i]);
+                }
 
                 if (castOrders != null && castOrders.length > i &&
                 		castOrders[i] != null && !castOrders[i].isEmpty()) {
@@ -117,7 +120,7 @@ public class AdminMovieSaveController implements Action {
         saveDTO.setCrews(crewList);
 
         // 🔥 6️⃣ 서비스 호출
-        adminMovieService.saveMovie(saveDTO);
+        adminMovieService.updateMovie(saveDTO);
 
         // 🔥 7️⃣ ActionForward 반환 (Redirect)
         ActionForward forward = new ActionForward();

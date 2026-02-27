@@ -9,4 +9,5 @@ public interface PersonDAO {
 	void mergePerson(PersonDTO person);
 	boolean existsPerson(int personId);
 	PersonDTO getPersonById(int pid);
+	List<PersonDTO> searchPerson(String trim);
 }

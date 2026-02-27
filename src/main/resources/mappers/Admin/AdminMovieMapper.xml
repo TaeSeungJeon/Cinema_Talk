@@ -16,38 +16,6 @@
     </select>
 
     <!-- ============================= -->
-    <!-- 2️⃣ 영화 INSERT -->
-    <!-- ============================= -->
-    <insert id="insertMovie"
-            parameterType="DTO.Movie.MovieDTO"
-            useGeneratedKeys="true"
-            keyProperty="movieId">
-
-        INSERT INTO movie (
-            movieTitle,
-            movieOriginalTitle,
-            movieOverview,
-            movieReleaseDate,
-            movieRuntime,
-            moviePosterPath,
-            movieBackdropPath,
-            movieRatingAverage,
-            movieRatingCount
-        )
-        VALUES (
-            #{movieTitle},
-            #{movieOriginalTitle},
-            #{movieOverview},
-            #{movieReleaseDate},
-            #{movieRuntime},
-            #{moviePosterPath},
-            #{movieBackdropPath},
-            #{movieRatingAverage},
-            #{movieRatingCount}
-        )
-    </insert>
-
-    <!-- ============================= -->
     <!-- 3️⃣ 영화 UPDATE -->
     <!-- ============================= -->
     <update id="updateMovie"
@@ -138,5 +106,11 @@
             #{crewJob}
         )
     </insert>
-  
+    
+  	<!-- 영화 삭제 -->
+  	<delete id="deleteMovie">
+        DELETE FROM movie
+        WHERE movieId = #{movieId}
+    </delete>
+    
   </mapper>

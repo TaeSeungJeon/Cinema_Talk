@@ -60,8 +60,8 @@
             transform: translateY(-2px);
         }
 
-        
-        
+
+
         .container {
             display: grid;
             grid-template-columns: 1fr 300px;
@@ -105,7 +105,7 @@
             box-shadow: var(--shadow-strong);
         }
 
-        
+
         .avatar {
             width: 44px;
             height: 44px;
@@ -227,7 +227,7 @@
             color: #94a3b8;
             text-decoration: none;
         }
-        
+
         .widget-placeholder {
             background: #f8fafc;
             border: 2px dashed #e2e8f0;
@@ -762,21 +762,11 @@
                  style="font-size:0.78rem; color:#94a3b8; padding:6px 4px 10px 4px; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">
             </div>
 
-            <!-- 내용(미리보기 + 텍스트를 하나의 입력박스로 보이게) -->
-            <div id="contentBox"
-                 style="border: 1px solid #e2e8f0; border-radius: 0 0 12px 12px; overflow: hidden;">
+            <!-- 내용 -->
+            <textarea rows="12" placeholder="영화에 대한 솔직한 생각을 들려주세요..."
+                      style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6;"
+                      name="boardContent" id="boardContent" required></textarea>
 
-                <div id="imagePreviewArea"
-                     style="display:none; padding: 12px; border-bottom: 1px solid #e2e8f0; background:#fff;"></div>
-
-                <div id="boardContentEditor"
-                     contenteditable="true"
-                     style="padding: 15px; min-height: 220px; line-height: 1.6; outline: none; font-size: 1rem; font-family: 'Inter', sans-serif; white-space: pre-wrap; word-break: break-word;"
-                     data-placeholder="영화에 대한 솔직한 생각을 들려주세요...">
-                </div>
-
-                <input type="hidden" name="boardContent" id="boardContent">
-            </div>
             <div id="linkPreviewArea" style="display:none; margin-top: 10px;"></div>
 
             <!-- 가이드라인-->
@@ -800,6 +790,26 @@
 <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 
 <script>
+    function toggleMenu(element) {
+        const isActive = element.classList.contains('active');
+        document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
+        if (!isActive) {
+            element.classList.add('active');
+        }
+    }
+
+    document.querySelectorAll('.sub-menu a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    });
+
+    window.addEventListener('click', function (e) {
+        if (!e.target.closest('.category-bubble')) {
+            document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
+        }
+        if (e.target == document.getElementById('writeModal')) closeModal();
+    });
 
     function openModal() {
         document.getElementById('writeModal').style.display = 'flex';
@@ -1064,7 +1074,6 @@
         });
 
     })();
-
 
 </script>
 

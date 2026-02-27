@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration 
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd" >
+
+<!-- 배치 처리용 MyBatis 환경설정 -->
+<configuration>
+
+	<settings>
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<!-- 배치 처리 최적화: 기본 실행자 타입을 BATCH로 설정 -->
+		<setting name="defaultExecutorType" value="BATCH" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="DTO.Movie.GenreDTO" alias="genre" />
+		<typeAlias type="DTO.Movie.MovieCastDTO" alias="moviecast" />
+		<typeAlias type="DTO.Movie.MovieCrewDTO" alias="moviecrew" />
+		<typeAlias type="DTO.Movie.MovieDTO" alias="movie" />
+		<typeAlias type="DTO.Movie.MovieGenreDTO" alias="moviegenre" />
+		<typeAlias type="DTO.Movie.PersonDTO" alias="person" />
+	</typeAliases>
+
+	<environments default="batch">
+		<environment id="batch">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="oracle.jdbc.OracleDriver" />
+				<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
+				<property name="username" value="seung" />
+				<property name="password" value="seung" />
+
+				<!-- 배치 처리용 커넥션 풀 설정 -->
+				<property name="poolMaximumActiveConnections" value="20" />
+				<property name="poolMaximumIdleConnections" value="10" />
+				<property name="poolMaximumCheckoutTime" value="30000" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<mapper resource="mappers/Movie/MovieMapper.xml"/>
+		<mapper resource="mappers/Movie/GenreMapper.xml"/>
+		<mapper resource="mappers/Movie/PersonMapper.xml"/>
+		<mapper resource="mappers/Movie/MovieCastMapper.xml"/>
+		<mapper resource="mappers/Movie/MovieCrewMapper.xml"/>
+		<mapper resource="mappers/Movie/MovieGenreMapper.xml"/>
+	</mappers>
+
+</configuration>

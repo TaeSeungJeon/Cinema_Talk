@@ -235,11 +235,46 @@ body {
 		grid-template-columns: 1fr;
 	}
 }
+
+.toast-center {
+	position: fixed;
+	top: 80px; /* 헤더 아래 */
+	left: 50%;
+	transform: translateX(-50%) translateY(-20px);
+	background: #111827;
+	color: #fff;
+	padding: 16px 28px;
+	border-radius: 14px;
+	font-size: 1rem;
+	font-weight: 600;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+	opacity: 0;
+	transition: all 0.3s ease;
+	z-index: 999999;
+	pointer-events: none;
+	min-width: 260px;
+	text-align: center;
+}
+
+.toast-center.show {
+	opacity: 1;
+	transform: translateX(-50%) translateY(0);
+}
+
+.toast-center.success {
+	background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.toast-center.error {
+	background: linear-gradient(90deg, #ef4444, #dc2626);
+}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
 </head>
 
 <body>
-
+<div id="toast" class="toast-center"></div>
 	<div class="admin-wrap">
 
 		<!-- HEADER -->
@@ -299,5 +334,16 @@ $(function(){
     });
 
 });
+function showToast(message, type = "success") {
+
+    const toast = document.getElementById("toast");
+
+    toast.innerText = message;
+    toast.className = "toast-center show " + type;
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
 </script>
 </html>

@@ -145,8 +145,16 @@ public class BoardOkController implements Action {
             out.println("<script>");
             out.println("alert('게시글이 등록되었습니다.');");
             String filter = (boardType == 1) ? "free" : "hot";
-            out.println("location.href='" + contextPath + "/freeBoard.do?filter=" + filter + "';");
+            
+            if (boardType == 10) {
+				out.println("location.href='" + contextPath + "/notice.do';");
+			} else if (boardType == 11) {
+				out.println("location.href='" + contextPath + "/quiry.do';");
+			} else {
+				out.println("location.href='" + contextPath + "/freeBoard.do?filter=" + filter + "';");
+			}
             out.println("</script>");
+            
         }catch (Exception e){
             e.printStackTrace();
             out.println("<script>");

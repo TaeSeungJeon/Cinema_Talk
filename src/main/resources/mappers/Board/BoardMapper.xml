@@ -94,6 +94,7 @@
     <select id="getBoardCount" resultType="int">
         SELECT COUNT(*)
         FROM BOARD
+        WHERE BOARDTYPE NOT IN (10, 11)
     </select>
 
     <select id="boardListPage" parameterType="map" resultType="DTO.Board.BoardDTO">
@@ -106,6 +107,7 @@
                             WHERE l.boardId = b.boardId
                               AND l.boardType = b.boardType) AS likeCount
                     FROM BOARD b
+                    WHERE b.boardType NOT IN (10, 11)
                     ORDER BY b.boardId DESC) b
               WHERE ROWNUM <![CDATA[<=]]> #{endRow})
         WHERE rnum >= #{startRow}

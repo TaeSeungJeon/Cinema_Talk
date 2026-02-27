@@ -26,11 +26,6 @@ public class AdminMovieDAOImpl implements AdminMovieDAO {
     }
 
     @Override
-    public void insertMovie(SqlSession session, MovieDTO movie) {
-        session.insert("AdminMovieMapper.insertMovie", movie);
-    }
-
-    @Override
     public void updateMovie(SqlSession session, MovieDTO movie) {
         session.update("AdminMovieMapper.updateMovie", movie);
     }
@@ -88,4 +83,9 @@ public class AdminMovieDAOImpl implements AdminMovieDAO {
 
         session.insert("AdminMovieMapper.insertMovieCrew", map);
     }
+
+	@Override
+	public int deleteMovie(SqlSession session, int movieId) {
+		return session.delete("AdminMovieMapper.deleteMovie", movieId);
+	}
 }

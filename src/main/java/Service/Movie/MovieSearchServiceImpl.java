@@ -6,6 +6,7 @@ import java.util.List;
 import DAO.Movie.MovieDAO;
 import DAO.Movie.MovieDAOImpl;
 import DTO.Movie.MovieDTO;
+import DTO.Movie.Recommend.MovieRecResponse;
 
 public class MovieSearchServiceImpl implements MovieSearchService {
 	private MovieDAO movieDAO = MovieDAOImpl.getInstance();
@@ -22,7 +23,13 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 			return null;
 		}
 		
-		return movieDAO.getMovieDTOList(words, searchOption, movieDTO.getStartrow(), movieDTO.getEndrow());
+		List<MovieDTO> movies = movieDAO.getMovieDTOList(words, searchOption, movieDTO.getStartrow(), movieDTO.getEndrow());
+		for (MovieDTO movie : movies) {
+				String originalDate = movie.getMovieReleaseDate();
+				String fixedDate = originalDate.substring(0, 10);
+				movie.setMovieReleaseDate(fixedDate);
+		}		
+		return movies;
 	}
 
 	@Override
@@ -42,6 +49,14 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 
 	@Override
 	public List<MovieDTO> searchAdminMovies(String keyword) {
-		return movieDAO.searchAdminMovies(keyword);
+		List<MovieDTO> list = movieDAO.searchAdminMovies(keyword);
+		if (list != null) {
+			for (MovieDTO movie : list) {
+				if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+					movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
+				}
+			}
+		}
+		return list;
 	}
 }

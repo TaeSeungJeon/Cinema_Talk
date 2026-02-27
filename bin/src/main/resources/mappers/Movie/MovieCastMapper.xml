@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.MovieCastDAO">
+	<insert id="insertMovieCast" parameterType="moviecast">
+		INSERT INTO MOVIE_CAST (
+			personId, movieId, characterName, castOrder
+		) VALUES (
+			#{personId}, #{movieId}, #{characterName}, #{castOrder}
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeMovieCast" parameterType="moviecast">
+		MERGE INTO MOVIE_CAST mc
+		USING (SELECT #{personId} AS personId, #{movieId} AS movieId FROM DUAL) src
+		ON (mc.personId = src.personId AND mc.movieId = src.movieId)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				mc.characterName = #{characterName},
+				mc.castOrder = #{castOrder}
+		WHEN NOT MATCHED THEN
+			INSERT (personId, movieId, characterName, castOrder)
+			VALUES (#{personId}, #{movieId}, #{characterName}, #{castOrder})
+	</insert>
+	
+	<select id="countMovieCast" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM MOVIE_CAST
+		WHERE personId = #{personId} AND movieId = #{movieId}
+	</select>
+	
+	<select id="getMovieCastById" parameterType="int" resultType="moviecast">
+        SELECT personId
+        FROM MOVIE_CAST
+        WHERE movieId = #{movieId}
+    </select>
+
+    <select id="getPersonIdsByMovieId" parameterType="int" resultType="int">
+        SELECT personId
+        FROM MOVIE_CAST
+        WHERE movieId = #{movieId}
+        ORDER BY castOrder
+    </select>
+    
+    <select id="getCastInfoByMovieId" parameterType="int" resultType="DTO.Movie.MovieDetailDTO$CastInfoDTO">
+        SELECT 
+            p.personId,
+            p.personName,
+            p.profilePath,
+            mc.characterName,
+            mc.castOrder
+        FROM MOVIE_CAST mc
+        JOIN PERSON p ON mc.personId = p.personId
+        WHERE mc.movieId = #{movieId}
+        ORDER BY mc.castOrder
+    </select>
+</mapper>

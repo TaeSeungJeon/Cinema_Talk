@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.PersonDAO">
+	<insert id="insertPerson" parameterType="person">
+		INSERT INTO PERSON (
+			personId, personName, biography, profilePath
+		) VALUES (
+			#{personId}, #{personName}, #{biography}, #{profilePath}
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergePerson" parameterType="person">
+		MERGE INTO PERSON p
+		USING (SELECT #{personId} AS personId FROM DUAL) src
+		ON (p.personId = src.personId)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				p.personName = #{personName},
+				p.biography = #{biography},
+				p.profilePath = #{profilePath}
+		WHEN NOT MATCHED THEN
+			INSERT (personId, personName, biography, profilePath)
+			VALUES (#{personId}, #{personName}, #{biography}, #{profilePath})
+	</insert>
+	
+	<select id="selectPersonById" parameterType="int" resultType="person">
+		SELECT personId, personName, biography, profilePath
+		FROM PERSON
+		WHERE personId = #{personId}
+	</select>
+</mapper>

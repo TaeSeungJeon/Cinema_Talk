@@ -40,7 +40,7 @@ public class BoardUpdateOkController implements Action {
         String boardTitle = request.getParameter("boardTitle");
         String boardContent = request.getParameter("boardContent");
 
-        BoardService boardService = new BoardServiceImpl();
+        BoardService boardService = BoardServiceImpl.getInstance();
 
         // 기존 글 조회
         BoardDTO originalBoard = boardService.getBoardCont(boardId);

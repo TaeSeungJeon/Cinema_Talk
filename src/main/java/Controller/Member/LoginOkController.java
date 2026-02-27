@@ -60,7 +60,7 @@ public class LoginOkController implements Action {
 			return forward;
 		}
 		if(mdto.getMemState() == 2) {
-			request.setAttribute("mag", "휴먼 계정입니다. 관리자에게 문의하세요");
+			request.setAttribute("msg", "휴먼 계정입니다. 관리자에게 문의하세요");
 			forward.setRedirect(false);
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
@@ -82,14 +82,12 @@ public class LoginOkController implements Action {
 		session.setAttribute("memRole", mdto.getMemRole());
 		session.setAttribute("memState", mdto.getMemState());
 		
-		// 관리자/일반회원 이동
+		//마지막 로그인 날짜 업데이트
+		memberService.updateLastLogin(mdto.getMemId());
+	
+		// 관리자/일반회원 모두 메인페이지로 이동
 		forward.setRedirect(true);
-		
-		if(mdto.getMemRole() == 1) { //관리자일 때
-			forward.setPath(request.getContextPath() + "/adminMypage.do");
-		}else { //일반회원인 경우
-			forward.setPath(request.getContextPath() + "/index.do");
-		}
+		forward.setPath(request.getContextPath()+"/index.do");
 		return forward;
 	}
 

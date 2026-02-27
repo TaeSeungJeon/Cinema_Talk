@@ -4,5 +4,7 @@ import DTO.Admin.MovieSaveDTO;
 
 public interface AdminMovieService {
 
-	void saveMovie(MovieSaveDTO saveDTO);
+	void updateMovie(MovieSaveDTO saveDTO);
+
+	void deleteMovie(int movieId);
 }

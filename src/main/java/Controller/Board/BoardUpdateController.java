@@ -28,7 +28,7 @@ public class BoardUpdateController implements Action {
 
         int boardId = Integer.parseInt(request.getParameter("boardId"));
 
-        BoardService boardService = new BoardServiceImpl();
+        BoardService boardService = BoardServiceImpl.getInstance();
         BoardDTO board = boardService.getBoardCont(boardId);
 
         if (board == null || !board.getMemNo().equals(loginMemNo)) {

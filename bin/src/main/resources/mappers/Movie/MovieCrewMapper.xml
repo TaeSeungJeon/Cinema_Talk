@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.MovieCrewDAO">
+	<insert id="insertMovieCrew" parameterType="moviecrew">
+		INSERT INTO MOVIE_CREW (
+			personId, movieId, crewJob
+		) VALUES (
+			#{personId}, #{movieId}, #{crewJob}
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeMovieCrew" parameterType="moviecrew">
+		MERGE INTO MOVIE_CREW mc
+		USING (SELECT #{personId} AS personId, #{movieId} AS movieId FROM DUAL) src
+		ON (mc.personId = src.personId AND mc.movieId = src.movieId)
+		WHEN MATCHED THEN
+			UPDATE SET mc.crewJob = #{crewJob}
+		WHEN NOT MATCHED THEN
+			INSERT (personId, movieId, crewJob)
+			VALUES (#{personId}, #{movieId}, #{crewJob})
+	</insert>
+	
+	<select id="countMovieCrew" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM MOVIE_CREW
+		WHERE personId = #{personId} AND movieId = #{movieId}
+	</select>
+	
+	<select id="getDirectorsByMovieId" parameterType="int" resultType="DTO.Movie.MovieDetailDTO$CrewInfoDTO">
+        SELECT 
+            p.personId,
+            p.personName,
+            p.profilePath,
+            mc.crewJob
+        FROM MOVIE_CREW mc
+        JOIN PERSON p ON mc.personId = p.personId
+        WHERE mc.movieId = #{movieId}
+        AND mc.crewJob = 'Director'
+    </select>
+</mapper>

@@ -4,6 +4,7 @@ import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
+import DTO.Board.LinkPreviewDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
 import Service.Board.CommentsService;
@@ -11,6 +12,7 @@ import Service.Board.CommentsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 import DTO.Board.AddFileDTO;
 import Service.Board.AddFileService;
@@ -22,9 +24,12 @@ public class PostDetailController implements Action {
 
         int boardId = Integer.parseInt(request.getParameter("boardId"));
 
-        BoardService service = new BoardServiceImpl();
+        BoardService service = BoardServiceImpl.getInstance();
 
-        BoardDTO cont = service.getBoardDetail(boardId);
+        Map<String, Object> result = service.getBoardDetailWithPreview(boardId);
+
+        BoardDTO cont = (BoardDTO) result.get("board");
+        LinkPreviewDTO preview = (LinkPreviewDTO) result.get("preview");
 
         // 게시글이 존재하지 않으면 목록으로 리다이렉트
         if (cont == null) {
@@ -33,6 +38,9 @@ public class PostDetailController implements Action {
             forward.setRedirect(true);
             return forward;
         }
+        // 실시간 인기글
+        List<BoardDTO> hotList = service.hotBoardList(10);
+        request.setAttribute("hotList", hotList);
 
         /* 첨부파일 기능 */
         AddFileService fileService = AddFileServiceImpl.getInstance();
@@ -48,15 +56,15 @@ public class PostDetailController implements Action {
         int likeCount = service.getBoardLikeCount(cont.getBoardId(), cont.getBoardType());
 
         request.setAttribute("likeCount", likeCount);
-
         request.setAttribute("cont", cont);
+        request.setAttribute("preview", preview);
 
         String rawContent = cont.getBoardContent();
 
         // 모든 HTML 태그 제거
         String textOnly = rawContent.replaceAll("<[^>]*>", "");
-        request.setAttribute("textOnlyContent", textOnly);
 
+        request.setAttribute("textOnlyContent", textOnly);
         request.setAttribute("clist", clist);
 
         ActionForward forward = new ActionForward();

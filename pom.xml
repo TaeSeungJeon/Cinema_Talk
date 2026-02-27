@@ -137,11 +137,27 @@
 	  		<artifactId>jakarta.mail</artifactId>
 	  		<version>2.0.1</version>
 		</dependency>
-		
+
+        <!-- HTML 파싱 (링크 프리뷰 OG 태그 파싱) -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
+        </dependency>
+
+        <!-- ========================= -->
+        <!-- Thumbnailator (썸네일 생성) -->
+        <!-- ========================= -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.20</version>
+        </dependency>
+
     </dependencies>
-	
-	
-	
+
+
+
 	<!-- Maven 빌드 설정 -->
 	<build>
     <plugins>
@@ -156,6 +172,7 @@
 		</plugin>
     </plugins>
 	</build>
-	
+
+
 	
 </project>

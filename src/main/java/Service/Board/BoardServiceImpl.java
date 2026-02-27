@@ -3,52 +3,118 @@ package Service.Board;
 import DAO.Board.BoardDAO;
 import DAO.Board.BoardDAOImpl;
 import DTO.Board.BoardDTO;
+import DTO.Board.LinkPreviewDTO;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BoardServiceImpl implements BoardService {
 
-    private BoardDAO bdao = BoardDAOImpl.getInstance();
+    private static BoardServiceImpl instance;
 
-    // 글 작성
+    private final BoardDAO bdao;
+
+    private BoardServiceImpl() {
+        this.bdao = BoardDAOImpl.getInstance();
+    }
+
+    public static BoardServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new BoardServiceImpl();
+        }
+        return instance;
+    }
+
     @Override
     public int boardIn(BoardDTO bdto) {
         bdao.boardIn(bdto);
-        return 1; // 성공 처리용 (나중에 개선 가능)
+        return 1;
     }
 
-    // 게시글 목록
     @Override
     public List<BoardDTO> boardList() {
         return bdao.boardList();
     }
 
-    // 게시글 단순 조회 (수정/삭제용)
     @Override
     public BoardDTO getBoardCont(int boardId) {
         return bdao.getBoardCont(boardId);
     }
 
-    // 조회수 증가
     @Override
     public void plusReadCount(int boardId) {
         bdao.updateReadCount(boardId);
     }
 
-    // 상세보기 (조회수 증가 포함)
     @Override
     public BoardDTO getBoardDetail(int boardId) {
         bdao.updateReadCount(boardId);
         return bdao.getBoardCont(boardId);
     }
 
-    // 삭제
+    // 링크 첨부
+    @Override
+    public Map<String, Object> getBoardDetailWithPreview(int boardId) {
+
+        BoardDTO board = getBoardDetail(boardId);
+
+        String content = board.getBoardContent(); // 여기 getter는 너 DTO에 맞춰 수정 필요
+        String url = extractUrl(content);
+
+        LinkPreviewDTO preview = null;
+        if (url != null) {
+            preview = fetchPreview(url);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("board", board);
+        result.put("preview", preview);
+
+        return result;
+    }
+
+    private String extractUrl(String text) {
+        if (text == null) return null;
+
+        Pattern pattern = Pattern.compile("(https?://\\S+)");
+        Matcher matcher = pattern.matcher(text);
+        return matcher.find() ? matcher.group(1) : null;
+    }
+
+    private LinkPreviewDTO fetchPreview(String url) {
+        try {
+            Document doc = Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0")
+                    .timeout(3000)
+                    .get();
+
+            String title = doc.select("meta[property=og:title]").attr("content");
+            String desc = doc.select("meta[property=og:description]").attr("content");
+            String image = doc.select("meta[property=og:image]").attr("content");
+
+            if (isBlank(title) && isBlank(desc) && isBlank(image)) return null;
+
+            return new LinkPreviewDTO(url, title, desc, image);
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
     @Override
     public void deleteBoard(int boardId) {
         bdao.deleteBoard(boardId);
     }
 
-    // 수정
     @Override
     public void updateBoard(BoardDTO bdto) {
         bdao.updateBoard(bdto);
@@ -100,5 +166,8 @@ public class BoardServiceImpl implements BoardService {
         return bdao.isBoardLiked(boardId, boardType, memNo) > 0;
     }
 
-
+    @Override
+    public List<BoardDTO> hotBoardList(int limit) {
+        return bdao.hotBoardList(limit);
+    }
 }

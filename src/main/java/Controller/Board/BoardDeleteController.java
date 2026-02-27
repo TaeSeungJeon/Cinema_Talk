@@ -28,7 +28,7 @@ public class BoardDeleteController implements Action {
 
         int boardId = Integer.parseInt(request.getParameter("boardId"));
 
-        BoardService boardService = new BoardServiceImpl();
+        BoardService boardService = BoardServiceImpl.getInstance();
         BoardDTO bdto = boardService.getBoardCont(boardId);
 
         // 글 존재 여부 체크

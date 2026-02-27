@@ -89,7 +89,15 @@ public class MemberServiceImpl implements MemberService {
 	public int emailCheck(String memEmail) {
 		return mdao.emailCheck(memEmail);
 	}//이메일 중복 체크
+
+	@Override
+	public int withdrawMember(int memNo) {
+		return mdao.withdrawMember(memNo);
+	}//회원 탈퇴 (상태값 3으로 변경)
 	
+	public int updateLastLogin(String memId) {
+		return mdao.updateLastLogin(memId);
+	}//마지막 로그인 날짜 업데이트
 
 }
 

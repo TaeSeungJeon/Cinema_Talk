@@ -103,6 +103,7 @@
             font-size: 0.95rem;
             pointer-events: none;
         }
+
         /* 공유버튼 */
         .share-btn {
             padding: 8px 16px;
@@ -186,6 +187,7 @@
             border-radius: var(--radius-soft);
             padding: 25px;
             box-shadow: var(--shadow-subtle);
+            display: block !important;
         }
 
         /* --- 게시글 본문 스타일 --- */
@@ -222,23 +224,6 @@
             line-height: 1.8;
             color: #374151;
             min-height: 250px;
-        }
-
-        .tag-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 30px;
-        }
-
-        .tag {
-            background: rgba(99, 102, 241, 0.05);
-            color: var(--accent-color);
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            text-decoration: none;
-            font-weight: 500;
         }
 
         .post-actions {
@@ -359,60 +344,177 @@
             gap: 15px;
         }
 
-        /* 대댓글 입력 영역 스타일 */
         .reply-form-container {
             width: 100%;
             margin-top: 15px;
             display: none;
         }
+
+        /* 링크 영역 */
+        .link-preview {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            margin-top: 14px;
+        }
+
+        .preview-card {
+            display: flex;
+            gap: 14px;
+            background: black;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 18px;
+            padding: 14px;
+            box-shadow: var(--shadow-subtle);
+            transition: 0.2s;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .preview-thumb {
+            width: 150px;
+            min-width: 150px;
+            height: 110px;
+            border-radius: 14px;
+            background-size: cover;
+            background-position: center;
+            background-color: #e2e8f0;
+        }
+
+        .preview-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .preview-domain {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .preview-desc {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .preview-url {
+            font-size: 0.8rem;
+            color: #818cf8;
+            font-weight: 700;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ========== 실시간 인기글: freeBoard.jsp 스타일/두께/기울임/로직 동일 ========== */
+        .side-widget {
+            background: white;
+            border-radius: var(--radius-soft);
+            padding: 25px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .widget-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-link {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .hot-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hot-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .hot-item:last-child {
+            border: none;
+        }
+
+        .rank-num {
+            font-weight: 800;
+            color: var(--accent-color);
+            font-style: italic;
+        }
+
+        .hot-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .hot-hidden {
+            display: none;
+        }
+
+        .widget-placeholder {
+            background: #f8fafc;
+            border: 2px dashed #e2e8f0;
+            border-radius: 16px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cbd5e1;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <a href="../../../Cinema_Talk.jsp" class="glass-panel-btn"
-       style="padding: 12px 28px; font-weight: 800; color: var(--accent-color); font-size: 1.3rem; letter-spacing: -1px;">Cinema
-        Talk</a>
-    <div style="display: flex; gap: 12px;">
-        <a href="memberLogin.do" class="glass-panel-btn"
-           style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">로그인</a>
-        <a href="myPage.jsp" class="glass-panel-btn"
-           style="padding: 10px 22px; color: var(--text-main); font-weight: 600; font-size: 0.9rem;">마이페이지</a>
-    </div>
-</header>
-
-<nav class="category-nav">
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">인기 영화 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="moviesNow.jsp?cat=current">현재 상영작</a></li>
-            <li><a href="moviesYet.jsp?cat=yet">개봉 예정작</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">장르별 찾기 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="genre1.jsp?code=action">액션/범죄</a></li>
-            <li><a href="genre2.jsp?code=romance">로맨스</a></li>
-            <li><a href="genre3.jsp?code=thriller">스릴러</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">커뮤니티 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="community.jsp?tab=best">인기 게시글</a></li>
-            <li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
-        </ul>
-    </div>
-    <div class="category-bubble" onclick="toggleMenu(this)">
-        <div class="cat-title">고객센터 ▾</div>
-        <ul class="sub-menu">
-            <li><a href="faq.jsp">자주 묻는 질문</a></li>
-            <li><a href="notice.jsp">공지사항 전체보기</a></li>
-            <li><a href="inquiry.jsp">1:1 문의</a></li>
-        </ul>
-    </div>
-</nav>
+<%-- include 헤더/네비 유지 (네가 쓰던 방식) --%>
+<%@ include file="../home/homeHeader.jsp" %>
 
 <div class="layout-wrapper">
     <aside class="side-panel">
@@ -447,13 +549,39 @@
             <div class="author-profile" style="margin-bottom: 20px;">
                 <span class="author-name" style="font-weight: 700;">${cont.boardName}</span>
                 <span class="post-meta"
-                      style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardRecommendCount}</span>
+                      style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardViewCount}</span>
             </div>
 
             <div class="post-body" id="post-body">
                 ${cont.boardContent}
             </div>
-                <%-- 첨부파일 기능 --%>
+
+            <c:if test="${not empty preview}">
+                <a href="${preview.url}" target="_blank" class="link-preview">
+                    <div class="preview-card">
+                        <c:if test="${not empty preview.image}">
+                            <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
+                        </c:if>
+
+                        <div class="preview-content">
+                            <div class="preview-domain">
+                                <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
+                            </div>
+
+                            <c:if test="${not empty preview.title}">
+                                <div class="preview-title">${preview.title}</div>
+                            </c:if>
+
+                            <c:if test="${not empty preview.description}">
+                                <div class="preview-desc">${preview.description}</div>
+                            </c:if>
+
+                            <div class="preview-url">${preview.url}</div>
+                        </div>
+                    </div>
+                </a>
+            </c:if>
+
             <c:if test="${not empty fileList}">
                 <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
                     <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
@@ -466,8 +594,7 @@
                                    style="text-decoration:none; font-weight:700; color:#374151;">
                                         ${f.fileName}
                                 </a>
-
-                                                            </div>
+                            </div>
                         </c:forEach>
                     </div>
                 </div>
@@ -481,17 +608,14 @@
                            value="${cont.boardTitle}"
                            style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
 
-                    <!--  수정 영역 -->
                     <div id="editor"
                          contenteditable="true"
                          style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
                         ${cont.boardContent}
                     </div>
 
-                    <!-- 실제 전송용 hidden -->
                     <input type="hidden" name="boardContent" id="hiddenContent">
 
-                    <!-- 파일 업로드 -->
                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
                         <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
                         <input type="file" name="uploadFiles" multiple style="margin-bottom:8px;">
@@ -511,8 +635,6 @@
                     </div>
                 </form>
             </div>
-
-
 
             <div class="post-footer-actions"
                  style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
@@ -535,10 +657,7 @@
                         </button>
                     </div>
                 </c:if>
-
             </div>
-
-            <%-- 태그 추가하려면 이 라인에 추가 (post-group) --%>
 
             <div class="post-actions">
                 <button class="action-btn" type="button"
@@ -547,7 +666,6 @@
                 </button>
 
                 <button type="button" class="share-btn" id="shareBtn">🔗 공유하기</button>
-
             </div>
         </article>
 
@@ -617,8 +735,8 @@
                                 <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
                                       onclick="toggleCommentLike(${comm.commentsId})"
                                       style="cursor:pointer; font-weight:600; color:var(--accent-color);">
-                                <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
-                                         좋아요 ${comm.likeCount}
+                                    <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
+                                    좋아요 ${comm.likeCount}
                                 </span>
                             </div>
 
@@ -654,24 +772,7 @@
     </main>
 
     <aside class="side-panel">
-        <div class="glass-panel">
-            <div class="side-title"><span>📊 영화 투표</span></div>
-            <div class="widget-placeholder">
-                <div style="text-align: center;">
-                    <p style="margin:0; font-size: 0.8rem; color: var(--text-main);">올해 최고의 기대작은?</p>
-                    <button style="margin-top:10px; font-size:0.7rem; padding:5px 10px; border-radius:8px; border:none; background:var(--accent-color); color:white; cursor:pointer; font-weight:700;">
-                        투표하기
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass-panel">
-            <div class="side-title">🔥 실시간 인기글</div>
-            <div class="side-item">1. 범죄도시4 관람 후기</div>
-            <div class="side-item">2. 오펜하이머 무음의 미학</div>
-            <div class="side-item">3. 듄2 포토카드 나눔합니다</div>
-        </div>
+        <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
     </aside>
 
     <script>
@@ -687,7 +788,6 @@
             }
         });
 
-
         function showReplyForm(id) {
             document.querySelectorAll('.reply-form-container').forEach(el => el.style.display = 'none');
             document.getElementById('reply-form-' + id).style.display = 'block';
@@ -697,29 +797,24 @@
             document.getElementById('reply-form-' + id).style.display = 'none';
         }
 
-        /*수정 폼 열기 : 기존 글 숨기고 입력창 노출*/
         function showEditForm(id) {
             document.getElementById('comment-text-' + id).style.display = 'none';
             document.getElementById('edit-form-' + id).style.display = 'block';
         }
 
-        /*수정 폼 닫기: 입력창 숨기고 기존 글 노출*/
         function hideEditForm(id) {
             document.getElementById('comment-text-' + id).style.display = 'block';
             document.getElementById('edit-form-' + id).style.display = 'none';
         }
 
-
         function deleteComment(cId, bId) {
             if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
                 location.href = "commentsDeleteOk.do?commentsId=" + cId + "&boardId=" + bId;
             }
-
         }
 
         function deletePost(boardId) {
             if (confirm("정말 삭제하시겠습니까?")) {
-
                 const form = document.createElement("form");
                 form.method = "post";
                 form.action = "<c:url value='/boardDelete.do'/>";
@@ -732,33 +827,18 @@
                 form.appendChild(input);
                 document.body.appendChild(form);
                 form.submit();
-
             }
         }
-        /* 게시글 수정 폼 열기 */
+
         function showUpdateForm() {
             document.getElementById("post-body").style.display = "none";
             document.getElementById("update-form").style.display = "block";
         }
 
-        /* 게시글 수정 폼 닫기 */
         function hideUpdateForm() {
             document.getElementById("post-body").style.display = "block";
             document.getElementById("update-form").style.display = "none";
         }
-        /* 좋아요 */
-        function toggleLike(boardId, boardType) {
-            fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
-                .then(r => r.text())
-                .then(res => {
-                    if (res === "LOGIN_REQUIRED") {
-                        alert("로그인 후 이용 가능합니다.");
-                        location.href = "memberLogin.do";
-                        return;
-                    }
-                    document.getElementById("likeCount").innerText = res;
-                });
-        }
 
         function toggleLike(boardId, boardType) {
             fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
@@ -773,59 +853,74 @@
                 });
         }
 
-
-            (function () {
+        (function () {
             const btn = document.getElementById("shareBtn");
             if (!btn) return;
 
             btn.addEventListener("click", async function () {
-            const url = window.location.href;
-            const title = document.title || "게시글";
+                const url = window.location.href;
+                const title = document.title || "게시글";
 
-            // 1) 모바일/지원 브라우저: 네이티브 공유창
-            if (navigator.share) {
-            try {
-            await navigator.share({ title, text: "게시글 공유", url });
-            return;
-        } catch (e) {
-            // 사용자가 취소한 경우도 여기로 들어옴 -> 조용히 넘어가서 복사로 fallback
-        }
-        }
+                if (navigator.share) {
+                    try {
+                        await navigator.share({ title, text: "게시글 공유", url });
+                        return;
+                    } catch (e) {}
+                }
 
-            // 2) URL 복사 (HTTPS/localhost에서만 navigator.clipboard가 정상인 경우가 많음)
-            try {
-            if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(url);
-            alert("URL이 복사되었습니다!");
-            return;
-        }
-        } catch (e) {}
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(url);
+                        alert("URL이 복사되었습니다!");
+                        return;
+                    }
+                } catch (e) {}
 
-            // 3) 구형/비보안 fallback (execCommand)
-            try {
-            const ta = document.createElement("textarea");
-            ta.value = url;
-            ta.style.position = "fixed";
-            ta.style.left = "-9999px";
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand("copy");
-            document.body.removeChild(ta);
-            alert("URL이 복사되었습니다!");
-        } catch (e) {
-            alert("공유/복사가 차단되었습니다. 주소창 URL을 직접 복사해주세요.");
-            console.error(e);
-        }
-        });
+                try {
+                    const ta = document.createElement("textarea");
+                    ta.value = url;
+                    ta.style.position = "fixed";
+                    ta.style.left = "-9999px";
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(ta);
+                    alert("URL이 복사되었습니다!");
+                } catch (e) {
+                    alert("공유/복사가 차단되었습니다. 주소창 URL을 직접 복사해주세요.");
+                    console.error(e);
+                }
+            });
         })();
 
-        document.querySelector("form[action$='boardUpdateOk.do']")
-            .addEventListener("submit", function () {
+        const updateForm = document.querySelector("form[action$='boardUpdateOk.do']");
+        if (updateForm) {
+            updateForm.addEventListener("submit", function () {
                 document.getElementById("hiddenContent").value =
                     document.getElementById("editor").innerHTML;
             });
+        }
 
+        /* 실시간 인기글: 더보기 누르면 10개 (5개 추가 노출), 다시 누르면 접기 */
+        (function () {
+            const btn = document.getElementById("hotMoreBtn");
+            const listBox = document.getElementById("hotListBox");
+            if (!btn || !listBox) return;
+
+            let expanded = false;
+
+            btn.addEventListener("click", function () {
+                expanded = !expanded;
+
+                listBox.querySelectorAll(".hot-hidden").forEach(el => {
+                    el.style.display = expanded ? "flex" : "none";
+                });
+
+                btn.textContent = expanded ? "접기" : "더보기";
+            });
+        })();
     </script>
 </div>
+
 </body>
 </html>

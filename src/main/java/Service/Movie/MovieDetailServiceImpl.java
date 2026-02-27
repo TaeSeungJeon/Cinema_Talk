@@ -30,8 +30,16 @@ public class MovieDetailServiceImpl implements MovieDetailService {
 	public MovieDetailDTO getMovieDetail(int movieId) {
 		// 1. 영화 기본 정보 조회
 		MovieDTO movie = movieDAO.getMovieById(movieId);
+		String originalDate = movie.getMovieReleaseDate();
+		String fixedDate = originalDate.substring(0, 10);
+		movie.setMovieReleaseDate(fixedDate);
+		
 		if (movie == null) {
 			return null;
+		}
+		// ReleaseDate가 null이 아니고 10자 이상이면 yyyy-MM-dd만 남기기
+		if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+			movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
 		}
 		
 		// 2. 장르 목록 조회

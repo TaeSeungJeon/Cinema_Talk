@@ -47,7 +47,7 @@ public class AdminVoteFormOkController implements Action {
 
     String state = request.getParameter("state");
     String voteId = request.getParameter("voteId");
-   
+
 
     String voteTitle = request.getParameter("voteTitle");
     String voteContent = request.getParameter("voteContent");
@@ -77,12 +77,14 @@ public class AdminVoteFormOkController implements Action {
     	    vdto.setVoteEndDate(voteEndDate);
     	    vdto.setOptionList(voptList);
     	    
+    	  
     	  if(voteId != null && voteId.trim() != "") {
-    		 
+    		  
     		  vdto.setVoteId(Integer.parseInt(voteId));
     	  }
-    	
-    	    if ("add".equals(state)) {
+    	 
+    	 
+    	    if ("add".equals(state) || (voteId == null || voteId.trim() == "")) {
     	      isSuccess = voteService.insertVoteRegister(vdto);
     	      msg = "투표가 성공적으로 추가되었습니다";
     	    } else if ("edit".equals(state) && voteId != null) {

@@ -12,10 +12,8 @@
             --success: #22c55e;
             --bg: #f0f2f5;
             --info: #0ea5e9; /* 시원한 하늘색 (상세 보기용) */
-             --info-hover: #0284c7;
-             --bg-color: #f0f2f5;
-			--glass-bg: rgba(255, 255, 255, 0.7);
-			--accent-color: #6366f1;
+            --info-hover: #0284c7;
+            --bg-color: #f0f2f5;
 			--text-main: #1f2937;
 			--radius-soft: 24px;
 			--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
@@ -25,7 +23,8 @@
         
          * {
 			box-sizing: border-box;
-		}
+			}
+			
         body {
 			font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
 			background-color: var(--bg-color);
@@ -38,36 +37,17 @@
 		}
 		
 		.vote-mgmt-page {
-		   padding:0.5rem 2rem;
-		    height: calc(100vh - 12rem);
-		    background-color: white;
-		    border-radius: 1rem;
-		   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-		   display:flex;
-		   flex-direction:column;
+		   padding:0.5rem 2rem;height: calc(100vh - 12rem);background-color: white;
+		   border-radius: 1rem;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;
 		}
 		
-        .admin-content {
-			background: white;
-			border-radius: var(--radius-soft);
-			box-shadow: var(--shadow-subtle);
-			padding: 22px;
-			min-height: 760px;
-			display:flex;
-			flex-direction: column;
-		} 
-       
         
         /* 테이블 스타일 */
         table { width: 100%; border-collapse: collapse;}
         th { background: #f8fafc; color: #64748b; padding: 12px; border-bottom: 2px solid #e2e8f0; }
         td { padding: 15px 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
         /* 테이블 스타일 고정 */
-		.vote-table {
-		    width: 100%;
-		    table-layout: fixed; /* 컬럼 넓이 고정을 위해 필수 */
-		    border-collapse: collapse;
-		}
+		.vote-table { width: 100%; table-layout: fixed;  border-collapse: collapse;}
 		
 		/* 각 컬럼 넓이 설정 */
 		.vote-table th:nth-child(1) { width: 60px; }  /* ID */
@@ -78,56 +58,22 @@
 		.vote-table th:nth-child(6) { width: 280px; } /* 관리 버튼 */
 		
 		/* 제목이 너무 길 경우 말줄임표(...) 처리 */
-		.vote-table td {
-		    overflow: hidden;
-		    text-overflow: ellipsis;
-		    white-space: nowrap;
-		    padding: 12px 8px;
-		    text-align: center;
-		}
+		.vote-table td {  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 12px 8px;text-align: center;}
 		
-		.vote-table td:nth-child(2) {
-		    text-align: left; /* 제목은 왼쪽 정렬 */
-		}
+		.vote-table td:nth-child(2) { text-align: left;}
         
-        /* 버튼 스타일 */
-        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .btn-add { background: var(--primary); color: #fff; float: right; }
         .btn-edit { background: #e0e7ff; color: var(--primary); margin-right: 5px; }
         .btn-del { background: #fee2e2; color: var(--danger); }
         .btn:hover { opacity: 0.8; transform: translateY(-1px); }
-        .btn-cont {
-            background: #e0f2fe; /* 매우 연한 파랑 배경 */
-            color: var(--info);   /* 진한 하늘색 글자 */
-            border: 1px solid #bae6fd; /* 미세한 테두리 */
-        }
+        .btn-cont {  background: #e0f2fe; color: var(--info); border: 1px solid #bae6fd; }
 
-        .btn-cont:hover {
-            background: var(--info);
-            color: #fff;
-            border-color: var(--info-hover);
-        }
+        .btn-cont:hover { background: var(--info); color: #fff; border-color: var(--info-hover); }
 
-        /* 모달 (팝업) 스타일 */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; }
-        .modal-content { background: #fff; width: 500px; margin: 100px auto; padding: 30px; border-radius: 12px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        
-        .v-badge {
-		    padding: 4px 10px;
-		    border-radius: 20px;
-		    font-size: 0.8rem;
-		    font-weight: 600;
-		}
+        .v-badge {  padding: 4px 10px; border-radius: 20px;  font-size: 0.8rem; font-weight: 600;}
 		.v-badge.ready { background: #dcfce7; color: var(--success); }
 		.v-badge.closed { background: #fee2e2; color: var(--danger); }
-		.custom-select-wrapper {
-		    position: relative;
-		    width: 150px;
-		    user-select: none;
-		}
+		.custom-select-wrapper {  position: relative;  width: 150px;  user-select: none;}
 		
 		.custom-select-trigger {
 		    padding: 10px 15px;
@@ -146,158 +92,50 @@
 		
 		/* 옵션 리스트 초기 상태 (숨김 & 위로 살짝 이동) */
 		.custom-options {
-		    position: absolute;
-		    top: 110%;
-		    left: 0;
-		    right: 0;
-		    background: #fff;
-		    border: 1px solid #e2e8f0;
-		    border-radius: 8px;
-		    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-		    z-index: 100;
-		    overflow: hidden;
-		    
-		    /* 애니메이션 핵심 */
-		    opacity: 0;
-		    visibility: hidden;
-		    transform: translateY(-10px);
-		    transition: all 0.3s ease; 
-		    padding: 5px 0;
+		    position: absolute;top: 110%; left: 0;  right: 0; background: #fff;  border: 1px solid #e2e8f0; border-radius: 8px;box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+		    z-index: 100;  overflow: hidden; opacity: 0; visibility: hidden;   transform: translateY(-10px); transition: all 0.3s ease;  padding: 5px 0;
 		}
 		
 		/* 드롭다운 열렸을 때 상태 */
-		.custom-select-wrapper.open .custom-options {
-		    opacity: 1;
-		    visibility: visible;
-		    transform: translateY(0);
-		}
+		.custom-select-wrapper.open .custom-options { opacity: 1; visibility: visible; transform: translateY(0);}
 		
-		.custom-option {
-		    padding: 10px 15px;
-		    font-size: 0.9rem;
-		    color: #475569;
-		    transition: background 0.2s;
-		    cursor: pointer;
-		}
+		.custom-option {  padding: 10px 15px; font-size: 0.9rem; color: #475569; transition: background 0.2s; cursor: pointer;}
 		
-		.custom-option:hover {
-		    background-color: #eff6ff;
-		    color: #3b82f6;
-		}
+		.custom-option:hover { background-color: #eff6ff; color: #3b82f6;}
 		
 		/* 화살표 아이콘 애니메이션 */
-		.arrow-icon::after {
-		    content: '▼';
-		    font-size: 0.7rem;
-		    transition: transform 0.3s;
-		}
-		.custom-select-wrapper.open .arrow-icon::after {
-		    transform: rotate(180deg);
-		}
+		.arrow-icon::after { content: '▼'; font-size: 0.7rem; transition: transform 0.3s;}
+		.custom-select-wrapper.open .arrow-icon::after { transform: rotate(180deg);}
 		
 		 /* 페이징 */
-	    .pagination {
-	        display: flex;
-	        justify-content: center;
-	        align-items: center;
-	        gap: 8px;
-	        margin-top: 30px;
-	        flex-wrap: wrap;
-	        flex-shrink: 0;
+	    .pagination { display: flex; justify-content: center; align-items: center;  gap: 8px;  margin-top: 30px;  flex-wrap: wrap;  flex-shrink: 0; }
+	
+	    .pagination a, .pagination span { display: inline-flex;  align-items: center; justify-content: center;  min-width: 40px; height: 40px;
+	        padding: 0 12px; border-radius: 12px;text-decoration: none; font-weight: 500; transition: 0.3s;
 	    }
 	
-	    .pagination a, .pagination span {
-	        display: inline-flex;
-	        align-items: center;
-	        justify-content: center;
-	        min-width: 40px;
-	        height: 40px;
-	        padding: 0 12px;
-	        border-radius: 12px;
-	        text-decoration: none;
-	        font-weight: 500;
-	        transition: 0.3s;
-	    }
+	    .pagination a { background: white; color: var(--text-main); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
 	
-	    .pagination a {
-	        background: white;
-	        color: var(--text-main);
-	        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-	    }
+	    .pagination a:hover { background: #6366f1; color: white; }
 	
-	    .pagination a:hover {
-	        background: #6366f1;
-	        color: white;
-	    }
+	    .pagination .current { background: #6366f1; color: white; box-shadow: var(--shadow-strong);}
 	
-	    .pagination .current {
-	        background: #6366f1;
-	        color: white;
-	        box-shadow: var(--shadow-strong);
-	    }
+	    .pagination .nav-btn { background: #6366f1;color: white;font-weight: 600;padding: 0 20px;}
 	
-	    .pagination .nav-btn {
-	        background: #6366f1;
-	        color: white;
-	        font-weight: 600;
-	        padding: 0 20px;
-	    }
+	    .pagination .nav-btn:hover { background: #4f46e5; }
 	
-	    .pagination .nav-btn:hover {
-	        background: #4f46e5;
-	    }
-	
-	    .pagination .nav-btn.disabled {
-	        background: #e2e8f0;
-	        color: #94a3b8;
-	        pointer-events: none;
-	    }
-	    
-
-		.admin-container {
-			display: grid;
-			grid-template-columns: 240px 1fr;
-			gap: 24px;
-		}
+	    .pagination .nav-btn.disabled { background: #e2e8f0;color: #94a3b8;pointer-events: none; }
 		
-		.tbl-page-container{
-			flex:1;
-			display:flex;
-			flex-direction:column;
-			overflow:hidden;
-			min-height:0;
-		}
+		.tbl-page-container{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
 		
-		.tbl-container {
-			flex:1;
-			overflow-y:auto;
-/* 			border-bottom: 1px solid #e2e8f0; */
-		}
+		.tbl-container {flex:1;overflow-y:auto;}
 		
-		.vote-table {
-		    width: 100%;
-		    border-collapse: collapse;
-		}
+		.vote-table {  width: 100%; border-collapse: collapse;}
 		
-		.vote-table thead th {
-		    position: sticky;  
-		    top: 0;
-		    z-index: 10;
-		}
+		.vote-table thead th { position: sticky; top: 0;z-index: 10;}
 		
-		 .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 6000;
-        }
+		 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+		 background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 6000; }
         
         .form-container {
 			background: white;
@@ -306,101 +144,62 @@
             padding: 35px;
             border-radius: 30px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-		}
+            max-height: 80vh;
+            overflow-y: auto;
+            display: flex;
+    		flex-direction: column;
+    		&::-webkit-scrollbar {
+		        display: none;
+		    }
 		
-		input[type="text"], input[type="date"], select, textarea {
-			width: 100%;
-			padding: 12px;
-			border: 1px solid var(--border);
-			border-radius: 8px;
-			font-size: 1rem;
-			box-sizing: border-box;
+		    scrollbar-width: none;
 		}
+			
+		input[type="text"], input[type="date"], select, 
+		textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
 		
-		.section-title {
-			font-weight: 700;
-			margin-top: 25px;
-			margin-bottom: 10px;
-			display: block;
-			color: #475569;
-		}
+		.section-title { font-weight: 700; margin-top: 25px; margin-bottom: 10px; display: block; color: #475569; }
 		
-		.btn-group {
-			margin-top: 40px;
-			display: flex;
-			gap: 10px;
-			justify-content: flex-end;
-		}
+		.btn-group {margin-top: 40px;display: flex;gap: 10px;justify-content: flex-end;}
 		
-		.btn {
-			padding: 12px 24px;
-			border-radius: 8px;
-			font-weight: 600;
-			cursor: pointer;
-			border: none;
-			transition: 0.2s;
-		}
+		.btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+		.btn-save {background: var(--primary);color: white;}
 		
-		.btn-save {
-			background: var(--primary);
-			color: white;
-		}
-		
-		.btn-cancel {
-			background: #e2e8f0;
-			color: #64748b;
-		}
+		.btn-cancel {background: #e2e8f0;color: #64748b;}
 
-		.btn-add-opt {
-			background: #334155;
-			color: white;
-			font-size: 0.85rem;
-		}
+		.btn-add-opt {background: #334155;color: white;font-size: 0.85rem;}
 		
 		/* 선택지(옵션) 아이템 스타일 */
-		.option-wrapper {
-			background: #f1f5f9;
-			padding: 20px;
-			border-radius: 12px;
-			margin-top: 10px;
-		}
+		.option-wrapper { background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 10px; }
 		
-		.option-item {
-			display: flex;
-			gap: 10px;
-			margin-bottom: 10px;
-			position: relative;
-		}
+		.option-item { display: flex; gap: 10px; margin-bottom: 10px; position: relative; }
 		
 		/* 자동완성 결과창 */
-		.search-results {
-			position: absolute;
-			top: 100%;
-			left: 0;
-			width: 100%;
-			background: white;
-			border: 1px solid var(--border);
-			border-radius: 8px;
-			z-index: 10;
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-			display: none;
-			max-height: 200px;
-			overflow-y: auto;
-		}
+		.search-results { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid var(--border); border-radius: 8px; z-index: 10; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: none; max-height: 200px; overflow-y: auto; }
+		.result-item { padding: 10px 15px; cursor: pointer; transition: 0.2s; }
+		.result-item:hover { background: #f0f4ff; color: var(--primary); }
 		
-		.result-item {
-			padding: 10px 15px;
-			cursor: pointer;
-			transition: 0.2s;
-		}
+		.vote-result-cont { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+		.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+		.result-header h3 { font-size: 1.25rem; color: #1e293b; margin: 0; }
 		
-		.result-item:hover {
-			background: #f0f4ff;
-			color: var(--primary);
-		}
+		.badge { background: #f1f5f9; color: #475569; padding: 6px 12px; border-radius: 20px; font-size: 0.875rem; margin-left: 8px; }
 		
+		.badge strong {color: #2563eb;}
+		
+		.item-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
+		.movie-title { font-weight: 600; color: #334155; }
+		.vote-count { color: #64748b; font-weight: 500; }
+		
+		/* 프로그레스 바 스타일 */
+		.progress-bar-wrap { width: 100%; height: 12px; background-color: #f1f5f9; border-radius: 6px; overflow: hidden; }
+		.progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); border-radius: 6px; width: 0%; transition: width 1.2s cubic-bezier(0.1, 0.5, 0.5, 1); }
+		.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; }
+		
+		.btn-close { background: none; border: none; font-size: 2rem; font-weight: 300; color: #64748b; cursor: pointer; line-height: 1; padding: 0 5px; transition: color 0.2s, transform 0.2s; }
+		.btn-close:hover { color: #1e293b; transform: scale(1.1); }
+		#vote-modal-header { margin: 0; font-size: 1.5rem; }
 	
-		
     </style>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -412,7 +211,7 @@
 		        <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
 		        
 		    </div>
-		    <div><button class="btn btn-add" onclick="openForm('add')" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
+		    <div><button class="btn btn-add" onclick="addForm()" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
 		
 			<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;   border-radius: 10px;">
 		        <div style="display: flex; gap: 12px; align-items: center;   border-radius: 10px;">
@@ -559,7 +358,10 @@
 	<div class="modal-overlay" id="voteModal">
 
 		<div class="form-container">
-				<h2 id="vote-modal-header">투표 등록</h2>
+				<div class="modal-header">
+			        <h2 id="vote-modal-header">투표 상세</h2>
+			        <button type="button" class="btn-close" onclick="closeModal()">&times;</button>
+			    </div>
 		
 				<form id="voteForm" >
 					<input type="hidden" name="voteId" value="${vote.voteId}"> <label
@@ -627,12 +429,37 @@
 						</c:choose>
 					</div>
 		
-					<div class="btn-group">
+					
+				</form>
+				
+				<!-- 투표결과 -->
+				<div class="vote-result-cont" style="display:none;">
+					<div class="result-header">
+				        <h3> 투표 실시간 현황</h3>
+				        <div class="result-summary">
+				            <span class="badge">총 참여자 <strong id="total-voters">0</strong>명</span>
+				            <span class="badge">댓글 <strong id="total-comments">0</strong>개</span>
+				        </div>
+				    </div>
+				
+				    <div class="result-list" id="result-list">
+				        <div class="result-item">
+				            <div class="item-info">
+				                <span class="movie-title">영화 제목 A</span>
+				                <span class="vote-count">450표 (45%)</span>
+				            </div>
+				            <div class="progress-bar-wrap">
+				                <div class="progress-bar-fill" style="width: 45%;"></div>
+				            </div>
+				        </div>
+				        </div>
+				</div>
+				
+				<div class="btn-group">
 						<button type="button" class="btn btn-cancel"
 							onclick="closeModal()">취소</button>
-						<button type="button"  class="btn btn-save">등록</button>
+						<button type="button"  class="btn btn-save" onclick="validateForm()">등록</button>
 					</div>
-				</form>
 			</div>
 		
 		
@@ -641,27 +468,33 @@
 
 
 <script>
-
-	
     var modal = document.getElementById('voteModal');
-    
-
-    function openForm(mode,voteId) {
-    	
-    	console.log("openForm" + mode)
-    	
-    	document.getElementById('voteModal').style.display = 'flex';
+ 
+    function openModal(mode,voteId) {
+    	modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         
         //폼 초기화
         $("#voteForm")[0].reset();
         $("#voteForm input[type='hidden']").val("");
         $('#optionList').html("영화를 추가해주세요");
-        
-        $("#vote-modal-header").text(mode === 'edit' ? "투표 수정" : "투표 등록");
-		$(".btn-save").data("mode", mode).text(mode === 'edit' ? '수정' : '등록');
-        
+        $(".btn-cancel").show();
+     
         if(mode === 'edit'){
+        	$("#vote-modal-header").text("투표 수정");
+        	$(".btn-save").data("mode", mode).text("수정");
+        	 $(".vote-result-cont").hide();
+        }else if(mode === 'cont'){
+        	$("#vote-modal-header").text("투표 상세");
+        	$(".btn-save").data("mode", mode).text("확인");
+        	$(".btn-cancel").hide();
+        	$(".vote-result-cont").show();
+        }else {
+        	$("#vote-modal-header").text("투표 등록");
+        	$(".btn-save").data("mode", mode).text("등록");
+        }
+        
+        if(mode != 'add'){
         	//투표정보조회
         	 $.ajax({
      			url : "${pageContext.request.contextPath}/admin/voteForm.do",
@@ -688,7 +521,6 @@
      			    if (vote.voteEndDate) {
      			        $("input[name='voteEndDate']").val(vote.voteStartDate);
      			    }
-     			
      			    
      			    //option list
      			   const $optionList = $("#optionList");
@@ -696,40 +528,50 @@
      			   vote.optionList.forEach(function(opt) {
      			       addOption(opt["movieId"], opt["movieTitle"])
      			    });
+     			   
+     			   //투표 결과
+     			   if(mode === 'cont'){
+     				  displayVoteResult(vote);
+     			   }
      			},
      			error : function(xhr) {
      				alert("문제가 발생했습니다.")
      			}
      		});
-        	
         }
-    	
     }
 
-    function closeModal() {
-        modal.style.display = 'none';
-    }
-    
-
-    function contVote(id) {
-    	alert("작업 중")
-    }
-
-   
-    function editVote(id) {
-        openForm('edit', id);
-    }
+    function closeModal() {modal.style.display = 'none';}
+    function addForm() {openModal('add');}
+    function contVote(id) {openModal('cont', id);}
+    function editVote(id) { openModal('edit', id);}
 
     // 삭제
     function deleteVote(id, status) {
     	
-    	if (status === 'ACTIVE') {
-            alert("진행 중인 투표는 삭제할 수 없습니다.");
+    	if (status != 'READY') {
+            alert("예정된 투표만 삭제할 수 있습니다.");
             return; // 함수 종료 (삭제 로직으로 넘어가지 않음)
         }
     	
         if(confirm("정말 이 투표를 삭제하시겠습니까? 데이터는 복구되지 않습니다.")) {
-            location.href = `voteOkForm.do?state=delete&voteId=\${id}`;
+        	$.ajax({
+				url : "${pageContext.request.contextPath}/admin/voteOkForm.do",
+				type : "POST",
+				data : {
+					state: 'delete',
+					voteId: id
+				},
+				headers : {
+					"X-Requested-With" : "XMLHttpRequest"
+				},
+				success : function(response) {
+					selectOption('ALL', '전체 보기');
+				},
+				error : function(xhr) {
+					alert("문제가 발생했습니다.")
+				}
+			});
         }
     }
 
@@ -749,29 +591,15 @@
         container.appendChild(div);
     }
 
-    // 선택지 필드 삭제 함수
-    function removeOption(btn) {
-        const items = document.querySelectorAll('.option-item');
-        if (items.length > 1) {
-            btn.parentElement.remove();
-        } else {
-            alert("최소 한 개의 선택지는 있어야 합니다.");
-        }
-    }
-    
-    function toggleDropdown() {
-        $('.custom-select-wrapper').toggleClass('open');
-    }
+  
+    //필터
+    function toggleDropdown() { $('.custom-select-wrapper').toggleClass('open'); }
 
     function selectOption(value, text) {
-        
-        
         // hidden input 값 변경
         $('#filterStatus').val(value);
-        
         // 드롭다운 닫기
         $('.custom-select-wrapper').removeClass('open');
-        
         // 기존 필터 함수 실행
         applyFilters(text);
     }
@@ -788,8 +616,11 @@
 			headers : {
 				"X-Requested-With" : "XMLHttpRequest"
 			},
-			success : function(response) {
-				$(".admin-content").html(response);
+			success : function(html) {
+				 const $newContent = $(html).find('.tbl-page-container').html();
+				 $('.tbl-page-container').html($newContent);
+				 
+				 window.scrollTo({ top: 0, behavior: 'smooth' });
 				// 표시 텍스트 변경
 		        $('#selectedText').text(text);
 		        $('#filterStatus').val(selectedStatus);
@@ -811,10 +642,7 @@
      // 모달 외부 클릭 시 닫기 
         if (e.target == document.getElementById('voteModal')) closeModal();
     });
-    
-    //정렬 기능
-    var ascOrder = true; //오름차순
-   
+
     function sortTable(column, colIdx){
     	
     	let isAsc = $(".vote-table").hasClass("asc");
@@ -835,7 +663,10 @@
 				"X-Requested-With" : "XMLHttpRequest"
 			},
 			success : function(response) {
-				$(".admin-content").html(response);
+				 const $newContent = $(response).find('.tbl-page-container').html();
+				 $('.tbl-page-container').html($newContent);
+				 
+				 window.scrollTo({ top: 0, behavior: 'smooth' });
 				if(isAsc){
 		    		$(".vote-table").removeClass("asc").addClass("desc");
 		    	}else{
@@ -876,7 +707,10 @@
 				"X-Requested-With" : "XMLHttpRequest"
 			},
 			success : function(response) {
-				$(".admin-content").html(response);
+				 const $newContent = $(response).find('.tbl-page-container').html();
+				 $('.tbl-page-container').html($newContent);
+				 
+				 window.scrollTo({ top: 0, behavior: 'smooth' });
 				
 			},
 			error : function(xhr) {
@@ -890,11 +724,9 @@
     var currentFocus = -1; // 현재 선택된 항목의 인덱스
      
      // 옵션 삭제
-		function removeOption(btn) {
-		    
+		function removeOption(btn) { 
 		    $(btn).closest('.option-item').remove();
 		    if($('.option-item').length == 0)  $('#optionList').html("영화를 추가해주세요")
-		   
 		}
 
 		// 옵션 추가 
@@ -1085,16 +917,18 @@
 			     }
 			 });
 			 
-			 $(document).off("click", ".btn-save").on("click", ".btn-save", function() {
-			    const mode = $(this).data("mode"); 
-			    console.log("전체 .btn-save 개수:", $(".btn-save").length);
-			    validateForm(mode);
-			});
+		
 			 
 			 //유효성 검사
-			 function validateForm(state){
+			 function validateForm(){
 				 
-				 console.log("validateForm" + state)
+				 const state = $(".btn-save").data("mode");
+				 
+				 if(state == "cont"){
+					closeModal();
+					selectOption('ALL', '전체 보기');
+					return;
+				 }
 			 	
 		 		const optItems = document.getElementsByClassName("option-item");
 			 	if (optItems.length <=1) {
@@ -1115,6 +949,7 @@
 			 	if(!validated) return false;
 			 	
 			 	let formData = $("#voteForm").serialize();
+			 	if(state)
 			 	formData += "&state=" + state;
 			 	
 			    $.ajax({
@@ -1126,6 +961,7 @@
 					},
 					success : function(response) {
 						alert(state === 'add' ? "투표가 성공적으로 등록되었습니다" : "투표가 성공적으로 수정되었습니다");
+						closeModal();
 						selectOption('ALL', '전체 보기');
 						
 					},
@@ -1135,6 +971,68 @@
 				});
 			 	
 			 }
+			 
+			 //투표 결과 보여주기
+			 function displayVoteResult(voteData) {
+			    //  요약 정보 업데이트
+			    $("#total-voters").text(voteData.voterCount);
+			    $("#total-comments").text(voteData.commentCount);
+			
+			    //  리스트 초기화
+			    const $list = $("#result-list");
+			    $list.empty();
+			  
+			    if(voteData.voteStatus === 'READY' ){
+			    	const itemHtml = `
+			    	<p>
+			    	투표 시작 전입니다.
+			    	</p>
+			    	`;
+			    	$list.append(itemHtml);
+			    } else if(voteData.voteResult.length == 0){
+			    	const itemHtml = `
+				    	<p>
+				    	투표에 참여한 사용자가 없습니다.
+				    	</p>
+				    	`;
+				    	$list.append(itemHtml);
+			    }
+			    
+			    else{
+			    	 // 항목별 막대 그래프 생성
+				    voteData.optionList.forEach(function(opt) {
+				    	const result = voteData.voteResult.find(r => r.movieId === opt.movieId);
+				    	const count = result ? result.count : 0;
+				    	
+				        // 백분율 계산 (총합이 0일 경우 대비)
+				        const percent = voteData.voterCount > 0 ? Math.round((count / voteData.voterCount) * 100) : 0;
+        
+				        const itemHtml = `
+				            <div class="result-item">
+				                <div class="item-info">
+				                    <span class="movie-title">\${opt.movieTitle}</span>
+				                    <span class="vote-count">\${count}표 (${percent}%)</span>
+				                </div>
+				                <div class="progress-bar-wrap">
+				                    <div class="progress-bar-fill" data-width="\${percent}%" style="width: 0%;"></div>
+				                </div>
+				            </div>
+				        `;
+				        $list.append(itemHtml);
+				    });
+			    }
+			
+			
+			    // 컨테이너 표시
+			    $(".vote-result-cont").fadeIn();
+			    
+			    setTimeout(function() {
+			        $(".progress-bar-fill").each(function() {
+			            const targetWidth = $(this).data("width");
+			            $(this).css("width", targetWidth); 
+			        });
+			    }, 50);
+			}
 </script>
 
 </body>

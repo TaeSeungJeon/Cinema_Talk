@@ -41,7 +41,7 @@ public class HotBoardController implements Action {
             json.append("\"boardType\":").append(dto.getBoardType()).append(",");
             json.append("\"title\":\"").append(dto.getBoardTitle().replace("\"", "\\\"")).append("\",");
             json.append("\"likeCount\":").append(dto.getLikeCount()).append(",");
-            json.append("\"readCount\":").append(dto.getBoardRecommendCount());
+            json.append("\"readCount\":").append(dto.getBoardViewCount());
             json.append("}");
 
             if (i < list.size() -1) {

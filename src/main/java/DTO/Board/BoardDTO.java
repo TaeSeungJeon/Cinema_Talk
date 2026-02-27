@@ -11,7 +11,7 @@ public class BoardDTO {
     private String boardTitle;
     private String boardContent;
     private String boardName;
-    private int boardRecommendCount;
+	private int boardViewCount;
     private String boardDate;
     private Integer memNo;
     private int movieId;

@@ -304,11 +304,13 @@
 
         .side-item {
             font-size: 0.9rem;
-            color: var(--text-sub);
+            color: black;
             padding: 8px 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.03);
             cursor: pointer;
             transition: 0.2s;
+            text-decoration:none;
+            display:block;
         }
 
         .side-item:hover {
@@ -501,17 +503,21 @@
                    style="font-weight: 700; color: var(--text-main); text-decoration: none;">
                     ${cont.boardName}
                 </a>
-                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 답변 42</div>
+                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 댓글 42</div>
             </div>
-            <div class="side-item">작성자의 다른 글 보기</div>
+            <div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
+            <a href="${pageContext.request.contextPath}/myPage.do?" class="side-item">작성자의 다른 글 보기</a>
             <div class="side-item">팔로우 하기</div>
+        </div>
         </div>
         <div class="glass-panel">
             <div class="side-title">📋 카테고리 이동</div>
-            <div class="side-item">영화 리뷰</div>
-            <div class="side-item">끝장 토론</div>
-            <div class="side-item">정보/뉴스</div>
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=free" class="side-item">자유게시판</a>
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=hot" class="side-item">영화 추천/후기</a>
+            <a href="${pageContext.request.contextPath}/vote.do?" class="side-item">오늘의 투표</a>
+            <a href="${pageContext.request.contextPath}/voteList.do?" class="side-item">투표 목록</a>
         </div>
+
     </aside>
 
     <main class="main-content">

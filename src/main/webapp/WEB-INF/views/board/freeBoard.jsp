@@ -323,7 +323,98 @@
             border-radius: 12px;
             border: 1px solid #e5e7eb;
         }
+        .widget-link {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-decoration: none;
+        }
+
+        .link-preview {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            margin-top: 14px;
+        }
+
+        .link-preview-card {
+            display: flex;
+            gap: 14px;
+            background: black;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 18px;
+            padding: 14px;
+            box-shadow: var(--shadow-subtle);
+            transition: 0.2s;
+        }
+
+        .link-preview-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .link-preview-thumb {
+            width: 150px;
+            min-width: 150px;
+            height: 110px;
+            border-radius: 14px;
+            background-size: cover;
+            background-position: center;
+            background-color: #e2e8f0;
+        }
+
+        .link-preview-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .link-preview-domain {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-preview-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .link-preview-desc {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .link-preview-url {
+            font-size: 0.8rem;
+            color: #818cf8;
+            font-weight: 700;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
     </style>
+
+    <!-- 공통스타일시트 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
 </head>
 <body>
 
@@ -429,19 +520,8 @@
     </main>
 
     <aside>
-        <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
 
-        <div class="side-widget">
-            <div class="widget-title"><span>📊 영화 투표</span></div>
-            <div class="widget-placeholder">
-                <div style="text-align: center;">
-                    <p style="margin:0; font-size: 0.8rem;">올해 최고의 기대작은?</p>
-                    <button style="margin-top:10px; font-size:0.7rem; padding:5px 10px; border-radius:8px; border:none; background:var(--accent-color); color:white; cursor:pointer;">
-                        투표하기
-                    </button>
-                </div>
-            </div>
-        </div>
+        <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
 
         <div class="side-widget">
             <div class="widget-title"><span>🏆 우수 리뷰어</span></div>
@@ -530,6 +610,7 @@
             <input type="hidden" name="boardContent" id="boardContent">
 
             <div id="linkPreviewArea" style="display:none; margin-top: 10px;"></div>
+
 
             <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
                 📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.

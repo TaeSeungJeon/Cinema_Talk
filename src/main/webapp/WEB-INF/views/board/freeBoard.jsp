@@ -742,7 +742,7 @@ aside {
 					<form action="searchBoard.do" method="get">
 						<input type="hidden" name="filter" value="${filter}" />
 						<select id="board-search-option" name="search-option">
-							<option value="0">제목+내용</option>
+							<option value="0">제목+내용        (야팔)</option>
 							<option value="1">제목</option>
 							<option value="2">내용</option>
 							<option value="3">글쓴이</option>

@@ -39,5 +39,7 @@ public interface BoardService {
     boolean isBoardLiked(int boardId, int boardType, int memNo);
     // 실시간 인기글
     List<BoardDTO> hotBoardList(int limit);
+    // 최근 게시글
+    List<BoardDTO> recentBoardList(int limit);
 
 }

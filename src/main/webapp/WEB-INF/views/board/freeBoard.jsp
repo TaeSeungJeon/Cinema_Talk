@@ -336,6 +336,32 @@
                 <h1 style="margin:0; font-size: 2rem; font-weight: 800;">커뮤니티</h1>
                 <p style="color: var(--text-sub); margin-top:5px; font-weight: 500;">영화 팬들과 자유롭게 소통하세요</p>
             </div>
+            <div class="board-search-bar">
+              <form action="searchBoard.do" method="get">
+                <input type="hidden" name="filter" value="${filter}" />
+                <select id="board-search-option" name="search-option">
+                  <option value="0">제목+내용        (야팔)</option>
+                  <option value="1">제목</option>
+                  <option value="2">내용</option>
+                  <option value="3">글쓴이</option>
+                </select>
+                <div class="custom-select" id="board-custom-select">
+                  <div class="custom-select-trigger">
+                    <span>제목+내용</span> <span class="arrow"></span>
+                  </div>
+                  <div class="custom-select-options">
+                    <div class="custom-select-option selected" data-value="0">제목+내용</div>
+                    <div class="custom-select-option" data-value="1">제목</div>
+                    <div class="custom-select-option" data-value="2">내용</div>
+                    <div class="custom-select-option" data-value="3">글쓴이</div>
+                  </div>
+                  <input type="hidden" name="movieId" value="0">
+                </div>
+                <input type="text" name="search-words"
+                  placeholder="찾고 싶은 게시글을 검색해보세요"> <input
+                  type="submit" value="검색">
+              </form> 
+				    </div>
             <button class="btn-write-submit" onclick="openModal()">📝 글쓰기</button>
         </div>
 

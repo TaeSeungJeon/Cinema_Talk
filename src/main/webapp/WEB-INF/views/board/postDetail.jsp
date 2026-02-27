@@ -549,7 +549,7 @@
             <div class="author-profile" style="margin-bottom: 20px;">
                 <span class="author-name" style="font-weight: 700;">${cont.boardName}</span>
                 <span class="post-meta"
-                      style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardRecommendCount}</span>
+                      style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardViewCount}</span>
             </div>
 
             <div class="post-body" id="post-body">

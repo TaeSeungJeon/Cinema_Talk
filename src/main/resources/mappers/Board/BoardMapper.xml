@@ -34,14 +34,14 @@
                BOARDNAME           as boardName,
                BOARDDATE           as boardDate,
                MEMNO               as memNo,
-               BOARDRECOMMENDCOUNT as boardRecommendCount
+               BOARDVIEWCOUNT as boardViewCount
         FROM BOARD
         WHERE BOARDID = #{boardId}
     </select>
 
     <update id="updateReadCount" parameterType="int">
         UPDATE BOARD
-        SET BOARDRECOMMENDCOUNT = NVL(BOARDRECOMMENDCOUNT, 0) + 1
+        SET BOARDVIEWCOUNT = NVL(boardViewCount, 0) + 1
         WHERE BOARDID = #{boardId}
     </update>
 
@@ -171,14 +171,14 @@
         FROM (SELECT b.BOARDID                         AS boardId,
                      b.BOARDTYPE                       AS boardType,
                      b.BOARDTITLE                      AS boardTitle,
-                     b.BOARDRECOMMENDCOUNT             AS boardRecommendCount,
+                     b.BOARDVIEWCOUNT             AS boardViewCount,
                      (SELECT COUNT(*)
                       FROM BOARD_LIKE l
                       WHERE l.BOARDID = b.BOARDID
                         AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
               FROM BOARD b
               ORDER BY likeCount DESC,
-                       NVL(b.BOARDRECOMMENDCOUNT, 0) DESC,
+                       NVL(b.BOARDVIEWCOUNT, 0) DESC,
                        b.BOARDID DESC)
         WHERE ROWNUM <![CDATA[<=]]> #{limit}
     </select>

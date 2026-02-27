@@ -8,7 +8,7 @@
 	<!-- 게시글 목록 조회 (회원번호 기준) -->
 	<select id="getBoardListByMemNo" parameterType="int" resultType="DTO.Board.BoardDTO">
 		SELECT boardId, boardType, boardTitle, boardContent, boardName, 
-		       boardRecommendCount, boardDate, memNo, movieId
+		       boardViewCount, boardDate, memNo, movieId
 		FROM BOARD 
 		WHERE memNo = #{memNo} 
 		ORDER BY boardDate DESC
@@ -99,7 +99,7 @@
     <!-- 좋아요 표시한 게시글 목록 조회 (BOARD_LIKE 기준) -->
     <select id="getLikedBoardsByMemNo" parameterType="int" resultType="DTO.Board.BoardDTO">
         SELECT b.boardId, b.boardType, b.boardTitle, b.boardName, 
-               b.boardRecommendCount, b.boardDate
+               b.boardViewCount, b.boardDate
         FROM BOARD_LIKE bl
         JOIN BOARD b ON bl.boardId = b.boardId AND bl.boardType = b.boardType
         WHERE bl.memNo = #{memNo}

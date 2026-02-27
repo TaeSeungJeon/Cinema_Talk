@@ -24,7 +24,7 @@ public class IndexController implements Action {
 		response.setContentType("text/html;charset=UTF-8");
 		HttpSession session = request.getSession();
 
-		Object memNoObj = session.getAttribute("mem_no");
+		Object memNoObj = session.getAttribute("memNo");
 		int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함
 	    
 	    List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();

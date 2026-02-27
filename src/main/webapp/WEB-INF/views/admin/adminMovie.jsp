@@ -32,7 +32,6 @@
 
 .search-wrapper {
 	position: relative;
-	margin-bottom: 1rem;
 }
 
 .search-wrapper i {
@@ -149,73 +148,79 @@
 }
 
 .detail-header-fixed {
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid #f3f4f6;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+	padding: 0.8rem 2rem 0.4rem 2rem;
+	border-bottom: 1px solid #f3f4f6;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin-bottom: 0.5rem;
 }
+
 .header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .header-left {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	flex: 1;
 }
+
 .title-row input {
-    font-size: 1.8rem;
-    font-weight: 700;
-    border: none;
-    outline: none;
-    background: transparent;
+	font-size: 1.8rem;
+	font-weight: 700;
+	border: none;
+	outline: none;
+	background: transparent;
 }
+
 .runtime-input {
-    width: 50px;
-    text-align: center;
+	width: 50px;
+	text-align: center;
 }
+
 .meta-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
 }
 
 .edit-original {
-    flex: 1;
-    min-width: 0;
+	flex: 1;
+	min-width: 0;
 }
 
 .meta-right {
-    display: flex;
-    gap: 14px;
-    flex-shrink: 0;
+	display: flex;
+	gap: 14px;
+	flex-shrink: 0;
 }
 
 .meta-row input {
-    border: none;
-    background: transparent;
-    font-size: 0.95rem;
-    outline: none;
+	border: none;
+	background: transparent;
+	font-size: 0.95rem;
+	outline: none;
 }
 
 .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #f3f4f6;
-    padding: 4px 10px;
-    border-radius: 999px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	background: #f3f4f6;
+	padding: 4px 10px;
+	border-radius: 999px;
 }
 
 .header-actions {
-    display: flex;
-    gap: 8px;
+	display: flex;
+	gap: 8px;
 }
+
 .scroll-body {
 	flex: 1;
 	overflow-y: auto;
@@ -244,10 +249,10 @@
 
 .overview-box {
 	wirdth: 100%;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #4b5563;
-    height: 100%;
+	font-size: 0.95rem;
+	line-height: 1.5;
+	color: #4b5563;
+	height: 100%;
 }
 
 .info-box {
@@ -325,6 +330,74 @@
 	gap: 0.5rem;
 	font-size: 0.875rem;
 }
+
+/* 전체 영역 */
+.detail-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 안쪽 컨텐츠 */
+.detail-empty-inner {
+    text-align: center;
+    max-width: 420px;
+    transform: translateY(-10px);
+    animation: fadeUp 0.6s ease-out;
+}
+
+/* 아이콘 박스 (크기 업) */
+.detail-empty-icon {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #eef2ff, #e0e7ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+    animation: float 3s ease-in-out infinite;
+}
+
+.detail-empty-icon i {
+    font-size: 42px;
+    color: #4f46e5;
+}
+
+/* 타이틀 크기 업 */
+.detail-empty-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 10px;
+}
+
+/* 설명 텍스트 */
+.detail-empty-desc {
+    font-size: 1rem;
+    color: #6b7280;
+    line-height: 1.6;
+}
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-10px);
+    }
+}
+
+/* 살짝 둥둥 뜨는 효과 */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
 </style>
 
 <div class="movie-mgmt-page">
@@ -334,9 +407,6 @@
 				<i class="fa-solid fa-magnifying-glass"></i> <input type="text"
 					class="search-input" placeholder="영화 검색..." id="listSearch">
 			</div>
-			<button class="btn-add-movie">
-				<i class="fa-solid fa-plus"></i> 새 영화 추가
-			</button>
 		</div>
 		<div class="movie-list-container" id="movie-list-area">
 			<jsp:include page="adminMovieSearch.jsp" />
@@ -345,7 +415,18 @@
 
 	<main class="movie-detail-content">
 		<div id="movie-detail-area">
-			<div style="padding: 2rem; color: #9ca3af;">왼쪽에서 영화를 선택하세요.</div>
+			<!-- ✅ 기본 Empty State -->
+			<div class="detail-empty">
+				<div class="detail-empty-inner">
+					<div class="detail-empty-icon">
+						<i class="fa-solid fa-film"></i>
+					</div>
+					<h3 class="detail-empty-title">영화 상세 정보</h3>
+					<p class="detail-empty-desc">
+						왼쪽 목록에서 영화를 선택하면<br> 상세 정보를 확인하고 수정할 수 있습니다.
+					</p>
+				</div>
+			</div>
 		</div>
 	</main>
 </div>

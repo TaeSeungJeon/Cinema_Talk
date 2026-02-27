@@ -16,27 +16,58 @@ public class MovieRecServiceImpl implements MovieRecService {
 	// 인기 영화 추천 목록 조회
 	@Override
 	public List<MovieRecResponse> getPopularRecList() {
-		return movieRecDAO.getPopularRecList(MOVIELIMIT);
+		List<MovieRecResponse> list = movieRecDAO.getPopularRecList(MOVIELIMIT);
+		if (list != null) {
+			for (MovieRecResponse movie : list) {
+				if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+					movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
+				}
+			}
+		}
+		return list;
 	}
 
 	// 선호 장르 기반 영화 추천 목록 조회
 	@Override
 	public List<MovieRecResponse> getLikeRecList(int memNo) {
-		
 		// 비로그인이면 랜덤 장르 선정
 	    if(memNo <= 0) {
-	        return movieRecDAO.getRandomRecList(MOVIELIMIT);
+	        List<MovieRecResponse> list = movieRecDAO.getRandomRecList(MOVIELIMIT);
+	        if (list != null) {
+	        	for (MovieRecResponse movie : list) {
+	        		if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+	        			movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
+	        		}
+	        	}
+	        }
+	        return list;
 	    }
 
 	    List<Integer> likeGenreIds = movieRecDAO.getMemberLikeGenres(memNo);
 
 	    // 선호 장르 없음 → 랜덤
 	    if(likeGenreIds == null || likeGenreIds.isEmpty()) {
-	        return movieRecDAO.getRandomRecList(MOVIELIMIT);
+	        List<MovieRecResponse> list = movieRecDAO.getRandomRecList(MOVIELIMIT);
+	        if (list != null) {
+	        	for (MovieRecResponse movie : list) {
+	        		if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+	        			movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
+	        		}
+	        	}
+	        }
+	        return list;
 	    }
 
 	    // 선호 장르 기반 추천
-	    return movieRecDAO.getLikeGenreRecList(likeGenreIds, MOVIELIMIT);
+	    List<MovieRecResponse> list = movieRecDAO.getLikeGenreRecList(likeGenreIds, MOVIELIMIT);
+	    if (list != null) {
+	    	for (MovieRecResponse movie : list) {
+	    		if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+	    			movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
+	    		}
+	    	}
+	    }
+	    return list;
 	}
 
 	// 선호 장르를 제외한 영화 추천 목록 조회
@@ -61,6 +92,13 @@ public class MovieRecServiceImpl implements MovieRecService {
 	    // 영화 조회
 	    List<MovieRecResponse> rows =
 	        movieRecDAO.selGenreMovies(genreIds, MOVIELIMIT);
+	    if (rows != null) {
+	    	for (MovieRecResponse movie : rows) {
+	    		if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+	    			movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
+	    		}
+	    	}
+	    }
 
 	    // 섹션 그룹핑하여 반환
 	    return groupByGenre(rows);

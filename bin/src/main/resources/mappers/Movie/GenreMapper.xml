@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DAO.Movie.GenreDAO">
+	<insert id="insertGenre" parameterType="genre">
+		INSERT INTO GENRE (
+			genreId, genreName
+		) VALUES (
+			#{genreId}, #{genreName}
+		)
+	</insert>
+	
+	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
+	<insert id="mergeGenre" parameterType="genre">
+		MERGE INTO GENRE g
+		USING (SELECT #{genreId} AS genreId FROM DUAL) src
+		ON (g.genreId = src.genreId)
+		WHEN MATCHED THEN
+			UPDATE SET g.genreName = #{genreName}
+		WHEN NOT MATCHED THEN
+			INSERT (genreId, genreName)
+			VALUES (#{genreId}, #{genreName})
+	</insert>
+	
+	<select id="selectGenreById" parameterType="int" resultType="genre">
+		SELECT genreId, genreName
+		FROM GENRE
+		WHERE genreId = #{genreId}
+	</select>
+	
+	<select id="getAllGenres" resultType="genre">
+        SELECT genreId, genreName
+        FROM GENRE
+        ORDER BY genreId ASC
+    </select>
+</mapper>

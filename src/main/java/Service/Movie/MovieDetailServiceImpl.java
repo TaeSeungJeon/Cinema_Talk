@@ -37,6 +37,10 @@ public class MovieDetailServiceImpl implements MovieDetailService {
 		if (movie == null) {
 			return null;
 		}
+		// ReleaseDate가 null이 아니고 10자 이상이면 yyyy-MM-dd만 남기기
+		if (movie.getMovieReleaseDate() != null && movie.getMovieReleaseDate().length() > 10) {
+			movie.setMovieReleaseDate(movie.getMovieReleaseDate().substring(0, 10));
+		}
 		
 		// 2. 장르 목록 조회
 		List<Integer> genreIds = movieGenreDAO.getGenreIdsByMovieId(movieId);

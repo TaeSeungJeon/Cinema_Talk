@@ -227,13 +227,15 @@
             movieTitle,
             movieOriginalTitle,
             moviePosterPath,
-            movieRatingAverage,
-            movieRuntime
+            movieRuntime,
+            movieReleaseDate
         FROM MOVIE
         <where>
             <if test="keyword != null and keyword != ''">
-                LOWER(movieTitle) LIKE '%' || LOWER(#{keyword}) || '%'
-                OR LOWER(movieOriginalTitle) LIKE '%' || LOWER(#{keyword}) || '%'
+                (
+                    LOWER(movieTitle) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(movieOriginalTitle) LIKE '%' || LOWER(#{keyword}) || '%'
+                )
             </if>
         </where>
         ORDER BY movieTitle ASC

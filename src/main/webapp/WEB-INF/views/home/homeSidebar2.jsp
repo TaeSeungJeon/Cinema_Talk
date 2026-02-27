@@ -1,5 +1,50 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 
+<style>
+    .hot-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .hot-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .hot-item:last-child {
+        border: none;
+    }
+
+    .rank-num {
+        font-weight: 800;
+        color: var(--accent-color);
+        font-style: italic;
+    }
+
+    .hot-text {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-main);
+        cursor: pointer;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .hot-hidden {
+        display: none;
+    }
+
+
+
+</style>
+
 <div class="side-widget" id="hotWidget">
     <div class="widget-title">
         <span>🔥 실시간 인기글</span>

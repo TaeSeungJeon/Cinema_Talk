@@ -32,4 +32,6 @@ public interface BoardDAO {
     int getBoardLikeCount(int boardId, int boardType);
     // 실시간 인기글
     List<BoardDTO> hotBoardList(int limit);
+
+    List<BoardDTO> recentBoardList(int limit);
 }

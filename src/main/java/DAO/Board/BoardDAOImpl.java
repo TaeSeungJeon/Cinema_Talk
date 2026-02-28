@@ -84,9 +84,7 @@ public class BoardDAOImpl implements BoardDAO {
         try {
             sqlSession = getSqlSession();
             result = sqlSession.update("Board.updateReadCount", boardId);
-            if (result > 0) {
-                sqlSession.commit();
-            }
+                sqlSession.commit(); // 조건없이 무조건 커밋 (실시간 인기글 반영버그 수정)
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

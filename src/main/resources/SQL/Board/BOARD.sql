@@ -25,3 +25,26 @@ references MEMBER (memNo);
 ALTER TABLE BOARD MODIFY (MOVIEID NULL);
 
 ALTER TABLE BOARD RENAME COLUMN boardViewCount TO boardViewCount;
+
+
+
+
+/* 조회수 로직 테스트 조회
+SELECT *
+FROM (
+         SELECT b.BOARDID          AS boardId,
+                b.BOARDTYPE         AS boardType,
+                b.BOARDTITLE        AS boardTitle,
+                b.BOARDVIEWCOUNT    AS boardViewCount,
+                (SELECT COUNT(*)
+                 FROM BOARD_LIKE l
+                 WHERE l.BOARDID = b.BOARDID
+                   AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
+         FROM BOARD b
+         WHERE b.BOARDTYPE IN (1, 2)
+         ORDER BY likeCount DESC,
+                  NVL(b.BOARDVIEWCOUNT, 0) DESC,
+                  b.BOARDID DESC
+     )
+WHERE ROWNUM <= 10;
+*/

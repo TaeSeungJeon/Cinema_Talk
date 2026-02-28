@@ -34,5 +34,7 @@ public interface MemberDAO {
 
 	List<MemberDTO> getMemberList();
 
+	List<MemberDTO> getMemberListByState(int memState);
+
 
 }

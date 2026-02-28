@@ -128,14 +128,14 @@ tbody td{
         <input type="text" id="memberKeyword" placeholder="아이디/이름 검색">
       </div>
 
-      <select id="stateFilter">
+      <select id="stateFilter" name="mem-state">
         <option value="">상태 전체</option>
         <option value="1">정상</option>
         <option value="2">휴면</option>
         <option value="3">탈퇴</option>
       </select>
 
-      <button class="btn" id="btnSearch">검색</button>
+      <button class="btn" id="btnSearch" type="submit">검색</button>
     </div>
 
     <button class="btn primary" id="btnReload"><i class="fa-solid fa-rotate"></i> 새로고침</button>
@@ -158,7 +158,7 @@ tbody td{
     $.ajax({
       url: "${pageContext.request.contextPath}/admin/memberList.do",
       type: "GET",
-      data: { keyword: keyword, state: state },
+      data: { keyword: keyword, "mem-state": state },
       headers: { "X-Requested-With": "XMLHttpRequest" },
       success: function(html){
         $("#memberListArea").html(html);
@@ -206,7 +206,9 @@ tbody td{
     });
   });
   
+  //새로고침 안 해도 회원목록 반영되게 함
   $(function(){
 	  loadMemberList();
 	});
+  
 </script>

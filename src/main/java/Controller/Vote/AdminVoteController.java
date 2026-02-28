@@ -50,6 +50,7 @@ public class AdminVoteController implements Action {
 	      }
     	String sortCol = request.getParameter("sortCol");
     	String sortDir = request.getParameter("sortDir");
+    	String filter = request.getParameter("filter");
 		
 		VoteRegisterDTO findVoteReg = new VoteRegisterDTO();
 		
@@ -58,14 +59,21 @@ public class AdminVoteController implements Action {
 		
 		findVoteReg.setSortCol(sortCol);
     	findVoteReg.setSortDir(sortDir);
+    	findVoteReg.setFilter(filter);
 		findVoteReg.setStartrow((page-1)*limit+1);//시작행번호
 		findVoteReg.setEndrow(findVoteReg.getStartrow()+limit-1);//끝행 번호
     	
     	List<VoteRegisterDTO> voteRegFullList = voteService.getVoteRegList(findVoteReg);
     	
+    	if(filter != null && !filter.equals("ALL")) {
+    		totalCount = voteRegFullList.size();
+    	}
+    	
     	voteRegFullList.forEach(vote -> {
     		voteService.updateVoteStatus(vote);
     	});
+    	
+    	
     	
     	//총 페이지수
     	int maxpage=(int)((double)totalCount/limit+0.95);
@@ -76,12 +84,16 @@ public class AdminVoteController implements Action {
     	if(endpage>startpage+10-1) endpage=startpage+10-1;
     	
     	
+    	
+    	
     	request.setAttribute("voteRegFullList", voteRegFullList);
     	request.setAttribute("page",page);//쪽번호 -> 내가 본 쪽번호로 바로 이동하기 위한 책갈피 기능 구현
 	    request.setAttribute("startpage",startpage);//시작페이지
 	    request.setAttribute("endpage",endpage);//마지막 페이지
 	    request.setAttribute("maxpage",maxpage);
 	    request.setAttribute("totalCount", totalCount);
+	    request.setAttribute("filter", filter);
+	    
     	
 		
     ActionForward forward = new ActionForward();

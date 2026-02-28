@@ -77,6 +77,17 @@
                 TO_CHAR(voteEndDate,'YYYY-MM-DD') AS voteEndDate,
                 voteStatus
             FROM vote_register
+	            <where>
+	                <if test="filter == 'ACTIVE'">
+	                    AND TRUNC(SYSDATE) BETWEEN voteStartDate AND voteEndDate
+	                </if>
+	                <if test="filter == 'READY'">
+	                    AND TRUNC(SYSDATE) &lt; voteStartDate
+	                </if>
+	                <if test="filter == 'ENDED'">
+	                    AND TRUNC(SYSDATE) &gt; voteEndDate
+	                </if>
+	            </where>
             	<choose>
 	                <when test="sortCol == 'startDate'">ORDER BY voteStartDate ${sortDir}</when> <!--sortDir은 asc, desc-->
 	                <when test="sortCol == 'endDate'">ORDER BY voteEndDate ${sortDir}</when>

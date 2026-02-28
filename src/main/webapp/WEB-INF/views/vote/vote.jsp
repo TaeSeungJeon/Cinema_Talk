@@ -631,32 +631,36 @@ opacity:1;
 
 		<aside class="aside" style="width: 30%;">
 			<div class="glass-panel"
-					style="display: flex; flex-direction: column; gap: 20px; min-height: 200px; justify-content: start;">
+					style="display: flex; flex-direction: column; gap: 20px; min-height: 200px;  justify-content: start;">
 					<div class="sidebar-title"
 						style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
 						<span>내가 참여한 투표</span> <a href="myPage.do"
 							style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
 							전체보기 > </a>
 					</div>
+					
+					<div id="my-vote-items" style="width:100%;">
+						<c:choose>
+							<c:when test="${not empty myVoteRecords}">
+								<c:forEach var="vote" items="${myVoteRecords}">
+									<div class="upcoming-item done-item"
+										onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
+										<div style="font-weight: 600;">${vote.voteTitle}</div>
+										<div style="font-size: 0.8rem; color: var(--accent-color);">
+											나의 픽: ${vote.movieTitle}</div>
+									</div>
+								</c:forEach>
+							</c:when>
+		
+							<c:otherwise>
+								<div class="upcoming-item no-record-msg" style="width: 100%;">참여한 투표 내역이 없습니다.</div>
+		
+							</c:otherwise>
+		
+						</c:choose>					
+					</div>
 	
-					<c:choose>
-						<c:when test="${not empty myVoteRecords}">
-							<c:forEach var="vote" items="${myVoteRecords}">
-								<div class="upcoming-item"
-									onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
-									<div style="font-weight: 600;">${vote.voteTitle}</div>
-									<div style="font-size: 0.8rem; color: var(--accent-color);">
-										나의 픽: ${vote.movieTitle}</div>
-								</div>
-							</c:forEach>
-						</c:when>
-	
-						<c:otherwise>
-							<div class="upcoming-item" style="width: 100%;">참여한 투표 내역이 없습니다.</div>
-	
-						</c:otherwise>
-	
-					</c:choose>
+
 
 			</div>
 			<br>

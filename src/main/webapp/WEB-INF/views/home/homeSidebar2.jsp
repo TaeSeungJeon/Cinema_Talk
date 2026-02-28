@@ -104,6 +104,10 @@
         hotData.forEach((item, index) => {
             const li = document.createElement('li');
             li.className = 'hot-item';
+            /* 게시판 2개 모두 실시간 로직에 포함 시키기 */
+            const badge = item.boardType === 1
+                ? '<span style="font-size:0.68rem;font-weight:700;padding:1px 6px;border-radius:20px;background:#ede9fe;color:#6366f1;margin-right:4px;">자유</span>'
+                : '<span style="font-size:0.68rem;font-weight:700;padding:1px 6px;border-radius:20px;background:#fef3c7;color:#d97706;margin-right:4px;">추천/후기</span>';
 
             li.innerHTML =
                 '<span class="rank-num">' + (index + 1) + '</span>' +

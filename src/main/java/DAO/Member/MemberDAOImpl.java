@@ -1,6 +1,7 @@
 package DAO.Member;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -229,5 +230,19 @@ public class MemberDAOImpl implements MemberDAO {
 			}
 		}
 	}//updateProfilePhotoPath() -> 프로필 사진 경로 업데이트
+
+	@Override
+	public List<MemberDTO> getMemberList() {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("getMemberList");	
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//getMemberList() -> 회원 목록 조회
 
 }

@@ -266,7 +266,7 @@ header {
 	<div style="display: flex; gap: 10px;">
 	
 	<!-- 로그인 한 상태 -->
-		<c:if test="${not empty sessionScope.memId}">
+		<c:if test="${not empty sessionScope.memNo}">
 		
 			<a href="memberLogout.do" class="glass-panel"
 				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
@@ -291,7 +291,7 @@ header {
 		</c:if>
 	
 	<!-- 로그인 안 한 상태 -->
-		<c:if test="${empty sessionScope.memId}">
+		<c:if test="${empty sessionScope.memNo}">
 			<a href="memberLogin.do" class="glass-panel"
 				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a>
 		</c:if>

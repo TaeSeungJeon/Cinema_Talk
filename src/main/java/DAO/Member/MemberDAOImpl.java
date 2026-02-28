@@ -245,4 +245,19 @@ public class MemberDAOImpl implements MemberDAO {
 		}
 	}//getMemberList() -> 회원 목록 조회
 
+	@Override
+	public List<MemberDTO> getMemberListByState(int memState) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("getMemberListByState", memState);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+		
+	}//getMemberListByState() -> 상태에 따른 회원 목록 조회
+
 }

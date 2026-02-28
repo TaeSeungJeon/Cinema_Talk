@@ -362,6 +362,8 @@ pageEncoding="UTF-8"%>
 				font-size: 0.95rem;
 				color: #374151;
 				line-height: 1.5;
+				white-space: pre-wrap; 
+    			word-break: break-all;
 			}
 			
 			.comment-utils {
@@ -419,6 +421,11 @@ pageEncoding="UTF-8"%>
 				justify-content: space-between;
 				align-items: center;
 				margin-bottom: 15px;
+				max-width: 1400px;
+			    margin: 0 auto;
+			    width: 100%;
+			    position: relative;
+			   
 			}
 			
 			.filter-nav {
@@ -554,7 +561,7 @@ pageEncoding="UTF-8"%>
 					{
 						writer: "${res.memName}",
 						createdDate: "${res.recordCreatedDate}",
-						cont: "${res.voteCommentText.replace('\"', '\\\"')}" <%-- 따옴표 에러 방지 --%>
+						cont: `${res.voteCommentText}` <%-- 따옴표 에러 방지 --%>
 					},
 					</c:if>
 					</c:forEach>
@@ -563,6 +570,7 @@ pageEncoding="UTF-8"%>
 					commentCount: ${validCommentCount}
 				};
 				
+			
 				
 				// 데이터가 있을 때만 실행하는 함수 정의
 				function displayVoteResults(data) {
@@ -575,7 +583,7 @@ pageEncoding="UTF-8"%>
 						
 						
 						if ($label.length > 0) {
-							console.log("test")
+							
 							// 결과 영역 보여주기 및 데이터 세팅
 							$label.find(".m-result").fadeIn();
 							$label.find(".res-count").text(item.count);
@@ -636,6 +644,7 @@ pageEncoding="UTF-8"%>
 					
 				$("#submitComment").on("click", function(e) {
 						const $textarea = $("#commentText");
+						
 						const commentContent = $textarea.val().trim(); // 앞뒤 공백 제거
 						
 						// 1. 비어있는지 확인
@@ -657,7 +666,7 @@ pageEncoding="UTF-8"%>
 							data: formData,
 							success: function(response) {
 								const data = JSON.parse(response);
-								console.log(data)
+								
 								if (data.status === "SUCCESS") {
 									
 									
@@ -743,8 +752,8 @@ pageEncoding="UTF-8"%>
 		<body>
 
 			<%@ include file="../home/homeHeader.jsp"%>
-			<!--  <a href="javascript:history.back();" class="back-btn">← 이전</a> -->
-			<header class="comm-header">
+			
+			<div class="comm-header">
 
 				<div>
 					<h1 class="poll-title" style="margin:0; font-size: 2rem; font-weight: 800;">${voteInfo.voteTitle}</h1>
@@ -756,11 +765,8 @@ pageEncoding="UTF-8"%>
 					</div>
 				</div>
 
-			</header>
-
-
-
-
+			</div>
+			
 
 			<main style="width: 100%">
 
@@ -775,10 +781,6 @@ pageEncoding="UTF-8"%>
 
 				<div class="vote-section"  style="width: 100%">
 					<section class="glass-panel2 vote-card-container tab-content" id="vote-content-area" style="width: 60%">
-
-
-						<div class="vote-window">
-							<div class="vote-track">
 
 								<div class="vote-content">
 									<div class="vote-header">
@@ -976,6 +978,11 @@ pageEncoding="UTF-8"%>
 				</div>
 
 			</main>
+
+
+		
+		
+		
 		<script src="${pageContext.request.contextPath}/js/vote.js"></script>
 		<script src="${pageContext.request.contextPath}/js/home.js"></script>
 	</body>

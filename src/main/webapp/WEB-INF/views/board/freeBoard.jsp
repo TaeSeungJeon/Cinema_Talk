@@ -575,16 +575,16 @@ aside {
 	pointer-events: none;
 }
 
-/* 에디터 안에 삽입되는 이미지 스타일 */
-#boardContentEditor img.editor-inline-image {
-	max-width: 100%;
-	height: auto;
-	display: block;
-	margin: 10px 0;
-	border-radius: 12px;
-	border: 1px solid #e5e7eb;
-}
-</style>
+        /* 에디터 안에 삽입되는 이미지 스타일 */
+        #boardContentEditor img.editor-inline-image{
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
 </head>
 <body>
 
@@ -714,42 +714,36 @@ aside {
 			</div>
 		</main>
 
-		<aside>
-			<jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
+    <aside>
+        <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
 
-			<div class="side-widget">
-				<div class="widget-title">
-					<span>📊 영화 투표</span>
-				</div>
-				<div class="widget-placeholder">
-					<div style="text-align: center;">
-						<p style="margin: 0; font-size: 0.8rem;">올해 최고의 기대작은?</p>
-						<button
-							style="margin-top: 10px; font-size: 0.7rem; padding: 5px 10px; border-radius: 8px; border: none; background: var(--accent-color); color: white; cursor: pointer;">
-							투표하기</button>
-					</div>
-				</div>
-			</div>
+        <div class="side-widget">
+            <div class="widget-title"><span>📊 영화 투표</span></div>
+            <div class="widget-placeholder">
+                <div style="text-align: center;">
+                    <p style="margin:0; font-size: 0.8rem;">올해 최고의 기대작은?</p>
+                    <button style="margin-top:10px; font-size:0.7rem; padding:5px 10px; border-radius:8px; border:none; background:var(--accent-color); color:white; cursor:pointer;">
+                        투표하기
+                    </button>
+                </div>
+            </div>
+        </div>
 
-			<div class="side-widget">
-				<div class="widget-title">
-					<span>🏆 우수 리뷰어</span>
-				</div>
-				<div style="display: flex; flex-direction: column; gap: 12px;">
-					<div style="display: flex; align-items: center; gap: 10px;">
-						<div
-							style="width: 32px; height: 32px; border-radius: 50%; background: #ddd;"></div>
-						<span style="font-size: 0.85rem; font-weight: 600;">MovieMaster</span>
-					</div>
-					<div style="display: flex; align-items: center; gap: 10px;">
-						<div
-							style="width: 32px; height: 32px; border-radius: 50%; background: #ccc;"></div>
-						<span style="font-size: 0.85rem; font-weight: 600;">Critic_Lee</span>
-					</div>
-				</div>
-			</div>
-		</aside>
-	</div>
+        <div class="side-widget">
+            <div class="widget-title"><span>🏆 우수 리뷰어</span></div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:#ddd;"></div>
+                    <span style="font-size:0.85rem; font-weight:600;">MovieMaster</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:#ccc;"></div>
+                    <span style="font-size:0.85rem; font-weight:600;">Critic_Lee</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
 
 	<div class="modal-overlay" id="writeModal">
 		<div class="write-modal">
@@ -844,9 +838,9 @@ aside {
 
 				<div id="linkPreviewArea" style="display: none; margin-top: 10px;"></div>
 
-				<div
-					style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
-					📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.</div>
+            <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
+                📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.
+            </div>
 
 				<div
 					style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AdminNotice">
+
+    <!-- 공지사항 수 (검색 조건 포함) -->
+    <select id="getNoticeCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD b
+        WHERE b.BOARDTYPE = 10
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%'
+                </when>
+                <when test="searchType == 'writer'">
+                    AND UPPER(b.BOARDNAME) LIKE '%' || UPPER(#{keyword}) || '%'
+                </when>
+                <otherwise>
+                    AND (UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                         OR UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%')
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!-- 정렬 + 검색 + 페이징 목록 -->
+    <select id="getNoticeList" parameterType="map" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (
+            SELECT ROWNUM rnum, sub.*
+            FROM (
+                SELECT
+                    b.BOARDID       AS boardId,
+                    b.BOARDTYPE     AS boardType,
+                    b.BOARDTITLE    AS boardTitle,
+                    b.BOARDCONTENT  AS boardContent,
+                    b.BOARDNAME     AS boardName,
+                    b.BOARDDATE     AS boardDate,
+                    b.MEMNO         AS memNo,
+                    NVL(b.BOARDVIEWCOUNT, 0) AS boardViewCount,
+                    (SELECT COUNT(*) FROM BOARD_LIKE l
+                     WHERE l.BOARDID = b.BOARDID AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount,
+                    (SELECT COUNT(*) FROM COMMENTS c
+                     WHERE c.BOARDID = b.BOARDID AND c.BOARDTYPE = b.BOARDTYPE) AS commentCount
+                FROM BOARD b
+                WHERE b.BOARDTYPE = 10
+                <if test="keyword != null and keyword != ''">
+                    <choose>
+                        <when test="searchType == 'title'">
+                            AND UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                        </when>
+                        <when test="searchType == 'content'">
+                            AND UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%'
+                        </when>
+                        <when test="searchType == 'writer'">
+                            AND UPPER(b.BOARDNAME) LIKE '%' || UPPER(#{keyword}) || '%'
+                        </when>
+                        <otherwise>
+                            AND (UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                                 OR UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%')
+                        </otherwise>
+                    </choose>
+                </if>
+                <choose>
+                    <when test="sort == 'like'">
+                        ORDER BY likeCount DESC, b.BOARDID DESC
+                    </when>
+                    <when test="sort == 'view'">
+                        ORDER BY NVL(b.BOARDVIEWCOUNT, 0) DESC, b.BOARDID DESC
+                    </when>
+                    <otherwise>
+                        ORDER BY b.BOARDID DESC
+                    </otherwise>
+                </choose>
+            ) sub
+            WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+        )
+        WHERE rnum >= #{startRow}
+    </select>
+
+    <!-- 상세 조회 -->
+    <select id="getNoticeDetail" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT
+            b.BOARDID       AS boardId,
+            b.BOARDTYPE     AS boardType,
+            b.BOARDTITLE    AS boardTitle,
+            b.BOARDCONTENT  AS boardContent,
+            b.BOARDNAME     AS boardName,
+            b.BOARDDATE     AS boardDate,
+            b.MEMNO         AS memNo,
+            NVL(b.BOARDVIEWCOUNT, 0) AS boardViewCount,
+            (SELECT COUNT(*) FROM BOARD_LIKE l
+             WHERE l.BOARDID = b.BOARDID AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount,
+            (SELECT COUNT(*) FROM COMMENTS c
+             WHERE c.BOARDID = b.BOARDID AND c.BOARDTYPE = b.BOARDTYPE) AS commentCount
+        FROM BOARD b
+        WHERE b.BOARDID = #{boardId}
+    </select>
+
+    <!-- 수정 -->
+    <update id="updateNotice" parameterType="DTO.Board.BoardDTO">
+        UPDATE BOARD
+        SET BOARDTITLE   = #{boardTitle},
+            BOARDCONTENT = #{boardContent}
+        WHERE BOARDID = #{boardId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteNotice" parameterType="int">
+        DELETE FROM BOARD
+        WHERE BOARDID = #{boardId}
+    </delete>
+
+</mapper>

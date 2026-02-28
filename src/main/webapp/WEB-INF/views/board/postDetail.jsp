@@ -535,6 +535,31 @@
 
             <div class="post-body" id="post-body">
                 ${cont.boardContent}
+                    <c:if test="${not empty preview}">
+                        <a href="${preview.url}" target="_blank" class="link-preview">
+                            <div class="preview-card">
+                                <c:if test="${not empty preview.image}">
+                                    <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
+                                </c:if>
+
+                                <div class="preview-content">
+                                    <div class="preview-domain">
+                                        <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
+                                    </div>
+
+                                    <c:if test="${not empty preview.title}">
+                                        <div class="preview-title">${preview.title}</div>
+                                    </c:if>
+
+                                    <c:if test="${not empty preview.description}">
+                                        <div class="preview-desc">${preview.description}</div>
+                                    </c:if>
+
+                                    <div class="preview-url">${preview.url}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </c:if>
             </div>
 
             <div id="update-form" style="display:none; margin-top:20px;">

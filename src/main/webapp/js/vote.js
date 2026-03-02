@@ -23,6 +23,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 url: "voteOk.do", 
                 data: { "voteId": voteId, "movieId": movieId, "comment": "" },
                 success: function(response) {
+
+                    if(response == "ERROR"){
+                        alert("문제가 발생했습니다.");
+                        return;
+                    }
+
+
                     let data = typeof response === "string" ? JSON.parse(response) : response;
 					
                     if (data.status === "LOGIN_REQUIRED") {

@@ -28,7 +28,7 @@ public interface VoteService {
 
 	List<VoteRecordDTO> getVoteRecordByVoteId(int voteId);
 
-	VoteRegisterDTO getVoteRegFullById(int voteId);
+	VoteRegisterDTO getVoteRegFullById(int voteId, boolean includeDeletedMovie);
 
 	void updateVoteStatus(VoteRegisterDTO voteReg);
 
@@ -45,6 +45,8 @@ public interface VoteService {
 	List<VoteRecordDTO> getVoteRecordByMemNo(int memNo);
 
 	int getRowCount(VoteRegisterDTO findVoteReg);
+
+	List<VoteRegisterDTO> getTenRecentVotes();
 
 	
 

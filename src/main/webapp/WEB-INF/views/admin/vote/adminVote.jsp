@@ -43,9 +43,29 @@
 		
         
         /* 테이블 스타일 */
-        table { width: 100%; border-collapse: collapse;}
-        th { background: #f8fafc; color: #64748b; padding: 12px; border-bottom: 2px solid #e2e8f0; }
-        td { padding: 15px 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+       table{
+		width:100%;
+		border-collapse:separate;
+		border-spacing:0;
+		min-width: 860px;
+		}
+		thead th{
+		position:sticky;
+		top:0;
+		background:#fff;
+		z-index:1;
+		text-align:center;
+		font-size:.85rem;
+		color:#6b7280;
+		padding:.8rem .75rem;
+		border-bottom:1px solid #f1f5f9;
+		}
+		tbody td{
+		padding:.9rem .75rem;
+		border-bottom:1px solid #f1f5f9;
+		font-size:.92rem;
+		color:#111827;
+		}
         /* 테이블 스타일 고정 */
 		.vote-table { width: 100%; table-layout: fixed;  border-collapse: collapse;}
 		
@@ -55,7 +75,8 @@
 		.vote-table th:nth-child(3) { width: 160px; } /* 시작일 */
 		.vote-table th:nth-child(4) { width: 160px; } /* 종료일 */
 		.vote-table th:nth-child(5) { width: 100px; } /* 상태 */
-		.vote-table th:nth-child(6) { width: 280px; } /* 관리 버튼 */
+		.vote-table th:nth-child(6) { width: 120px; } /* 상태 */
+		.vote-table th:nth-child(7) { width: 280px; } /* 관리 버튼 */
 		
 		/* 제목이 너무 길 경우 말줄임표(...) 처리 */
 		.vote-table td {  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 12px 8px;text-align: center;}
@@ -146,6 +167,7 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
             max-height: 80vh;
             overflow-y: auto;
+			position: relative;
             display: flex;
     		flex-direction: column;
     		&::-webkit-scrollbar {
@@ -196,9 +218,13 @@
 		.progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); border-radius: 6px; width: 0%; transition: width 1.2s cubic-bezier(0.1, 0.5, 0.5, 1); }
 		.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; }
 		
-		.btn-close { background: none; border: none; font-size: 2rem; font-weight: 300; color: #64748b; cursor: pointer; line-height: 1; padding: 0 5px; transition: color 0.2s, transform 0.2s; }
+		.btn-close { background: none; border: none; font-size: 2rem; font-weight: 300; color: #64748b; cursor: pointer; line-height: 1; padding: 0 5px; transition: color 0.2s, transform 0.2s;position: absolute;
+    		top: 20px; right: 25px; }
 		.btn-close:hover { color: #1e293b; transform: scale(1.1); }
 		#vote-modal-header { margin: 0; font-size: 1.5rem; }
+		.status-badge-error {display: inline-flex;align-items: center;gap: 4px;
+		}
+
 	
     </style>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -207,11 +233,8 @@
 <body>
 
 	<div class="vote-mgmt-page">
-			 <div>
-		        <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
-		        
-		    </div>
-		    <div><button class="btn btn-add" onclick="addForm()" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
+			
+		   
 		
 			<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;   border-radius: 10px;">
 		        <div style="display: flex; gap: 12px; align-items: center;   border-radius: 10px;">
@@ -233,26 +256,31 @@
 					    <input type="hidden" id="filterStatus" name="genre" value="${param.genre != null ? param.genre : 'ALL'}">
 					</div>
 				</div>
-				
+
+				 <div><button class="btn btn-add" onclick="addForm()" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
+			
+		    </div>
+
+			<div style="display:flex; justify-content: flex-end; border-bottom: 1px solid #f3f4f6; ">
 				<c:choose>
 				    <c:when test="${filter == 'ACTIVE'}">
-				    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인 투표 수: ${totalCount }개</p>
+				    	<p id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인 투표 수: ${totalCount }개</p>
 				    </c:when>
 				    
 				     <c:when test="${filter == 'ENDED'}">
-				    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">종료된 투표 수: ${totalCount }개</p>
+				    	<p id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">종료된 투표 수: ${totalCount }개</p>
 				    </c:when>
 				    
 				     <c:when test="${filter == 'READY'}">
-				    	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">예정된 투표 수: ${totalCount }개</p>
+				    	<p id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">예정된 투표 수: ${totalCount }개</p>
 				    </c:when>
 				    
 				    <c:otherwise>
-				     	<p  style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
+				     	<p  id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
 				    </c:otherwise>
 			    </c:choose>
+			</div>
 			
-		    </div>
 		   
 		    <div class="tbl-page-container">
 			    <div class="tbl-container">
@@ -264,6 +292,7 @@
 				                <th onclick="sortTable('startDate',2)" style="cursor:pointer;">시작일 <span class="sort-icon">↕</span></th>
 				                <th onclick="sortTable('endDate',3)" style="cursor:pointer;">종료일 <span class="sort-icon">↕</span></th>
 				                <th>상태</th>
+								<th>비고</th>
 				                <th>관리</th>
 				            </tr>
 				        </thead>
@@ -285,6 +314,21 @@
 						                    </c:choose>
 						                      
 						                    </td>
+											<td style="text-align: center;">
+												<c:choose>
+													<c:when test="${(vote.validOptionCount) < 2}">
+														<span class="status-badge-error" 
+															title="현재 선택지: ${(vote.validOptionCount)}개 (최소 2개 필요)"
+															style="color: #ef4444; background: #fee2e2; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: help;">
+															⚠️ 선택지 부족 
+														</span>
+													</c:when>
+													<c:otherwise>
+														<span style="color: #10b981; font-size: 0.8rem;">정상</span>
+													</c:otherwise>
+												</c:choose>
+											</td>
+
 						                    <td>
 						                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
 						                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
@@ -299,7 +343,7 @@
 						        <%-- 투표 목록이 없을 때 ⭐ --%>
 						        <c:otherwise>
 						            <tr>
-						                <td colspan="6" style="text-align: center; padding: 100px 0; color: #94a3b8;">
+						                <td colspan="7" style="text-align: center; padding: 100px 0; color: #94a3b8;">
 						                    
 						                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
 						                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
@@ -358,9 +402,9 @@
 	<div class="modal-overlay" id="voteModal">
 
 		<div class="form-container">
+				 <button type="button" class="btn-close" onclick="closeModal()">&times;</button>
 				<div class="modal-header">
 			        <h2 id="vote-modal-header">투표 상세</h2>
-			        <button type="button" class="btn-close" onclick="closeModal()">&times;</button>
 			    </div>
 		
 				<form id="voteForm" >
@@ -401,24 +445,7 @@
 							<%--  수정 모드: 기존 옵션이 있는 경우 --%>
 							<c:when test="${not empty vote.optionList}">
 								<c:forEach var="opt" items="${vote.optionList}">
-									<div class="option-item"
-										style="display: flex; gap: 10px; margin-bottom: 10px;">
-										<div style="flex: 1; position: relative;">
-											<input type="hidden" name="movieId" class="movie-id-hidden"
-												value="${opt.movieId}"> <input type="text"
-												name="optionTitle" class="movie-search"
-												value="${opt.movieTitle}"
-												onkeydown="if(event.keyCode==13) event.preventDefault();"
-												onkeyup="handleSearch(this, event)" autocomplete="off">
-												
-											<div class="search-results"></div>
-											<div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
-											        DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
-											    </div>
-										</div>
-										<button type="button" class="btn" onclick="removeOption(this)"
-											style="height: 45px; align-self: flex-start; background: #fee2e2; color: #ef4444; border: none; padding: 10px; cursor: pointer; border-radius: 8px;">삭제</button>
-									</div>
+									
 								</c:forEach>
 							</c:when>
 		
@@ -479,19 +506,29 @@
         $("#voteForm input[type='hidden']").val("");
         $('#optionList').html("영화를 추가해주세요");
         $(".btn-cancel").show();
+		$('input[name="voteTitle"]').prop('readonly', false);
+		$('input[name="voteContent"]').prop('readonly', false);
+		$('input[name="voteStartDate"]').prop('readonly', false);
+		$('input[name="voteEndDate"]').prop('readonly', false);
      
         if(mode === 'edit'){
         	$("#vote-modal-header").text("투표 수정");
         	$(".btn-save").data("mode", mode).text("수정");
-        	 $(".vote-result-cont").hide();
+        	$(".vote-result-cont").hide();
+			$(".btn-add-opt").show();
         }else if(mode === 'cont'){
         	$("#vote-modal-header").text("투표 상세");
         	$(".btn-save").data("mode", mode).text("확인");
-        	$(".btn-cancel").hide();
-        	$(".vote-result-cont").show();
+        	$(".btn-cancel").hide();$(".vote-result-cont").show();$(".btn-add-opt").hide();
+			$('input[name="voteTitle"]').prop('readonly', true);
+			$('input[name="voteContent"]').prop('readonly', true);
+			$('input[name="voteStartDate"]').prop('readonly', true);
+			$('input[name="voteEndDate"]').prop('readonly', true);
         }else {
         	$("#vote-modal-header").text("투표 등록");
         	$(".btn-save").data("mode", mode).text("등록");
+			$(".vote-result-cont").hide();
+			$(".btn-add-opt").show();
         }
         
         if(mode != 'add'){
@@ -507,9 +544,13 @@
      				"X-Requested-With" : "XMLHttpRequest"
      			},
      			success : function(response) {
-     				
-     				let vote = typeof response === "string" ? JSON.parse(response) : response;
-     				
+					let vote = typeof response === "string" ? JSON.parse(response) : response;
+					 if (vote.status === "LOGIN_REQUIRED") {
+                        alert("로그인이 필요합니다.");
+                        location.href = "memberLogin.do";
+                        return;
+                    }
+     			
      				$("input[name='voteId']").val(vote.voteId);
      				$("input[name='voteTitle']").val(vote.voteTitle);
      			    $("input[name='voteContent']").val(vote.voteContent);
@@ -519,18 +560,19 @@
      			    }
      			    
      			    if (vote.voteEndDate) {
-     			        $("input[name='voteEndDate']").val(vote.voteStartDate);
+     			        $("input[name='voteEndDate']").val(vote.voteEndDate);
      			    }
      			    
      			    //option list
      			   const $optionList = $("#optionList");
      			   $optionList.empty();
      			   vote.optionList.forEach(function(opt) {
-     			       addOption(opt["movieId"], opt["movieTitle"])
+     			       addOption(opt['movieId'], opt['movieTitle'], opt['movieDeleted'], mode)
      			    });
      			   
      			   //투표 결과
      			   if(mode === 'cont'){
+					console.log("상세")
      				  displayVoteResult(vote);
      			   }
      			},
@@ -566,7 +608,23 @@
 					"X-Requested-With" : "XMLHttpRequest"
 				},
 				success : function(response) {
-					selectOption('ALL', '전체 보기');
+					let data = JSON.parse(response);
+					if (data.status === "LOGIN_REQUIRED") {
+                        alert("로그인이 필요합니다.");
+                        location.href = "memberLogin.do";
+                        return;
+                    }
+
+					if(data.status === "ERROR"){
+						alert("문제가 발생했습니다.");
+						return;
+					}
+
+					if(data.status === "SUCCESS"){
+						alert("투표가 성공적으로 삭제되었습니다.");
+						selectOption('ALL', '전체 보기');
+					}
+					
 				},
 				error : function(xhr) {
 					alert("문제가 발생했습니다.")
@@ -619,7 +677,9 @@
 			success : function(html) {
 				 const $newContent = $(html).find('.tbl-page-container').html();
 				 $('.tbl-page-container').html($newContent);
-				 
+
+				 const $voteRegCount = $(html).find('#voteRegCount').html();
+				 $('#voteRegCount').html($voteRegCount);
 				 window.scrollTo({ top: 0, behavior: 'smooth' });
 				// 표시 텍스트 변경
 		        $('#selectedText').text(text);
@@ -730,7 +790,7 @@
 		}
 
 		// 옵션 추가 
-		function addOption(movieId = '', movieTitle = '') {
+		function addOption(movieId = '', movieTitle = '', movieDeleted=false, mode) {
 			
 		    const optItem = $(".option-item");
 		    if(optItem.length == 0){
@@ -739,21 +799,28 @@
 		    
 		    // 데이터가 있을 때와 없을 때의 placeholder/value 처리를 합니다.
 		    const html = `
-		        <div class="option-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
+		        <div class="option-item  \${movieDeleted == 1 ? 'is-deleted' : ''}" style="display: flex; gap: 10px; margin-bottom: 10px;">
 		            <div style="flex: 1; position: relative;">
 		                <input type="hidden" name="movieId" class="movie-id-hidden" value="\${movieId}">
 		                <input type="text" name="optionTitle" class="movie-search" 
+								style="border: 1px solid \${movieDeleted == 1 ? '#fb7185' : '#d1d5db'};" 
 		                       placeholder="영화 제목을 검색하세요"
 		                       value="\${movieTitle}"
+							    \${movieDeleted == 1 || mode == 'cont' ? 'readonly' : ''}
 		                       onkeydown="if(event.keyCode==13) event.preventDefault();"
 		                       onkeyup="handleSearch(this, event)" autocomplete="off">
 		                <div class="search-results"></div>
 		                <div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
 		                    DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
 		                </div>
+						<div class="delete-warning" 
+                                style="display: \${mode == 'cont' ? 'none' : 'block'}; display: \${movieDeleted == 1 ? 'flex' : 'none'}; align-items: center; gap: 4px; color: #e11d48; font-size: 11px; font-weight: 700; margin-top: 6px; letter-spacing: -0.5px;">
+                                <span style="font-size: 14px;">⚠️</span> 
+                                영화 정보가 삭제되었습니다. 해당 항목을 삭제해야 수정이 가능합니다.
+                            </div>
 		            </div>
-		            <button type="button" class="btn" onclick="removeOption(this)" 
-		                    style="height: 45px; align-self: flex-start; background:#fee2e2; color:#ef4444; border:none; padding: 10px; cursor:pointer; border-radius:8px;">삭제</button>
+		            <button type="button" class="btn delete-btn" onclick="removeOption(this)" 
+		                    style="display: \${mode == 'cont' ? 'none' : 'block'};height: 45px; align-self: flex-start; background:#fee2e2; color:#ef4444; border:none; padding: 10px; cursor:pointer; border-radius:8px;">삭제</button>
 		        </div>`;
 		    $('#optionList').append(html);
 		}
@@ -937,6 +1004,31 @@
 			 	}
 			 	
 			 	let validated = true;
+
+				//optItems 중에 삭제된영화가 있으면 수정 못하게 
+				for (let i = 0, ids = new Set(); i < optItems.length; i++) {
+					const mId = optItems[i].querySelector('.movie-id-hidden').value;
+
+					// 1. 삭제된 영화 체크
+					if (optItems[i].classList.contains("is-deleted") || optItems[i].innerText.includes("(삭제된 영화)")) {
+						alert("목록에 삭제된 영화가 포함되어 수정할 수 없습니다. 삭제 후 다시 시도해 주세요.");
+						validated = false;
+						break;
+					}
+
+					// 2. movieId 중복 체크
+					if (ids.has(mId)) {
+						alert("중복된 영화가 선택되었습니다. 다시 확인해 주세요.");
+						validated = false;
+						break;
+					}
+					
+					ids.add(mId);
+				}
+
+				if (!validated) return false;
+
+
 			 	$('.movie-id-hidden').each(function() {
 			         if ($(this).val() === "") {
 			             alert("DB에 존재하지 않는 영화가 포함되어 있습니다. 검색 결과에서 선택해주세요.");
@@ -960,9 +1052,25 @@
 						"X-Requested-With" : "XMLHttpRequest"
 					},
 					success : function(response) {
-						alert(state === 'add' ? "투표가 성공적으로 등록되었습니다" : "투표가 성공적으로 수정되었습니다");
-						closeModal();
-						selectOption('ALL', '전체 보기');
+						let data = JSON.parse(response);
+						if (data.status === "LOGIN_REQUIRED") {
+							alert("로그인이 필요합니다.");
+							location.href = "memberLogin.do";
+							return;
+						}
+
+
+						if(data.status === "ERROR"){
+							alert("문제가 발생했습니다.");
+							return;
+						}
+
+						if(data.status === "SUCCESS"){
+							alert(state === 'add' ? "투표가 성공적으로 등록되었습니다" : "투표가 성공적으로 수정되었습니다");
+							closeModal();
+							selectOption('ALL', '전체 보기');
+						}
+						
 						
 					},
 					error : function(xhr) {
@@ -977,7 +1085,7 @@
 			    //  요약 정보 업데이트
 			    $("#total-voters").text(voteData.voterCount);
 			    $("#total-comments").text(voteData.commentCount);
-			
+			console.log(voteData)
 			    //  리스트 초기화
 			    const $list = $("#result-list");
 			    $list.empty();
@@ -1006,12 +1114,12 @@
 				    	
 				        // 백분율 계산 (총합이 0일 경우 대비)
 				        const percent = voteData.voterCount > 0 ? Math.round((count / voteData.voterCount) * 100) : 0;
-        
+   
 				        const itemHtml = `
 				            <div class="result-item">
 				                <div class="item-info">
 				                    <span class="movie-title">\${opt.movieTitle}</span>
-				                    <span class="vote-count">\${count}표 (${percent}%)</span>
+				                    <span class="vote-count">\${count}표 (\${percent}%)</span>
 				                </div>
 				                <div class="progress-bar-wrap">
 				                    <div class="progress-bar-fill" data-width="\${percent}%" style="width: 0%;"></div>

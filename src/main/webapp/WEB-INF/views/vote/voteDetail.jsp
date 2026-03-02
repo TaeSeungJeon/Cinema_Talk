@@ -979,7 +979,7 @@ pageEncoding="UTF-8"%>
 
 			</main>
 
-
+			<jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 		
 		
 		

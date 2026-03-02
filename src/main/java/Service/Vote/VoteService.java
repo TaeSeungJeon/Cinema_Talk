@@ -46,6 +46,8 @@ public interface VoteService {
 
 	int getRowCount(VoteRegisterDTO findVoteReg);
 
+	List<VoteRegisterDTO> getTenRecentVotes();
+
 	
 
 }

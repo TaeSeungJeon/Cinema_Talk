@@ -184,4 +184,14 @@ return voteRegFullList.stream()
 		return this.vdao.getRowCount(findVoteReg);
 	}
 
+	@Override
+	public List<VoteRegisterDTO> getTenRecentVotes() {
+		List<VoteRegisterDTO> voteList = this.vdao.getTenRecentVotes();
+		voteList.forEach(vote -> {
+			updateVoteStatus(vote);
+		});
+
+		return voteList;
+	}
+
 }

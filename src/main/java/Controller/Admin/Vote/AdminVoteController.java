@@ -1,4 +1,4 @@
-package Controller.Vote;
+package Controller.Admin.Vote;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -98,7 +98,7 @@ public class AdminVoteController implements Action {
 		
     ActionForward forward = new ActionForward();
 		forward.setRedirect(false);
-		forward.setPath("/WEB-INF/views/vote/adminVote.jsp");
+		forward.setPath("/WEB-INF/views/admin/vote/adminVote.jsp");
 		return forward;
     }
     

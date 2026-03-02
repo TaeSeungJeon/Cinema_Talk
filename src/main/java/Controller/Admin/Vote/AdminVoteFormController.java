@@ -1,4 +1,4 @@
-package Controller.Vote;
+package Controller.Admin.Vote;
 
 import java.io.PrintWriter;
 import java.util.List;

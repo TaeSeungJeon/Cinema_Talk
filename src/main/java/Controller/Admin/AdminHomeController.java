@@ -1,7 +1,12 @@
 package Controller.Admin;
 
+import java.util.List;
+
 import Controller.Action;
 import Controller.ActionForward;
+import DTO.Vote.VoteRegisterDTO;
+import Service.Vote.VoteService;
+import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -10,6 +15,13 @@ public class AdminHomeController implements Action {
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		VoteService voteService = new VoteServiceImpl();
+		List<VoteRegisterDTO> voteRegList = voteService.getTenRecentVotes();
+
+
+		request.setAttribute("voteData", voteRegList);
+		
 		
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

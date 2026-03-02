@@ -319,7 +319,7 @@
     </div>
 </div>
 </div>
-
+<jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 
 
 <script>

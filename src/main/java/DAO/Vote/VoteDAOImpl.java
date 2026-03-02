@@ -318,4 +318,18 @@ public class VoteDAOImpl implements VoteDAO {
 			}
 		}
 	}
+
+	@Override
+	public List<VoteRegisterDTO> getTenRecentVotes() {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("vregListRecent10");
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
 }

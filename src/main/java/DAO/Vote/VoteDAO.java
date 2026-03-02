@@ -40,4 +40,6 @@ public interface VoteDAO {
 
     VoteRegisterDTO getVoteRegFullByIdNoNullMovie(int voteId);
 
+	List<VoteRegisterDTO> getTenRecentVotes();
+
 }

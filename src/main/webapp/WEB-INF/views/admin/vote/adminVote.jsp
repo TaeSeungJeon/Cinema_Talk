@@ -43,9 +43,29 @@
 		
         
         /* 테이블 스타일 */
-        table { width: 100%; border-collapse: collapse;}
-        th { background: #f8fafc; color: #64748b; padding: 12px; border-bottom: 2px solid #e2e8f0; }
-        td { padding: 15px 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+       table{
+		width:100%;
+		border-collapse:separate;
+		border-spacing:0;
+		min-width: 860px;
+		}
+		thead th{
+		position:sticky;
+		top:0;
+		background:#fff;
+		z-index:1;
+		text-align:center;
+		font-size:.85rem;
+		color:#6b7280;
+		padding:.8rem .75rem;
+		border-bottom:1px solid #f1f5f9;
+		}
+		tbody td{
+		padding:.9rem .75rem;
+		border-bottom:1px solid #f1f5f9;
+		font-size:.92rem;
+		color:#111827;
+		}
         /* 테이블 스타일 고정 */
 		.vote-table { width: 100%; table-layout: fixed;  border-collapse: collapse;}
 		
@@ -213,11 +233,8 @@
 <body>
 
 	<div class="vote-mgmt-page">
-			 <div>
-		        <h2 style="float: left;"> 투표 콘텐츠 관리</h2>
-		        
-		    </div>
-		    <div><button class="btn btn-add" onclick="addForm()" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
+			
+		   
 		
 			<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;   border-radius: 10px;">
 		        <div style="display: flex; gap: 12px; align-items: center;   border-radius: 10px;">
@@ -239,7 +256,12 @@
 					    <input type="hidden" id="filterStatus" name="genre" value="${param.genre != null ? param.genre : 'ALL'}">
 					</div>
 				</div>
-				
+
+				 <div><button class="btn btn-add" onclick="addForm()" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
+			
+		    </div>
+
+			<div style="display:flex; justify-content: flex-end; border-bottom: 1px solid #f3f4f6; ">
 				<c:choose>
 				    <c:when test="${filter == 'ACTIVE'}">
 				    	<p id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인 투표 수: ${totalCount }개</p>
@@ -257,8 +279,8 @@
 				     	<p  id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
 				    </c:otherwise>
 			    </c:choose>
+			</div>
 			
-		    </div>
 		   
 		    <div class="tbl-page-container">
 			    <div class="tbl-container">

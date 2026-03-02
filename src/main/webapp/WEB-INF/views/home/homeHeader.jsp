@@ -266,7 +266,7 @@ header {
 	<div style="display: flex; gap: 10px;">
 	
 	<!-- 로그인 한 상태 -->
-		<c:if test="${not empty sessionScope.memId}">
+		<c:if test="${not empty sessionScope.memNo}">
 		
 			<a href="memberLogout.do" class="glass-panel"
 				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
@@ -291,7 +291,7 @@ header {
 		</c:if>
 	
 	<!-- 로그인 안 한 상태 -->
-		<c:if test="${empty sessionScope.memId}">
+		<c:if test="${empty sessionScope.memNo}">
 			<a href="memberLogin.do" class="glass-panel"
 				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a>
 		</c:if>
@@ -308,8 +308,8 @@ header {
 	<div class="category-bubble" onclick="toggleMenu(this)">
 		<div class="cat-title">커뮤니티 ▾</div>
 		<ul class="sub-menu">
-			<li><a href="community.jsp?tab=best">인기 리뷰</a></li>
-			<li><a href="freeBoard.do?tab=free">자유 게시판</a></li>
+		<li><a href="freeBoard.do?filter=free">자유 게시판</a></li>
+		<li><a href="freeBoard.do?filter=hot">영화 추천/후기</a></li>
 		</ul>
 	</div>
 	<div class="category-bubble" onclick="toggleMenu(this)">

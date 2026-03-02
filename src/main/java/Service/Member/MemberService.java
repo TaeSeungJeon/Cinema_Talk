@@ -1,5 +1,7 @@
 package Service.Member;
 
+import java.util.List;
+
 import DTO.Member.MemberDTO;
 
 public interface MemberService {
@@ -22,6 +24,9 @@ public interface MemberService {
 	int emailCheck(String memEmail);
 
 	int withdrawMember(int memNo);
+	
 	int updateLastLogin(String memId);
+
+	List<MemberDTO> getMemberList();
 
 }

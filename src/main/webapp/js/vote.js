@@ -68,22 +68,56 @@ document.addEventListener("DOMContentLoaded", function() {
 						let commentHtml = "";
 						if(comments){
 							comments.forEach(function(comment) {
-            commentHtml += `
-                <div class="comment-item">
-                    <strong>${comment.memName}</strong>
-                    <p>${comment.commentText}</p>
-                    <small>${comment.createdDate}</small>
-                </div>
-            `;
-        });
-        
-
-        $(".comment-list").html(commentHtml);
-        
-       
-        $(".comment-count").text(comments.length);
+					            commentHtml += `
+					                <div class="comment-item">
+					                    <strong>${comment.memName}</strong>
+					                    <p>${comment.commentText}</p>
+					                    <small>${comment.createdDate}</small>
+					                </div>
+					            `;
+					        });
+					        
+					
+					        $(".comment-list").html(commentHtml);
+					        $(".comment-count").text(comments.length);
 						}
-                    }
+						
+						//투표메인페이지에서 투표후 '내가 참여한투표' 에 추가되게 하기 2026/02/25
+						$(".no-record-msg").remove();
+						const currentVoteId = voteId;
+						let isAlreadyInList = false; //목록에 있는지 없는지 확인을 위한 변수
+						
+						
+						$("#my-vote-items .done-item").each(function() {
+				            if($(this).attr("onclick").includes("voteId=" + currentVoteId)) {
+				                isAlreadyInList = true;
+				            }
+				        });
+						
+						if(!isAlreadyInList) {
+				            // 사용자가 선택한 영화 제목 (라벨 등에서 텍스트 가져오기)
+				            const selectedMovieTitle = $selectedOption.closest('.movie-option').find('.movie-info').find('.m-title').text();
+				            const voteTitle = $this.closest('.vote-content').find('.vote-title').text().trim();
+							
+				            const newItemHtml = `
+				                <div class="upcoming-item" onclick="location.href='voteCont.do?voteId=${currentVoteId}'" style="display:none;">
+				                    <div style="font-weight: 600;">${voteTitle}</div>
+				                    <div style="font-size: 0.8rem; color: var(--accent-color);">나의 픽: ${selectedMovieTitle}</div>
+				                </div>
+				            `;
+				            
+				            // 맨 앞에 추가하고 부드럽게 나타나기
+				            $("#my-vote-items").prepend(newItemHtml);
+				            $("#my-vote-items .upcoming-item").first().fadeIn(500);
+							
+							//위젯 안에 3개만 노출
+							if ($("#my-vote-items .upcoming-item").length > 3) {
+							    $("#my-vote-items .upcoming-item").last().remove();
+							}
+				        }
+						
+						
+                    }// if SUCCESS 종료
                 },
                 error: function(err) {
                     alert("통신 중 오류가 발생했습니다.");
@@ -92,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // 2. 슬라이드 관련 로직
+    // 슬라이드 관련 로직
     const track = document.querySelector('.vote-track');
     const slides = document.querySelectorAll('.vote-content');
     const prevBtn = document.getElementById('votePrevBtn');
@@ -102,9 +136,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const slideCount = slides.length;
 
     function moveSlide(index) {
-        if (slideCount === 0) return;
+        if (slideCount === 0) return;	
+		if (track == null) return;
         track.style.transform = `translateX(-${index * 100}%)`;
         currentIndex = index;
+		if(slideCount == 1){
+			if(prevBtn) prevBtn.classList.add('disabled');
+			if(nextBtn) nextBtn.classList.add('disabled');
+		}
     }
 
     if (slideCount > 0) {

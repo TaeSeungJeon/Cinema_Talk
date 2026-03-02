@@ -154,7 +154,7 @@ body {
 	padding: 14px;
 	border: 1px solid rgba(0, 0, 0, 0.06);
 	box-shadow: var(--shadow-subtle);
-	min-height: 220px;
+	min-height: 350px;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -196,7 +196,7 @@ body {
 	border: 2px solid rgba(0, 0, 0, 0.15);
 	border-radius: 18px;
 	padding: 16px;
-	min-height: 360px;
+	min-height: 580px;
 }
 
 .panel-title {
@@ -210,7 +210,7 @@ body {
 	border: 2px dashed #e2e8f0;
 	border-radius: 16px;
 	background: #f8fafc;
-	height: 280px;
+	height: 500px;
 	display: flex;
 	align-items: center;
 	justify-content: center;

@@ -304,11 +304,13 @@
 
         .side-item {
             font-size: 0.9rem;
-            color: var(--text-sub);
+            color: black;
             padding: 8px 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.03);
             cursor: pointer;
             transition: 0.2s;
+            text-decoration:none;
+            display:block;
         }
 
         .side-item:hover {
@@ -457,46 +459,6 @@
             cursor: pointer;
         }
 
-        .hot-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .hot-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .hot-item:last-child {
-            border: none;
-        }
-
-        .rank-num {
-            font-weight: 800;
-            color: var(--accent-color);
-            font-style: italic;
-        }
-
-        .hot-text {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-main);
-            cursor: pointer;
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .hot-hidden {
-            display: none;
-        }
-
         .widget-placeholder {
             background: #f8fafc;
             border: 2px dashed #e2e8f0;
@@ -509,11 +471,26 @@
             font-weight: 700;
             font-size: 0.85rem;
         }
+
+        .reply-to {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .reply-to-name {
+            color: #a5b4fc;
+            font-weight: 700;
+        }
+
+
     </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
 </head>
 <body>
 
-<%-- include 헤더/네비 유지 (네가 쓰던 방식) --%>
+<%-- include 헤더/네비 유지 --%>
 <%@ include file="../home/homeHeader.jsp" %>
 
 <div class="layout-wrapper">
@@ -526,17 +503,21 @@
                    style="font-weight: 700; color: var(--text-main); text-decoration: none;">
                     ${cont.boardName}
                 </a>
-                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 답변 42</div>
+                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 댓글 42</div>
             </div>
-            <div class="side-item">작성자의 다른 글 보기</div>
+            <div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
+            <a href="${pageContext.request.contextPath}/myPage.do?" class="side-item">작성자의 다른 글 보기</a>
             <div class="side-item">팔로우 하기</div>
+        </div>
         </div>
         <div class="glass-panel">
             <div class="side-title">📋 카테고리 이동</div>
-            <div class="side-item">영화 리뷰</div>
-            <div class="side-item">끝장 토론</div>
-            <div class="side-item">정보/뉴스</div>
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=free" class="side-item">자유게시판</a>
+            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=hot" class="side-item">영화 추천/후기</a>
+            <a href="${pageContext.request.contextPath}/vote.do?" class="side-item">오늘의 투표</a>
+            <a href="${pageContext.request.contextPath}/voteList.do?" class="side-item">투표 목록</a>
         </div>
+
     </aside>
 
     <main class="main-content">
@@ -554,51 +535,32 @@
 
             <div class="post-body" id="post-body">
                 ${cont.boardContent}
+                    <c:if test="${not empty preview}">
+                        <a href="${preview.url}" target="_blank" class="link-preview">
+                            <div class="preview-card">
+                                <c:if test="${not empty preview.image}">
+                                    <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
+                                </c:if>
+
+                                <div class="preview-content">
+                                    <div class="preview-domain">
+                                        <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
+                                    </div>
+
+                                    <c:if test="${not empty preview.title}">
+                                        <div class="preview-title">${preview.title}</div>
+                                    </c:if>
+
+                                    <c:if test="${not empty preview.description}">
+                                        <div class="preview-desc">${preview.description}</div>
+                                    </c:if>
+
+                                    <div class="preview-url">${preview.url}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </c:if>
             </div>
-
-            <c:if test="${not empty preview}">
-                <a href="${preview.url}" target="_blank" class="link-preview">
-                    <div class="preview-card">
-                        <c:if test="${not empty preview.image}">
-                            <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
-                        </c:if>
-
-                        <div class="preview-content">
-                            <div class="preview-domain">
-                                <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
-                            </div>
-
-                            <c:if test="${not empty preview.title}">
-                                <div class="preview-title">${preview.title}</div>
-                            </c:if>
-
-                            <c:if test="${not empty preview.description}">
-                                <div class="preview-desc">${preview.description}</div>
-                            </c:if>
-
-                            <div class="preview-url">${preview.url}</div>
-                        </div>
-                    </div>
-                </a>
-            </c:if>
-
-            <c:if test="${not empty fileList}">
-                <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
-                    <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
-
-                    <div style="display:flex; flex-direction:column; gap:12px;">
-                        <c:forEach var="f" items="${fileList}">
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <a href="${pageContext.request.contextPath}${f.filePath}"
-                                   target="_blank"
-                                   style="text-decoration:none; font-weight:700; color:#374151;">
-                                        ${f.fileName}
-                                </a>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-            </c:if>
 
             <div id="update-form" style="display:none; margin-top:20px;">
                 <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data">
@@ -616,10 +578,55 @@
 
                     <input type="hidden" name="boardContent" id="hiddenContent">
 
+                    <c:if test="${not empty preview}">
+                        <a href="${preview.url}" target="_blank" class="link-preview">
+                            <div class="preview-card">
+                                <c:if test="${not empty preview.image}">
+                                    <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
+                                </c:if>
+
+                                <div class="preview-content">
+                                    <div class="preview-domain">
+                                        <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
+                                    </div>
+
+                                    <c:if test="${not empty preview.title}">
+                                        <div class="preview-title">${preview.title}</div>
+                                    </c:if>
+
+                                    <c:if test="${not empty preview.description}">
+                                        <div class="preview-desc">${preview.description}</div>
+                                    </c:if>
+
+                                    <div class="preview-url">${preview.url}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </c:if>
+
+
                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
                         <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
                         <input type="file" name="uploadFiles" multiple style="margin-bottom:8px;">
                     </div>
+
+                    <c:if test="${not empty fileList}">
+                        <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
+                            <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
+
+                            <div style="display:flex; flex-direction:column; gap:12px;">
+                                <c:forEach var="f" items="${fileList}">
+                                    <div style="display:flex; flex-direction:column; gap:8px;">
+                                        <a href="${pageContext.request.contextPath}${f.filePath}"
+                                           target="_blank"
+                                           style="text-decoration:none; font-weight:700; color:#374151;">
+                                                ${f.fileName}
+                                        </a>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </c:if>
 
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
                         <button type="button"
@@ -694,7 +701,18 @@
 
                         <div class="comment-content" style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div class="comment-user">${comm.commentsName}</div>
+                                <div class="comment-user">
+                                        ${comm.commentsName}
+                                    <c:if test="${comm.parentBoardId > 0}">
+                                        <c:forEach var="parent" items="${clist}">
+                                            <c:if test="${parent.commentsId == comm.parentBoardId}">
+                                                <span class="reply-to">
+                                                    ↩ <span class="reply-to-name">@${parent.commentsName}</span>
+                                                </span>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
 
                                 <c:if test="${not empty sessionScope.memNo and sessionScope.memNo == comm.memNo}">
                                     <div class="comment-edit-delete" style="font-size: 0.75rem; color:var(--text-sub);">
@@ -733,7 +751,7 @@
                                       style="cursor:pointer; font-weight:600; color:var(--accent-color);"
                                       onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
                                 <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
-                                      onclick="toggleCommentLike(${comm.commentsId})"
+                                      onclick="toggleCommentLike(${comm.commentsId}, this)"
                                       style="cursor:pointer; font-weight:600; color:var(--accent-color);">
                                     <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
                                     좋아요 ${comm.likeCount}
@@ -769,11 +787,13 @@
                 </c:if>
             </div>
         </section>
+        <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
     </main>
 
     <aside class="side-panel">
         <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
     </aside>
+
 
     <script>
         function toggleMenu(element) {
@@ -850,6 +870,48 @@
                         return;
                     }
                     document.getElementById("likeCount").innerText = res;
+                });
+        }
+
+        const CTX = "${pageContext.request.contextPath}";
+
+        function toggleLike(boardId, boardType) {
+            fetch(CTX + "/boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
+                .then(r => r.text())
+                .then(res => {
+                    if (res === "LOGIN_REQUIRED") {
+                        alert("로그인 후 이용 가능합니다.");
+                        location.href = CTX + "/memberLogin.do";
+                        return;
+                    }
+                    document.getElementById("likeCount").innerText = res;
+                });
+        }
+
+        function toggleCommentLike(commentsId, btnEl) {
+            fetch(CTX + "/commentsLike.do?commentsId=" + commentsId)
+                .then(r => r.text())
+                .then(res => {
+                    if (res === "LOGIN_REQUIRED") {
+                        alert("로그인 후 이용 가능합니다.");
+                        location.href = CTX + "/memberLogin.do";
+                        return;
+                    }
+                    var isLiked = btnEl.classList.contains("liked");
+                    var likeCount = parseInt(res);
+                    var newIcon = !isLiked ? '❤️' : '🤍';
+
+                    if (isLiked) {
+                        btnEl.classList.remove("liked");
+                    } else {
+                        btnEl.classList.add("liked");
+                    }
+
+                    btnEl.innerHTML =
+                        '<span class="like-icon">' + newIcon + '</span> 좋아요 ' + likeCount;
+
+                    // innerHTML 교체 후 onclick 재등록
+                    btnEl.onclick = function() { toggleCommentLike(commentsId, btnEl); };
                 });
         }
 

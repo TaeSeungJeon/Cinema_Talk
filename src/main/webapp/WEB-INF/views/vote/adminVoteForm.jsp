@@ -14,22 +14,30 @@
 	--primary: #4f46e5;
 	--bg: #f8fafc;
 	--border: #e2e8f0;
+	 --bg-color: #f0f2f5;
+	--glass-bg: rgba(255, 255, 255, 0.7);
+	--accent-color: #6366f1;
+	--text-main: #1f2937;
+	--radius-soft: 24px;
+	--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
+	--shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
+}
+
+* {
+	box-sizing: border-box;
 }
 
 body {
-	font-family: 'Pretendard', sans-serif;
-	background: var(--bg);
+	font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+	background-color: var(--bg-color);
+	color: var(--text-main);
 	margin: 0;
-	padding: 40px;
 }
 
 .form-container {
 	max-width: 800px;
-	margin: 0 auto;
-	background: #fff;
-	padding: 40px;
+	
 	border-radius: 16px;
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
 h2 {
@@ -129,85 +137,125 @@ input[type="text"], input[type="date"], select, textarea {
 	color: white;
 	font-size: 0.85rem;
 }
+
+.admin-wrap {
+	max-width: 1650px; 
+	margin: 0 auto;
+	padding: 25px;
+	width: 100%;
+}
+.admin-container {
+	display: grid;
+	grid-template-columns: 240px 1fr;
+	gap: 24px;
+}
+
+ .admin-content {
+	background: white;
+	border-radius: var(--radius-soft);
+	box-shadow: var(--shadow-subtle);
+	padding: 22px;
+	min-height: 760px;
+}
 </style>
 </head>
 <body>
-	<div class="form-container">
-		<h2>${empty vote ? '새 투표 등록' : '투표 정보 수정'}</h2>
 
-		<form action="voteOkForm.do?state=${not empty vote ? 'edit' : 'add'}" method="post" id="voteForm" onsubmit="return validateForm()">
-			<input type="hidden" name="voteId" value="${vote.voteId}"> <label
-				class="section-title">투표 제목</label> <input type="text"
-				name="voteTitle" value="${vote.voteTitle}"
-				placeholder="사용자에게 보여질 투표 제목을 입력하세요" required> <label
-				class="section-title">투표 내용</label> <input type="text"
-				name="voteContent" value="${vote.voteContent}"
-				placeholder="이 투표에 대한 설명을 입력하세요" required>
+<div class="admin-wrap">
 
-
-			<div style="display: flex; gap: 20px;">
-			    <div style="flex: 1;">
-			        <label class="section-title">시작일</label> 
-			        <input type="date" name="voteStartDate" 
-			               value="${not empty vote ? fn:substring(vote.voteStartDate, 0, 10) : ''}" 
-			               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
-			               required>
-			    </div>
-			    <div style="flex: 1;">
-			        <label class="section-title">종료일</label> 
-			        <input type="date" name="voteEndDate" 
-			               value="${not empty vote ? fn:substring(vote.voteEndDate, 0, 10) : ''}" 
-			               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
-			               required>
-			    </div>
+	<!-- HEADER -->
+	<jsp:include page="/WEB-INF/views/admin/adminHeader.jsp"></jsp:include>
+	
+	<div class="admin-container">
+	
+	
+		<!-- SIDEBAR -->
+		<jsp:include page="/WEB-INF/views/admin/adminSidebar.jsp"></jsp:include>
+	
+		<main class="admin-content">
+			<div class="form-container">
+				<h2>${empty vote ? '새 투표 등록' : '투표 정보 수정'}</h2>
+		
+				<form action="voteOkForm.do?state=${not empty vote ? 'edit' : 'add'}" method="post" id="voteForm" onsubmit="return validateForm()">
+					<input type="hidden" name="voteId" value="${vote.voteId}"> <label
+						class="section-title">투표 제목</label> <input type="text"
+						name="voteTitle" value="${vote.voteTitle}"
+						placeholder="사용자에게 보여질 투표 제목을 입력하세요" required> <label
+						class="section-title">투표 내용</label> <input type="text"
+						name="voteContent" value="${vote.voteContent}"
+						placeholder="이 투표에 대한 설명을 입력하세요" required>
+		
+		
+					<div style="display: flex; gap: 20px;">
+					    <div style="flex: 1;">
+					        <label class="section-title">시작일</label> 
+					        <input type="date" name="voteStartDate" 
+					               value="${not empty vote ? fn:substring(vote.voteStartDate, 0, 10) : ''}" 
+					               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
+					               required>
+					    </div>
+					    <div style="flex: 1;">
+					        <label class="section-title">종료일</label> 
+					        <input type="date" name="voteEndDate" 
+					               value="${not empty vote ? fn:substring(vote.voteEndDate, 0, 10) : ''}" 
+					               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
+					               required>
+					    </div>
+					</div>
+					<div
+						style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
+						<label class="section-title">투표 선택지 (영화)</label>
+						<button type="button" class="btn btn-add-opt" onclick="addOption()">+
+							영화 추가</button>
+					</div>
+		
+					<div id="optionList" class="option-wrapper">
+						<c:choose>
+							<%--  수정 모드: 기존 옵션이 있는 경우 --%>
+							<c:when test="${not empty vote.optionList}">
+								<c:forEach var="opt" items="${vote.optionList}">
+									<div class="option-item"
+										style="display: flex; gap: 10px; margin-bottom: 10px;">
+										<div style="flex: 1; position: relative;">
+											<input type="hidden" name="movieId" class="movie-id-hidden"
+												value="${opt.movieId}"> <input type="text"
+												name="optionTitle" class="movie-search"
+												value="${opt.movieTitle}"
+												onkeydown="if(event.keyCode==13) event.preventDefault();"
+												onkeyup="handleSearch(this, event)" autocomplete="off">
+												
+											<div class="search-results"></div>
+											<div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+											        DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
+											    </div>
+										</div>
+										<button type="button" class="btn" onclick="removeOption(this)"
+											style="height: 45px; align-self: flex-start; background: #fee2e2; color: #ef4444; border: none; padding: 10px; cursor: pointer; border-radius: 8px;">삭제</button>
+									</div>
+								</c:forEach>
+							</c:when>
+		
+							<%-- 등록 모드: 빈 입력창 하나를 기본으로 노출 --%>
+							<c:otherwise>
+								영화를 추가해주세요
+							</c:otherwise>
+						</c:choose>
+					</div>
+		
+					<div class="btn-group">
+						<button type="button" class="btn btn-cancel"
+							onclick="history.back()">취소</button>
+						<button type="submit" class="btn btn-save">${not empty vote ? '수정' : '등록'}</button>
+					</div>
+				</form>
 			</div>
-			<div
-				style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
-				<label class="section-title">투표 선택지 (영화)</label>
-				<button type="button" class="btn btn-add-opt" onclick="addOption()">+
-					영화 추가</button>
-			</div>
 
-			<div id="optionList" class="option-wrapper">
-				<c:choose>
-					<%--  수정 모드: 기존 옵션이 있는 경우 --%>
-					<c:when test="${not empty vote.optionList}">
-						<c:forEach var="opt" items="${vote.optionList}">
-							<div class="option-item"
-								style="display: flex; gap: 10px; margin-bottom: 10px;">
-								<div style="flex: 1; position: relative;">
-									<input type="hidden" name="movieId" class="movie-id-hidden"
-										value="${opt.movieId}"> <input type="text"
-										name="optionTitle" class="movie-search"
-										value="${opt.movieTitle}"
-										onkeydown="if(event.keyCode==13) event.preventDefault();"
-										onkeyup="handleSearch(this, event)" autocomplete="off">
-										<div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
-									        DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
-									    </div>
-									<div class="search-results"></div>
-								</div>
-								<button type="button" class="btn" onclick="removeOption(this)"
-									style="height: 45px; align-self: flex-start; background: #fee2e2; color: #ef4444; border: none; padding: 10px; cursor: pointer; border-radius: 8px;">삭제</button>
-							</div>
-						</c:forEach>
-					</c:when>
-
-					<%-- 등록 모드: 빈 입력창 하나를 기본으로 노출 --%>
-					<c:otherwise>
-						영화를 추가해주세요
-					</c:otherwise>
-				</c:choose>
-			</div>
-
-			<div class="btn-group">
-				<button type="button" class="btn btn-cancel"
-					onclick="history.back()">취소</button>
-				<button type="submit" class="btn btn-save">${not empty vote ? '수정' : '등록'}</button>
-			</div>
-		</form>
+		
+		</main>
+		
 	</div>
 
+</div>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
        let searchTimer;
@@ -312,6 +360,7 @@ input[type="text"], input[type="date"], select, textarea {
                         \${title}
                         </div>`;
                     });
+                    
                     $results.html(html).show();
                     } else {
                     	$errorMsg.show();

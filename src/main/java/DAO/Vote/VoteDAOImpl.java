@@ -277,7 +277,7 @@ public class VoteDAOImpl implements VoteDAO {
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectList("MyPage.getVoteRecordListByMemNo", memNo);
+			return sqlSession.selectList("voteRecordListByMemNo", memNo);
 
 
 		} finally {
@@ -294,6 +294,22 @@ public class VoteDAOImpl implements VoteDAO {
 		try {
 			sqlSession = getSqlSession();
 			return sqlSession.selectOne("voteRegCount", findVoteReg);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public VoteRegisterDTO getVoteRegFullByIdNoNullMovie(int voteId) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("vregFullByVoteIdNotNull", voteId);
 
 
 		} finally {

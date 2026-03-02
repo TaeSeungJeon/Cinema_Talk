@@ -77,8 +77,11 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public VoteRegisterDTO getVoteRegFullById(int voteId) {
-		return this.vdao.getVoteRegFullById(voteId);
+	public VoteRegisterDTO getVoteRegFullById(int voteId, boolean includeDeletedMovie) {
+		if(includeDeletedMovie){
+			return this.vdao.getVoteRegFullById(voteId);
+		}
+		return this.vdao.getVoteRegFullByIdNoNullMovie(voteId);
 	}
 
 	@Override

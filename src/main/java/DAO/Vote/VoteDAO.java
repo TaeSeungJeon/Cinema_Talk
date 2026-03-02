@@ -38,4 +38,6 @@ public interface VoteDAO {
 
 	int getRowCount(VoteRegisterDTO findVoteReg);
 
+    VoteRegisterDTO getVoteRegFullByIdNoNullMovie(int voteId);
+
 }

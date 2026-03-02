@@ -37,11 +37,10 @@ public class AdminVoteFormController implements Action {
 		MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
 		
 		if(mem == null || mem.getMemRole() != 1) {
-			String contextPath = request.getContextPath();
-			out.println("<script>");
-			out.println("alert('관리자로 다시 로그인 하세요!');");
-			out.println("location='" + contextPath + "/memberLogin.do';");
-			out.println("</script>");
+			JSONObject error = new JSONObject();
+			error.put("status", "LOGIN_REQUIRED");
+			out.print(error.toString());
+			out.flush();
 			return null;
 		}
     			
@@ -54,7 +53,7 @@ public class AdminVoteFormController implements Action {
 	    	int voteId = Integer.parseInt(voteIdstr);
 	    	VoteService voteService = new VoteServiceImpl();
 	    	
-	    	VoteRegisterDTO voteReg = voteService.getVoteRegFullById(voteId);
+	    	VoteRegisterDTO voteReg = voteService.getVoteRegFullById(voteId, true);
 	    	voteService.updateVoteStatus(voteReg);
 	    	
 //	    	request.setAttribute("vote", voteReg); --ajax할때 쓸수 없어서 json을 던짐
@@ -74,6 +73,7 @@ public class AdminVoteFormController implements Action {
 			        JSONObject optObj = new JSONObject();
 			        optObj.put("movieId", opt.getMovieId());
 			        optObj.put("movieTitle", opt.getMovieTitle());
+					optObj.put("movieDeleted", opt.getMovieDeleted());
 			        
 			        jsonOptList.put(optObj); 
 			    }

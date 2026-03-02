@@ -18,7 +18,7 @@
 
 			<id property="movieId" column="movieId" />
 			<result property="voteId" column="voteId" />
-
+			<result property="movieDeleted" column="movieDeleted" />
 			<result property="movieTitle" column="movieTitle" />
 			<result property="movieReleaseDate"
 				column="movieReleaseDate" />
@@ -29,76 +29,85 @@
 
 	</resultMap>
 	<insert id="vrecIn" parameterType="voterecord">
-		INSERT INTO vote_record
-		values(recordIdSeq.nextval, sysdate, #{memNo}, #{voteId},
-		#{movieId}, #{voteCommentText})
+		INSERT INTO vote_record 
+		(recordId, recordCreatedDate, memNo, voteId, movieId, voteCommentText) 
+		VALUES (recordIdSeq.NEXTVAL, SYSDATE, #{memNo}, #{voteId}, #{movieId, jdbcType=INTEGER}, #{voteCommentText, jdbcType=VARCHAR})
 	</insert>
 
 	<select id="vrecResult" resultType="voteresult"
 		parameterType="int">
 		SELECT
-		    #{voteId} as voteId,
-		    r.movieId,
-		    
-		    r.count,
-		    r.totalVoterCount,
-		    ROUND(r.count * 100.0 / r.totalCount, 1) AS percentage,
-		    RANK() OVER (ORDER BY r.count DESC) AS rank,
-		    m.movieTitle as movieTitle
-		
+			#{voteId} as voteId,
+			r.movieId,
+			r.count,
+			r.totalVoterCount,
+			ROUND(r.count * 100.0 / NULLIF(r.totalCount, 0), 1) AS percentage, -- 0 나누기 방지
+			RANK() OVER (ORDER BY r.count DESC) AS rank,
+			CASE 
+				WHEN r.movieDeleted = 1 THEN r.movieTitleBackup || ' (삭제된 영화)'
+				WHEN m.movieTitle IS NOT NULL THEN m.movieTitle
+				ELSE '정보 없음'
+			END as movieTitle
 		FROM (
-		    SELECT
-		        movieId,
-		        count,
-		        SUM(count) OVER() AS totalCount,
-		        SUM(voterCnt) OVER() AS totalVoterCount
-		    FROM (
-		        SELECT
-		            movieId,
-		            COUNT(*) AS count,
-		            COUNT(DISTINCT memNo) AS voterCnt
-		        FROM vote_record
-		        WHERE voteId = #{voteId}
-		        GROUP BY movieId
-		    )
+			SELECT
+				movieId,
+				movieDeleted,
+				movieTitleBackup,
+				count,
+				SUM(count) OVER() AS totalCount,
+				SUM(voterCnt) OVER() AS totalVoterCount
+			FROM (
+				SELECT
+					movieId,
+					movieTitleBackup, -- 삭제된 영화 구분을 위해 추가
+					MAX(movieDeleted) as movieDeleted,
+					COUNT(*) AS count,
+					COUNT(DISTINCT memNo) AS voterCnt
+				FROM vote_record
+				WHERE voteId = #{voteId}
+				GROUP BY movieId, movieTitleBackup -- 두 컬럼으로 그룹화
+			)
 		) r
-		
-		JOIN movie m
-		ON r.movieId = m.movieId
+		LEFT JOIN movie m ON r.movieId = m.movieId
 
 	</select>
 
 	<select id="vregList" resultType="voteregister">
 		SELECT * FROM (
-        SELECT ROWNUM AS rnum, T.* FROM (
-            SELECT 
-                voteId, voteTitle, voteContent, 
-                TO_CHAR(voteStartDate,'YYYY-MM-DD') AS voteStartDate,
-                TO_CHAR(voteEndDate,'YYYY-MM-DD') AS voteEndDate,
-                voteStatus
-            FROM vote_register
-	            <where>
-	                <if test="filter == 'ACTIVE'">
-	                    AND TRUNC(SYSDATE) BETWEEN voteStartDate AND voteEndDate
-	                </if>
-	                <if test="filter == 'READY'">
-	                    AND TRUNC(SYSDATE) &lt; voteStartDate
-	                </if>
-	                <if test="filter == 'ENDED'">
-	                    AND TRUNC(SYSDATE) &gt; voteEndDate
-	                </if>
-	            </where>
-            	<choose>
-	                <when test="sortCol == 'startDate'">ORDER BY voteStartDate ${sortDir}</when> <!--sortDir은 asc, desc-->
-	                <when test="sortCol == 'endDate'">ORDER BY voteEndDate ${sortDir}</when>
-	                <when test="sortCol == 'status'">ORDER BY voteStatus ${sortDir}</when>
-	                <when test="sortCol == 'voteId'">ORDER BY voteId ${sortDir}</when> 
-	                <otherwise>ORDER BY voteId DESC</otherwise>
-	            </choose>
-	        ) T
-	        WHERE ROWNUM &lt;= #{endrow}
-	    )
-	    WHERE rnum &gt;= #{startrow}
+			SELECT ROWNUM AS rnum, T.* FROM (
+				SELECT 
+					voteId, voteTitle, voteContent, 
+					TO_CHAR(voteStartDate,'YYYY-MM-DD') AS voteStartDate,
+					TO_CHAR(voteEndDate,'YYYY-MM-DD') AS voteEndDate,
+					voteStatus,
+					-- [추가] movieDeleted가 0인 유효한 선택지 개수만 카운트
+					(SELECT COUNT(*) 
+					FROM vote_option 
+					WHERE voteId = vr.voteId 
+					AND movieDeleted = 0) AS validOptionCount
+				FROM vote_register vr
+				<where>
+					<if test="filter == 'ACTIVE'">
+						AND TRUNC(SYSDATE) BETWEEN voteStartDate AND voteEndDate
+					</if>
+					<if test="filter == 'READY'">
+						AND TRUNC(SYSDATE) &lt; voteStartDate
+					</if>
+					<if test="filter == 'ENDED'">
+						AND TRUNC(SYSDATE) &gt; voteEndDate
+					</if>
+				</where>
+				<choose>
+					<when test="sortCol == 'startDate'">ORDER BY voteStartDate ${sortDir}</when>
+					<when test="sortCol == 'endDate'">ORDER BY voteEndDate ${sortDir}</when>
+					<when test="sortCol == 'status'">ORDER BY voteStatus ${sortDir}</when>
+					<when test="sortCol == 'voteId'">ORDER BY voteId ${sortDir}</when> 
+					<otherwise>ORDER BY voteId DESC</otherwise>
+				</choose>
+			) T
+			WHERE ROWNUM &lt;= #{endrow}
+		)
+		WHERE rnum &gt;= #{startrow}
 
 	</select>
 
@@ -114,38 +123,73 @@
 	</select>
 
 	<select id="vrecRecordMemno" resultType="voterecord">
-		select * from
-		vote_record where memNo=#{memNo} and voteId=#{voteId}
+		SELECT 
+        r.*,
+        CASE 
+            WHEN r.movieDeleted = 1 THEN r.movieTitleBackup || ' (삭제된 영화)'
+            ELSE m.movieTitle 
+        END AS movieTitle
+		FROM vote_record r
+		LEFT JOIN movie m ON r.movieId = m.movieId
+		WHERE r.memNo = #{memNo} AND r.voteId = #{voteId}
 	</select>
-
 
 	<update id="vrecUpdate">
 		update vote_record set recordCreatedDate=sysdate,
 		voteCommentText=#{voteCommentText} where memNo=#{memNo} and voteId =#{voteId}
 	</update>
 
+<!-- movieID null 인 레지스터는 포함되지 않을 때 쓰는 쿼리 -->
 	<select id="vregFullList" resultMap="voteRegisterMap">
 
 		SELECT
-		vr.voteId,
-		vr.voteTitle,
-		vr.voteContent,
-		TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
-		TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
-		vr.voteStatus,
-
-		vo.movieId,
-
-		m.movieTitle,
-		TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
-		m.moviePosterPath
-
+			vr.voteId,
+			vr.voteTitle,
+			vr.voteContent,
+			TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
+			TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
+			vr.voteStatus,
+			vo.movieId,
+			m.movieTitle,
+			TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
+			m.moviePosterPath
 		FROM vote_register vr
 		JOIN vote_option vo ON vr.voteId = vo.voteId
 		JOIN movie m ON vo.movieId = m.movieId
+		WHERE vr.voteId IN (
+			-- [핵심] 유효한 선택지가 2개 이상인 투표 ID만 추출
+			SELECT voteId 
+			FROM vote_option 
+			WHERE movieDeleted = 0 
+			GROUP BY voteId 
+			HAVING COUNT(*) >= 2
+		)
+		AND vo.movieDeleted = 0
+		ORDER BY vr.voteId, vo.optionId
 
-		ORDER BY vr.voteId, vo.movieId
-
+	</select>
+<!-- movieID null 인 레지스터도 포함하고 싶을 때 쓰는 쿼리 -->
+	<select id="vregFullListWithNull" resultMap="voteRegisterMap">
+		SELECT
+			vr.voteId,
+			vr.voteTitle,
+			vr.voteContent,
+			TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
+			TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
+			vr.voteStatus,
+			vo.movieId,
+			vo.optionId, -- 중복 방지를 위해 PK인 optionId를 가져오는 것이 좋습니다.
+			-- 영화가 삭제된 경우 백업된 제목을 사용
+			CASE 
+				WHEN vo.movieDeleted = 1 THEN vo.movieTitleBackup || ' (삭제됨)'
+				ELSE m.movieTitle 
+			END AS movieTitle,
+			TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
+			m.moviePosterPath
+		FROM vote_register vr
+		LEFT JOIN vote_option vo ON vr.voteId = vo.voteId
+		LEFT JOIN movie m ON vo.movieId = m.movieId -- LEFT JOIN으로 변경
+		ORDER BY vr.voteId DESC, vo.optionId ASC
 	</select>
 
 	<select id="vrecListVoteId" resultType="voterecord">
@@ -161,22 +205,39 @@
 	<select id="vregFullByVoteId" resultMap="voteRegisterMap">
 
 		SELECT
-		    vr.voteId,
-		    vr.voteTitle,
-		    vr.voteContent,
-		    TO_CHAR(vr.voteStartDate,'YYYY-MM-DD') AS voteStartDate,
-		    TO_CHAR(vr.voteEndDate,'YYYY-MM-DD') AS voteEndDate,
-		    vr.voteStatus,
-		    vo.movieId,
-		    m.movieTitle,
-		    TO_CHAR(m.movieReleaseDate,'YYYY-MM-DD') AS movieReleaseDate,
-		    m.moviePosterPath
+			vr.voteId,
+			vr.voteTitle,
+			vr.voteContent,
+			TO_CHAR(vr.voteStartDate, 'YYYY-MM-DD') AS voteStartDate,
+			TO_CHAR(vr.voteEndDate, 'YYYY-MM-DD') AS voteEndDate,
+			vr.voteStatus,
+			vo.movieId,
+			vo.optionId, -- 중복 방지 및 식별을 위한 PK 추가
+			vo.movieDeleted,
+			-- 영화가 삭제되었다면 트리거로 백업한 제목을, 아니면 현재 제목을 출력
+			CASE 
+				WHEN vo.movieDeleted = 1 THEN vo.movieTitleBackup || ' (삭제된 영화)'
+				WHEN m.movieTitle IS NULL AND vo.movieId IS NOT NULL THEN '정보 없음'
+				ELSE m.movieTitle 
+			END AS movieTitle,
+			TO_CHAR(m.movieReleaseDate, 'YYYY-MM-DD') AS movieReleaseDate,
+			m.moviePosterPath
 		FROM vote_register vr
-		JOIN vote_option vo ON vr.voteId = vo.voteId
-		JOIN movie m ON vo.movieId = m.movieId
+		LEFT JOIN vote_option vo ON vr.voteId = vo.voteId
+		LEFT JOIN movie m ON vo.movieId = m.movieId 
 		WHERE vr.voteId = #{voteId}
-		ORDER BY vr.voteId, vo.movieId
+		ORDER BY vo.optionId ASC -- 옵션 추가 순서대로 정렬
 
+	</select>
+
+	<!-- 삭제된 영화 제외 -->
+	<select id="vregFullByVoteIdNotNull" resultMap="voteRegisterMap">
+		SELECT vr.voteId, vr.voteTitle, vr.voteContent, TO_CHAR(vr.voteStartDate, 'YYYY-MM-DD') AS voteStartDate, 
+		TO_CHAR(vr.voteEndDate, 'YYYY-MM-DD') AS voteEndDate, vr.voteStatus, vo.movieId, vo.optionId, m.movieTitle, 
+		TO_CHAR(m.movieReleaseDate, 'YYYY-MM-DD') AS movieReleaseDate, m.moviePosterPath 
+		FROM vote_register vr JOIN vote_option vo ON vr.voteId = vo.voteId JOIN movie m ON vo.movieId = m.movieId 
+		WHERE vr.voteId = #{voteId} AND vo.movieId IS NOT NULL 
+		ORDER BY vo.optionId ASC
 	</select>
 	
 	<insert id="vregIn" parameterType="voteregister">
@@ -211,6 +272,30 @@
 	
 	<select id="voteRegCount" parameterType="voteregister" resultType="int">
 	 select count(voteId) from vote_register
+	</select>
+
+	<select id="voteRecordListByMemNo" parameterType="int" resultType="voterecord">
+		SELECT 
+			vr.recordId, 
+			vr.recordCreatedDate, 
+			vr.memNo, 
+			vr.voteId, 
+			vr.movieId, 
+			vr.voteCommentText,
+			vr.movieDeleted,
+			vreg.voteTitle,
+			TO_CHAR(vreg.voteEndDate, 'YYYY-MM-DD') AS voteEndDate,
+			-- 영화가 삭제되었다면 백업 제목을, 아니면 현재 제목을 출력
+			CASE 
+				WHEN vr.movieDeleted = 1 THEN vr.movieTitleBackup || ' (삭제된 영화)'
+				ELSE m.movieTitle 
+			END AS movieTitle,
+			m.moviePosterPath
+		FROM VOTE_RECORD vr
+		LEFT JOIN VOTE_REGISTER vreg ON vr.voteId = vreg.voteId
+		LEFT JOIN MOVIE m ON vr.movieId = m.movieId
+		WHERE vr.memNo = #{memNo}
+		ORDER BY vr.recordCreatedDate DESC
 	</select>
 
 

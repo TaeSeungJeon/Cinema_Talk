@@ -304,7 +304,7 @@
                         </a>
                     </c:when>
                     <c:otherwise>
-                        <a href="voteDetail.do?voteId=${vote.voteId}" class="v-action-btn">
+                        <a href="voteCont.do?voteId=${vote.voteId}" class="v-action-btn">
                             ${vote.voteStatus eq 'ACTIVE' ? '투표하기 →' : '결과 보기 →'}
                         </a>
                     </c:otherwise>

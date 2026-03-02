@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Member.MemberDTO;
@@ -35,11 +37,10 @@ public class AdminVoteFormOkController implements Action {
 	MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
 	
 	if(mem == null || mem.getMemRole() != 1) {
-		String contextPath = request.getContextPath();
-		out.println("<script>");
-		out.println("alert('관리자로 다시 로그인 하세요!');");
-		out.println("location='" + contextPath + "/memberLogin.do';");
-		out.println("</script>");
+		JSONObject error = new JSONObject();
+		error.put("status", "LOGIN_REQUIRED");
+		out.print(error.toString());
+		out.flush();
 		return null;
 	}
 
@@ -54,9 +55,7 @@ public class AdminVoteFormOkController implements Action {
     String voteStartDate = request.getParameter("voteStartDate");
     String voteEndDate = request.getParameter("voteEndDate");
     String[] movieIds = request.getParameterValues("movieId");
-
-    boolean isSuccess = false;
-    String msg= " ";
+   
     
     try {
     	  List<VoteOptionDTO> voptList = new ArrayList<>();
@@ -83,29 +82,35 @@ public class AdminVoteFormOkController implements Action {
     		  vdto.setVoteId(Integer.parseInt(voteId));
     	  }
     	 
-    	 
+    	
     	    if ("add".equals(state) || (voteId == null || voteId.trim() == "")) {
-    	      isSuccess = voteService.insertVoteRegister(vdto);
-    	      msg = "투표가 성공적으로 추가되었습니다";
+    	      voteService.insertVoteRegister(vdto);
+    	    
     	    } else if ("edit".equals(state) && voteId != null) {
-    	     isSuccess = voteService.editVoteRegister(vdto);
-    	     msg = "투표가 성공적으로 수정되었습니다";
+    	      voteService.editVoteRegister(vdto);
+    	     
     	    } else if ("delete".equals(state) && voteId != null) {	
-    	     isSuccess = voteService.deleteVoteRegister(vdto);
-    	     msg = "투표가 성공적으로 삭제되었습니다";
+    	    voteService.deleteVoteRegister(vdto);
+    	     
     	    }
-    	   
-    	   
+
+			JSONObject success = new JSONObject();
+			success.put("status", "SUCCESS");
+    	   out.print(success.toString());
+			out.flush();
+			return null;
 
     	   
 	} catch (Exception e) {
 		e.printStackTrace();
+		JSONObject error = new JSONObject();
+		error.put("status", "ERROR");
+		out.print(error.toString());
+		out.flush();
+		return null;
 		
 	}
 
- 
-    return null;
-  
   }
 
 }

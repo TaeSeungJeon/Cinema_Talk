@@ -38,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Board.CommentsDTO" alias="cdto"/>
     <typeAlias type="DTO.Member.MyPage.MyPageDTO" alias="mypage" />
     <typeAlias type="DTO.Admin.AdminMovieDetailDTO" alias="adminmoviedetail" />
+    <typeAlias type="DTO.Admin.Stats.TrendDTO" alias="trend" />
     <typeAlias type="DTO.Admin.MovieSaveDTO" alias="moviesave" />
 	</typeAliases>
 
@@ -101,6 +102,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Board/AddFileMapper.xml"/>
 		<mapper resource="mappers/Board/BoardSearchMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMovieMapper.xml"/>
+		<mapper resource="mappers/Admin/AdminSummaryStatsMapper.xml"/>
+		<mapper resource="mappers/Admin/AdminMemberStatsMapper.xml"/>
+		<mapper resource="mappers/Admin/AdminBoardStatsMapper.xml"/>
+		<mapper resource="mappers/Admin/AdminVoteStatsMapper.xml"/>
 		<mapper resource="mappers/Home.xml"/>
 	</mappers>
 

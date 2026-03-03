@@ -7,6 +7,8 @@ import Controller.ActionForward;
 import DAO.Admin.AdminNoticeDAO;
 import DAO.Admin.AdminNoticeDAOImpl;
 import DTO.Board.BoardDTO;
+import Service.Admin.AdminNoticeService;
+import Service.Admin.AdminNoticeServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -16,7 +18,7 @@ public class AdminNoticeUpdateController implements Action {
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain; charset=UTF-8");
-
+        AdminNoticeService service = AdminNoticeServiceImpl.getInstance();
         int boardId = Integer.parseInt(request.getParameter("boardId"));
         String boardTitle = request.getParameter("boardTitle");
         String boardContent = request.getParameter("boardContent");
@@ -26,8 +28,7 @@ public class AdminNoticeUpdateController implements Action {
         dto.setBoardTitle(boardTitle);
         dto.setBoardContent(boardContent);
 
-        AdminNoticeDAO dao = AdminNoticeDAOImpl.getInstance();
-        int result = dao.updateNotice(dto);
+        int result = service.updateNotice(dto);
 
         PrintWriter out = response.getWriter();
         out.print(result > 0 ? "success" : "fail");

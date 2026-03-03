@@ -263,13 +263,12 @@ header {
 
 .container {
 	display: grid;
-	grid-template-columns: 1fr 300px;
-	gap: 30px;
+	grid-template-columns: 1fr 280px;
+	gap: 35px;
 	max-width: 1400px;
 	margin: 0 auto;
 	width: 100%;
 	position: relative;
-	z-index: 10;
 }
 
 .comm-header {
@@ -327,6 +326,8 @@ header {
 	transition: 0.3s;
 	position: relative;
 	padding-bottom: 32px;
+	max-height: 95px;
+	min-height: 95px;
 }
 
 .post-card:hover {
@@ -663,8 +664,21 @@ aside {
 }
 
 .notice-bar {
-	background: white; border-radius: 50px; padding: 15px 30px;
-	margin-bottom: 25px; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow-subtle);
+	background: white;
+	border-radius: 50px;
+	padding: 15px 30px;
+	margin-bottom: 25px;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	box-shadow: var(--shadow-subtle);
+}
+
+.write-modal{
+	max-height: 90vh;
+	overflow: auto;
+}
+
 
     </style>
 </head>
@@ -732,7 +746,8 @@ aside {
 						<div class="post-card-header">
 							<a class="post-author"
 								href="${pageContext.request.contextPath}/myPage.do?memNo=${board.memNo}">
-								${board.boardName} </a> <span class="post-boardtype"> <c:choose>
+								${board.boardName} </a>
+							<span class="post-boardtype"> <c:choose>
 									<c:when test="${board.boardType == 1}">자유게시판</c:when>
 									<c:when test="${board.boardType == 2}">영화 추천/후기</c:when>
 									<c:otherwise>전체</c:otherwise>

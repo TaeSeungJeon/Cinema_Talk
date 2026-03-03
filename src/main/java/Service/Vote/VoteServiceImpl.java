@@ -77,8 +77,11 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public VoteRegisterDTO getVoteRegFullById(int voteId) {
-		return this.vdao.getVoteRegFullById(voteId);
+	public VoteRegisterDTO getVoteRegFullById(int voteId, boolean includeDeletedMovie) {
+		if(includeDeletedMovie){
+			return this.vdao.getVoteRegFullById(voteId);
+		}
+		return this.vdao.getVoteRegFullByIdNoNullMovie(voteId);
 	}
 
 	@Override
@@ -179,6 +182,16 @@ return voteRegFullList.stream()
 	@Override
 	public int getRowCount(VoteRegisterDTO findVoteReg) {
 		return this.vdao.getRowCount(findVoteReg);
+	}
+
+	@Override
+	public List<VoteRegisterDTO> getTenRecentVotes() {
+		List<VoteRegisterDTO> voteList = this.vdao.getTenRecentVotes();
+		voteList.forEach(vote -> {
+			updateVoteStatus(vote);
+		});
+
+		return voteList;
 	}
 
 }

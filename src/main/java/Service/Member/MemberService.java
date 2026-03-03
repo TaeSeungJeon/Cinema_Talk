@@ -29,4 +29,6 @@ public interface MemberService {
 
 	List<MemberDTO> getMemberList();
 
+	List<MemberDTO> getMemberListByState(int memState);
+
 }

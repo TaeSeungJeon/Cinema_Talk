@@ -253,7 +253,6 @@
 		<span><i class="fa-solid fa-calendar"></i>${board.boardDate}</span>
 		<span><i class="fa-solid fa-eye"></i>조회 ${board.boardViewCount}</span>
 		<span><i class="fa-solid fa-heart"></i>좋아요 ${board.likeCount}</span>
-		<span><i class="fa-solid fa-comment"></i>댓글 ${board.commentCount}</span>
 	</div>
 </div>
 
@@ -281,13 +280,6 @@
 			<div>
 				<div class="nd-info-label">좋아요</div>
 				<div class="nd-info-value">${board.likeCount}</div>
-			</div>
-		</div>
-		<div class="nd-info-card">
-			<div class="nd-info-icon comments"><i class="fa-solid fa-comments"></i></div>
-			<div>
-				<div class="nd-info-label">댓글</div>
-				<div class="nd-info-value">${board.commentCount}</div>
 			</div>
 		</div>
 	</div>

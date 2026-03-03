@@ -51,7 +51,7 @@ public class BoardListController implements Action {
 
         int maxPage = (totalCount + limit - 1) / limit;
 
-// 10페이지 블록
+        // 10페이지 블록
         int startPage = ((page - 1) / 10) * 10 + 1;
         int endPage = startPage + 9;
         if (endPage > maxPage) endPage = maxPage;

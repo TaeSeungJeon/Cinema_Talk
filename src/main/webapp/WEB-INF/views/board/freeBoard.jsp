@@ -751,6 +751,8 @@ aside {
 									style="text-decoration: none; color: inherit;">
 									${board.boardTitle} </a>
 							</h2>
+
+							<%-- 글 내용 미리보기 부분 div --%>
 							<div class="post-preview">${board.boardContent}</div>
 						</div>
 					</article>

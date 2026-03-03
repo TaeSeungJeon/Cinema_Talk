@@ -134,3 +134,12 @@ start with 1
 increment by 1
 nocycle
 nocache;
+
+
+drop table VOTE_REGISTER;
+drop table VOTE_OPTION;
+drop table VOTE_RECORD;
+
+drop sequence optionidSeq;
+drop sequence recordIdSeq;
+drop sequence voteIdSeq;

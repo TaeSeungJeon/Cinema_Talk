@@ -20,7 +20,7 @@
 .font-select-trigger {
 	padding: 4px 28px 4px 8px;
 	border-radius: 8px;
-	border: 1px solid #e2e8f0;
+	border: 1px solid var(--border-color);
 	font-size: 0.85rem;
 	color: #374151;
 	cursor: pointer;
@@ -47,7 +47,7 @@
 	top: calc(100% + 4px);
 	left: 0;
 	background: white;
-	border: 1px solid #e2e8f0;
+	border: 1px solid var(--border-color);
 	border-radius: 12px;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 	z-index: 9999;
@@ -71,7 +71,7 @@
 }
 
 .font-option:hover {
-	background: #f1f5f9;
+	background: var(--bg-elevated);
 }
 
 .font-option.selected {
@@ -93,7 +93,7 @@
 body {
 	font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
 	background-color: var(--bg-color);
-	color: var(--text-main);
+	color: #374151;
 	margin: 0;
 	padding: 25px;
 	display: flex;
@@ -146,18 +146,18 @@ header {
 	align-items: center;
 	gap: 6px;
 	padding: 8px 14px;
-	background-color: #f1f3f5;
+	background-color: var(--bg-elevated);
 	border-radius: 20px;
 	cursor: pointer;
 	font-size: 0.85rem;
 	font-weight: 500;
-	color: #495057;
+	color: #94a3b8;
 	transition: background-color 0.2s ease;
 	user-select: none;
 }
 
 .custom-select-trigger:hover {
-	background-color: #e9ecef;
+	background-color: var(--bg-color);
 }
 
 .custom-select-trigger .arrow {
@@ -197,7 +197,7 @@ header {
 .custom-select-option {
 	padding: 8px 10px;
 	font-size: 0.85rem;
-	color: #495057;
+	color: #94a3b8;
 	cursor: pointer;
 	transition: all 0.15s ease;
 	text-align: center;
@@ -209,7 +209,7 @@ header {
 }
 
 .custom-select-option.selected {
-	background: #f0f0ff;
+	background: var(--bg-elevated);
 	color: #6366f1;
 	font-weight: 600;
 }
@@ -220,7 +220,7 @@ header {
 	outline: none;
 	flex: 1;
 	text-align: center;
-	color: #1f2937;
+	color: #374151;
 	font-size: 0.95rem;
 }
 
@@ -263,13 +263,12 @@ header {
 
 .container {
 	display: grid;
-	grid-template-columns: 1fr 300px;
-	gap: 30px;
+	grid-template-columns: 1fr 280px;
+	gap: 35px;
 	max-width: 1400px;
 	margin: 0 auto;
 	width: 100%;
 	position: relative;
-	z-index: 10;
 }
 
 .comm-header {
@@ -290,7 +289,7 @@ header {
 	border: 1px solid rgba(0, 0, 0, 0.03);
 	padding: 10px 24px;
 	border-radius: 50px;
-	color: var(--text-sub);
+	color: #94a3b8;
 	cursor: pointer;
 	transition: 0.3s;
 	font-weight: 600;
@@ -314,7 +313,7 @@ header {
 
 .post-boardtype {
 	margin-left: 6px;
-	color: var(--text-sub);
+	color: #94a3b8;
 	font-weight: 600;
 }
 
@@ -327,6 +326,8 @@ header {
 	transition: 0.3s;
 	position: relative;
 	padding-bottom: 32px;
+	max-height: 95px;
+	min-height: 95px;
 }
 
 .post-card:hover {
@@ -339,14 +340,14 @@ header {
 	align-items: center;
 	margin-bottom: 5px;
 	font-size: 0.85rem;
-	color: var(--text-sub);
+	color: #94a3b8;
 	justify-content: flex-start;
 	gap: 10px;
 }
 
 .post-author {
 	font-weight: 700;
-	color: var(--text-main);
+	color: #374151;
 	text-decoration: none;
 }
 
@@ -359,7 +360,7 @@ header {
 	gap: 12px;
 	font-weight: 500;
 	font-size: 0.8rem;
-	color: var(--text-sub);
+	color: #94a3b8;
 	position: absolute;
 	left: 127px;
 	bottom: 18px;
@@ -380,7 +381,7 @@ header {
 
 .post-content h2 a {
 	text-decoration: none;
-	color: var(--text-main);
+	color: #374151;
 }
 
 aside {
@@ -407,14 +408,14 @@ aside {
 }
 
 .widget-placeholder {
-	background: #f8fafc;
-	border: 2px dashed #e2e8f0;
+	background: var(--bg-elevated);
+	border: 2px dashed var(--border-color);
 	border-radius: 16px;
 	height: 100px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: #cbd5e1;
+	color: #94a3b8;
 	font-weight: 700;
 	font-size: 0.85rem;
 }
@@ -466,7 +467,7 @@ aside {
 	padding: 8px 16px;
 	border-radius: 50px;
 	background: white;
-	color: var(--text-sub);
+	color: #94a3b8;
 	text-decoration: none;
 	font-size: 0.85rem;
 	border: 1px solid rgba(0, 0, 0, 0.03);
@@ -475,8 +476,8 @@ aside {
 }
 
 .page-btn:hover {
-	background: #f8fafc;
-	color: var(--text-main);
+	background: var(--bg-elevated);
+	color: #374151;
 	transform: translateY(-2px);
 }
 
@@ -605,7 +606,7 @@ aside {
 .link-preview-thumb {
 	width: 140px;
 	min-width: 140px;
-	background: #f1f5f9;
+	background: var(--bg-elevated);
 	overflow: hidden;
 }
 
@@ -637,7 +638,7 @@ aside {
 
 .link-preview-desc {
 	font-size: 0.9rem;
-	color: #cbd5e1;
+	color: #94a3b8;
 	line-height: 1.5;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
@@ -661,6 +662,23 @@ aside {
 	text-decoration: none;
 	cursor: pointer;
 }
+
+.notice-bar {
+	background: white;
+	border-radius: 50px;
+	padding: 15px 30px;
+	margin-bottom: 25px;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	box-shadow: var(--shadow-subtle);
+}
+
+.write-modal{
+	max-height: 90vh;
+	overflow: auto;
+}
+
 
     </style>
 </head>
@@ -707,6 +725,12 @@ aside {
 					글쓰기</button>
 			</div>
 
+			<%-- 공지사항 --%>
+			<div class="notice-bar">
+		<span style="font-weight: 700; color: var(--accent-color);">📢
+			공지사항</span> <span style="color: #64748b;">신규 투표 기능 업데이트 안내 및 이용 가이드</span>
+		</div>
+
 			<nav class="filter-nav">
 				<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
 					class="filter-btn ${filter=='all' ? 'active' : ''}">전체보기</a> <a
@@ -722,7 +746,8 @@ aside {
 						<div class="post-card-header">
 							<a class="post-author"
 								href="${pageContext.request.contextPath}/myPage.do?memNo=${board.memNo}">
-								${board.boardName} </a> <span class="post-boardtype"> <c:choose>
+								${board.boardName} </a>
+							<span class="post-boardtype"> <c:choose>
 									<c:when test="${board.boardType == 1}">자유게시판</c:when>
 									<c:when test="${board.boardType == 2}">영화 추천/후기</c:when>
 									<c:otherwise>전체</c:otherwise>
@@ -751,6 +776,8 @@ aside {
 									style="text-decoration: none; color: inherit;">
 									${board.boardTitle} </a>
 							</h2>
+
+							<%-- 글 내용 미리보기 부분 div --%>
 							<div class="post-preview">${board.boardContent}</div>
 						</div>
 					</article>
@@ -935,496 +962,466 @@ aside {
 	<jsp:include page="/WEB-INF/views/home/homeFooter.jsp" />
 
 	<script>
-    (function () {
-
-        window.__CTX = window.__CTX || "${pageContext.request.contextPath}";
-        var CTX = window.__CTX;
-
-        // ===== 전역으로 필요한 함수들 (인라인 onclick/onmousedown 때문에) =====
-        window.openModal = function () {
-            var modal = document.getElementById('writeModal');
-            if (modal) modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        };
-
-        window.closeModal = function () {
-            var modal = document.getElementById('writeModal');
-            if (modal) modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        };
-
-        // ===== 상대시간 =====
-        function toRelativeTime(dateStr) {
-            if (!dateStr) return "";
-            var raw = (dateStr + "").trim();
-
-            var normalized = raw.replace(" ", "T");
-            if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(normalized)) normalized += ":00";
-            normalized = normalized.replace(/\.\d+$/, "");
-
-            var d = new Date(normalized);
-            if (isNaN(d)) return raw;
-
-            var diffMs = Date.now() - d.getTime();
-            var diffSec = Math.floor(diffMs / 1000);
-            var diffMin = Math.floor(diffSec / 60);
-            var diffHr  = Math.floor(diffMin / 60);
-            var diffDay = Math.floor(diffHr / 24);
-            var diffWeek = Math.floor(diffDay / 7);
-            var diffMonth = Math.floor(diffDay / 30);
-            var diffYear = Math.floor(diffDay / 365);
-
-            if (diffSec < 1) return "방금 전";
-            if (diffSec < 60) return diffSec + "초 전";
-            if (diffMin < 60) return diffMin + "분 전";
-            if (diffHr < 24) return diffHr + "시간 전";
-            if (diffDay < 7) return diffDay + "일 전";
-            if (diffWeek < 4) return diffWeek + "주 전";
-            if (diffMonth < 12) return diffMonth + "달 전";
-            return diffYear + "년 전";
-        }
-
-        var times = document.querySelectorAll(".post-time");
-        for (var i = 0; i < times.length; i++) {
-            var t = times[i].getAttribute("data-time");
-            times[i].textContent = toRelativeTime(t);
-        }
-
-        // ===== 에디터 =====
-        var editor = document.getElementById("boardContentEditor");
-
-        // selection 저장/복원
-        var savedRange = null;
-
-        function saveSelection() {
-            if (!editor) return;
-            var sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
-
-            var range = sel.getRangeAt(0);
-            if (editor.contains(range.commonAncestorContainer)) {
-                savedRange = range.cloneRange();
-            } else {
-                savedRange = null;
-            }
-        }
-        window.saveSelection = saveSelection;
-
-        function restoreSelection() {
-            if (!savedRange) return false;
-            var sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(savedRange);
-            return true;
-        }
-
-        // ===== B/I/U =====
-        window.execCmd = function (cmd) {
-            if (!editor) return;
-            editor.focus();
-
-            var sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) return;
-
-            var r0 = sel.getRangeAt(0);
-            if (!editor.contains(r0.commonAncestorContainer)) {
-                var r = document.createRange();
-                r.selectNodeContents(editor);
-                r.collapse(false);
-                sel.removeAllRanges();
-                sel.addRange(r);
-            }
-            document.execCommand(cmd, false, null);
-            saveSelection();
-        };
-
-        // ===== 폰트 드롭다운 =====
-        var fontWrapper  = document.getElementById("fontSelectWrapper");
-        var fontDropdown = document.getElementById("fontSelectDropdown");
-        var fontLabel    = document.getElementById("fontSelectLabel");
-
-        function closeFontDropdown() {
-            if (fontDropdown) fontDropdown.classList.remove("open");
-        }
-
-        function toggleFontDropdown() {
-            saveSelection();
-            if (!fontDropdown) return;
-            fontDropdown.classList.toggle("open");
-        }
-        window.toggleFontDropdown = toggleFontDropdown;
-
-        // 커서만 있을 때 "이후 입력"에만 폰트 적용: ZWSP span 생성
-        function ensureTypingFont(fontName) {
-            if (!editor) return;
-
-            editor.focus();
-            // editor 안 커서가 없으면 끝으로
-            var sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) return;
-
-            var range = sel.getRangeAt(0);
-            if (!editor.contains(range.commonAncestorContainer)) return;
-
-            // 커서 위치에 span 삽입 + ZWSP
-            var span = document.createElement("span");
-            span.style.fontFamily = "'" + fontName + "', sans-serif";
-
-            var zwsp = document.createTextNode("\u200B");
-            span.appendChild(zwsp);
-
-            range.insertNode(span);
-
-            // caret을 span 안(ZWSP 뒤)로 이동
-            var r = document.createRange();
-            r.setStart(zwsp, 1);
-            r.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(r);
-
-            saveSelection();
-        }
-
-        function applyFontToSelection(fontName) {
-            if (!editor) return;
-
-            editor.focus();
-            restoreSelection();
-
-            var sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) {
-                editor.dataset.currentFont = fontName;
-                return;
-            }
-
-            var range = sel.getRangeAt(0);
-
-            // editor 밖이면 이후 입력용만 저장
-            if (!editor.contains(range.commonAncestorContainer)) {
-                editor.dataset.currentFont = fontName;
-                return;
-            }
-
-            // 커서만 있으면: 기존 글은 건드리지 않고 이후 입력만 적용
-            if (range.collapsed) {
-                editor.dataset.currentFont = fontName;
-                ensureTypingFont(fontName);
-                closeFontDropdown();
-                return;
-            }
-
-            // 선택 영역만 span으로 감싸기
-            var span = document.createElement("span");
-            span.style.fontFamily = "'" + fontName + "', sans-serif";
-
-            try {
-                range.surroundContents(span);
-            } catch (e) {
-                var contents = range.extractContents();
-                span.appendChild(contents);
-                range.insertNode(span);
-            }
-
-            // caret span 뒤로
-            range.setStartAfter(span);
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
-
-            editor.dataset.currentFont = fontName;
-            saveSelection();
-        }
-
-
-        var fontOptions = document.querySelectorAll(".font-option");
-        for (var j = 0; j < fontOptions.length; j++) {
-            (function (optionEl) {
-                optionEl.addEventListener("pointerdown", function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    var fontName = optionEl.getAttribute("data-font");
-                    if (!fontName) return;
-
-                    if (fontLabel) {
-                        fontLabel.textContent = optionEl.textContent;
-                        fontLabel.style.fontFamily = optionEl.style.fontFamily;
-                    }
-
-                    for (var k = 0; k < fontOptions.length; k++) fontOptions[k].classList.remove("selected");
-                    optionEl.classList.add("selected");
-
-                    applyFontToSelection(fontName);
-                    closeFontDropdown();
-                });
-            })(fontOptions[j]);
-        }
-
-        // 바깥 클릭 시 닫기
-        document.addEventListener("pointerdown", function (e) {
-            if (fontWrapper && !fontWrapper.contains(e.target)) closeFontDropdown();
-        });
-
-
-        if (editor) {
-            editor.addEventListener("mouseup", saveSelection);
-            editor.addEventListener("keyup", saveSelection);
-            editor.addEventListener("focus", saveSelection);
-
-            editor.addEventListener("input", function () {
-                // ZWSP 제거
-                var walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
-                var node;
-                while ((node = walker.nextNode())) {
-                    if (node.nodeValue && node.nodeValue.indexOf("\u200B") !== -1) {
-                        node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
-                    }
-                }
-            });
-        }
-
-        var linkTrigger = document.getElementById("linkTrigger");
-        var previewArea = document.getElementById("linkPreviewArea");
-        var currentPreviewUrl = "";
-
-        function escapeHtml(str) {
-            if (!str) return "";
-            return (str + "")
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;")
-                .replaceAll("'", "&#039;");
-        }
-
-        function insertTextAtCursor(el, text) {
-            el.focus();
-            var sel = window.getSelection();
-            if (!sel || !sel.rangeCount) return;
-
-            var range = sel.getRangeAt(0);
-            range.deleteContents();
-
-            var textNode = document.createTextNode(text);
-            range.insertNode(textNode);
-            range.setStartAfter(textNode);
-            range.collapse(true);
-
-            sel.removeAllRanges();
-            sel.addRange(range);
-            saveSelection();
-        }
-
-        async function fetchLinkPreview(url) {
-            var res = await fetch(CTX + "/linkPreview.do?url=" + encodeURIComponent(url));
-            return await res.json();
-        }
-
-        function renderPreviewCard(data) {
-            if (!previewArea) return;
-            previewArea.style.display = "block";
-
-            var title = data.title || data.url;
-            var desc = data.description || "";
-            var img = data.image || "";
-
-            var thumbHtml = img
-                ? '<div class="link-preview-thumb"><img src="' + img + '" alt=""></div>'
-                : '<div class="link-preview-thumb"></div>';
-
-            previewArea.innerHTML =
-                '<div class="link-preview-card" id="linkPreviewCard">' +
-                thumbHtml +
-                '<div class="link-preview-body">' +
-                '<div class="link-preview-title">' + escapeHtml(title) + '</div>' +
-                '<div class="link-preview-desc">' + escapeHtml(desc) + '</div>' +
-                '<div class="link-preview-url">' + escapeHtml(data.url) + '</div>' +
-                '</div>' +
-                '</div>';
-
-            document.getElementById("linkPreviewCard").onclick = function () {
-                window.open(data.url, "_blank");
-            };
-        }
-
-        function clearPreviewCard() {
-            if (!previewArea) return;
-            previewArea.style.display = "none";
-            previewArea.innerHTML = "";
-            currentPreviewUrl = "";
-        }
-
-        async function onClickLink() {
-            if (!editor) return;
-
-            var url = prompt("붙여넣을 URL을 입력하세요");
-            if (!url) return;
-
-            insertTextAtCursor(editor, "\n" + url.trim() + "\n");
-
-            var normalized = url.trim().startsWith("http") ? url.trim() : "https://" + url.trim();
-            if (currentPreviewUrl === normalized) return;
-
-            try {
-                var data = await fetchLinkPreview(normalized);
-                if (!data || !data.ok) {
-                    clearPreviewCard();
-                    return;
-                }
-                currentPreviewUrl = data.url;
-                renderPreviewCard(data);
-            } catch (e) {
-                clearPreviewCard();
-            }
-        }
-        if (linkTrigger) linkTrigger.addEventListener("click", onClickLink);
-
-        /* 파일 첨부 */
-        (function () {
-            var trigger = document.getElementById('attachTrigger');
-            var input   = document.getElementById('attachInput');
-            var name    = document.getElementById('attachName');
-
-            if (!trigger || !input || !name) return;
-
-            trigger.addEventListener('click', function () {
-                // 파일 선택창 열기 전에 현재 커서 위치 저장
-                if (typeof saveSelection === "function") saveSelection();
-                input.click();
-            });
-
-            function insertNodeAtCursor(node) {
-                if (!editor) return;
-
-                editor.focus();
-
-                // 파일 선택창 갔다 오면 selection이 날아가므로 복원 시도
-                if (typeof restoreSelection === "function") {
-                    restoreSelection();
-                }
-
-                var sel = window.getSelection();
-                if (!sel || sel.rangeCount === 0) {
-                    // selection이 아예 없으면 에디터 끝에 추가
-                    editor.appendChild(node);
-                    return;
-                }
-
-                var range = sel.getRangeAt(0);
-
-                // editor 밖 selection이면 끝으로
-                if (!editor.contains(range.commonAncestorContainer)) {
-                    range = document.createRange();
-                    range.selectNodeContents(editor);
-                    range.collapse(false);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-
-                range.insertNode(node);
-
-                // 커서를 node 뒤로 이동
-                range.setStartAfter(node);
-                range.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(range);
-
-                if (typeof saveSelection === "function") saveSelection();
-            }
-
-            input.addEventListener('change', function () {
-                if (!input.files || input.files.length === 0) {
-                    name.textContent = '';
-                    return;
-                }
-
-                var files = Array.from(input.files);
-                name.textContent = files.map(function (f) { return f.name; }).join(', ');
-
-                // 이미지 파일만 editor에 삽입
-                files.forEach(function (f) {
-                    if (!f.type || !f.type.startsWith("image/")) return;
-
-                    var url = URL.createObjectURL(f);
-
-                    var img = document.createElement("img");
-                    img.src = url;
-                    img.alt = f.name || "image";
-                    img.className = "editor-inline-image";
-                    img.onload = function () {
-                        URL.revokeObjectURL(url);
-                    };
-
-                    var wrapper = document.createElement("div");
-                    wrapper.appendChild(img);
-
-                    insertNodeAtCursor(wrapper);
-                    insertNodeAtCursor(document.createElement("br"));
-                });
-
-                // 같은 파일을 다시 선택할 수 있게 input 초기화
-                input.value = "";
-            });
-        })();
-
-        // ===== 폼 제출 =====
-        var writeForm = document.querySelector(".write-form");
-        if (writeForm && editor) {
-            writeForm.addEventListener("submit", function () {
-                document.getElementById("boardContent").value = editor.innerHTML;
-            });
-        }
-
-    })();
-    (function() {
-        const customSelect = document.getElementById('board-custom-select');
-        const trigger = customSelect.querySelector('.custom-select-trigger');
-        const options = customSelect.querySelectorAll('.custom-select-option');
-        const hiddenSelect = document.getElementById('board-search-option');
-        const triggerText = trigger.querySelector('span:first-child');
-
-        // 드롭다운 토글
-        trigger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            customSelect.classList.toggle('open');
-        });
-
-        // 옵션 선택
-        options.forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const value = this.dataset.value;
-                const text = this.textContent;
-
-                // 선택 상태 업데이트
-                options.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-
-                // 트리거 텍스트 변경
-                triggerText.textContent = text;
-
-                // 숨겨진 select 값 변경
-                hiddenSelect.value = value;
-
-                // 드롭다운 닫기
-                customSelect.classList.remove('open');
-            });
-        });
-
-        // 외부 클릭 시 드롭다운 닫기
-        document.addEventListener('click', function() {
-            customSelect.classList.remove('open');
-        });
-    })();
-
-	// 뒤로가기(bfcache) 감지 시 강제 새로고침
-	window.addEventListener('pageshow', function(e) {
-		if (e.persisted) {
-			window.location.reload();
-		}
-	});
-
-</script>
-
+		(function () {
+			window.__CTX = window.__CTX || "${pageContext.request.contextPath}";
+			var CTX = window.__CTX;
+
+			// ===== 전역 함수(모달) =====
+			window.openModal = function () {
+				var modal = document.getElementById('writeModal');
+				if (modal) modal.style.display = 'flex';
+				document.body.style.overflow = 'hidden';
+			};
+
+			window.closeModal = function () {
+				var modal = document.getElementById('writeModal');
+				if (modal) modal.style.display = 'none';
+				document.body.style.overflow = 'auto';
+			};
+
+			// ===== 상대시간 =====
+			function toRelativeTime(dateStr) {
+				if (!dateStr) return "";
+				var raw = (dateStr + "").trim();
+
+				var normalized = raw.replace(" ", "T");
+				if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(normalized)) normalized += ":00";
+				normalized = normalized.replace(/\.\d+$/, "");
+
+				var d = new Date(normalized);
+				if (isNaN(d)) return raw;
+
+				var diffMs = Date.now() - d.getTime();
+				var diffSec = Math.floor(diffMs / 1000);
+				var diffMin = Math.floor(diffSec / 60);
+				var diffHr  = Math.floor(diffMin / 60);
+				var diffDay = Math.floor(diffHr / 24);
+				var diffWeek = Math.floor(diffDay / 7);
+				var diffMonth = Math.floor(diffDay / 30);
+				var diffYear = Math.floor(diffDay / 365);
+
+				if (diffSec < 1) return "방금 전";
+				if (diffSec < 60) return diffSec + "초 전";
+				if (diffMin < 60) return diffMin + "분 전";
+				if (diffHr < 24) return diffHr + "시간 전";
+				if (diffDay < 7) return diffDay + "일 전";
+				if (diffWeek < 4) return diffWeek + "주 전";
+				if (diffMonth < 12) return diffMonth + "달 전";
+				return diffYear + "년 전";
+			}
+
+			var times = document.querySelectorAll(".post-time");
+			for (var i = 0; i < times.length; i++) {
+				var t = times[i].getAttribute("data-time");
+				times[i].textContent = toRelativeTime(t);
+			}
+
+			// ===== 에디터 =====
+			var editor = document.getElementById("boardContentEditor");
+			var savedRange = null;
+
+			function saveSelection() {
+				if (!editor) return;
+				var sel = window.getSelection();
+				if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
+
+				var range = sel.getRangeAt(0);
+				if (editor.contains(range.commonAncestorContainer)) {
+					savedRange = range.cloneRange();
+				} else {
+					savedRange = null;
+				}
+			}
+			window.saveSelection = saveSelection;
+
+			function restoreSelection() {
+				if (!savedRange) return false;
+				var sel = window.getSelection();
+				sel.removeAllRanges();
+				sel.addRange(savedRange);
+				return true;
+			}
+
+			// ===== B/I/U =====
+			window.execCmd = function (cmd) {
+				if (!editor) return;
+				editor.focus();
+
+				var sel = window.getSelection();
+				if (!sel || sel.rangeCount === 0) return;
+
+				var r0 = sel.getRangeAt(0);
+				if (!editor.contains(r0.commonAncestorContainer)) {
+					var r = document.createRange();
+					r.selectNodeContents(editor);
+					r.collapse(false);
+					sel.removeAllRanges();
+					sel.addRange(r);
+				}
+				document.execCommand(cmd, false, null);
+				saveSelection();
+			};
+
+			// ===== 폰트 드롭다운(네 기존 로직 유지) =====
+			var fontWrapper  = document.getElementById("fontSelectWrapper");
+			var fontDropdown = document.getElementById("fontSelectDropdown");
+			var fontLabel    = document.getElementById("fontSelectLabel");
+
+			function closeFontDropdown() {
+				if (fontDropdown) fontDropdown.classList.remove("open");
+			}
+
+			window.toggleFontDropdown = function () {
+				saveSelection();
+				if (!fontDropdown) return;
+				fontDropdown.classList.toggle("open");
+			};
+
+			function ensureTypingFont(fontName) {
+				if (!editor) return;
+				editor.focus();
+
+				var sel = window.getSelection();
+				if (!sel || sel.rangeCount === 0) return;
+
+				var range = sel.getRangeAt(0);
+				if (!editor.contains(range.commonAncestorContainer)) return;
+
+				var span = document.createElement("span");
+				span.style.fontFamily = "'" + fontName + "', sans-serif";
+
+				var zwsp = document.createTextNode("\u200B");
+				span.appendChild(zwsp);
+				range.insertNode(span);
+
+				var r = document.createRange();
+				r.setStart(zwsp, 1);
+				r.collapse(true);
+				sel.removeAllRanges();
+				sel.addRange(r);
+
+				saveSelection();
+			}
+
+			function applyFontToSelection(fontName) {
+				if (!editor) return;
+
+				editor.focus();
+				restoreSelection();
+
+				var sel = window.getSelection();
+				if (!sel || sel.rangeCount === 0) {
+					editor.dataset.currentFont = fontName;
+					return;
+				}
+
+				var range = sel.getRangeAt(0);
+
+				if (!editor.contains(range.commonAncestorContainer)) {
+					editor.dataset.currentFont = fontName;
+					return;
+				}
+
+				if (range.collapsed) {
+					editor.dataset.currentFont = fontName;
+					ensureTypingFont(fontName);
+					closeFontDropdown();
+					return;
+				}
+
+				var span = document.createElement("span");
+				span.style.fontFamily = "'" + fontName + "', sans-serif";
+
+				try {
+					range.surroundContents(span);
+				} catch (e) {
+					var contents = range.extractContents();
+					span.appendChild(contents);
+					range.insertNode(span);
+				}
+
+				range.setStartAfter(span);
+				range.collapse(true);
+				sel.removeAllRanges();
+				sel.addRange(range);
+
+				editor.dataset.currentFont = fontName;
+				saveSelection();
+			}
+
+			var fontOptions = document.querySelectorAll(".font-option");
+			for (var j = 0; j < fontOptions.length; j++) {
+				(function (optionEl) {
+					optionEl.addEventListener("pointerdown", function (e) {
+						e.preventDefault();
+						e.stopPropagation();
+
+						var fontName = optionEl.getAttribute("data-font");
+						if (!fontName) return;
+
+						if (fontLabel) {
+							fontLabel.textContent = optionEl.textContent;
+							fontLabel.style.fontFamily = optionEl.style.fontFamily;
+						}
+
+						for (var k = 0; k < fontOptions.length; k++) fontOptions[k].classList.remove("selected");
+						optionEl.classList.add("selected");
+
+						applyFontToSelection(fontName);
+						closeFontDropdown();
+					});
+				})(fontOptions[j]);
+			}
+
+			document.addEventListener("pointerdown", function (e) {
+				if (fontWrapper && !fontWrapper.contains(e.target)) closeFontDropdown();
+			});
+
+			if (editor) {
+				editor.addEventListener("mouseup", saveSelection);
+				editor.addEventListener("keyup", saveSelection);
+				editor.addEventListener("focus", saveSelection);
+
+				editor.addEventListener("input", function () {
+					var walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+					var node;
+					while ((node = walker.nextNode())) {
+						if (node.nodeValue && node.nodeValue.indexOf("\u200B") !== -1) {
+							node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
+						}
+					}
+				});
+			}
+
+			// ===== 링크 프리뷰(네 기존 로직 유지) =====
+			var linkTrigger = document.getElementById("linkTrigger");
+			var previewArea = document.getElementById("linkPreviewArea");
+			var currentPreviewUrl = "";
+
+			function escapeHtml(str) {
+				if (!str) return "";
+				return (str + "")
+						.replaceAll("&", "&amp;")
+						.replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;")
+						.replaceAll("\"", "&quot;")
+						.replaceAll("'", "&#039;");
+			}
+
+			function insertTextAtCursor(el, text) {
+				el.focus();
+				var sel = window.getSelection();
+				if (!sel || !sel.rangeCount) return;
+
+				var range = sel.getRangeAt(0);
+				range.deleteContents();
+
+				var textNode = document.createTextNode(text);
+				range.insertNode(textNode);
+				range.setStartAfter(textNode);
+				range.collapse(true);
+
+				sel.removeAllRanges();
+				sel.addRange(range);
+				saveSelection();
+			}
+
+			async function fetchLinkPreview(url) {
+				var res = await fetch(CTX + "/linkPreview.do?url=" + encodeURIComponent(url));
+				return await res.json();
+			}
+
+			function renderPreviewCard(data) {
+				if (!previewArea) return;
+				previewArea.style.display = "block";
+
+				var title = data.title || data.url;
+				var desc = data.description || "";
+				var img = data.image || "";
+
+				var thumbHtml = img
+						? '<div class="link-preview-thumb"><img src="' + img + '" alt=""></div>'
+						: '<div class="link-preview-thumb"></div>';
+
+				previewArea.innerHTML =
+						'<div class="link-preview-card" id="linkPreviewCard">' +
+						thumbHtml +
+						'<div class="link-preview-body">' +
+						'<div class="link-preview-title">' + escapeHtml(title) + '</div>' +
+						'<div class="link-preview-desc">' + escapeHtml(desc) + '</div>' +
+						'<div class="link-preview-url">' + escapeHtml(data.url) + '</div>' +
+						'</div>' +
+						'</div>';
+
+				document.getElementById("linkPreviewCard").onclick = function () {
+					window.open(data.url, "_blank");
+				};
+			}
+
+			function clearPreviewCard() {
+				if (!previewArea) return;
+				previewArea.style.display = "none";
+				previewArea.innerHTML = "";
+				currentPreviewUrl = "";
+			}
+
+			async function onClickLink() {
+				if (!editor) return;
+
+				var url = prompt("붙여넣을 URL을 입력하세요");
+				if (!url) return;
+
+				insertTextAtCursor(editor, "\n" + url.trim() + "\n");
+
+				var normalized = url.trim().startsWith("http") ? url.trim() : "https://" + url.trim();
+				if (currentPreviewUrl === normalized) return;
+
+				try {
+					var data = await fetchLinkPreview(normalized);
+					if (!data || !data.ok) { clearPreviewCard(); return; }
+					currentPreviewUrl = data.url;
+					renderPreviewCard(data);
+				} catch (e) {
+					clearPreviewCard();
+				}
+			}
+			if (linkTrigger) linkTrigger.addEventListener("click", onClickLink);
+
+			// ===== 파일 첨부 (수정된 버전: input.value="" 없음 + clone 교체) =====
+			(function () {
+				var trigger = document.getElementById('attachTrigger');
+				var input   = document.getElementById('attachInput');
+				var name    = document.getElementById('attachName');
+				if (!trigger || !input || !name) return;
+
+				trigger.addEventListener('click', function () {
+					if (typeof saveSelection === "function") saveSelection();
+					input.click();
+				});
+
+				function insertNodeAtCursor(node) {
+					if (!editor) return;
+					editor.focus();
+					restoreSelection();
+
+					var sel = window.getSelection();
+					if (!sel || sel.rangeCount === 0) { editor.appendChild(node); return; }
+
+					var range = sel.getRangeAt(0);
+					if (!editor.contains(range.commonAncestorContainer)) {
+						range = document.createRange();
+						range.selectNodeContents(editor);
+						range.collapse(false);
+						sel.removeAllRanges();
+						sel.addRange(range);
+					}
+
+					range.insertNode(node);
+					range.setStartAfter(node);
+					range.collapse(true);
+					sel.removeAllRanges();
+					sel.addRange(range);
+					saveSelection();
+				}
+
+				function bindFileInput(inp) {
+					inp.addEventListener('change', function () {
+						if (!inp.files || inp.files.length === 0) {
+							name.textContent = '';
+							return;
+						}
+
+						var files = Array.from(inp.files);
+						name.textContent = files.map(function (f) { return f.name; }).join(', ');
+
+						files.forEach(function (f) {
+							if (!f.type || !f.type.startsWith("image/")) return;
+
+							var url = URL.createObjectURL(f);
+							var img = document.createElement("img");
+							img.src = url;
+							img.alt = f.name || "image";
+							img.className = "editor-inline-image";
+							img.onload = function () {
+								setTimeout(function(){ URL.revokeObjectURL(url); }, 500);
+							};
+
+							var wrapper = document.createElement("div");
+							wrapper.appendChild(img);
+
+							insertNodeAtCursor(wrapper);
+							insertNodeAtCursor(document.createElement("br"));
+						});
+
+						// 같은 파일 재선택 UX를 위해 input 교체(파일 전송은 유지)
+						var newInput = inp.cloneNode(true);
+						inp.parentNode.replaceChild(newInput, inp);
+						input = newInput;
+						bindFileInput(newInput);
+					});
+				}
+
+				bindFileInput(input);
+			})();
+
+			// ===== 폼 제출: blob 미리보기 img 제거 후 저장 =====
+			var writeForm = document.querySelector(".write-form");
+			if (writeForm && editor) {
+				writeForm.addEventListener("submit", function () {
+					var cloned = editor.cloneNode(true);
+
+					cloned.querySelectorAll("img.editor-inline-image").forEach(function (img) {
+						var wrapper = img.closest("div");
+						if (wrapper && wrapper.childNodes.length === 1) wrapper.remove();
+						else img.remove();
+					});
+
+					document.getElementById("boardContent").value = cloned.innerHTML;
+				});
+			}
+
+		})(); // ✅ 여기서 한 번만 닫힘
+
+		// ===== 검색 커스텀 셀렉트(원래 코드 유지) =====
+		(function() {
+			const customSelect = document.getElementById('board-custom-select');
+			if (!customSelect) return;
+
+			const trigger = customSelect.querySelector('.custom-select-trigger');
+			const options = customSelect.querySelectorAll('.custom-select-option');
+			const hiddenSelect = document.getElementById('board-search-option');
+			const triggerText = trigger.querySelector('span:first-child');
+
+			trigger.addEventListener('click', function(e) {
+				e.stopPropagation();
+				customSelect.classList.toggle('open');
+			});
+
+			options.forEach(option => {
+				option.addEventListener('click', function(e) {
+					e.stopPropagation();
+					const value = this.dataset.value;
+					const text = this.textContent;
+
+					options.forEach(opt => opt.classList.remove('selected'));
+					this.classList.add('selected');
+
+					triggerText.textContent = text;
+					hiddenSelect.value = value;
+
+					customSelect.classList.remove('open');
+				});
+			});
+
+			document.addEventListener('click', function() {
+				customSelect.classList.remove('open');
+			});
+		})();
+
+		// 뒤로가기(bfcache) 감지 시 강제 새로고침
+		window.addEventListener('pageshow', function(e) {
+			if (e.persisted) window.location.reload();
+		});
+	</script>
 </body>
 </html>

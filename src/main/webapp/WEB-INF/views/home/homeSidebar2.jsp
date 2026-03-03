@@ -71,7 +71,7 @@
 
     async function loadHotPosts(limit) {
         try {
-            const res = await fetch(contextPath + '/hotBoard.do?limit=' + limit);
+            const res = await fetch(contextPath + '/hotBoard.do?limit=' + limit + '&t=' + new Date().getTime() + '&nocache=' + Math.random());
             const data = await res.json();
 
             hotData = data.items || [];
@@ -153,4 +153,29 @@
 
     applyExpandedUI();
     loadHotPosts(collapsedLimit);
+
+    // 페이지 로드 시 항상 최신 데이터 가져오기
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || performance.navigation.type === 2) {
+            const targetLimit = isExpanded ? expandedLimit : collapsedLimit;
+            loadHotPosts(targetLimit);
+        }
+    });
+
+    // 브라우저 뒤로가기/앞으로가기 감지
+    window.addEventListener('popstate', function() {
+        setTimeout(function() {
+            const targetLimit = isExpanded ? expandedLimit : collapsedLimit;
+            loadHotPosts(targetLimit);
+        }, 100);
+    });
+
+    // 페이지 포커스 시 즉시 새로고침
+    window.addEventListener('focus', function() {
+        const targetLimit = isExpanded ? expandedLimit : collapsedLimit;
+        loadHotPosts(targetLimit);
+    });
+
+
+
 </script>

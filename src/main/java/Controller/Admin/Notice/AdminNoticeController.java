@@ -4,9 +4,9 @@ import java.util.List;
 
 import Controller.Action;
 import Controller.ActionForward;
-import DAO.Admin.AdminNoticeDAO;
-import DAO.Admin.AdminNoticeDAOImpl;
 import DTO.Board.BoardDTO;
+import Service.Admin.AdminNoticeService;
+import Service.Admin.AdminNoticeServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -15,8 +15,8 @@ public class AdminNoticeController implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
-
-        AdminNoticeDAO dao = AdminNoticeDAOImpl.getInstance();
+        
+        AdminNoticeService service = AdminNoticeServiceImpl.getInstance();
 
         String sort = request.getParameter("sort");
         if (sort == null || sort.isEmpty()) sort = "latest";
@@ -36,8 +36,8 @@ public class AdminNoticeController implements Action {
         int startRow = (page - 1) * limit + 1;
         int endRow = startRow + limit - 1;
 
-        int totalCount = dao.getNoticeCount(searchType, keyword);
-        List<BoardDTO> list = dao.getNoticeList(sort, searchType, keyword, startRow, endRow);
+        int totalCount = service.getNoticeCount(searchType, keyword);
+        List<BoardDTO> list = service.getNoticeList(sort, searchType, keyword, startRow, endRow);
 
         int maxPage = (totalCount + limit - 1) / limit;
         int startPage = ((page - 1) / 10) * 10 + 1;

@@ -21,7 +21,10 @@ public class MovieDetailController implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
+		HttpSession session = request.getSession();
 		
+		
+        
 		// 1. 파라미터에서 영화 ID 가져오기
 		String idParam = request.getParameter("movieId");
 	
@@ -32,6 +35,11 @@ public class MovieDetailController implements Action {
 			forward.setRedirect(false);
 			return forward;
 		}
+		
+		
+		String requestSessionURL = request.getRequestURL().toString();
+        
+        session.setAttribute("requestSessionURL", requestSessionURL + "?movieId=" + idParam);
 		
 		int movieId = Integer.parseInt(idParam);
 		
@@ -53,7 +61,6 @@ public class MovieDetailController implements Action {
 		request.setAttribute("favoriteCount", favoriteCount);
 		
 		// 로그인한 경우 좋아요 여부 확인
-		HttpSession session = request.getSession();
 		String memId = (String) session.getAttribute("memId");
 		if (memId != null) {
 			MemberService memberService = new MemberServiceImpl();

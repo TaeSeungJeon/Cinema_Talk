@@ -20,9 +20,9 @@ public class LoginOkController implements Action {
 		//로그인 창에서 입력받은 아이디, 비번 변수에 저장
 		String id = request.getParameter("mem-id");
 		String pwd = request.getParameter("mem-pwd");
-		
+
 		ActionForward forward = new ActionForward();
-		
+
 		//아이디 입력 확인
 		if(id == null || id.trim().isEmpty()) {
 			request.setAttribute("msg", "아이디를 입력하세요.");
@@ -30,7 +30,7 @@ public class LoginOkController implements Action {
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
 		}
-		
+
 		//비밀번호 입력확인
 		if(pwd == null || pwd.trim().isEmpty()) {
 			request.setAttribute("msg", "비밀번호를 입력하세요.");
@@ -38,7 +38,7 @@ public class LoginOkController implements Action {
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
 		}
-		
+
 		MemberService memberService = new MemberServiceImpl();
 
 		//아이디로 회원 조회
@@ -51,7 +51,7 @@ public class LoginOkController implements Action {
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
 		}
-		
+
 		//계정 상태 체크(memState)
 		if(mdto.getMemState() == 3) {
 			request.setAttribute("msg", "탈퇴한 계정입니다.");
@@ -65,7 +65,7 @@ public class LoginOkController implements Action {
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;
 		}
-		
+
 		//비밀번호 검증(BCrypt)
 		if(!BCrypt.checkpw(pwd, mdto.getMemPwd())) {
 			request.setAttribute("msg", "비밀번호가 일치하지 않습니다.");
@@ -81,13 +81,20 @@ public class LoginOkController implements Action {
 		session.setAttribute("memName", mdto.getMemName()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
 		session.setAttribute("memRole", mdto.getMemRole());
 		session.setAttribute("memState", mdto.getMemState());
-		
+
 		//마지막 로그인 날짜 업데이트
 		memberService.updateLastLogin(mdto.getMemId());
-	
+		String requestSessionURL = (String)session.getAttribute("requestSessionURL");
+		
+		if(requestSessionURL != null) {
+			requestSessionURL = requestSessionURL.substring(34, requestSessionURL.length());
+			forward.setPath(request.getContextPath() + "/" + requestSessionURL);
+		} else {
+			forward.setPath(request.getContextPath()+"/index.do");
+		}
+
 		// 관리자/일반회원 모두 메인페이지로 이동
 		forward.setRedirect(true);
-		forward.setPath(request.getContextPath()+"/index.do");
 		return forward;
 	}
 

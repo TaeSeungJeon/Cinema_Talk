@@ -26,12 +26,12 @@ public class MemberMovieRecommendController implements Action {
         // 세션에서 회원 ID 가져오기
         HttpSession session = request.getSession();
         String memId = (String) session.getAttribute("memId");
-
+           
         if (memId == null) {
             // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
         	out.println("<script>");
         	out.println("alert('로그인이 필요합니다.');");
-        	out.println("history.back();");
+        	out.println("location='" + request.getContextPath() + "/memberLogin.do';");
         	out.println("</script>");
         	return null;
         }

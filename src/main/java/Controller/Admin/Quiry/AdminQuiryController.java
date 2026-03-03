@@ -24,6 +24,7 @@ public class AdminQuiryController implements Action {
         String searchType = request.getParameter("searchType");
         String keyword = request.getParameter("keyword");
         String unanswered = request.getParameter("unanswered");
+        
         if (searchType == null) searchType = "";
         if (keyword == null) keyword = "";
         if (unanswered == null) unanswered = "";

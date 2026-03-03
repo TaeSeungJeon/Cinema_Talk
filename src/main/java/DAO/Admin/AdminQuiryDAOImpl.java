@@ -47,6 +47,7 @@ public class AdminQuiryDAOImpl implements AdminQuiryDAO {
     public List<BoardDTO> getQuiryList(String sort, String searchType, String keyword,
                                         String unanswered, int startRow, int endRow) {
         SqlSession session = null;
+        
         try {
             session = getSqlSession();
             Map<String, Object> param = new HashMap<>();

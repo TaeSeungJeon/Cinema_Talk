@@ -440,14 +440,17 @@ function loadNoticeList(page) {
 	});
 }
 
+/* 이전 바인딩 해제 후 재등록 (다른 페이지 이벤트 충돌 방지) */
+$(document).off(".noticeEvt").off(".quiryEvt");
+
 /* 정렬 버튼 */
-$(document).on("click", ".sort-btn", function() {
+$(document).on("click.noticeEvt", ".notice-mgmt-page .sort-btn", function() {
 	currentSort = $(this).data("sort");
 	loadNoticeList(1);
 });
 
 /* 검색 (Enter) */
-$(document).on("keyup", "#noticeSearch", function(e) {
+$(document).on("keyup.noticeEvt", "#noticeSearch", function(e) {
 	if (e.key === "Enter") {
 		currentSearch  = $("#searchType").val();
 		currentKeyword = $(this).val();
@@ -456,7 +459,7 @@ $(document).on("keyup", "#noticeSearch", function(e) {
 });
 
 /* 검색 타입 변경 후 자동 검색 */
-$(document).on("change", "#searchType", function() {
+$(document).on("change.noticeEvt", "#searchType", function() {
 	currentSearch = $(this).val();
 	var kw = $("#noticeSearch").val();
 	if (kw) {
@@ -466,13 +469,13 @@ $(document).on("change", "#searchType", function() {
 });
 
 /* 페이징 */
-$(document).on("click", ".page-btn", function() {
+$(document).on("click.noticeEvt", ".notice-mgmt-page .page-btn", function() {
 	var p = $(this).data("page");
 	if (p) loadNoticeList(p);
 });
 
 /* 공지 카드 클릭 → 상세 로드 */
-$(document).on("click", ".notice-card", function() {
+$(document).on("click.noticeEvt", ".notice-mgmt-page .notice-card", function() {
 	var boardId = $(this).data("id");
 
 	$(".notice-card").removeClass("active");

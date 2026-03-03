@@ -501,7 +501,7 @@ function loadQuiryList(page) {
 }
 
 /* 이전 바인딩 해제 후 재등록 (AJAX 교체 시 중복 방지) */
-$(document).off(".quiryEvt");
+$(document).off(".quiryEvt").off(".noticeEvt");
 
 /* 정렬 버튼 */
 $(document).on("click.quiryEvt", ".notice-mgmt-page .sort-btn", function() {

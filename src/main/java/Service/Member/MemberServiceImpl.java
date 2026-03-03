@@ -105,6 +105,11 @@ public class MemberServiceImpl implements MemberService {
 		return mdao.getMemberList();
 	}//회원목록 조회
 
+	@Override
+	public List<MemberDTO> getMemberListByState(int memState) {
+		return mdao.getMemberListByState(memState);
+	}//상태에 따른 회원목록 조회
+
 }
 
 

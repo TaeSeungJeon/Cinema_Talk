@@ -73,8 +73,13 @@
   </update>
   
   <!-- 회원목록 조회 -->
-  <select id="getMemberList" resultType="member">
+  <select id="getMemberList" parameterType="int"  resultType="member">
   	select memNo, memId, memName, memPhone, memEmail, memState, memLastLogin from member order by memNo asc
+  </select>
+  
+  <!-- 상태에 따른 회원목록 조회 -->
+  <select id="getMemberListByState" parameterType="int" resultType="member">
+  	select memNo, memId, memName, memPhone, memEmail, memState, memLastLogin from member where memState = #{value} order by memNo
   </select>
   
   </mapper>

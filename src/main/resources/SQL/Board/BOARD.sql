@@ -24,9 +24,8 @@ references MEMBER (memNo);
 -- MOVIEID 컬럼을 NULL 허용으로 변경
 ALTER TABLE BOARD MODIFY (MOVIEID NULL);
 
+
 ALTER TABLE BOARD RENAME COLUMN boardViewCount TO boardViewCount;
-
-
 
 
 /* 조회수 로직 테스트 조회

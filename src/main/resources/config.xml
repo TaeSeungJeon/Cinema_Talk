@@ -102,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Board/AddFileMapper.xml"/>
 		<mapper resource="mappers/Board/BoardSearchMapper.xml"/>
     <mapper resource="mappers/Admin/AdminNoticeMapper.xml"/>
+    <mapper resource="mappers/Admin/AdminQuiryMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMovieMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminSummaryStatsMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMemberStatsMapper.xml"/>

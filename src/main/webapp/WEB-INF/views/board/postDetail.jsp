@@ -8,8 +8,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>프리미엄 영화 큐레이션 - 게시글 상세</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Black+Han+Sans&family=Gaegu&family=Jua&family=Cute+Font&family=Do+Hyeon&family=Gugi&family=Sunflower:wght@300;500;700&family=Gothic+A1:wght@400;700&family=Stylish&display=swap" rel="stylesheet">
     <style>
+
+
+        /* 폰트 드롭다운 */
+        .font-select-wrapper { position: relative; }
+
+        .font-select-trigger {
+            padding: 4px 28px 4px 8px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #374151;
+            cursor: pointer;
+            background: white;
+            min-width: 110px;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+        }
+
+        .font-select-trigger::after {
+            content: "▾";
+            position: absolute;
+            right: 8px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .font-select-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            z-index: 9999;
+            min-width: 160px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .font-select-dropdown.open { display: block; }
+
+        .font-option {
+            padding: 9px 14px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #374151;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+
+        .font-option:hover { background: #f1f5f9; }
+        .font-option.selected { background: #ede9fe; color: #6366f1; }
+
         :root {
             --bg-color: #f0f2f5;
             --glass-bg: rgba(255, 255, 255, 0.7);
@@ -570,9 +629,45 @@
                            value="${cont.boardTitle}"
                            style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
 
+                    <%-- 툴바 --%>
+                    <div style="background:#f8fafc; padding:8px 15px; border-radius:10px 10px 0 0;
+            border:1px solid #e2e8f0; border-bottom:none;
+            display:flex; gap:15px; color:#64748b; font-size:0.9rem;
+            align-items:center; flex-wrap:wrap;">
+
+                        <div class="font-select-wrapper" id="editFontSelectWrapper">
+                            <div class="font-select-trigger" id="editFontSelectTrigger"
+                                 onmousedown="event.preventDefault(); editSaveSelection(); editToggleFontDropdown();">
+                                <span id="editFontSelectLabel" style="font-family:'Inter',sans-serif;">Inter (기본)</span>
+                            </div>
+                            <div class="font-select-dropdown" id="editFontSelectDropdown">
+                                <div class="font-option selected" style="font-family:'Inter',sans-serif;"          data-font="Inter">Inter (기본)</div>
+                                <div class="font-option" style="font-family:'Noto Sans KR',sans-serif;"            data-font="Noto Sans KR">노토 산스</div>
+                                <div class="font-option" style="font-family:'Noto Serif KR',serif;"                data-font="Noto Serif KR">노토 세리프</div>
+                                <div class="font-option" style="font-family:'Gothic A1',sans-serif;"               data-font="Gothic A1">고딕 A1</div>
+                                <div class="font-option" style="font-family:'Do Hyeon',sans-serif;"                data-font="Do Hyeon">도현체</div>
+                                <div class="font-option" style="font-family:'Jua',sans-serif;"                     data-font="Jua">주아체</div>
+                                <div class="font-option" style="font-family:'Gugi',cursive;"                       data-font="Gugi">구기체</div>
+                                <div class="font-option" style="font-family:'Sunflower',sans-serif;"               data-font="Sunflower">해바라기체</div>
+                                <div class="font-option" style="font-family:'Stylish',sans-serif;"                 data-font="Stylish">스타일리시</div>
+                                <div class="font-option" style="font-family:'Black Han Sans',sans-serif;"          data-font="Black Han Sans">블랙 한 산스</div>
+                                <div class="font-option" style="font-family:'Cute Font',cursive;"                  data-font="Cute Font">귀여운 폰트</div>
+                                <div class="font-option" style="font-family:'Gaegu',cursive;"                      data-font="Gaegu">개구체</div>
+                            </div>
+                        </div>
+
+                        <span style="cursor:pointer; font-weight:800;"
+                              onmousedown="event.preventDefault(); editExecCmd('bold')">B</span>
+                        <span style="cursor:pointer; font-style:italic;"
+                              onmousedown="event.preventDefault(); editExecCmd('italic')">I</span>
+                        <span style="cursor:pointer; text-decoration:underline;"
+                              onmousedown="event.preventDefault(); editExecCmd('underline')">U</span>
+                    </div>
+
+
                     <div id="editor"
                          contenteditable="true"
-                         style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
+                         style="width:100%; min-height:250px; padding:12px; border-radius:0 0 12px 12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
                         ${cont.boardContent}
                     </div>
 
@@ -604,6 +699,27 @@
                         </a>
                     </c:if>
 
+                    <%-- 링크 첨부 --%>
+                    <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
+                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">🔗 링크 첨부</div>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" id="updateLinkInput"
+                                   placeholder="https://..."
+                                   style="flex:1; padding:8px 12px; border-radius:10px; border:1px solid #e2e8f0; font-size:0.9rem; outline:none;">
+                            <button type="button" id="updateLinkBtn"
+                                    style="padding:8px 16px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:600; cursor:pointer;">
+                                미리보기
+                            </button>
+                            <button type="button" id="updateLinkClearBtn"
+                                    style="display:none; padding:8px 16px; border-radius:10px; border:none; background:#e2e8f0; color:#374151; font-weight:600; cursor:pointer;">
+                                ✕ 제거
+                            </button>
+                        </div>
+                        <input type="hidden" name="linkUrl" id="updateLinkUrl" value="${preview.url}">
+
+                        <%-- 미리보기 영역 --%>
+                        <div id="updateLinkPreviewArea" style="margin-top:12px; position:relative;"></div>
+                    </div>
 
                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
                         <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
@@ -981,6 +1097,293 @@
                 btn.textContent = expanded ? "접기" : "더보기";
             });
         })();
+
+        /* ===== 수정폼 링크 프리뷰 ===== */
+        (function () {
+            const CTX       = "${pageContext.request.contextPath}";
+            const btn       = document.getElementById("updateLinkBtn");
+            const clearBtn  = document.getElementById("updateLinkClearBtn");
+            const input     = document.getElementById("updateLinkInput");
+            const area      = document.getElementById("updateLinkPreviewArea");
+            const hiddenUrl = document.getElementById("updateLinkUrl");
+            const editor    = document.getElementById("editor");
+
+            if (!btn) return;
+
+            // 기존 preview가 있으면 초기 렌더링
+            const existingUrl = hiddenUrl.value;
+            if (existingUrl) {
+                input.value = existingUrl;
+                clearBtn.style.display = "inline-block";
+                renderUpdatePreview({
+                    url:         "${preview.url}",
+                    title:       "${preview.title}",
+                    description: "${preview.description}",
+                    image:       "${preview.image}"
+                });
+            }
+
+            // 미리보기 버튼
+            btn.addEventListener("click", async function () {
+                let url = input.value.trim();
+                if (!url) return;
+                if (!url.startsWith("http")) url = "https://" + url;
+
+                btn.textContent = "로딩중...";
+                btn.disabled = true;
+
+                try {
+                    const res  = await fetch(CTX + "/linkPreview.do?url=" + encodeURIComponent(url));
+                    const data = await res.json();
+
+                    if (!data || !data.ok) {
+                        alert("미리보기를 불러올 수 없는 링크입니다.");
+                        return;
+                    }
+                    hiddenUrl.value = data.url;
+                    clearBtn.style.display = "inline-block";
+                    renderUpdatePreview(data);
+                } catch (e) {
+                    alert("링크 미리보기 실패");
+                } finally {
+                    btn.textContent = "미리보기";
+                    btn.disabled = false;
+                }
+            });
+
+            // 제거 버튼
+            clearBtn.addEventListener("click", function () {
+                input.value    = "";
+                hiddenUrl.value = "";
+                area.innerHTML = "";
+                clearBtn.style.display = "none";
+            });
+
+            function escapeHtml(str) {
+                if (!str) return "";
+                return (str + "")
+                    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+            }
+
+            function renderUpdatePreview(data) {
+                const thumbHtml = data.image
+                    ? '<div class="preview-thumb" style="background-image:url(\'' + escapeHtml(data.image) + '\');"></div>'
+                    : '';
+
+                // 미리보기 카드 + 우측 하단 적용 버튼
+                area.innerHTML =
+                    '<a href="' + escapeHtml(data.url) + '" target="_blank" class="link-preview">' +
+                    '<div class="preview-card">' +
+                    thumbHtml +
+                    '<div class="preview-content">' +
+                    '<div class="preview-domain">' + escapeHtml(data.url.replace("https://", "")) + '</div>' +
+                    '<div class="preview-title">'  + escapeHtml(data.title) + '</div>' +
+                    '<div class="preview-desc">'   + escapeHtml(data.description) + '</div>' +
+                    '<div class="preview-url">'    + escapeHtml(data.url) + '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</a>' +
+                    // 적용 버튼
+                    '<div style="display:flex; justify-content:flex-end; margin-top:8px;">' +
+                    '<button type="button" id="applyLinkBtn" ' +
+                    'style="padding:7px 20px; border-radius:10px; border:none; ' +
+                    'background:#6366f1; color:white; font-weight:700; cursor:pointer;">' +
+                    '✅ 에디터에 적용' +
+                    '</button>' +
+                    '</div>';
+
+                // 적용 버튼 클릭 이벤트
+                document.getElementById("applyLinkBtn").addEventListener("click", function () {
+                    if (!editor) return;
+
+                    const url = data.url || "";
+                    const thumbStyle = data.image
+                        ? 'background-image:url(\'' + data.image + '\');'
+                        : 'background:#e2e8f0;';
+
+                    // 에디터에 삽입할 HTML (URL 텍스트 + 프리뷰 카드)
+                    const insertHtml =
+                        '<p>' + escapeHtml(url) + '</p>' +
+                        '<a href="' + escapeHtml(url) + '" target="_blank" class="link-preview">' +
+                        '<div class="preview-card">' +
+                        (data.image ? '<div class="preview-thumb" style="' + thumbStyle + '"></div>' : '') +
+                        '<div class="preview-content">' +
+                        '<div class="preview-domain">' + escapeHtml(url.replace("https://", "")) + '</div>' +
+                        '<div class="preview-title">'  + escapeHtml(data.title) + '</div>' +
+                        '<div class="preview-desc">'   + escapeHtml(data.description) + '</div>' +
+                        '<div class="preview-url">'    + escapeHtml(url) + '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</a>';
+
+                    // 에디터 끝에 삽입
+                    editor.focus();
+                    const sel = window.getSelection();
+                    const range = document.createRange();
+                    range.selectNodeContents(editor);
+                    range.collapse(false); // 끝으로 이동
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    document.execCommand("insertHTML", false, insertHtml);
+
+                    // 적용 후 버튼 상태 변경
+                    this.textContent = "✔ 적용됨";
+                    this.style.background = "#10b981";
+                    this.disabled = true;
+                });
+            }
+        })();
+
+        /* ===== 수정폼 에디터 툴바 ===== */
+        (function () {
+            var editor      = document.getElementById("editor");
+            var fontWrapper  = document.getElementById("editFontSelectWrapper");
+            var fontDropdown = document.getElementById("editFontSelectDropdown");
+            var fontLabel    = document.getElementById("editFontSelectLabel");
+            var savedRange   = null;
+
+            if (!editor) return;
+
+            // selection 저장/복원
+            function editSaveSelection() {
+                var sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
+                var range = sel.getRangeAt(0);
+                savedRange = editor.contains(range.commonAncestorContainer) ? range.cloneRange() : null;
+            }
+            window.editSaveSelection = editSaveSelection;
+
+            function editRestoreSelection() {
+                if (!savedRange) return false;
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(savedRange);
+                return true;
+            }
+
+            // B/I/U
+            window.editExecCmd = function (cmd) {
+                editor.focus();
+                var sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) return;
+                var r0 = sel.getRangeAt(0);
+                if (!editor.contains(r0.commonAncestorContainer)) {
+                    var r = document.createRange();
+                    r.selectNodeContents(editor);
+                    r.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(r);
+                }
+                document.execCommand(cmd, false, null);
+                editSaveSelection();
+            };
+
+            // 폰트 드롭다운
+            function editCloseFontDropdown() {
+                if (fontDropdown) fontDropdown.classList.remove("open");
+            }
+            function editToggleFontDropdown() {
+                editSaveSelection();
+                if (fontDropdown) fontDropdown.classList.toggle("open");
+            }
+            window.editToggleFontDropdown = editToggleFontDropdown;
+
+            function ensureEditTypingFont(fontName) {
+                editor.focus();
+                var sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) return;
+                var range = sel.getRangeAt(0);
+                if (!editor.contains(range.commonAncestorContainer)) return;
+                var span = document.createElement("span");
+                span.style.fontFamily = "'" + fontName + "', sans-serif";
+                var zwsp = document.createTextNode("\u200B");
+                span.appendChild(zwsp);
+                range.insertNode(span);
+                var r = document.createRange();
+                r.setStart(zwsp, 1);
+                r.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(r);
+                editSaveSelection();
+            }
+
+            function applyEditFont(fontName) {
+                editor.focus();
+                editRestoreSelection();
+                var sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) { editor.dataset.currentFont = fontName; return; }
+                var range = sel.getRangeAt(0);
+                if (!editor.contains(range.commonAncestorContainer)) { editor.dataset.currentFont = fontName; return; }
+
+                if (range.collapsed) {
+                    editor.dataset.currentFont = fontName;
+                    ensureEditTypingFont(fontName);
+                    editCloseFontDropdown();
+                    return;
+                }
+
+                var span = document.createElement("span");
+                span.style.fontFamily = "'" + fontName + "', sans-serif";
+                try {
+                    range.surroundContents(span);
+                } catch (e) {
+                    var contents = range.extractContents();
+                    span.appendChild(contents);
+                    range.insertNode(span);
+                }
+                range.setStartAfter(span);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+                editor.dataset.currentFont = fontName;
+                editSaveSelection();
+            }
+
+            // 폰트 옵션 이벤트
+            var fontOptions = document.querySelectorAll("#editFontSelectDropdown .font-option");
+            for (var j = 0; j < fontOptions.length; j++) {
+                (function (optionEl) {
+                    optionEl.addEventListener("pointerdown", function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var fontName = optionEl.getAttribute("data-font");
+                        if (!fontName) return;
+                        if (fontLabel) {
+                            fontLabel.textContent = optionEl.textContent;
+                            fontLabel.style.fontFamily = optionEl.style.fontFamily;
+                        }
+                        fontOptions.forEach(function(o) { o.classList.remove("selected"); });
+                        optionEl.classList.add("selected");
+                        applyEditFont(fontName);
+                        editCloseFontDropdown();
+                    });
+                })(fontOptions[j]);
+            }
+
+            // 바깥 클릭 시 닫기
+            document.addEventListener("pointerdown", function (e) {
+                if (fontWrapper && !fontWrapper.contains(e.target)) editCloseFontDropdown();
+            });
+
+            // selection 추적
+            editor.addEventListener("mouseup", editSaveSelection);
+            editor.addEventListener("keyup",   editSaveSelection);
+            editor.addEventListener("focus",   editSaveSelection);
+
+            // ZWSP 제거
+            editor.addEventListener("input", function () {
+                var walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+                var node;
+                while ((node = walker.nextNode())) {
+                    if (node.nodeValue && node.nodeValue.indexOf("\u200B") !== -1) {
+                        node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
+                    }
+                }
+            });
+        })();
+
+
     </script>
 </div>
 

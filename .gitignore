@@ -53,8 +53,4 @@ build/
 ### Mac OS ###
 .DS_Store
 # IntelliJ
-.idea/
-out/
-# IntelliJ
-.idea/
-out/
+

@@ -36,6 +36,6 @@ public interface MemberDAO {
 
 	List<MemberDTO> getMemberListByState(int memState);
 
-	int changeDormant(int memNo);
+	int updateMemberState(int memNo, int targetState);
 
 }

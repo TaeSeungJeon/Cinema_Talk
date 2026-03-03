@@ -183,20 +183,25 @@ tbody td{
   });
 
   // 정지 전환 버튼 클릭
-  $(document).on("click", ".btn-set-dormant", function(){
+  $(document).on("click", ".btn-change-state", function(){
     const memNo = $(this).data("memno");
-    const memId = $(this).data("memid");
-
-    if(!confirm(memId + " 회원을 정지 회원으로 전환할까요?")) return;
+    const targetState = $(this).data("targetstate"); // 1(정상) 또는 2(정지)
+    
+    const msg = (targetState === 2) ? "정지 처리할까요?" : "정지를 해제할까요?";
+    if (!confirm(msg)) return;
 
     $.ajax({
       url: "${pageContext.request.contextPath}/admin/memberSetDormant.do",
       type: "POST",
-      data: { memNo: memNo },
+      data: { memNo: memNo, targetState: targetState},
       headers: { "X-Requested-With": "XMLHttpRequest" },
       success: function(res){
-        // res를 "OK" 또는 JSON으로 받아도 됨
-        alert("정지 전환 완료");
+    	 
+    	const successMsg = (targetState === 2)
+        ? "정지 처리되었습니다."
+        : "정지 해제되었습니다."; 
+    	
+        alert(successMsg);
         loadMemberList();
       },
       error: function(xhr){

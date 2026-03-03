@@ -70,7 +70,7 @@
 		<li><a class="side-link"
 			href="${pageContext.request.contextPath}/admin/notice.do">공지사항</a></li>
 		<li><a class="side-link"
-			href="${pageContext.request.contextPath}/admin/qna.do">문의관리</a></li>
+			href="${pageContext.request.contextPath}/admin/quiry.do">문의관리</a></li>
 		<li><a class="side-link"
 			href="${pageContext.request.contextPath}/admin/stats.do">통계</a></li>
 	</ul>

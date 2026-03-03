@@ -82,4 +82,9 @@
   	select memNo, memId, memName, memPhone, memEmail, memState, memLastLogin from member where memState = #{value} order by memNo
   </select>
   
+  <!-- 정지 상태로 전환 -->
+  <update id="changeDormant" parameterType="int">
+  	update member set memState = 2 where memNo = #{value}
+  </update>
+  
   </mapper>

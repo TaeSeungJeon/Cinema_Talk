@@ -51,7 +51,7 @@
                   <span class="badge ok">정상</span>
                 </c:when>
                 <c:when test="${m.memState == 2}">
-                  <span class="badge sleep">휴면</span>
+                  <span class="badge sleep">정지</span>
                 </c:when>
                 <c:otherwise>
                   <span class="badge out">탈퇴</span>
@@ -61,17 +61,17 @@
 
             <td>
               <div class="row-actions">
-                <%-- 정상 회원만 휴면 전환 가능 --%>
+                <%-- 정상 회원만 정지 전환 가능 --%>
                 <c:choose>
                   <c:when test="${m.memState == 1}">
                     <button class="btn btn-set-dormant"
                       data-memno="${m.memNo}"
                       data-memid="${m.memId}">
-                      휴면 전환
+                      정지
                     </button>
                   </c:when>
                   <c:otherwise>
-                    <button class="btn disabled" disabled>휴면 전환</button>
+                    <button class="btn disabled" disabled>정지</button>
                   </c:otherwise>
                 </c:choose>
               </div>

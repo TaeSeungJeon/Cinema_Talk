@@ -60,7 +60,7 @@ public class LoginOkController implements Action {
 			return forward;
 		}
 		if(mdto.getMemState() == 2) {
-			request.setAttribute("msg", "휴먼 계정입니다. 관리자에게 문의하세요");
+			request.setAttribute("msg", "정지된 계정입니다. 관리자에게 문의하세요");
 			forward.setRedirect(false);
 			forward.setPath("/WEB-INF/views/member/login.jsp");
 			return forward;

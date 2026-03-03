@@ -257,7 +257,24 @@ public class MemberDAOImpl implements MemberDAO {
 				sqlSession.close();
 			}
 		}
-		
 	}//getMemberListByState() -> 상태에 따른 회원 목록 조회
+
+	@Override
+	public int changeDormant(int memNo) {
+		SqlSession sqlSession = null;
+		int result = 0;
+		
+		try{
+			sqlSession = getSqlSession();
+			result = sqlSession.update("changeDormant", memNo);
+			sqlSession.commit();
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+		
+		return result;
+	}//changeDormant() -> 회원 상태 변경: 1(정상) -> 2(일시정지)
 
 }

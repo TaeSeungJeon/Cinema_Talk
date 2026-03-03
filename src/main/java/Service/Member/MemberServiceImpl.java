@@ -110,6 +110,11 @@ public class MemberServiceImpl implements MemberService {
 		return mdao.getMemberListByState(memState);
 	}//상태에 따른 회원목록 조회
 
+	@Override
+	public int changeDormant(int memNo) {
+		return mdao.changeDormant(memNo);
+	}//회원 상태 변경: 1(정상) -> 2(일시정지)
+
 }
 
 

@@ -132,3 +132,4 @@ ALTER TABLE vote_record
 ADD CONSTRAINT uq_vote_record
 UNIQUE (voteId, memNo);
 
+drop sequence voteIdSeq

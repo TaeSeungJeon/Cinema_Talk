@@ -31,4 +31,5 @@ public interface MemberService {
 
 	List<MemberDTO> getMemberListByState(int memState);
 
+	int changeDormant(int memNo);
 }

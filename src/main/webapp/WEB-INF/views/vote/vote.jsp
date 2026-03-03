@@ -721,6 +721,8 @@ opacity:1;
 									style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">
 									종료: ${vote.voteEndDate} | 참여
 									<c:set var="done" value="false" />
+									<c:choose>
+									<c:when test="${not empty vote.resultList}">
 									<c:forEach var="res" items="${vote.resultList}">
 										<c:if test="${not done and res.rank == 1}">
 											<span style="font-weight: 600;">
@@ -728,6 +730,12 @@ opacity:1;
 											<c:set var="done" value="true" />
 										</c:if>
 									</c:forEach>
+									</c:when>
+									<c:otherwise>
+									0
+									</c:otherwise>
+									</c:choose>
+									
 									명
 								</div>
 

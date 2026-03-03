@@ -42,6 +42,10 @@ public class VoteContController implements Action {
 		voteService.updateVoteStatus(voteReg);
 
 		boolean voted = false;
+		
+		String requestSessionURL = request.getRequestURL().toString();
+        
+        session.setAttribute("requestSessionURL", requestSessionURL  + "?voteId=" + voteId );
 	
 		if(mem != null){
 			

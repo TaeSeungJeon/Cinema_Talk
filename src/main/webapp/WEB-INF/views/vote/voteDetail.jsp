@@ -159,17 +159,14 @@ pageEncoding="UTF-8"%>
 				overflow-y: auto;
 				padding-right: 10px;
 				margin-bottom: 15px;
-				scrollbar-width: thin;
-				scrollbar-color: var(--accent-color) transparent;
 			}
 			
 			.vote-options-list::-webkit-scrollbar {
-				width: 5px;
+				display: none;
 			}
 			
 			.vote-options-list::-webkit-scrollbar-thumb {
-				background: var(--accent-color);
-				border-radius: 10px;
+				display:none
 			}
 			
 			/* ⭐ 수정된 영화 옵션 카드 (배경 그래프 핵심) */

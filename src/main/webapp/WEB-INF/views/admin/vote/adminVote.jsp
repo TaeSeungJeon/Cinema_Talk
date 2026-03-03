@@ -996,6 +996,12 @@
 					selectOption('ALL', '전체 보기');
 					return;
 				 }
+				 
+				 const form = document.getElementById('voteForm');
+				    if (!form.checkValidity()) {
+				        form.reportValidity(); // 경고 메시지 표시
+				        return;
+				    }
 			 	
 		 		const optItems = document.getElementsByClassName("option-item");
 			 	if (optItems.length <=1) {

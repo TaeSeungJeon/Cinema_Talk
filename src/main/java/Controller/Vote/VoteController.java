@@ -37,6 +37,10 @@ public class VoteController implements Action {
 		String memId = (String) session.getAttribute("memId"); // 값이 없으면 자동으로 null
 		MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
 		
+		 String requestSessionURL = request.getRequestURL().toString();
+	        
+	        session.setAttribute("requestSessionURL", requestSessionURL);
+		
 		final MemberDTO finalMem = mem;
 		
 		//사용자 투표이력 가져오기

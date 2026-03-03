@@ -9,7 +9,7 @@ import Service.Member.MemberServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/* 관리자 마이페이지 중 회원관리 휴면전환 컨트롤러 */
+/* 관리자 마이페이지 중 회원관리 회원 상태(정상 -> 정지) 전환 컨트롤러 */
 public class AdminMemberSetDormantController implements Action {
 
 	@Override

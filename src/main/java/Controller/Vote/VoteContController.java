@@ -38,7 +38,7 @@ public class VoteContController implements Action {
 		Object filterObj = request.getParameter("filter");
 		String filter = filterObj == null ? null : (String) filterObj;
 
-		VoteRegisterDTO voteReg = voteService.getVoteRegFullById(voteId);
+		VoteRegisterDTO voteReg = voteService.getVoteRegFullById(voteId, false);
 		voteService.updateVoteStatus(voteReg);
 
 		boolean voted = false;

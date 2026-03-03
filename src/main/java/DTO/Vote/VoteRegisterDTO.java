@@ -36,4 +36,6 @@ public class VoteRegisterDTO {
 	
 	//정렬을 위한 변수
 	private String filter;
+
+	private int validOptionCount;
 }

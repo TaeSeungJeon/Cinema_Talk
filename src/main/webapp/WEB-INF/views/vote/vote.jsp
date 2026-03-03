@@ -758,6 +758,8 @@ opacity:1;
 		</aside>
 	</main>
 
+	<jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
+
 	<script src="${pageContext.request.contextPath}/js/vote.js"></script>
 	<script src="${pageContext.request.contextPath}/js/home.js"></script>
 </body>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="AdminSummaryStats">
+  	<!-- 기간 내 신규 회원 수 -->
+  	<select id="selNewMemberCntByRange" resultType="int">
+  		<![CDATA[
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE memDate BETWEEN #{startDate} AND #{endDate}
+        ]]>
+  	</select>
+  	
+  	<!-- 기간 내 신규 게시글 수 -->
+  	<select id="selNewBoardCntByRange" resultType="int">
+  		<![CDATA[
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE boardDate BETWEEN #{startDate} AND #{endDate}
+        ]]>
+  	</select>
+  	
+  	<!-- 기간 내 투표 참여 수 -->
+  	<select id="selNewVoteJoinCntByRange" resultType="int">
+  		<![CDATA[
+        SELECT COUNT(*)
+        FROM VOTE_RECORD
+        WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate}
+        ]]>
+  	</select>
+  	
+  	<!-- 기간 내 신규 문의 수 
+  	<select id="selNewInquiryCntByRange" resultType="int">
+  		<![CDATA[
+        SELECT COUNT(*)
+        FROM INQUIRY
+        WHERE inquiryCreatedDate BETWEEN #{startDate} AND #{endDate}
+        ]]>
+  	</select>-->
+  	<!--기간 내 신규 문의 수(더미) -->
+  	<select id="selNewInquiryCntByRange" resultType="int">
+  		<![CDATA[
+        SELECT COUNT(*)
+        FROM VOTE_RECORD
+        WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate}
+        ]]>
+  	</select>
+  	
+  	<!-- 일별 방문자 추이 -->
+  	<select id="selDailyVisitorTrend" resultType="trend">
+  		<![CDATA[
+	    SELECT
+	        TO_CHAR(statDate, 'YYYY-MM-DD') AS regDate,
+	        NVL(dauCount, 0) AS cnt
+	    FROM DAILY_VISIT
+	    WHERE statDate BETWEEN #{startDate} AND #{endDate}
+	    ORDER BY statDate
+		]]>
+  	</select>
+  	
+  	<!-- 일별 신규 회원 추이 -->
+  	<select id="selDailyNewMemberTrend" resultType="trend">
+  		<![CDATA[
+	    SELECT
+	        TO_CHAR(memDate, 'YYYY-MM-DD') AS regDate,
+	        COUNT(*) AS cnt
+	    FROM MEMBER
+	    WHERE memDate BETWEEN #{startDate} AND #{endDate}
+	    GROUP BY TO_CHAR(memDate, 'YYYY-MM-DD')
+	    ORDER BY regDate
+		]]>
+  	</select>
+  </mapper>

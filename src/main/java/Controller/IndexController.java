@@ -29,16 +29,26 @@ public class IndexController implements Action {
 		HttpSession session = request.getSession();
 
 		Object memNoObj = session.getAttribute("memNo");
-		int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1; // 로그인한 상태면 회원 번호 구함
 
-		List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
-		List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList(memNo);
+		int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함
 
-		request.setAttribute("indexTrendMovieList", indexTrendMovieList);
-		request.setAttribute("homeGenreMovieList", indexGenreMovieList);
+		String todayKey = "visited_" + java.time.LocalDate.now();
 
-		List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
-		request.setAttribute("activeVoteRegList", activeVoteRegList);
+	    if (session.getAttribute(todayKey) == null) {
+
+	        homeService.increaseTodayDau();
+
+	        session.setAttribute(todayKey, true);
+	    }
+	    
+	  List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
+	  List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList(memNo);
+	   
+	  request.setAttribute("indexTrendMovieList", indexTrendMovieList);
+	  request.setAttribute("homeGenreMovieList", indexGenreMovieList);
+	    
+    List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
+    request.setAttribute("activeVoteRegList", activeVoteRegList);
 
 		// 최근 게시글 3개
 		List<BoardDTO> recentBoardList = boardService.recentBoardList(3);

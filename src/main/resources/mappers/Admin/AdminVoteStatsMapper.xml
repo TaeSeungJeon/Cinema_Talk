@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="AdminVoteStats">
+  	<!-- 총 투표 수 -->
+    <select id="selVoteCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM VOTE_REGISTER
+    </select>
+    
+    <!-- 특정 날짜 기준 총 투표 수 -->
+    <select id="selTotalVoteCountByDate" parameterType="java.time.LocalDate" resultType="int">
+	<![CDATA[
+        SELECT COUNT(*)
+    	FROM VOTE_REGISTER
+    	WHERE voteStartDate < #{value} + 1
+    ]]>
+    </select>
+    
+    <!-- 총 투표 참여 수 -->
+    <select id="selVoteJoinCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM VOTE_RECORD
+    </select>
+    
+    <!-- 특정 기간 내 총 투표 참여 수 -->
+    <select id="selTotalVoteJoinCountByDate" parameterType="java.time.LocalDate" resultType="int">
+    	<![CDATA[
+        SELECT COUNT(*)
+        FROM VOTE_RECORD
+        WHERE recordCreatedDate < #{value} + 1
+        ]]>
+    </select>
+    
+    <!-- 총 투표 댓글 수 -->
+    <select id="selVoteCommentCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM VOTE_RECORD
+        WHERE voteCommentText IS NOT NULL
+    </select>
+    
+    <!-- 현재 진행 중인 투표 수 -->
+    <select id="selActiveVoteStat" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+        FROM VOTE_REGISTER
+        WHERE voteStartDate <= SYSDATE
+          AND voteEndDate >= SYSDATE
+        ]]>
+    </select>
+    
+    <!-- 월별 투표 참여 추이 -->
+    <select id="selMonthlyVoteTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.TrendDTO">
+        <![CDATA[
+        SELECT
+            TO_CHAR(recordCreatedDate, 'YYYY-MM') AS regDate,
+            COUNT(*) AS cnt
+        FROM VOTE_RECORD
+        WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate}
+        GROUP BY TO_CHAR(recordCreatedDate, 'YYYY-MM')
+        ORDER BY regDate
+        ]]>
+    </select>
+    
+    <!-- 인기 투표 TOP 10 -->
+    <select id="selTopVotes" resultType="DTO.Admin.Stats.TopVoteDTO">
+        <![CDATA[
+		SELECT *
+		FROM (
+		    SELECT
+		        vr.voteId,
+		        vr.voteTitle,
+		        vr.voteStartDate,
+		        vr.voteEndDate,
+		        vr.voteStatus,
+		        COUNT(vrec.voteId) AS voteJoinCnt
+		    FROM VOTE_REGISTER vr
+		    LEFT JOIN VOTE_RECORD vrec
+		        ON vr.voteId = vrec.voteId
+		    GROUP BY
+		        vr.voteId,
+		        vr.voteTitle,
+		        vr.voteStartDate,
+		        vr.voteEndDate,
+		        vr.voteStatus
+		    ORDER BY voteJoinCnt DESC
+		)
+		WHERE ROWNUM <= 10
+]]>
+    </select>
+    
+  </mapper>

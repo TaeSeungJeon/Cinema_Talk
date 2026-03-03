@@ -12,15 +12,18 @@ import mybatis.DBService;
 
 public class AdminMovieServiceImpl implements AdminMovieService {
 
-	private static final AdminMovieServiceImpl instance = new AdminMovieServiceImpl();
-
+    private static AdminMovieServiceImpl instance = null;
+    
     private final AdminMovieDAO dao = AdminMovieDAOImpl.getInstance();
 
     private AdminMovieServiceImpl() {}
 
     public static AdminMovieServiceImpl getInstance() {
-        return instance;
-    }
+		if (instance == null) {
+			instance = new AdminMovieServiceImpl();
+		}
+		return instance;
+	}
     
     private SqlSession getSqlSession() {		
 		return DBService.getFactory().openSession(false);

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="AdminMemberStats">
+  	<!-- 전체 회원 수 (탈퇴 제외) -->
+    <select id="selMemberCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE memState != 3
+    </select>
+    
+    <!-- 특정 날짜 기준 총 회원 수 -->
+    <select id="selTotalMemberCountByDate" parameterType="java.time.LocalDate" resultType="int">
+	<![CDATA[
+        SELECT COUNT(*)
+    	FROM MEMBER
+    	WHERE memDate < #{value} + 1
+        AND memState != 3
+    ]]>
+    </select>
+    
+    <!-- 특정 기간 내 신규 회원 수 -->
+    <select id="selNewMemberCnt" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="int">
+    	<![CDATA[
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE memDate BETWEEN #{startDate} AND #{endDate}
+        AND memState != 3
+        ]]>
+    </select>
+    
+    <!-- 휴면 회원 수 -->
+    <select id="selSleepMemberCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE memState = 2
+    </select>
+    
+    <!-- 탈퇴 회원 수 -->
+    <select id="selOutMemberCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE memState = 3
+    </select>
+    
+    <!-- 신규 회원 추이 -->
+    <select id="selNewMemberTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.TrendDTO">
+        <![CDATA[
+        SELECT
+            TO_CHAR(memDate, 'YYYY-MM-DD') AS regDate,
+            COUNT(*) AS cnt
+        FROM MEMBER
+        WHERE memDate BETWEEN #{startDate} AND #{endDate}
+        GROUP BY TO_CHAR(memDate, 'YYYY-MM-DD')
+        ORDER BY regDate
+        ]]>
+    </select>
+    
+    <!-- 게시글 TOP 10 회원 -->
+    <select id="selTopBoardMembers" resultType="DTO.Admin.Stats.TopMemberDTO">
+        <![CDATA[
+        SELECT *
+        FROM (
+            SELECT
+                m.memNo,
+                m.memId,
+                m.memName,
+                m.memEmail,
+                m.memState,
+                m.memProfilePhoto,
+                m.memDate,
+                m.memLastLogin,
+                COUNT(b.boardId) AS boardCount
+            FROM MEMBER m
+            JOIN BOARD b ON m.memNo = b.memNo
+            GROUP BY
+                m.memNo,
+                m.memId,
+                m.memName,
+                m.memEmail,
+                m.memState,
+                m.memProfilePhoto,
+                m.memDate,
+                m.memLastLogin
+            ORDER BY boardCount DESC
+        )
+        WHERE ROWNUM <= 10
+        ]]>
+    </select>
+    
+    <!-- 댓글 TOP 10 회원 -->
+    <select id="selTopCommentMembers" resultType="DTO.Admin.Stats.TopMemberDTO">
+        <![CDATA[
+        SELECT *
+        FROM (
+            SELECT
+                m.memNo,
+                m.memId,
+                m.memName,
+                m.memEmail,
+                m.memState,
+                m.memProfilePhoto,
+                m.memDate,
+                m.memLastLogin,
+                COUNT(c.commentsId) AS commentCount
+            FROM MEMBER m
+            JOIN COMMENTS c ON m.memNo = c.memNo
+            GROUP BY
+                m.memNo,
+                m.memId,
+                m.memName,
+                m.memEmail,
+                m.memState,
+                m.memProfilePhoto,
+                m.memDate,
+                m.memLastLogin
+            ORDER BY commentCount DESC
+        )
+        WHERE ROWNUM <= 10
+        ]]>
+    </select>
+  </mapper>

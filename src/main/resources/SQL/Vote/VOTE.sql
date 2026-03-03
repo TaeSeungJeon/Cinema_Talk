@@ -58,12 +58,6 @@ ALTER TABLE VOTE_OPTION ADD (optionId NUMBER NOT NULL);
 
 ALTER TABLE VOTE_OPTION ADD CONSTRAINT PK_VOTE_OPTION PRIMARY KEY (optionId);
 
--- 유니크 제약조건 추가
--- 영화가 삭제되어 movieId가 NULL이 되는 것은 허용해줌
-CREATE UNIQUE INDEX UK_VOTE_OPTION_ACTIVE 
-ON VOTE_OPTION (CASE WHEN movieDeleted = 0 THEN voteId END, 
-                CASE WHEN movieDeleted = 0 THEN movieId END);
-
 -- 영화가 삭제되는 여부를 저장하기 위한 컬럼 추가
 ALTER TABLE VOTE_OPTION 
 ADD (movieDeleted NUMBER(1) DEFAULT 0);
@@ -77,6 +71,15 @@ ALTER TABLE VOTE_OPTION ADD (movieTitleBackup VARCHAR2(200));
 
 -- VOTE_RECORD에 개별 투표 이력에서 제목 확인 가능하게 함
 ALTER TABLE VOTE_RECORD ADD (movieTitleBackup VARCHAR2(200));
+
+
+-- 유니크 제약조건 추가
+-- 영화가 삭제되어 movieId가 NULL이 되는 것은 허용해줌
+CREATE UNIQUE INDEX UK_VOTE_OPTION_ACTIVE 
+ON VOTE_OPTION (CASE WHEN movieDeleted = 0 THEN voteId END, 
+                CASE WHEN movieDeleted = 0 THEN movieId END);
+
+
 
 -- 영화가 삭제 되기전 트리거
 CREATE OR REPLACE TRIGGER trgOnMovieDeleted

@@ -538,16 +538,16 @@ tbody td {
 
 			<!-- 기간 필터 -->
 			<div class="filter-bar">
-				<button class="filter-btn active" onclick="setFilter(this,'7일')">최근
+				<button class="filter-btn active" onclick="setFilter(this,7)">최근
 					7일</button>
-				<button class="filter-btn" onclick="setFilter(this,'30일')">최근
+				<button class="filter-btn" onclick="setFilter(this,30)">최근
 					30일</button>
-				<button class="filter-btn" onclick="setFilter(this,'90일')">최근
+				<button class="filter-btn" onclick="setFilter(this,90)">최근
 					90일</button>
-				<button class="filter-btn" onclick="setFilter(this,'1년')">1년</button>
+				<button class="filter-btn" onclick="setFilter(this,365)">1년</button>
 				<div class="date-range">
-					<input type="date" id="startDate" value="2026-01-28" /> <span>~</span>
-					<input type="date" id="endDate" value="2026-02-27" />
+					<input type="date" id="startDate" value="2026-01-28"/> <span>~</span>
+					<input type="date" id="endDate" value="2026-02-27"/>
 				</div>
 			</div>
 
@@ -921,26 +921,36 @@ tbody td {
 				<div class="kpi-card">
 					<div class="kpi-icon icon-purple">📩</div>
 					<div class="kpi-label">총 문의 수</div>
-					<div class="kpi-value">201</div>
+					<div class="kpi-value">${inquiryStat.totalInquiryStat.currentValue}</div>
 					<div class="kpi-sub">
-						<span class="kpi-badge badge-up">▲ 14%</span> 전월 대비
+						<span
+							class="kpi-badge 
+        ${inquiryStat.totalInquiryStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
+							${inquiryStat.totalInquiryStat.increaseRate >= 0 ? '▲' : '▼'}
+							${inquiryStat.totalInquiryStat.increaseRate}% </span> 전월 대비
 					</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-green">✅</div>
 					<div class="kpi-label">처리 완료</div>
-					<div class="kpi-value">142</div>
+					<div class="kpi-value">${inquiryStat.totalInquiryStat.currentValue}</div>
 					<div class="kpi-sub">
-						<span class="kpi-badge badge-up">▲ 8.5%</span> 전월 대비
+						<span
+							class="kpi-badge 
+        ${inquiryStat.totalInquiryStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
+							${inquiryStat.totalInquiryStat.increaseRate >= 0 ? '▲' : '▼'}
+							${inquiryStat.totalInquiryStat.increaseRate}% </span> 전월 대비
 					</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-orange">🔄</div>
 					<div class="kpi-label">처리 중</div>
+					<div class="kpi-value">${inquiryStat.processingCnt}</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-blue">⏱️</div>
 					<div class="kpi-label">평균 처리 시간</div>
+					<div class="kpi-value">${inquiryStat.avgProcessingTime}</div>
 				</div>
 			</div>
 
@@ -958,10 +968,10 @@ tbody td {
 				</div>
 
 
-				<div class="chart-card">
-					<div class="chart-card-header">
+				<div class="table-card">
+					<div class="table-card-header">
 						<div>
-							<div class="chart-card-title">일별 문의 접수</div>
+							<div class="table-card-title">일별 문의 접수</div>
 							<div class="chart-card-sub">최근 30일</div>
 						</div>
 					</div>
@@ -994,14 +1004,25 @@ function switchTab(tabName) {
 window.chartInstances = {};
 
 /* ── 필터 버튼 ── */
-function setFilter(btn, label) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-function setFilterMembers(btn, label) { setFilter(btn, label); }
-function setFilterContent(btn, label) { setFilter(btn, label); }
-function setFilterInquiry(btn, label) { setFilter(btn, label); }
+function setFilter(btn, days) {
 
+	  document.querySelectorAll('.filter-btn')
+	          .forEach(b => b.classList.remove('active'));
+
+	  btn.classList.add('active');
+
+	  const today = new Date();
+	  const start = new Date();
+	  start.setDate(today.getDate() - days);
+
+	  const startStr = formatDate(start);
+	  const endStr = formatDate(today);
+
+	  document.getElementById('startDate').value = startStr;
+	  document.getElementById('endDate').value = endStr;
+
+	  loadStat(startStr, endStr);
+}
 /* ── 공통 Chart.js 옵션 ── */
 const baseFont = { family: "'Segoe UI','Apple SD Gothic Neo',sans-serif", size: 12 };
 
@@ -1238,18 +1259,29 @@ const voteTrendData = [
 /* ── INQUIRY 탭 차트 ── */
 
 /* 문의 처리 현황 */
+const inquiryStatusData = {
+  completed: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.completedCnt : 0},
+  processing: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.processingCnt : 0},
+  pending: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.pendingCnt : 0}
+};
+		
+
 (function(){
   window.chartInstances.inquiryStatusChart = new Chart(document.getElementById('inquiryStatusChart'), {
     type:'doughnut',
     data:{
-      labels:['처리 완료','처리 중','미처리'],
-      datasets:[{
-        data:[142,38,21],
-        backgroundColor:['#34d399','#fbbf24','#f87171'],
-        borderWidth:0,
-        hoverOffset:6
-      }]
-    },
+        labels:['처리 완료','처리 중','미처리'],
+        datasets:[{
+          data:[
+            inquiryStatusData.completed,
+            inquiryStatusData.processing,
+            inquiryStatusData.pending
+          ],
+          backgroundColor:['#34d399','#fbbf24','#f87171'],
+          borderWidth:0,
+          hoverOffset:6
+        }]
+      },
     options:{
       responsive:true, maintainAspectRatio:false,
       cutout:'60%',
@@ -1266,37 +1298,49 @@ const voteTrendData = [
 })();
 
 /* 일별 문의 접수 */
+const inquiryTrendLabels = [
+<c:forEach var="t" items="${inquiryStat.dailyInquiryTrend}" varStatus="s">
+    "${t.regDate}"<c:if test="${!s.last}">,</c:if>
+</c:forEach>
+];
+
+const inquiryTrendData = [
+<c:forEach var="t" items="${inquiryStat.dailyInquiryTrend}" varStatus="s">
+    ${t.cnt}<c:if test="${!s.last}">,</c:if>
+</c:forEach>
+];
 (function(){
-  const labels = Array.from({length:30}, (_,i)=>{
-    const d = new Date('2026-01-29');
-    d.setDate(d.getDate()+i);
-    return `${d.getMonth()+1}/${d.getDate()}`;
-  });
-  const data = [5,7,4,8,6,9,7,10,8,11,9,12,10,13,11,14,12,15,13,16,14,17,15,18,16,19,17,20,18,21];
-  window.chartInstances.inquiryTrendChart = new Chart(document.getElementById('inquiryTrendChart'), {
-    type:'line',
-    data:{
-      labels,
-      datasets:[{
-        label:'문의 접수',
-        data,
-        borderColor:'#f87171',
-        backgroundColor:'rgba(248,113,113,0.08)',
-        borderWidth:2,
-        pointRadius:0,
-        fill:true,
-        tension:0.4
-      }]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, color:'#bbb'}},
-        y:{grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb'}}
-      }
-    }
-  });
+    window.chartInstances.inquiryTrendChart = new Chart(
+		  document.getElementById('inquiryTrendChart'),
+		  {
+		    type: 'line',
+		    data: {
+		    	labels: (inquiryTrendLabels || []).map(d => {
+		    	    if (!d) return '';
+		    	    const parts = d.split('-');
+		    	    return parts[1] + '/' + parts[2];
+		    	}),
+		      datasets: [{
+		    	label: '신규 문의 접수 수',
+		        data: inquiryTrendData,
+		        borderColor:'#f87171',
+		        backgroundColor:'rgba(248,113,113,0.08)',
+		        borderWidth:2,
+		        pointRadius:0,
+		        fill:true,
+		        tension:0.4
+		      }]
+		    },
+		    options:{
+		          responsive:true, maintainAspectRatio:false,
+		          plugins:{legend:{display:false}},
+		          scales:{
+		            x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, color:'#bbb'}},
+		            y:{grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb', precision:0}}
+		          }
+		       }
+		  }
+		);
 })();
 
 </script>

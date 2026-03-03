@@ -26,6 +26,10 @@ public class AdminStatsController implements Action {
 
 	    DateRangeDTO dataRange = new DateRangeDTO();
 
+	    DateRangeDTO last7DaysRange = new DateRangeDTO();
+	    last7DaysRange.setStartDate(LocalDate.now().minusDays(7));
+	    last7DaysRange.setEndDate(LocalDate.now());
+	    
 	    try {
 	        if (start != null && !start.isBlank() &&
 	            end != null && !end.isBlank()) {
@@ -46,10 +50,10 @@ public class AdminStatsController implements Action {
 	    }
 	    
 	    request.setAttribute("summaryStat", adminStatsService.getSummaryStat(dataRange));
-	    request.setAttribute("memberStat", adminStatsService.getMemberStat(dataRange));
-	    request.setAttribute("boardStat", adminStatsService.getBoardStat(dataRange));
-	    request.setAttribute("voteStat", adminStatsService.getVoteStat(dataRange));
-	    request.setAttribute("inquiryStat", adminStatsService.getInquiryStat(dataRange));
+	    request.setAttribute("memberStat", adminStatsService.getMemberStat(last7DaysRange));
+	    request.setAttribute("boardStat", adminStatsService.getBoardStat(last7DaysRange));
+	    request.setAttribute("voteStat", adminStatsService.getVoteStat(last7DaysRange));
+	    request.setAttribute("inquiryStat", adminStatsService.getInquiryStat(last7DaysRange));
 	    
 	    if (isAjax) {
 	    	forward.setPath("/WEB-INF/views/admin/adminStats.jsp");

@@ -12,8 +12,8 @@ public class AdminInquiryStatDTO {
     private PeriodStatDTO completedInquiryStat;
 
     private int processingCnt;
-    private double avgProcessingTime;  // 시간 단위
+    private String avgProcessingTime;  // 시간 단위
 
-    private List<TrendDTO> inquiryStatusTrend;
+    private InquiryStatusStatDTO inquiryStatus;
     private List<TrendDTO> dailyInquiryTrend;
 }

@@ -361,7 +361,6 @@
 						</span>
 						<span><i class="fa-solid fa-eye"></i>${b.boardViewCount}</span>
 						<span><i class="fa-solid fa-heart"></i>${b.likeCount}</span>
-						<span><i class="fa-solid fa-comment"></i>${b.commentCount}</span>
 					</div>
 				</div>
 			</c:forEach>

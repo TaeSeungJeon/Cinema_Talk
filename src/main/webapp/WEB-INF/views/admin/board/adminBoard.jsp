@@ -16,7 +16,7 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* ========== 왼쪽: 공지 목록 ========== */
+/* ========== 왼쪽: 게시글 목록 ========== */
 .notice-sidebar {
 	width: 420px;
 	border-right: 1px solid #f3f4f6;
@@ -127,7 +127,7 @@
 	background: #d1d5db; border-radius: 10px;
 }
 
-/* 공지 카드 */
+/* 게시글 카드 */
 .notice-card {
 	padding: 0.85rem 1rem;
 	border-radius: 0.75rem;
@@ -161,7 +161,7 @@
 	font-weight: 700;
 	padding: 2px 8px;
 	border-radius: 999px;
-	background: #8b5cf6;
+	background: #3b82f6;
 	color: white;
 }
 
@@ -240,7 +240,7 @@
 	overflow: hidden;
 }
 
-#notice-detail-area {
+#board-detail-area {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
@@ -306,9 +306,9 @@
 </style>
 
 <!-- ========== 전체 페이지 ========== -->
-<div class="notice-mgmt-page" id="notice-mgmt-page">
+<div class="notice-mgmt-page" id="board-mgmt-page">
 
-	<!-- ===== 왼쪽: 공지사항 목록 ===== -->
+	<!-- ===== 왼쪽: 게시글 목록 ===== -->
 	<aside class="notice-sidebar">
 		<div class="sidebar-header">
 
@@ -317,26 +317,29 @@
 				<button class="sort-btn ${sort == 'latest' ? 'active' : ''}" data-sort="latest">
 					<i class="fa-solid fa-clock"></i> 최신순
 				</button>
-				<button class="sort-btn ${sort == 'view' ? 'active' : ''}" data-sort="view">
-					<i class="fa-solid fa-eye"></i> 조회수순
-				</button>
 				<button class="sort-btn ${sort == 'like' ? 'active' : ''}" data-sort="like">
 					<i class="fa-solid fa-heart"></i> 좋아요순
+				</button>
+				<button class="sort-btn ${sort == 'view' ? 'active' : ''}" data-sort="view">
+					<i class="fa-solid fa-eye"></i> 조회순
+				</button>
+				<button class="sort-btn ${sort == 'comment' ? 'active' : ''}" data-sort="comment">
+					<i class="fa-solid fa-comment"></i> 댓글순
 				</button>
 			</div>
 
 			<!-- 검색 -->
 			<div class="search-row">
-				<select class="search-select" id="noticeSearchType">
+				<select class="search-select" id="boardSearchType">
 					<option value=""        ${empty searchType ? 'selected' : ''}>전체</option>
-					<option value="writer"  ${searchType == 'writer'  ? 'selected' : ''}>회원</option>
+					<option value="writer"  ${searchType == 'writer'  ? 'selected' : ''}>작성자</option>
 					<option value="title"   ${searchType == 'title'   ? 'selected' : ''}>제목</option>
 					<option value="content" ${searchType == 'content' ? 'selected' : ''}>내용</option>
 				</select>
 				<div class="search-wrapper">
 					<i class="fa-solid fa-magnifying-glass"></i>
 					<input type="text" class="search-input"
-						   placeholder="검색어 입력..." id="noticeSearch" value="${keyword}">
+						   placeholder="검색어 입력..." id="boardSearch" value="${keyword}">
 				</div>
 			</div>
 
@@ -347,11 +350,11 @@
 		</div>
 
 		<!-- 목록 -->
-		<div class="notice-list-container" id="notice-list-area">
-			<c:forEach var="b" items="${noticeList}">
+		<div class="notice-list-container" id="board-list-area">
+			<c:forEach var="b" items="${boardList}">
 				<div class="notice-card" data-id="${b.boardId}">
 					<div class="card-top">
-						<span class="card-type-badge">공지</span>
+						<span class="card-type-badge">게시글</span>
 						<span class="card-date">${b.boardDate}</span>
 					</div>
 					<div class="card-title">${b.boardTitle}</div>
@@ -361,15 +364,16 @@
 						</span>
 						<span><i class="fa-solid fa-eye"></i>${b.boardViewCount}</span>
 						<span><i class="fa-solid fa-heart"></i>${b.likeCount}</span>
+						<span><i class="fa-solid fa-comment"></i>${b.commentCount}</span>
 					</div>
 				</div>
 			</c:forEach>
 
-			<c:if test="${empty noticeList}">
+			<c:if test="${empty boardList}">
 				<div style="text-align:center; padding:3rem 1rem; color:#9ca3af;">
 					<i class="fa-solid fa-inbox"
 					   style="font-size:2rem; margin-bottom:0.5rem; display:block;"></i>
-					공지사항이 없습니다.
+					게시글이 없습니다.
 				</div>
 			</c:if>
 		</div>
@@ -397,15 +401,15 @@
 
 	<!-- ===== 오른쪽: 상세 ===== -->
 	<main class="notice-detail-content">
-		<div id="notice-detail-area">
+		<div id="board-detail-area">
 			<div class="detail-empty">
 				<div class="detail-empty-inner">
 					<div class="detail-empty-icon">
-						<i class="fa-solid fa-clipboard-list"></i>
+						<i class="fa-solid fa-comments"></i>
 					</div>
-					<h3 class="detail-empty-title">공지사항 상세 정보</h3>
+					<h3 class="detail-empty-title">게시글 상세 정보</h3>
 					<p class="detail-empty-desc">
-						왼쪽 목록에서 공지사항을 선택하면<br>
+						왼쪽 목록에서 게시글을 선택하면<br>
 						상세 내용을 확인하고 수정·삭제할 수 있습니다.
 					</p>
 				</div>
@@ -417,26 +421,26 @@
 <script>
 (function() {
 	/* ===== 현재 필터 상태 (클로저로 격리) ===== */
-	var _noticeSort    = "${sort}";
-	var _noticeSearch  = "${searchType}";
-	var _noticeKeyword = "${keyword}";
-	var _noticePage    = ${page};
+	var _boardSort    = "${sort}";
+	var _boardSearch  = "${searchType}";
+	var _boardKeyword = "${keyword}";
+	var _boardPage    = ${page};
 
 	/* 외부(detail JSP)에서 접근할 수 있도록 window에 노출 */
-	window.noticeCurrentPage = _noticePage;
+	window.boardCurrentPage = _boardPage;
 
 	/* 목록 AJAX 로드 */
-	window.loadNoticeList = function(page) {
-		_noticePage = page || 1;
-		window.noticeCurrentPage = _noticePage;
+	window.loadBoardList = function(page) {
+		_boardPage = page || 1;
+		window.boardCurrentPage = _boardPage;
 		$.ajax({
-			url  : "${pageContext.request.contextPath}/admin/notice.do",
+			url  : "${pageContext.request.contextPath}/admin/board.do",
 			type : "GET",
 			data : {
-				sort       : _noticeSort,
-				searchType : _noticeSearch,
-				keyword    : _noticeKeyword,
-				page       : _noticePage
+				sort       : _boardSort,
+				searchType : _boardSearch,
+				keyword    : _boardKeyword,
+				page       : _boardPage
 			},
 			headers : { "X-Requested-With" : "XMLHttpRequest" },
 			success : function(html) {
@@ -448,51 +452,51 @@
 	/* 이전 모든 관리 페이지 바인딩 해제 */
 	$(document).off(".boardEvt").off(".noticeEvt").off(".quiryEvt");
 
-	/* 정렬 버튼 — #notice-mgmt-page 한정 */
-	$(document).on("click.noticeEvt", "#notice-mgmt-page .sort-btn", function() {
-		_noticeSort = $(this).data("sort");
-		loadNoticeList(1);
+	/* 정렬 버튼 — #board-mgmt-page 한정 */
+	$(document).on("click.boardEvt", "#board-mgmt-page .sort-btn", function() {
+		_boardSort = $(this).data("sort");
+		loadBoardList(1);
 	});
 
 	/* 검색 (Enter) */
-	$(document).on("keyup.noticeEvt", "#noticeSearch", function(e) {
+	$(document).on("keyup.boardEvt", "#boardSearch", function(e) {
 		if (e.key === "Enter") {
-			_noticeSearch  = $("#noticeSearchType").val();
-			_noticeKeyword = $(this).val();
-			loadNoticeList(1);
+			_boardSearch  = $("#boardSearchType").val();
+			_boardKeyword = $(this).val();
+			loadBoardList(1);
 		}
 	});
 
 	/* 검색 타입 변경 후 자동 검색 */
-	$(document).on("change.noticeEvt", "#noticeSearchType", function() {
-		_noticeSearch = $(this).val();
-		var kw = $("#noticeSearch").val();
+	$(document).on("change.boardEvt", "#boardSearchType", function() {
+		_boardSearch = $(this).val();
+		var kw = $("#boardSearch").val();
 		if (kw) {
-			_noticeKeyword = kw;
-			loadNoticeList(1);
+			_boardKeyword = kw;
+			loadBoardList(1);
 		}
 	});
 
-	/* 페이징 — #notice-mgmt-page 한정 */
-	$(document).on("click.noticeEvt", "#notice-mgmt-page .page-btn", function() {
+	/* 페이징 — #board-mgmt-page 한정 */
+	$(document).on("click.boardEvt", "#board-mgmt-page .page-btn", function() {
 		var p = $(this).data("page");
-		if (p) loadNoticeList(p);
+		if (p) loadBoardList(p);
 	});
 
-	/* 공지 카드 클릭 → 상세 로드 — #notice-mgmt-page 한정 */
-	$(document).on("click.noticeEvt", "#notice-mgmt-page .notice-card", function() {
+	/* 게시글 카드 클릭 → 상세 로드 — #board-mgmt-page 한정 */
+	$(document).on("click.boardEvt", "#board-mgmt-page .notice-card", function() {
 		var boardId = $(this).data("id");
 
-		$("#notice-mgmt-page .notice-card").removeClass("active");
+		$("#board-mgmt-page .notice-card").removeClass("active");
 		$(this).addClass("active");
 
 		$.ajax({
-			url  : "${pageContext.request.contextPath}/admin/notice/detail.do",
+			url  : "${pageContext.request.contextPath}/admin/board/detail.do",
 			type : "GET",
 			data : { boardId : boardId },
 			headers : { "X-Requested-With" : "XMLHttpRequest" },
 			success : function(html) {
-				$("#notice-detail-area").html(html);
+				$("#board-detail-area").html(html);
 			},
 			error : function(xhr) {
 				console.log("상세 로딩 실패:", xhr.status);

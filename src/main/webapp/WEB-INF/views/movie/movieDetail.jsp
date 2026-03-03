@@ -426,13 +426,13 @@
             <!-- 좋아요 버튼 -->
             <c:choose>
                 <c:when test="${isFavorite}">
-                    <button class="genre-tag" style="background:#ef4444;" onclick="pressFavorite()" value="false">👎 좋아요 취소</button>
+                    <button class="genre-tag" id="favoriteBtn" style="background:#ef4444;" onclick="pressFavorite()" data-favorite="true">👎 좋아요 취소</button>
                 </c:when>
                 <c:otherwise>
-                    <button class="genre-tag" style="background:#FC39C6;" onclick="pressFavorite()" value="true">👍 좋아요</button>
+                    <button class="genre-tag" id="favoriteBtn" style="background:#FC39C6;" onclick="pressFavorite()" data-favorite="false">👍 좋아요</button>
                 </c:otherwise>
             </c:choose>
-            <span style="margin-left: 10px; color: var(--text-secondary);">💖 ${favoriteCount}명이 좋아요</span>
+            <span id="favoriteCountText" style="margin-left: 10px; color: var(--text-secondary);">💖 ${favoriteCount}명이 좋아요</span>
 
             <!-- 줄거리 -->
             <c:if test="${not empty movie.movieOverview}">
@@ -513,8 +513,41 @@
         window.location.href = 'searchMovie.do?search-option=3&search-words=' + encodeURIComponent(genreName);
     }
     function pressFavorite() {
-        var action = event.target.value === 'true' ? 'add' : 'remove';
-        window.location.href = 'MemberMovieRecommend.do?movieId=' + movieId + '&redirect=movieDetail.do?movieId=' + movieId + '&action=' + action;
+        var btn = document.getElementById('favoriteBtn');
+        var isFav = btn.getAttribute('data-favorite') === 'true';
+        var action = isFav ? 'remove' : 'add';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'MemberMovieRecommend.do', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var res = JSON.parse(xhr.responseText);
+                    if (res.status === 'loginRequired') {
+                        alert('로그인이 필요합니다.');
+                        window.location.href = 'memberLogin.do';
+                        return;
+                    }
+                    if (res.status === 'success') {
+                        // 버튼 상태 갱신
+                        if (res.isFavorite) {
+                            btn.setAttribute('data-favorite', 'true');
+                            btn.style.background = '#ef4444';
+                            btn.innerHTML = '👎 좋아요 취소';
+                        } else {
+                            btn.setAttribute('data-favorite', 'false');
+                            btn.style.background = '#FC39C6';
+                            btn.innerHTML = '👍 좋아요';
+                        }
+                        // 좋아요 수 갱신
+                        document.getElementById('favoriteCountText').innerHTML = '💖 ' + res.favoriteCount + '명이 좋아요';
+                    }
+                }
+            }
+        };
+        xhr.send('movieId=' + movieId + '&action=' + action);
     }
     
 	function searchBoardByMovieId() {

@@ -50,8 +50,8 @@ public class IndexController implements Action {
     List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
     request.setAttribute("activeVoteRegList", activeVoteRegList);
 
-		// 최근 게시글 3개
-		List<BoardDTO> recentBoardList = boardService.recentBoardList(3);
+		// 최근 게시글 5개
+		List<BoardDTO> recentBoardList = boardService.recentBoardList(5);
 		request.setAttribute("recentBoardList", recentBoardList);
 
 		ActionForward forward = new ActionForward();

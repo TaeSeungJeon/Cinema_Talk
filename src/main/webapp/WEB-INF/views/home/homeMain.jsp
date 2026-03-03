@@ -2,6 +2,26 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 
+<style>
+
+	.post-item .post-preview img,
+	.post-item .post-preview video,
+	.post-item .post-preview iframe {
+		display: none !important;
+	}
+
+	.post-item .post-thumb{
+		width: 80px;
+		height: 80px;
+		border-radius: 14px;
+		overflow: hidden;
+		background: #e5e7eb;
+		flex: 0 0 96px;
+	}
+
+</style>
+
+
 <div class="quick-booking-aside" id="floatingMenu">
 	<div class="booking-box">
 		<h4 style="color: white; font-size: 0.75rem; margin: 0 0 10px 0;">📅
@@ -155,6 +175,7 @@
 						});
 			})();
 		</script>
+
 	</c:if>
 
 	<c:if test="${empty indexTrendMovieList}">
@@ -218,13 +239,16 @@
 		</c:if>
 
 		<c:forEach var="b" items="${recentBoardList}">
-			<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
+            <a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
 			   class="post-item">
-				<div class="post-thumb">썸네일</div>	<%-- 여기가 최근게시글 이미지 깨지는 부분 --%>
+				<div class="post-thumb" data-thumb-scope>
+					<div class="thumb-placeholder">unfile</div>
+				</div>
 				<div class="post-content">
 					<div style="display: flex; justify-content: space-between;">
 						<span
 								style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700;">
+
 							<c:out value="${b.boardType == 1 ? '자유게시판' : (b.boardType == 2 ? '영화 추천/후기' : '게시판')}" />
 						</span>
 						<span style="font-size: 0.85rem; color: #94a3b8;">
@@ -234,10 +258,14 @@
 					<div class="post-main-title">
 						<c:out value="${b.boardTitle}" />
 					</div>
+					<div class="post-preview" style="display:none;"> ${b.boardContent}</div>
+					<%--
+					게시글 내용 미리보기 부분
 					<div style="font-size: 0.9rem; color: #64748b;">
 						<c:out value="${fn:substring(b.boardContent, 0, 60)}" />
-						<c:if test="${fn:length(b.boardContent) > 60}">...</c:if>  <%--여기가 최근게시글 이미지 경로 깨지는 부분 --%>
+						<c:if test="${fn:length(b.boardContent) > 60}">...</c:if>
 					</div>
+					--%>
 					<div class="post-stats">
 						<span>💬 댓글 <c:out value="${b.commentCount}" /></span>
 						<span>👍 좋아요 <c:out value="${b.likeCount}" /></span>
@@ -255,3 +283,32 @@
 		</div>
 	</section>
 </main>
+<script>
+
+	document.addEventListener("DOMContentLoaded", function () {
+		document.querySelectorAll(".post-item").forEach(function (item) {
+			var preview = item.querySelector(".post-preview");
+			var thumbBox = item.querySelector(".post-thumb");
+			if (!preview || !thumbBox) return;
+
+			// preview 안에서 첫 번째 이미지를 찾음
+			var firstImg = preview.querySelector("img");
+			if (!firstImg || !firstImg.getAttribute("src")) return;
+
+			// 썸네일 이미지 생성
+			var timg = document.createElement("img");
+			timg.src = firstImg.getAttribute("src");
+			timg.alt = "thumbnail";
+			timg.style.width = "100%";
+			timg.style.height = "100%";
+			timg.style.objectFit = "cover";
+			timg.style.borderRadius = "14px";
+			timg.style.display = "block";
+
+			// 더미 제거 후 썸네일 삽입
+			thumbBox.innerHTML = "";
+			thumbBox.appendChild(timg);
+		});
+	});
+
+</script>

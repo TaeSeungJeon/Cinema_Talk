@@ -45,6 +45,7 @@ public class BoardOkController implements Action {
         String boardTitle = request.getParameter("boardTitle");
         String boardCont = request.getParameter("boardContent");
 
+
         if (boardTitle == null || boardTitle.trim().isEmpty() ||
                 boardCont == null || boardCont.trim().isEmpty()) {
             out.println("<script>");

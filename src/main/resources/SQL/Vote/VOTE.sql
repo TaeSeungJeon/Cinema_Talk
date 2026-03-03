@@ -80,7 +80,23 @@ CREATE UNIQUE INDEX UK_VOTE_OPTION_ACTIVE
 ON VOTE_OPTION (CASE WHEN movieDeleted = 0 THEN voteId END, 
                 CASE WHEN movieDeleted = 0 THEN movieId END);
 
+create sequence optionidSeq
+start with 1
+increment by 1
+nocycle
+nocache;
 
+create sequence recordIdSeq
+start with 1
+increment by 1
+nocycle
+nocache;
+
+create sequence voteIdSeq
+start with 1
+increment by 1
+nocycle
+nocache;
 
 -- 영화가 삭제 되기전 트리거
 CREATE OR REPLACE TRIGGER trgOnMovieDeleted
@@ -117,6 +133,7 @@ ALTER TABLE vote_record
 ADD CONSTRAINT uq_vote_record
 UNIQUE (voteId, memNo);
 
+
 create sequence optionidSeq
 start with 1
 increment by 1
@@ -135,11 +152,3 @@ increment by 1
 nocycle
 nocache;
 
-
-drop table VOTE_REGISTER;
-drop table VOTE_OPTION;
-drop table VOTE_RECORD;
-
-drop sequence optionidSeq;
-drop sequence recordIdSeq;
-drop sequence voteIdSeq;

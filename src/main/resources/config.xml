@@ -72,7 +72,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 
 				<property name="username" value="C##test1" />
 				<property name="password" value="test1" />
-
 				
 				<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
@@ -102,6 +101,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Board/AddFileMapper.xml"/>
 		<mapper resource="mappers/Board/BoardSearchMapper.xml"/>
     <mapper resource="mappers/Admin/AdminNoticeMapper.xml"/>
+    <mapper resource="mappers/Admin/AdminQuiryMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMovieMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminSummaryStatsMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMemberStatsMapper.xml"/>

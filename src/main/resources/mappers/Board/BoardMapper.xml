@@ -210,6 +210,7 @@
                        NVL(b.BOARDVIEWCOUNT, 0) DESC,
                        b.BOARDID DESC)
         WHERE ROWNUM <![CDATA[<=]]> #{limit}
+        /* 좋아요 기반, 좋아요가 같으면 조회수 순 */
     </select>
 
 </mapper>

@@ -16,7 +16,7 @@ public class LoginOkController implements Action {
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		response.setContentType("text/html;charset=UTF-8");
 		//로그인 창에서 입력받은 아이디, 비번 변수에 저장
 		String id = request.getParameter("mem-id");
 		String pwd = request.getParameter("mem-pwd");

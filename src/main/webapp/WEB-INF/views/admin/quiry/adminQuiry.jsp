@@ -16,7 +16,7 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* ========== 왼쪽: 공지 목록 ========== */
+/* ========== 왼쪽: 문의 목록 ========== */
 .notice-sidebar {
 	width: 420px;
 	border-right: 1px solid #f3f4f6;
@@ -38,6 +38,7 @@
 .sort-group {
 	display: flex;
 	gap: 6px;
+	flex-wrap: wrap;
 }
 
 .sort-btn {
@@ -62,6 +63,31 @@
 	background: #4f46e5;
 	color: white;
 	border-color: #4f46e5;
+}
+
+/* 미답변 필터 버튼 */
+.filter-unanswered-btn {
+	padding: 5px 14px;
+	border: 1px solid #fca5a5;
+	border-radius: 999px;
+	background: #fef2f2;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #dc2626;
+	cursor: pointer;
+	transition: all 0.2s;
+	margin-left: auto;
+}
+
+.filter-unanswered-btn:hover {
+	background: #fee2e2;
+	border-color: #f87171;
+}
+
+.filter-unanswered-btn.active {
+	background: #dc2626;
+	color: white;
+	border-color: #dc2626;
 }
 
 /* 검색 바 */
@@ -127,7 +153,7 @@
 	background: #d1d5db; border-radius: 10px;
 }
 
-/* 공지 카드 */
+/* 문의 카드 */
 .notice-card {
 	padding: 0.85rem 1rem;
 	border-radius: 0.75rem;
@@ -161,8 +187,26 @@
 	font-weight: 700;
 	padding: 2px 8px;
 	border-radius: 999px;
-	background: #8b5cf6;
+	background: #f59e0b;
 	color: white;
+}
+
+.card-status-badge {
+	font-size: 0.65rem;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 999px;
+	margin-left: 6px;
+}
+
+.card-status-badge.answered {
+	background: #d1fae5;
+	color: #059669;
+}
+
+.card-status-badge.unanswered {
+	background: #fee2e2;
+	color: #dc2626;
 }
 
 .card-date {
@@ -267,17 +311,17 @@
 	height: 110px;
 	margin: 0 auto 22px;
 	border-radius: 50%;
-	background: linear-gradient(145deg, #eef2ff, #e0e7ff);
+	background: linear-gradient(145deg, #fef3c7, #fde68a);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+	box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15);
 	animation: float 3s ease-in-out infinite;
 }
 
 .detail-empty-icon i {
 	font-size: 42px;
-	color: #4f46e5;
+	color: #f59e0b;
 }
 
 .detail-empty-title {
@@ -308,11 +352,11 @@
 <!-- ========== 전체 페이지 ========== -->
 <div class="notice-mgmt-page">
 
-	<!-- ===== 왼쪽: 공지사항 목록 ===== -->
+	<!-- ===== 왼쪽: 문의사항 목록 ===== -->
 	<aside class="notice-sidebar">
 		<div class="sidebar-header">
 
-			<!-- 정렬 -->
+			<!-- 정렬 + 미답변 필터 -->
 			<div class="sort-group">
 				<button class="sort-btn ${sort == 'latest' ? 'active' : ''}" data-sort="latest">
 					<i class="fa-solid fa-clock"></i> 최신순
@@ -322,6 +366,9 @@
 				</button>
 				<button class="sort-btn ${sort == 'like' ? 'active' : ''}" data-sort="like">
 					<i class="fa-solid fa-heart"></i> 좋아요순
+				</button>
+				<button class="filter-unanswered-btn ${unanswered == 'Y' ? 'active' : ''}" id="btnUnanswered">
+					<i class="fa-solid fa-comment-slash"></i> 미답변
 				</button>
 			</div>
 
@@ -336,7 +383,7 @@
 				<div class="search-wrapper">
 					<i class="fa-solid fa-magnifying-glass"></i>
 					<input type="text" class="search-input"
-						   placeholder="검색어 입력..." id="noticeSearch" value="${keyword}">
+						   placeholder="검색어 입력..." id="quirySearch" value="${keyword}">
 				</div>
 			</div>
 
@@ -347,11 +394,21 @@
 		</div>
 
 		<!-- 목록 -->
-		<div class="notice-list-container" id="notice-list-area">
-			<c:forEach var="b" items="${noticeList}">
+		<div class="notice-list-container" id="quiry-list-area">
+			<c:forEach var="b" items="${quiryList}">
 				<div class="notice-card" data-id="${b.boardId}">
 					<div class="card-top">
-						<span class="card-type-badge">공지</span>
+						<span>
+							<span class="card-type-badge">문의</span>
+							<c:choose>
+								<c:when test="${b.commentCount > 0}">
+									<span class="card-status-badge answered">답변완료</span>
+								</c:when>
+								<c:otherwise>
+									<span class="card-status-badge unanswered">미답변</span>
+								</c:otherwise>
+							</c:choose>
+						</span>
 						<span class="card-date">${b.boardDate}</span>
 					</div>
 					<div class="card-title">${b.boardTitle}</div>
@@ -361,15 +418,16 @@
 						</span>
 						<span><i class="fa-solid fa-eye"></i>${b.boardViewCount}</span>
 						<span><i class="fa-solid fa-heart"></i>${b.likeCount}</span>
+						<span><i class="fa-solid fa-comment"></i>${b.commentCount}</span>
 					</div>
 				</div>
 			</c:forEach>
 
-			<c:if test="${empty noticeList}">
+			<c:if test="${empty quiryList}">
 				<div style="text-align:center; padding:3rem 1rem; color:#9ca3af;">
 					<i class="fa-solid fa-inbox"
 					   style="font-size:2rem; margin-bottom:0.5rem; display:block;"></i>
-					공지사항이 없습니다.
+					문의사항이 없습니다.
 				</div>
 			</c:if>
 		</div>
@@ -401,12 +459,12 @@
 			<div class="detail-empty">
 				<div class="detail-empty-inner">
 					<div class="detail-empty-icon">
-						<i class="fa-solid fa-clipboard-list"></i>
+						<i class="fa-solid fa-headset"></i>
 					</div>
-					<h3 class="detail-empty-title">공지사항 상세 정보</h3>
+					<h3 class="detail-empty-title">문의사항 상세 정보</h3>
 					<p class="detail-empty-desc">
-						왼쪽 목록에서 공지사항을 선택하면<br>
-						상세 내용을 확인하고 수정·삭제할 수 있습니다.
+						왼쪽 목록에서 문의사항을 선택하면<br>
+						상세 내용을 확인하고 답변·삭제할 수 있습니다.
 					</p>
 				</div>
 			</div>
@@ -416,21 +474,23 @@
 
 <script>
 /* ===== 현재 필터 상태 ===== */
-var currentSort    = "${sort}";
-var currentSearch  = "${searchType}";
-var currentKeyword = "${keyword}";
-var currentPage    = ${page};
+var currentSort       = "${sort}";
+var currentSearch     = "${searchType}";
+var currentKeyword    = "${keyword}";
+var currentPage       = ${page};
+var currentUnanswered = "${unanswered}";
 
 /* 목록 AJAX 로드 */
-function loadNoticeList(page) {
+function loadQuiryList(page) {
 	currentPage = page || 1;
 	$.ajax({
-		url  : "${pageContext.request.contextPath}/admin/notice.do",
+		url  : "${pageContext.request.contextPath}/admin/quiry.do",
 		type : "GET",
 		data : {
 			sort       : currentSort,
 			searchType : currentSearch,
 			keyword    : currentKeyword,
+			unanswered : currentUnanswered,
 			page       : currentPage
 		},
 		headers : { "X-Requested-With" : "XMLHttpRequest" },
@@ -440,49 +500,59 @@ function loadNoticeList(page) {
 	});
 }
 
-/* 이전 바인딩 해제 후 재등록 (다른 페이지 이벤트 충돌 방지) */
-$(document).off(".noticeEvt").off(".quiryEvt");
+/* 이전 바인딩 해제 후 재등록 (AJAX 교체 시 중복 방지) */
+$(document).off(".quiryEvt").off(".noticeEvt");
 
 /* 정렬 버튼 */
-$(document).on("click.noticeEvt", ".notice-mgmt-page .sort-btn", function() {
+$(document).on("click.quiryEvt", ".notice-mgmt-page .sort-btn", function() {
 	currentSort = $(this).data("sort");
-	loadNoticeList(1);
+	loadQuiryList(1);
+});
+
+/* 미답변 필터 토글 */
+$(document).on("click.quiryEvt", "#btnUnanswered", function() {
+	if (currentUnanswered === "Y") {
+		currentUnanswered = "";
+	} else {
+		currentUnanswered = "Y";
+	}
+	loadQuiryList(1);
 });
 
 /* 검색 (Enter) */
-$(document).on("keyup.noticeEvt", "#noticeSearch", function(e) {
+$(document).on("keyup.quiryEvt", "#quirySearch", function(e) {
 	if (e.key === "Enter") {
 		currentSearch  = $("#searchType").val();
 		currentKeyword = $(this).val();
-		loadNoticeList(1);
+		loadQuiryList(1);
 	}
 });
 
 /* 검색 타입 변경 후 자동 검색 */
-$(document).on("change.noticeEvt", "#searchType", function() {
+$(document).on("change.quiryEvt", "#searchType", function() {
 	currentSearch = $(this).val();
-	var kw = $("#noticeSearch").val();
+	var kw = $("#quirySearch").val();
 	if (kw) {
 		currentKeyword = kw;
-		loadNoticeList(1);
+		loadQuiryList(1);
 	}
 });
 
 /* 페이징 */
-$(document).on("click.noticeEvt", ".notice-mgmt-page .page-btn", function() {
+$(document).on("click.quiryEvt", ".notice-mgmt-page .page-btn", function() {
 	var p = $(this).data("page");
-	if (p) loadNoticeList(p);
+	if (p) loadQuiryList(p);
 });
 
-/* 공지 카드 클릭 → 상세 로드 */
-$(document).on("click.noticeEvt", ".notice-mgmt-page .notice-card", function() {
+/* 문의 카드 클릭 → 상세 로드 */
+$(document).on("click.quiryEvt", ".notice-mgmt-page .notice-card", function() {
 	var boardId = $(this).data("id");
 
 	$(".notice-card").removeClass("active");
 	$(this).addClass("active");
 
 	$.ajax({
-		url  : "${pageContext.request.contextPath}/admin/notice/detail.do",
+		url  : "${pageContext.request.contextPath}/admin/quiry/detail.do",
 		type : "GET",
 		data : { boardId : boardId },
 		headers : { "X-Requested-With" : "XMLHttpRequest" },

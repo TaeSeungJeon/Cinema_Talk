@@ -287,7 +287,7 @@
                 <div class="v-meta">
                     <c:choose>
                         <c:when test="${vote.voted}">
-                            <span style="color: var(--primary); font-size: 0.85rem; font-weight: 700;">
+                            <span style="color: var(--status-active);; font-size: 0.85rem; font-weight: 700;">
                                 ✓ 참여 완료
                             </span>
                         </c:when>

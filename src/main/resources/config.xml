@@ -107,6 +107,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Admin/AdminMemberStatsMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminBoardStatsMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminVoteStatsMapper.xml"/>
+		<mapper resource="mappers/Admin/AdminInquiryStatsMapper.xml"/>
 		<mapper resource="mappers/Home.xml"/>
 	</mappers>
 

@@ -131,7 +131,7 @@ body {
 	border-radius: var(--radius-soft);
 	box-shadow: var(--shadow-subtle);
 	padding: 22px;
-	min-height: 760px;
+	height: 1035.31px;
 }
 
 /* stats board */
@@ -307,6 +307,8 @@ body {
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
+var contextPath = "${pageContext.request.contextPath}";
+
 $(function(){
 
     $(".admin-sidebar").on("click", ".side-link", function(e){
@@ -346,5 +348,7 @@ function showToast(message, type = "success") {
         toast.classList.remove("show");
     }, 3000);
 }
+
+
 </script>
 </html>

@@ -9,6 +9,8 @@ import DAO.Admin.AdminMovieDAO;
 import DAO.Admin.AdminMovieDAOImpl;
 import DAO.Admin.Stats.AdminBoardStatsDAO;
 import DAO.Admin.Stats.AdminBoardStatsDAOImpl;
+import DAO.Admin.Stats.AdminInquiryStatsDAO;
+import DAO.Admin.Stats.AdminInquiryStatsDAOImpl;
 import DAO.Admin.Stats.AdminMemberStatsDAO;
 import DAO.Admin.Stats.AdminMemberStatsDAOImpl;
 import DAO.Admin.Stats.AdminVoteStatsDAO;
@@ -162,6 +164,10 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 	public AdminVoteStatDTO getVoteStat(DateRangeDTO dataRange) {
 		AdminVoteStatDTO voteStatDTO = new AdminVoteStatDTO();
 		
+		DateRangeDTO oneMonthRange = new DateRangeDTO();
+		oneMonthRange.setStartDate(LocalDate.now().minusDays(30));
+		oneMonthRange.setEndDate(LocalDate.now());
+		
 		try (SqlSession session = getSqlSession()) {
 			AdminVoteStatsDAO dao = new AdminVoteStatsDAOImpl(session);
 			
@@ -184,7 +190,7 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 	    	voteStatDTO.setActiveVoteStat(dao.selActiveVoteStat());
 	   
 	    	// 월별 투표 참여 추이
-	    	voteStatDTO.setMonthlyVoteTrend(dao.selMonthlyVoteTrend(dataRange));
+	    	voteStatDTO.setMonthlyVoteTrend(dao.selMonthlyVoteTrend(oneMonthRange));
 	    	
 	    	// 인기 투표 TOP 10
 	    	voteStatDTO.setTopVotes(dao.selTopVotes());
@@ -196,19 +202,48 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 	public AdminInquiryStatDTO getInquiryStat(DateRangeDTO dataRange) {
 		AdminInquiryStatDTO inquiryStatDTO = new AdminInquiryStatDTO();
 		
+		// 1달 범위 계산
+		DateRangeDTO oneMonthRange = new DateRangeDTO();
+		oneMonthRange.setStartDate(LocalDate.now().minusDays(30));
+		oneMonthRange.setEndDate(LocalDate.now());
+		
 		try (SqlSession session = getSqlSession()) {
+			AdminInquiryStatsDAO dao = new AdminInquiryStatsDAOImpl(session);
 			
 			// 총 문의 수 + 증가률
-			
+			int currentTotalInquiryCnt = dao.selTotalInquiryCnt();
+	    	int previousTotalInquiryCnt = dao.selTotalInquiryCountByDate(dataRange.getEndDate().minusMonths(1));
+	    	
+	    	inquiryStatDTO.setTotalInquiryStat(calculatePeriodStat(currentTotalInquiryCnt, previousTotalInquiryCnt));
+
 			// 답변 완료된 문의 수 + 증가률
-			
+	    	int currentCompletedInquiryCnt = dao.selCompletedInquiryCnt();
+	    	int previousCompletedInquiryCnt = dao.selCompletedInquiryCountByDate(dataRange.getEndDate().minusMonths(1));
+	    	
+	    	inquiryStatDTO.setCompletedInquiryStat(calculatePeriodStat(currentCompletedInquiryCnt, previousCompletedInquiryCnt));
+
 			// 처리 중인 문의 수
-			
+	    	inquiryStatDTO.setProcessingCnt(dao.selProcessingInquiryCnt());
+	    	
 			// 평균 문의 처리 시간(처리일 - 문의 등록일)
-			
-			// 일별 문의 등록 추이
+	    	double hours = dao.selAvgProcessingTime();
+	    	String formatted;
+	    	if (hours < 1) {
+	    	    formatted = Math.round(hours * 60) + "분";
+	    	} else if (hours < 24) {
+	    	    formatted = String.format("%.1f시간", hours);
+	    	} else {
+	    	    long days = (long) (hours / 24);
+	    	    long remainHours = Math.round(hours % 24);
+	    	    formatted = days + "일 " + remainHours + "시간";
+	    	}
+	    	inquiryStatDTO.setAvgProcessingTime(formatted);			
+	    	
+			// 1달 내 문의 처리 현황
+			inquiryStatDTO.setInquiryStatus(dao.selInquiryStatus(oneMonthRange));
 			
 			// 일별 문의 접수
+			inquiryStatDTO.setDailyInquiryTrend(dao.selDailyReceivedInquiryTrend(dataRange));
 		}
 		
 		return inquiryStatDTO;

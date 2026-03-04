@@ -34,4 +34,7 @@ public interface BoardDAO {
     List<BoardDTO> hotBoardList(int limit);
 
     List<BoardDTO> recentBoardList(int limit);
+
+    // 최신 공지사항 1건
+    BoardDTO latestNotice();
 }

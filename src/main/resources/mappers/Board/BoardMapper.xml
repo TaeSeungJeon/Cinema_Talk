@@ -214,4 +214,20 @@
         /* 좋아요 기반, 좋아요가 같으면 조회수 순 */
     </select>
 
+    <!-- 최신 공지사항 1건 (boardType = 10) -->
+    <select id="latestNotice" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (
+            SELECT
+                b.BOARDID       AS boardId,
+                b.BOARDTYPE     AS boardType,
+                b.BOARDTITLE    AS boardTitle,
+                b.BOARDDATE     AS boardDate
+            FROM BOARD b
+            WHERE b.BOARDTYPE = 10
+            ORDER BY b.BOARDDATE DESC NULLS LAST, b.BOARDID DESC
+        )
+        WHERE ROWNUM = 1
+    </select>
+
 </mapper>

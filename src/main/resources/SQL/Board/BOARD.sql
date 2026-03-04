@@ -23,6 +23,8 @@ alter table board add constraint fk_mem_no foreign key (memNo)
 references MEMBER (memNo);
 -- MOVIEID 컬럼을 NULL 허용으로 변경
 ALTER TABLE BOARD MODIFY (MOVIEID NULL);
+-- 링크 프리뷰 사용을 위한 컬럼 추가 (삭제해도될 듯)
+ALTER TABLE BOARD ADD (linkUrl VARCHAR2(500) NULL);
 
 
 ALTER TABLE BOARD RENAME COLUMN boardViewCount TO boardViewCount;

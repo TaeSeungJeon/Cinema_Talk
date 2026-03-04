@@ -439,13 +439,13 @@ function submitReply() {
 					data : { boardId : _boardId },
 					headers : { "X-Requested-With" : "XMLHttpRequest" },
 					success : function(html) {
-						$("#notice-detail-area").html(html);
+						$("#quiry-detail-area").html(html);
 					}
 				});
 
 				// 왼쪽 목록도 갱신 (답변 상태 변경 반영)
 				if (typeof loadQuiryList === "function") {
-					loadQuiryList(currentPage);
+					loadQuiryList(window.quiryCurrentPage);
 				}
 			} else {
 				showToast("답변 등록 실패", "error");
@@ -470,7 +470,7 @@ function deleteQuiry() {
 				showToast("✔ 문의사항이 삭제되었습니다.");
 
 				// 상세 영역 초기화
-				document.getElementById("notice-detail-area").innerHTML =
+				document.getElementById("quiry-detail-area").innerHTML =
 					'<div class="detail-empty">' +
 					'  <div class="detail-empty-inner">' +
 					'    <div class="detail-empty-icon"><i class="fa-solid fa-headset"></i></div>' +
@@ -481,7 +481,7 @@ function deleteQuiry() {
 
 				// 목록 갱신
 				if (typeof loadQuiryList === "function") {
-					loadQuiryList(currentPage);
+					loadQuiryList(window.quiryCurrentPage);
 				}
 			} else {
 				showToast("삭제 실패", "error");

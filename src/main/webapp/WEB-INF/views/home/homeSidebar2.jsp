@@ -149,8 +149,6 @@
         }
     }
 
-
-
     document.getElementById('hotToggleBtn').addEventListener('click', toggleHotList);
 
     applyExpandedUI();

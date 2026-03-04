@@ -284,7 +284,7 @@
 	overflow: hidden;
 }
 
-#notice-detail-area {
+#quiry-detail-area {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
@@ -350,7 +350,7 @@
 </style>
 
 <!-- ========== 전체 페이지 ========== -->
-<div class="notice-mgmt-page">
+<div class="notice-mgmt-page" id="quiry-mgmt-page">
 
 	<!-- ===== 왼쪽: 문의사항 목록 ===== -->
 	<aside class="notice-sidebar">
@@ -374,7 +374,7 @@
 
 			<!-- 검색 -->
 			<div class="search-row">
-				<select class="search-select" id="searchType">
+				<select class="search-select" id="quirySearchType">
 					<option value=""        ${empty searchType ? 'selected' : ''}>전체</option>
 					<option value="writer"  ${searchType == 'writer'  ? 'selected' : ''}>회원</option>
 					<option value="title"   ${searchType == 'title'   ? 'selected' : ''}>제목</option>
@@ -455,7 +455,7 @@
 
 	<!-- ===== 오른쪽: 상세 ===== -->
 	<main class="notice-detail-content">
-		<div id="notice-detail-area">
+		<div id="quiry-detail-area">
 			<div class="detail-empty">
 				<div class="detail-empty-inner">
 					<div class="detail-empty-icon">
@@ -473,95 +473,101 @@
 </div>
 
 <script>
-/* ===== 현재 필터 상태 ===== */
-var currentSort       = "${sort}";
-var currentSearch     = "${searchType}";
-var currentKeyword    = "${keyword}";
-var currentPage       = ${page};
-var currentUnanswered = "${unanswered}";
+(function() {
+	/* ===== 현재 필터 상태 (클로저로 격리) ===== */
+	var _quirySort       = "${sort}";
+	var _quirySearch     = "${searchType}";
+	var _quiryKeyword    = "${keyword}";
+	var _quiryPage       = ${page};
+	var _quiryUnanswered = "${unanswered}";
 
-/* 목록 AJAX 로드 */
-function loadQuiryList(page) {
-	currentPage = page || 1;
-	$.ajax({
-		url  : "${pageContext.request.contextPath}/admin/quiry.do",
-		type : "GET",
-		data : {
-			sort       : currentSort,
-			searchType : currentSearch,
-			keyword    : currentKeyword,
-			unanswered : currentUnanswered,
-			page       : currentPage
-		},
-		headers : { "X-Requested-With" : "XMLHttpRequest" },
-		success : function(html) {
-			$("#admin-content").html(html);
+	/* 외부(detail JSP)에서 접근할 수 있도록 window에 노출 */
+	window.quiryCurrentPage = _quiryPage;
+
+	/* 목록 AJAX 로드 */
+	window.loadQuiryList = function(page) {
+		_quiryPage = page || 1;
+		window.quiryCurrentPage = _quiryPage;
+		$.ajax({
+			url  : "${pageContext.request.contextPath}/admin/quiry.do",
+			type : "GET",
+			data : {
+				sort       : _quirySort,
+				searchType : _quirySearch,
+				keyword    : _quiryKeyword,
+				unanswered : _quiryUnanswered,
+				page       : _quiryPage
+			},
+			headers : { "X-Requested-With" : "XMLHttpRequest" },
+			success : function(html) {
+				$("#admin-content").html(html);
+			}
+		});
+	};
+
+	/* 이전 모든 관리 페이지 바인딩 해제 */
+	$(document).off(".boardEvt").off(".noticeEvt").off(".quiryEvt");
+
+	/* 정렬 버튼 — #quiry-mgmt-page 한정 */
+	$(document).on("click.quiryEvt", "#quiry-mgmt-page .sort-btn", function() {
+		_quirySort = $(this).data("sort");
+		loadQuiryList(1);
+	});
+
+	/* 미답변 필터 토글 */
+	$(document).on("click.quiryEvt", "#btnUnanswered", function() {
+		if (_quiryUnanswered === "Y") {
+			_quiryUnanswered = "";
+		} else {
+			_quiryUnanswered = "Y";
+		}
+		loadQuiryList(1);
+	});
+
+	/* 검색 (Enter) */
+	$(document).on("keyup.quiryEvt", "#quirySearch", function(e) {
+		if (e.key === "Enter") {
+			_quirySearch  = $("#quirySearchType").val();
+			_quiryKeyword = $(this).val();
+			loadQuiryList(1);
 		}
 	});
-}
 
-/* 이전 바인딩 해제 후 재등록 (AJAX 교체 시 중복 방지) */
-$(document).off(".quiryEvt").off(".noticeEvt");
-
-/* 정렬 버튼 */
-$(document).on("click.quiryEvt", ".notice-mgmt-page .sort-btn", function() {
-	currentSort = $(this).data("sort");
-	loadQuiryList(1);
-});
-
-/* 미답변 필터 토글 */
-$(document).on("click.quiryEvt", "#btnUnanswered", function() {
-	if (currentUnanswered === "Y") {
-		currentUnanswered = "";
-	} else {
-		currentUnanswered = "Y";
-	}
-	loadQuiryList(1);
-});
-
-/* 검색 (Enter) */
-$(document).on("keyup.quiryEvt", "#quirySearch", function(e) {
-	if (e.key === "Enter") {
-		currentSearch  = $("#searchType").val();
-		currentKeyword = $(this).val();
-		loadQuiryList(1);
-	}
-});
-
-/* 검색 타입 변경 후 자동 검색 */
-$(document).on("change.quiryEvt", "#searchType", function() {
-	currentSearch = $(this).val();
-	var kw = $("#quirySearch").val();
-	if (kw) {
-		currentKeyword = kw;
-		loadQuiryList(1);
-	}
-});
-
-/* 페이징 */
-$(document).on("click.quiryEvt", ".notice-mgmt-page .page-btn", function() {
-	var p = $(this).data("page");
-	if (p) loadQuiryList(p);
-});
-
-/* 문의 카드 클릭 → 상세 로드 */
-$(document).on("click.quiryEvt", ".notice-mgmt-page .notice-card", function() {
-	var boardId = $(this).data("id");
-
-	$(".notice-card").removeClass("active");
-	$(this).addClass("active");
-
-	$.ajax({
-		url  : "${pageContext.request.contextPath}/admin/quiry/detail.do",
-		type : "GET",
-		data : { boardId : boardId },
-		headers : { "X-Requested-With" : "XMLHttpRequest" },
-		success : function(html) {
-			$("#notice-detail-area").html(html);
-		},
-		error : function(xhr) {
-			console.log("상세 로딩 실패:", xhr.status);
+	/* 검색 타입 변경 후 자동 검색 */
+	$(document).on("change.quiryEvt", "#quirySearchType", function() {
+		_quirySearch = $(this).val();
+		var kw = $("#quirySearch").val();
+		if (kw) {
+			_quiryKeyword = kw;
+			loadQuiryList(1);
 		}
 	});
-});
+
+	/* 페이징 — #quiry-mgmt-page 한정 */
+	$(document).on("click.quiryEvt", "#quiry-mgmt-page .page-btn", function() {
+		var p = $(this).data("page");
+		if (p) loadQuiryList(p);
+	});
+
+	/* 문의 카드 클릭 → 상세 로드 — #quiry-mgmt-page 한정 */
+	$(document).on("click.quiryEvt", "#quiry-mgmt-page .notice-card", function() {
+		var boardId = $(this).data("id");
+
+		$("#quiry-mgmt-page .notice-card").removeClass("active");
+		$(this).addClass("active");
+
+		$.ajax({
+			url  : "${pageContext.request.contextPath}/admin/quiry/detail.do",
+			type : "GET",
+			data : { boardId : boardId },
+			headers : { "X-Requested-With" : "XMLHttpRequest" },
+			success : function(html) {
+				$("#quiry-detail-area").html(html);
+			},
+			error : function(xhr) {
+				console.log("상세 로딩 실패:", xhr.status);
+			}
+		});
+	});
+})();
 </script>

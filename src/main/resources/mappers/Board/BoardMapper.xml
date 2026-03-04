@@ -11,8 +11,8 @@
         </selectKey>
 
         INSERT INTO BOARD
-        (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo)
-        VALUES (#{boardId}, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo})
+        (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo, linkUrl)
+        VALUES (#{boardId}, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo}, #{linkUrl})
     </insert>
 
     <select id="boardList" resultType="DTO.Board.BoardDTO">
@@ -34,6 +34,7 @@
                BOARDNAME           as boardName,
                BOARDDATE           as boardDate,
                MEMNO               as memNo,
+               LINKURL             as linkUrl,
                BOARDVIEWCOUNT as boardViewCount
         FROM BOARD
         WHERE BOARDID = #{boardId}

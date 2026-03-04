@@ -44,6 +44,7 @@ public class BoardOkController implements Action {
         // 게시글 정보
         String boardTitle = request.getParameter("boardTitle");
         String boardCont = request.getParameter("boardContent");
+        String linkUrl = request.getParameter("linkUrl");
 
 
         if (boardTitle == null || boardTitle.trim().isEmpty() ||
@@ -79,6 +80,9 @@ public class BoardOkController implements Action {
 
 
         bdto.setBoardName(memId); // 세션에서 바로 사용
+        if (linkUrl != null && !linkUrl.trim().isEmpty()) {
+            bdto.setLinkUrl(linkUrl.trim());
+        }
 
         try {
             BoardService boardService = BoardServiceImpl.getInstance();

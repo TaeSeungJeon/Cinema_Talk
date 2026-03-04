@@ -354,7 +354,7 @@ function saveNotice() {
 				cancelEdit();
 
 				// 왼쪽 목록도 갱신
-				loadNoticeList(currentPage);
+				loadNoticeList(window.noticeCurrentPage);
 			} else {
 				showToast("수정 실패", "error");
 			}
@@ -385,7 +385,7 @@ function deleteNotice() {
 					'</div>';
 
 				// 목록 갱신
-				loadNoticeList(currentPage);
+				loadNoticeList(window.noticeCurrentPage);
 			} else {
 				showToast("삭제 실패", "error");
 			}

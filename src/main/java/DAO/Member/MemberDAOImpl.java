@@ -257,7 +257,27 @@ public class MemberDAOImpl implements MemberDAO {
 				sqlSession.close();
 			}
 		}
-		
 	}//getMemberListByState() -> 상태에 따른 회원 목록 조회
+
+	@Override
+	public int updateMemberState(int memNo, int targetState) {
+		SqlSession sqlSession = null;
+		int result = 0;
+		
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("memNo", memNo);
+			map.put("targetState", targetState);
+			
+			result = sqlSession.update("updateMemberState2", map);
+			sqlSession.commit();
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+		return result;
+	}//updateMemberState() -> 회원 상태 변경
 
 }

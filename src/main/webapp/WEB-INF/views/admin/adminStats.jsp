@@ -17,9 +17,8 @@ body {
 
 /* ── 메인 컨테이너 ── */
 .container {
-	max-width: 1400px;
-	margin: 0 auto;
-	padding: 32px 36px;
+	padding:1.5rem 2rem;height: calc(100vh - 12rem);background-color: white;
+	border-radius: 1rem;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;
 }
 
 /* ── 페이지 제목 ── */
@@ -129,7 +128,7 @@ body {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 18px;
-	margin-bottom: 28px;
+	margin-bottom: 20px;
 }
 
 .kpi-card {
@@ -139,7 +138,8 @@ body {
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 10px;
+	height: 190px;
 }
 
 .kpi-label {
@@ -225,7 +225,7 @@ body {
 
 .chart-grid-2 {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 1fr 1fr;
 	gap: 18px;
 	margin-bottom: 28px;
 }
@@ -236,9 +236,16 @@ body {
 	padding: 24px;
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 	width: 300px;
-	height: 310px;
+	height: 575px;
 }
-
+.chart-card-2 {
+	background: #fff;
+	border-radius: 14px;
+	padding: 24px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	width: 600px;
+	height: 512px;
+}
 .chart-card-header {
 	display: flex;
 	justify-content: space-between;
@@ -269,6 +276,12 @@ body {
 .chart-wrap {
 	position: relative;
 	width: 100%;
+	height: 400px;
+}
+.chart-wrap-2 {
+	position: relative;
+	width: 100%;
+	height: 465px;
 }
 
 /* ── 테이블 ── */
@@ -279,7 +292,7 @@ body {
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 	margin-bottom: 28px;
 	width: 900px;
-	height: 310px;
+	height: 575px;
 	overflow: hidden;
 }
 
@@ -287,7 +300,6 @@ body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 18px;
 }
 
 .table-card-title {
@@ -501,7 +513,7 @@ tbody td {
 		grid-template-columns: 1fr 1fr;
 	}
 	.chart-grid-2 {
-		grid-template-columns: 1fr;
+		grid-template-columns: 1fr 1fr;
 	}
 	.tab-nav {
 		gap: 6px;
@@ -538,17 +550,19 @@ tbody td {
 
 			<!-- 기간 필터 -->
 			<div class="filter-bar">
-				<button class="filter-btn active" onclick="setFilter(this,'7일')">최근
+			<input type="hidden" id="selectedDays" name="selectedDays" value="${selectedDays}">
+				<button class="filter-btn ${selectedDays == 7 ? 'active' : ''}" onclick="setFilter(this,7)">최근
 					7일</button>
-				<button class="filter-btn" onclick="setFilter(this,'30일')">최근
+				<button class="filter-btn ${selectedDays == 30 ? 'active' : ''}" onclick="setFilter(this,30)">최근
 					30일</button>
-				<button class="filter-btn" onclick="setFilter(this,'90일')">최근
+				<button class="filter-btn ${selectedDays == 90 ? 'active' : ''}" onclick="setFilter(this,90)">최근
 					90일</button>
-				<button class="filter-btn" onclick="setFilter(this,'1년')">1년</button>
+				<button class="filter-btn ${selectedDays == 365 ? 'active' : ''}" onclick="setFilter(this,365)">1년</button>
 				<div class="date-range">
-					<input type="date" id="startDate" value="2026-01-28" /> <span>~</span>
-					<input type="date" id="endDate" value="2026-02-27" />
+					<input type="date" id="startDate" value="${startDate}"/> <span>~</span>
+					<input type="date" id="endDate" value="${endDate}"/>
 				</div>
+				<button class="filter-btn ${empty selectedDays or (selectedDays ne '7' and selectedDays ne '30' and selectedDays ne '90' and selectedDays ne '365') ? 'active' : ''}" type="button" onclick="searchByDate()">검색</button>
 			</div>
 
 			<!-- KPI 카드 -->
@@ -562,7 +576,7 @@ tbody td {
 							class="kpi-badge 
         ${summaryStat.newMemberCnt.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${summaryStat.newMemberCnt.increaseRate >= 0 ? '▲' : '▼'}
-							${summaryStat.newMemberCnt.increaseRate}% </span> 전월 대비
+							${summaryStat.newMemberCnt.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -574,7 +588,7 @@ tbody td {
 							class="kpi-badge 
         ${summaryStat.newBoardCnt.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${summaryStat.newBoardCnt.increaseRate >= 0 ? '▲' : '▼'}
-							${summaryStat.newBoardCnt.increaseRate}% </span> 전월 대비
+							${summaryStat.newBoardCnt.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -586,7 +600,7 @@ tbody td {
 							class="kpi-badge 
         ${summaryStat.newVoteJoinCnt.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${summaryStat.newVoteJoinCnt.increaseRate >= 0 ? '▲' : '▼'}
-							${summaryStat.newVoteJoinCnt.increaseRate}% </span> 전월 대비
+							${summaryStat.newVoteJoinCnt.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -598,14 +612,14 @@ tbody td {
 							class="kpi-badge 
         ${summaryStat.newInquiryCnt.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${summaryStat.newInquiryCnt.increaseRate >= 0 ? '▲' : '▼'}
-							${summaryStat.newInquiryCnt.increaseRate}% </span> 전월 대비
+							${summaryStat.newInquiryCnt.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 			</div>
 
 			<!-- 차트 행 1 -->
 			<div class="chart-grid-2">
-				<div class="chart-card">
+				<div class="chart-card-2">
 					<div class="chart-card-header">
 						<div>
 							<div class="chart-card-title">일별 방문자 추이</div>
@@ -613,11 +627,11 @@ tbody td {
 						</div>
 						<span class="chart-tag">DAU</span>
 					</div>
-					<div class="chart-wrap" style="height: 220px;">
+					<div class="chart-wrap">
 						<canvas id="visitChart"></canvas>
 					</div>
 				</div>
-				<div class="chart-card">
+				<div class="chart-card-2">
 					<div class="chart-card-header">
 						<div>
 							<div class="chart-card-title">신규 가입 추이</div>
@@ -625,7 +639,7 @@ tbody td {
 						</div>
 						<span class="chart-tag">신규</span>
 					</div>
-					<div class="chart-wrap" style="height: 220px;">
+					<div class="chart-wrap">
 						<canvas id="signUpChart"></canvas>
 					</div>
 				</div>
@@ -647,7 +661,7 @@ tbody td {
 							class="kpi-badge 
         ${memberStat.totalMemberStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${memberStat.totalMemberStat.increaseRate >= 0 ? '▲' : '▼'}
-							${memberStat.totalMemberStat.increaseRate}% </span> 전월 대비
+							${memberStat.totalMemberStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -659,7 +673,7 @@ tbody td {
 							class="kpi-badge 
         ${memberStat.newMemberStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${memberStat.newMemberStat.increaseRate >= 0 ? '▲' : '▼'}
-							${memberStat.newMemberStat.increaseRate}% </span> 전월 대비
+							${memberStat.newMemberStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -682,7 +696,7 @@ tbody td {
 							<div class="chart-card-sub">최근 30일</div>
 						</div>
 					</div>
-					<div class="chart-wrap" style="height: 200px;">
+					<div class="chart-wrap-2">
 						<canvas id="dailyMemberTrendChart"></canvas>
 					</div>
 				</div>
@@ -743,7 +757,7 @@ tbody td {
 							class="kpi-badge 
         ${boardStat.totalBoardStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${boardStat.totalBoardStat.increaseRate >= 0 ? '▲' : '▼'}
-							${boardStat.totalBoardStat.increaseRate}% </span> 전월 대비
+							${boardStat.totalBoardStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -755,7 +769,7 @@ tbody td {
 							class="kpi-badge 
         ${boardStat.totalCommentStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${boardStat.totalCommentStat.increaseRate >= 0 ? '▲' : '▼'}
-							${boardStat.totalCommentStat.increaseRate}% </span> 전월 대비
+							${boardStat.totalCommentStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -778,7 +792,7 @@ tbody td {
 							<div class="chart-card-sub">최근 30일</div>
 						</div>
 					</div>
-					<div class="chart-wrap" style="height: 200px;">
+					<div class="chart-wrap-2">
 						<canvas id="dailyBoardTrendChart"></canvas>
 					</div>
 				</div>
@@ -837,7 +851,7 @@ tbody td {
 							class="kpi-badge 
         ${voteStat.totalVoteStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${voteStat.totalVoteStat.increaseRate >= 0 ? '▲' : '▼'}
-							${voteStat.totalVoteStat.increaseRate}% </span> 전월 대비
+							${voteStat.totalVoteStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -849,7 +863,7 @@ tbody td {
 							class="kpi-badge 
         ${voteStat.voteJoinStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${voteStat.voteJoinStat.increaseRate >= 0 ? '▲' : '▼'}
-							${voteStat.voteJoinStat.increaseRate}% </span> 전월 대비
+							${voteStat.voteJoinStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -872,7 +886,7 @@ tbody td {
 							<div class="chart-card-sub">최근 30일</div>
 						</div>
 					</div>
-					<div class="chart-wrap" style="height: 200px;">
+					<div class="chart-wrap-2">
 						<canvas id="monthlyVoteTrendChart"></canvas>
 					</div>
 				</div>
@@ -921,51 +935,61 @@ tbody td {
 				<div class="kpi-card">
 					<div class="kpi-icon icon-purple">📩</div>
 					<div class="kpi-label">총 문의 수</div>
-					<div class="kpi-value">201</div>
+					<div class="kpi-value">${inquiryStat.totalInquiryStat.currentValue}</div>
 					<div class="kpi-sub">
-						<span class="kpi-badge badge-up">▲ 14%</span> 전월 대비
+						<span
+							class="kpi-badge 
+        ${inquiryStat.totalInquiryStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
+							${inquiryStat.totalInquiryStat.increaseRate >= 0 ? '▲' : '▼'}
+							${inquiryStat.totalInquiryStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-green">✅</div>
 					<div class="kpi-label">처리 완료</div>
-					<div class="kpi-value">142</div>
+					<div class="kpi-value">${inquiryStat.totalInquiryStat.currentValue}</div>
 					<div class="kpi-sub">
-						<span class="kpi-badge badge-up">▲ 8.5%</span> 전월 대비
+						<span
+							class="kpi-badge 
+        ${inquiryStat.totalInquiryStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
+							${inquiryStat.totalInquiryStat.increaseRate >= 0 ? '▲' : '▼'}
+							${inquiryStat.totalInquiryStat.increaseRate}% </span> 이전 동일 기간 대비
 					</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-orange">🔄</div>
 					<div class="kpi-label">처리 중</div>
+					<div class="kpi-value">${inquiryStat.processingCnt}</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-blue">⏱️</div>
 					<div class="kpi-label">평균 처리 시간</div>
+					<div class="kpi-value">${inquiryStat.avgProcessingTime}</div>
 				</div>
 			</div>
 
-			<div class="chart-grid">
-				<div class="chart-card">
+			<div class="chart-grid-2">
+				<div class="chart-card-2" style="height:575px;">
 					<div class="chart-card-header">
 						<div>
 							<div class="chart-card-title">문의 처리 현황</div>
 							<div class="chart-card-sub">이번 달 접수된 문의</div>
 						</div>
 					</div>
-					<div class="chart-wrap" style="height: 200px;">
+					<div class="chart-wrap" style="margin-top: 50px;">
 						<canvas id="inquiryStatusChart"></canvas>
 					</div>
 				</div>
 
 
-				<div class="chart-card">
-					<div class="chart-card-header">
+				<div class="table-card" style="width: 600px">
+					<div class="table-card-header">
 						<div>
-							<div class="chart-card-title">일별 문의 접수</div>
+							<div class="table-card-title">일별 문의 접수</div>
 							<div class="chart-card-sub">최근 30일</div>
 						</div>
 					</div>
-					<div class="chart-wrap" style="height: 200px;">
+					<div class="chart-wrap-2">
 						<canvas id="inquiryTrendChart"></canvas>
 					</div>
 				</div>
@@ -974,14 +998,18 @@ tbody td {
 		</div>
 	</div>
 	<!-- /container -->
-
+</body>
 	<script>
 /* ── 탭 전환 ── */
 function switchTab(tabName) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
   document.getElementById(tabName).classList.add('active');
-  event.target.classList.add('active');
+  
+  // event가 정의되지 않았을 경우를 대비한 안전한 처리
+  if(event && event.target) {
+    event.target.classList.add('active');
+  }
   
   // 차트 재렌더링 (탭 전환 후)
   setTimeout(() => {
@@ -991,46 +1019,105 @@ function switchTab(tabName) {
   }, 100);
 }
 
-window.chartInstances = {};
+window.chartInstances = window.chartInstances || {};
 
-/* ── 필터 버튼 ── */
-function setFilter(btn, label) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+/* ── 필터 버튼 및 검색 로직 ── */
+function setFilter(btn, days){
+	document.querySelectorAll('.filter-btn')
+    .forEach(b => b.classList.remove('active'));
+	
+    btn.classList.add('active');
+	
+    const today = new Date();
+    const start = new Date();
+    start.setDate(today.getDate() - days);
+
+    const startStr = formatDate(start);
+    const endStr = formatDate(today);
+
+    document.getElementById("startDate").value = startStr;
+    document.getElementById("endDate").value = endStr;
+    document.getElementById("selectedDays").value = days;
+
+    // 날짜 설정 후 즉시 검색 실행
+    searchByDate();
 }
-function setFilterMembers(btn, label) { setFilter(btn, label); }
-function setFilterContent(btn, label) { setFilter(btn, label); }
-function setFilterInquiry(btn, label) { setFilter(btn, label); }
+
+function formatDate(date){
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth()+1).padStart(2,'0');
+    const dd = String(date.getDate()).padStart(2,'0');
+    return yyyy + "-" + mm + "-" + dd;
+}
+function searchManual(){
+    document.querySelectorAll('.filter-btn')
+        .forEach(b => b.classList.remove('active'));
+
+    document.getElementById("selectedDays").value = "";
+    searchByDate();
+}
+function searchByDate(){
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+    const selectedDays = document.getElementById("selectedDays").value;
+    
+    $.ajax({
+        url: contextPath + "/admin/stats.do", 
+        type: "POST",
+        data: {
+            startDate: start,
+            endDate: end,
+            selectedDays: selectedDays
+        },
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        success: function(response){
+            $("#admin-content").html(response);
+        },
+        error: function(xhr){
+            console.log("에러:", xhr.status);
+        }
+    });
+}
 
 /* ── 공통 Chart.js 옵션 ── */
-const baseFont = { family: "'Segoe UI','Apple SD Gothic Neo',sans-serif", size: 12 };
+var baseFont = { family: "'Segoe UI','Apple SD Gothic Neo',sans-serif", size: 12 };
 
 /* ── OVERVIEW 탭 차트 ── */
 
 /* 1. 방문자 추이 */
-const visitTrendLabels = [
-<c:forEach var="t" items="${summaryStat.dailyVisitorTrend}" varStatus="s">
-    "${t.regDate}"<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
 
-const visitTrendData = [
-<c:forEach var="t" items="${summaryStat.dailyVisitorTrend}" varStatus="s">
-    ${t.cnt}<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
+window.visitTrendDataFromServer = {
+    labels: [
+        <c:forEach var="t" items="${summaryStat.dailyVisitorTrend}" varStatus="s">
+            "${t.regDate}"<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ],
+    data: [
+        <c:forEach var="t" items="${summaryStat.dailyVisitorTrend}" varStatus="s">
+            ${t.cnt}<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ]
+};
+
 (function(){
+	if (window.chartInstances.visitChart) {
+	      window.chartInstances.visitChart.destroy();
+	  }
+	const labels = window.visitTrendDataFromServer?.labels || [];
+	const data = window.visitTrendDataFromServer?.data || [];
   window.chartInstances.visitChart = new Chart(document.getElementById('visitChart'), {
     type:'line',
     data:{
-      labels: (visitTrendLabels || []).map(d => {
+      labels: labels.map(d => {
           if (!d) return '';
           const parts = d.split('-');
           return parts[1] + '/' + parts[2];
       }),
       datasets:[{
         label:'방문자 수',
-        data: visitTrendData,
+        data: data,
         borderColor:'#5b6af0',
         backgroundColor:'rgba(91,106,240,0.08)',
         borderWidth:2,
@@ -1051,29 +1138,37 @@ const visitTrendData = [
 })();
 
 /* 2. 신규 가입 */
-const signUpTrendLabels = [
-<c:forEach var="t" items="${summaryStat.dailyNewMemberTrend}" varStatus="s">
-    "${t.regDate}"<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
-
-const signUpTrendData = [
-<c:forEach var="t" items="${summaryStat.dailyNewMemberTrend}" varStatus="s">
-    ${t.cnt}<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
+window.signUpTrendDataFromServer = {
+    labels: [
+        <c:forEach var="t" items="${summaryStat.dailyNewMemberTrend}" varStatus="s">
+            "${t.regDate}"<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ],
+    data: [
+        <c:forEach var="t" items="${summaryStat.dailyNewMemberTrend}" varStatus="s">
+            ${t.cnt}<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ]
+};
 (function(){
+	if (window.chartInstances.signUpChart) {
+	      window.chartInstances.signUpChart.destroy();
+	  }
+
+	const labels = window.signUpTrendDataFromServer?.labels || [];
+	const data = window.signUpTrendDataFromServer?.data || [];
+	
   window.chartInstances.signUpChart = new Chart(document.getElementById('signUpChart'), {
     type:'bar',
     data:{
-      labels: (signUpTrendLabels || []).map(d => {
+      labels: labels.map(d => {
           if (!d) return '';
           const parts = d.split('-');
           return parts[1] + '/' + parts[2];
       }),
       datasets:[{
         label:'신규 가입',
-        data: signUpTrendData,
+        data: data,
         backgroundColor:'#5b6af0',
         borderRadius:8,
         borderSkipped:false
@@ -1093,31 +1188,40 @@ const signUpTrendData = [
 /* ── MEMBERS 탭 차트 ── */
 
 /* 가입 추이*/
-const memberTrendLabels = [
-<c:forEach var="t" items="${memberStat.dailyNewMemberTrend}" varStatus="s">
-    "${t.regDate}"<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
+window.memberTrendDataFromServer = {
+    labels: [
+        <c:forEach var="t" items="${memberStat.dailyNewMemberTrend}" varStatus="s">
+            "${t.regDate}"<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ],
+    data: [
+        <c:forEach var="t" items="${memberStat.dailyNewMemberTrend}" varStatus="s">
+            ${t.cnt}<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ]
+};
 
-const memberTrendData = [
-<c:forEach var="t" items="${memberStat.dailyNewMemberTrend}" varStatus="s">
-    ${t.cnt}<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
 (function(){
+	if (window.chartInstances.dailyMemberTrendChart) {
+	      window.chartInstances.dailyMemberTrendChart.destroy();
+	  }
+
+	  const labels = window.memberTrendDataFromServer?.labels || [];
+	  const data = window.memberTrendDataFromServer?.data || [];
+	  
 	  window.chartInstances.dailyMemberTrendChart = new Chart(
 	    document.getElementById('dailyMemberTrendChart'),
 	    {
 	      type: 'line',
 	      data: {
-	        labels: (memberTrendLabels || []).map(d => {
+	        labels: labels.map(d => {
 	          if (!d) return '';
 	          const parts = d.split('-');
 	          return parts[1] + '/' + parts[2];
 	        }),
 	        datasets: [{
-	          label: '신규 가입자 수',   // undefined 방지
-	          data: memberTrendData,
+	          label: '신규 가입자 수',
+	          data: data,
 	          borderColor:'#34d399',
 	          backgroundColor:'rgba(52,211,153,0.08)',
 	          borderWidth:2,
@@ -1140,31 +1244,39 @@ const memberTrendData = [
 
 
 /* 일별 게시글 등록 추이*/
-const boardTrendLabels = [
-<c:forEach var="t" items="${boardStat.dailyNewBoardTrend}" varStatus="s">
-    "${t.regDate}"<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
-
-const boardTrendData = [
-<c:forEach var="t" items="${boardStat.dailyNewBoardTrend}" varStatus="s">
-    ${t.cnt}<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
+window.boardTrendDataFromServer = {
+    labels: [
+        <c:forEach var="t" items="${boardStat.dailyNewBoardTrend}" varStatus="s">
+            "${t.regDate}"<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ],
+    data: [
+        <c:forEach var="t" items="${boardStat.dailyNewBoardTrend}" varStatus="s">
+            ${t.cnt}<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ]
+};
 (function(){
+	 if (window.chartInstances.dailyBoardTrendChart) {
+	      window.chartInstances.dailyBoardTrendChart.destroy();
+	  }
+
+	  const labels = window.boardTrendDataFromServer?.labels || [];
+	  const data = window.boardTrendDataFromServer?.data || [];
+
     window.chartInstances.dailyBoardTrendChart = new Chart(
 		  document.getElementById('dailyBoardTrendChart'),
 		  {
 		    type: 'line',
 		    data: {
-		    	labels: (boardTrendLabels || []).map(d => {
+		    	labels: labels.map(d => {
 		    	    if (!d) return '';
 		    	    const parts = d.split('-');
 		    	    return parts[1] + '/' + parts[2];
 		    	}),
 		      datasets: [{
 		    	label: '신규 게시글 수',
-		        data: boardTrendData,
+		        data: data,
 		        borderColor:'#f59e0b',
 		        backgroundColor:'rgba(245,158,11,0.08)',
 		        borderWidth:2,
@@ -1187,31 +1299,40 @@ const boardTrendData = [
 
 
 /* 월별 투표 참여 추이*/
-const voteTrendLabels = [
-<c:forEach var="t" items="${voteStat.monthlyVoteTrend}" varStatus="s">
-    "${t.regDate}"<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
+window.voteTrendDataFromServer = {
+    labels: [
+        <c:forEach var="t" items="${voteStat.monthlyVoteTrend}" varStatus="s">
+            "${t.regDate}"<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ],
+    data: [
+        <c:forEach var="t" items="${voteStat.monthlyVoteTrend}" varStatus="s">
+            ${t.cnt}<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ]
+};
 
-const voteTrendData = [
-<c:forEach var="t" items="${voteStat.monthlyVoteTrend}" varStatus="s">
-    ${t.cnt}<c:if test="${!s.last}">,</c:if>
-</c:forEach>
-];
 (function(){
+	 if (window.chartInstances.monthlyVoteTrendChart) {
+	      window.chartInstances.monthlyVoteTrendChart.destroy();
+	  }
+
+	  const labels = window.voteTrendDataFromServer?.labels || [];
+	  const data = window.voteTrendDataFromServer?.data || [];
+
     window.chartInstances.monthlyVoteTrendChart = new Chart(
 		  document.getElementById('monthlyVoteTrendChart'),
 		  {
 		    type: 'line',
 		    data: {
-		    	labels: (voteTrendLabels || []).map(d => {
+		    	labels: labels.map(d => {
 		    	    if (!d) return '';
 		    	    const parts = d.split('-');
 		    	    return parts[1] + '월';
 		    	}),
 		      datasets: [{
 		    	  label: '신규 투표 참여 수',
-			      data: voteTrendData,
+			      data: data,
 			      borderColor:'#f87171',
 			      backgroundColor:'rgba(248,113,113,0.08)',
 			      borderWidth:2,
@@ -1238,18 +1359,38 @@ const voteTrendData = [
 /* ── INQUIRY 탭 차트 ── */
 
 /* 문의 처리 현황 */
+window.inquiryStatusDataFromServer = {
+  completed: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.completedCnt : 0},
+  processing: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.processingCnt : 0},
+  pending: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.pendingCnt : 0}
+};
+		
 (function(){
+	 if (window.chartInstances.inquiryStatusChart) {
+	      window.chartInstances.inquiryStatusChart.destroy();
+	  }
+
+	  const data = window.inquiryStatusDataFromServer || {
+	      completed: 0,
+	      processing: 0,
+	      pending: 0
+	  };
+	  
   window.chartInstances.inquiryStatusChart = new Chart(document.getElementById('inquiryStatusChart'), {
     type:'doughnut',
     data:{
-      labels:['처리 완료','처리 중','미처리'],
-      datasets:[{
-        data:[142,38,21],
-        backgroundColor:['#34d399','#fbbf24','#f87171'],
-        borderWidth:0,
-        hoverOffset:6
-      }]
-    },
+        labels:['처리 완료','처리 중','미처리'],
+        datasets:[{
+          data:[
+            data.completed,
+            data.processing,
+            data.pending
+          ],
+          backgroundColor:['#34d399','#fbbf24','#f87171'],
+          borderWidth:0,
+          hoverOffset:6
+        }]
+      },
     options:{
       responsive:true, maintainAspectRatio:false,
       cutout:'60%',
@@ -1266,37 +1407,57 @@ const voteTrendData = [
 })();
 
 /* 일별 문의 접수 */
+window.inquiryTrendDataFromServer = {
+    labels: [
+        <c:forEach var="t" items="${inquiryStat.dailyInquiryTrend}" varStatus="s">
+            "${t.regDate}"<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ],
+    data: [
+        <c:forEach var="t" items="${inquiryStat.dailyInquiryTrend}" varStatus="s">
+            ${t.cnt}<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
+    ]
+};
 (function(){
-  const labels = Array.from({length:30}, (_,i)=>{
-    const d = new Date('2026-01-29');
-    d.setDate(d.getDate()+i);
-    return `${d.getMonth()+1}/${d.getDate()}`;
-  });
-  const data = [5,7,4,8,6,9,7,10,8,11,9,12,10,13,11,14,12,15,13,16,14,17,15,18,16,19,17,20,18,21];
-  window.chartInstances.inquiryTrendChart = new Chart(document.getElementById('inquiryTrendChart'), {
-    type:'line',
-    data:{
-      labels,
-      datasets:[{
-        label:'문의 접수',
-        data,
-        borderColor:'#f87171',
-        backgroundColor:'rgba(248,113,113,0.08)',
-        borderWidth:2,
-        pointRadius:0,
-        fill:true,
-        tension:0.4
-      }]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, color:'#bbb'}},
-        y:{grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb'}}
-      }
-    }
-  });
+	if (window.chartInstances.inquiryTrendChart) {
+	      window.chartInstances.inquiryTrendChart.destroy();
+	  }
+
+	const labels = window.inquiryTrendDataFromServer?.labels || [];
+	const data = window.inquiryTrendDataFromServer?.data || [];
+	  
+    window.chartInstances.inquiryTrendChart = new Chart(
+		  document.getElementById('inquiryTrendChart'),
+		  {
+		    type: 'line',
+		    data: {
+		    	labels: labels.map(d => {
+		    	    if (!d) return '';
+		    	    const parts = d.split('-');
+		    	    return parts[1] + '/' + parts[2];
+		    	}),
+		      datasets: [{
+		    	label: '신규 문의 접수 수',
+		        data: data,
+		        borderColor:'#f87171',
+		        backgroundColor:'rgba(248,113,113,0.08)',
+		        borderWidth:2,
+		        pointRadius:0,
+		        fill:true,
+		        tension:0.4
+		      }]
+		    },
+		    options:{
+		          responsive:true, maintainAspectRatio:false,
+		          plugins:{legend:{display:false}},
+		          scales:{
+		            x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, color:'#bbb'}},
+		            y:{grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb', precision:0}}
+		          }
+		       }
+		  }
+		);
 })();
 
 </script>

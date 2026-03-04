@@ -70,10 +70,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 				<property name="url"
 					value="jdbc:oracle:thin:@127.0.0.1:1521:xe" /> 
 
-				<property name="username" value="week" />
-				<property name="password" value="week" />
-
-				
+				<property name="username" value="C##test1" />
+				<property name="password" value="test1" />
 				<!-- <property name="driver" value="oracle.jdbc.OracleDriver" />
 				<property name="url"
 					value="jdbc:oracle:thin:@112.220.114.131:1521:xe" />
@@ -101,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Board/CommentsMapper.xml"/>
 		<mapper resource="mappers/Board/AddFileMapper.xml"/>
 		<mapper resource="mappers/Board/BoardSearchMapper.xml"/>
+    <mapper resource="mappers/Admin/AdminBoardMapper.xml"/>
     <mapper resource="mappers/Admin/AdminNoticeMapper.xml"/>
     <mapper resource="mappers/Admin/AdminQuiryMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMovieMapper.xml"/>
@@ -108,6 +107,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Admin/AdminMemberStatsMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminBoardStatsMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminVoteStatsMapper.xml"/>
+		<mapper resource="mappers/Admin/AdminInquiryStatsMapper.xml"/>
 		<mapper resource="mappers/Home.xml"/>
 	</mappers>
 

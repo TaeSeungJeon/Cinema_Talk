@@ -46,12 +46,18 @@ public class AdminMovieServiceImpl implements AdminMovieService {
             if (!exists) {
                 throw new IllegalArgumentException("존재하지 않는 영화입니다.");
             }
+            
+            String originalDate = movie.getMovieReleaseDate();
 
+            if (originalDate != null && !originalDate.isBlank()) {
+                movie.setMovieReleaseDate(originalDate.substring(0, Math.min(10, originalDate.length())));
+            }
+            
             dao.updateMovie(session, movie);
 
             int movieId = movie.getMovieId();
 
-            // ===== 장르 =====
+            
             dao.deleteMovieGenres(session, movieId);
             if (saveDTO.getGenreIds() != null) {
                 for (Integer gid : saveDTO.getGenreIds()) {
@@ -59,7 +65,6 @@ public class AdminMovieServiceImpl implements AdminMovieService {
                 }
             }
 
-            // ===== 출연진 =====
             dao.deleteMovieCasts(session, movieId);
             if (saveDTO.getCasts() != null) {
                 for (CastSaveDTO cast : saveDTO.getCasts()) {
@@ -67,7 +72,6 @@ public class AdminMovieServiceImpl implements AdminMovieService {
                 }
             }
 
-            // ===== 제작진 =====
             dao.deleteMovieCrews(session, movieId);
             if (saveDTO.getCrews() != null) {
                 for (CrewSaveDTO crew : saveDTO.getCrews()) {

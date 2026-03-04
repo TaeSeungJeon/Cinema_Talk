@@ -781,7 +781,7 @@ h3 {
 </style>
 
 <form action="${pageContext.request.contextPath}/admin/movie/save.do"
-	method="post">
+	method="post" onsubmit="return saveMovie(event)">
 	<input type="hidden" name="movieId" value="${adminMovie.movieId}">
 	<div class="detail-header-fixed">
 
@@ -845,12 +845,11 @@ h3 {
 								<input type="checkbox" class="genre-checkbox"
 									id="genre-${genre.genreId}" name="genreIds"
 									value="${genre.genreId}"
-									<c:if test="${movieGenreIds.contains(genre.genreId)}">checked</c:if>>
+       <c:if test="${not empty movieGenreIds and movieGenreIds.contains(genre.genreId)}">checked</c:if>>
 
 								<label for="genre-${genre.genreId}"
 									class="pill genre-${fn:replace(genre.genreName, ' ', '-')}
-                <c:if test='${movieGenreIds.contains(genre.genreId)}'> selected</c:if>">
-									${genre.genreName} </label>
+       <c:if test='${not empty movieGenreIds and movieGenreIds.contains(genre.genreId)}'> selected</c:if>">									${genre.genreName} </label>
 							</c:forEach>
 						</div>
 					</div>
@@ -898,7 +897,7 @@ h3 {
 					<div class="person-header">
 						<h3>제작진</h3>
 						<span class="person-count" id="director-count">
-							${fn:length(adminMovie.directors)}명 </span>
+							${empty adminMovie.directors ? 0 : fn:length(adminMovie.directors)}명 </span>
 					</div>
 
 					<div class="person-list" id="director-list">
@@ -951,7 +950,7 @@ h3 {
 					<div class="person-header">
 						<h3>출연진</h3>
 						<span class="person-count" id="cast-count">
-							${fn:length(adminMovie.casts)}명 </span>
+							${empty adminMovie.casts ? 0 : fn:length(adminMovie.casts)}명 </span>
 					</div>
 
 					<div class="person-list" id="cast-list">
@@ -1113,25 +1112,7 @@ document.addEventListener("DOMContentLoaded", function() {
     updateCount('cast');
 });
 
-// 장르 pill 클릭 시 체크박스 토글 및 색상 변경 (동적 바인딩, 영화 전환에도 항상 동작)
-document.addEventListener('click', function(e) {
-  if (
-    e.target.tagName === 'LABEL' &&
-    e.target.classList.contains('pill') &&
-    e.target.htmlFor &&
-    e.target.closest('.genre-grid')
-  ) {
-    const input = document.getElementById(e.target.htmlFor);
-    if (input) {
-      input.checked = !input.checked;
-      if (input.checked) {
-        e.target.classList.add('selected');
-      } else {
-        e.target.classList.remove('selected');
-      }
-    }
-  }
-});
+// 장르 pill 클릭 핸들러는 부모 페이지(adminMovie.jsp)에서 이벤트 위임으로 처리
 // 제작진/출연진 이름 또는 역할 더블클릭 시 인라인 편집 모드로 전환
 document.addEventListener("dblclick", function (e) {
 
@@ -1300,6 +1281,42 @@ function reloadMovieList(keyword) {
     });
 }
 
+// 영화 저장
+function saveMovie(e) {
+
+    e.preventDefault(); // 페이지 이동 막기
+
+    const form = e.target;
+    const params = new URLSearchParams(new FormData(form));
+
+    fetch("${pageContext.request.contextPath}/admin/movie/save.do", {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: params
+    })
+    .then(res => res.text())
+    .then(result => {
+
+        const clean = result.trim();
+
+        if (clean === "success") {
+
+            const keyword = document.querySelector(".search-input")?.value || "";
+
+            reloadMovieList(keyword);
+
+            showToast("✔ 영화가 수정되었습니다.");
+
+        } else {
+            showToast("수정 실패", "error");
+        }
+
+    });
+
+    return false; // ⭐ submit 완전히 차단
+}
 // 영화 삭제
 function deleteMovie() {
 

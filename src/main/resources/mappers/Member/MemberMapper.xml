@@ -19,7 +19,7 @@
   
   <!-- 입력받은 아이디로 로그인 인증 -->
   <select id="loginCheck" parameterType="String" resultType="member">
-  	select * from member where memId = #{value} and memState=1
+  	select * from member where memId = #{value}
   </select>
 
   <!-- 글쓰기 입력할 유저 조회 (?) -->
@@ -81,5 +81,10 @@
   <select id="getMemberListByState" parameterType="int" resultType="member">
   	select memNo, memId, memName, memPhone, memEmail, memState, memLastLogin from member where memState = #{value} order by memNo
   </select>
+  
+  <!-- 회원 상태 전환 -->
+  <update id="updateMemberState2" parameterType="map">
+  	update member set memState = #{targetState} where memNo = #{memNo}
+  </update>
   
   </mapper>

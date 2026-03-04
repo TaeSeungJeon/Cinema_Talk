@@ -31,4 +31,5 @@ public interface MemberService {
 
 	List<MemberDTO> getMemberListByState(int memState);
 
+	int updateMemberState(int memNo, int targetState);
 }

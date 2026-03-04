@@ -904,10 +904,10 @@ pageEncoding="UTF-8"%>
 								</c:forEach>
 							</div>
 							
-							<c:if test="${isChoiceDeleted}">
+							<c:if test="${voteInfo.choiceDeleted}">
 							    <div class="deleted-msg">
 							        <span class="icon-point">●</span> 삭제된 영화를 선택하셨습니다. 
-							        <span>(${movieTitleBackup})</span>
+							        <span>(${voteInfo.movieTitleBackup})</span>
 							    </div>
 							</c:if>
 
@@ -999,22 +999,37 @@ pageEncoding="UTF-8"%>
 					</section>
 					<aside class="aside" style="width: 30%;">
 						<div class="glass-panel"
-								style="display: flex; flex-direction: column; gap: 20px; min-height: 200px;  justify-content: start;">
+								style="display: flex; flex-direction: column; min-height: 200px;  justify-content: start;">
 								<div class="sidebar-title"
-									style="width: 100%; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+									style="width: 100%; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
 									<span>진행중인 투표</span> <a href="voteList.do?filter=ACTIVE"
 										style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">
 										전체보기 > </a>
 								</div>
 								
-								<div class="active-box">
+								<div class="active-box" style="padding-top:15px;">
 									<c:choose>
 										<c:when test="${not empty voteRegisterActive}">
 											<c:forEach var="vote" items="${voteRegisterActive}">
 												<div class="upcoming-item"
 													onclick="location.href='voteCont.do?voteId=${vote.voteId}'">
-													<div style="font-weight: 600;">${vote.voteTitle}</div>
-													<div style="font-size: 0.8rem; color: var(--accent-color);">
+													<div style="font-weight: 600; display:flex; gap:10px; justify-content:flex-start; align-items : center">
+														${vote.voteTitle} 
+														<c:if test="${vote.voted}">
+															<div style="font-size: 10px; 
+																font-weight: 800;
+																letter-spacing: -0.02em;
+																color: #166534; 
+																background-color: #dcfce7; 
+																padding: 2px 8px; 
+																border-radius: 12px;
+																border: 1px solid #bbf7d0;
+																white-space: nowrap;">
+															참여 완료
+															</div>
+														</c:if>
+													</div>
+													<div style="font-size: 0.8rem; color: var(--accent-color);margin-top:5px">
 														시작일: ${vote.voteEndDate}</div>
 												</div>
 											</c:forEach>

@@ -50,7 +50,7 @@ public class VoteContController implements Action {
 		String requestSessionURL = request.getRequestURL().toString();
         
         session.setAttribute("requestSessionURL", requestSessionURL  + "?voteId=" + voteId );
-	
+	voteReg.setChoiceDeleted(false);
 		if(mem != null){
 			
 			VoteRecordDTO temp = new VoteRecordDTO();
@@ -65,6 +65,8 @@ public class VoteContController implements Action {
 				
 				if(voteRecord.getMovieDeleted() == 1) {
 					voteReg.setChoiceDeleted(true);
+					voteReg.setMovieTitleBackup(voteRecord.getMovieTitleBackup());
+
 				}
 			}
 
@@ -87,8 +89,7 @@ public class VoteContController implements Action {
 	
 
 		voteReg.setVoted(voted);
-		System.out.println("=================================");
-		System.out.println(voteReg.isVoted());
+		
 		
 		request.setAttribute("voteInfo", voteReg);
 		
@@ -136,7 +137,6 @@ public class VoteContController implements Action {
 	List<VoteRegisterDTO> closedReg = groupedVotes.getOrDefault("CLOSED", new ArrayList<>());
 		
 		request.setAttribute("voteRegisterActive", activeReg.stream()
-			    .filter(vote -> !vote.isVoted()) 
 			    .sorted(Comparator.comparing(VoteRegisterDTO::getVoteEndDate)) 
 			    .collect(Collectors.toList())); 
 

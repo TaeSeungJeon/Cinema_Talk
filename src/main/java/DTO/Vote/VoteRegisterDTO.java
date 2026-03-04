@@ -22,7 +22,8 @@ public class VoteRegisterDTO {
 
 	//사용자가 선택한 투표선택지 
 	private int userChoice;
-	private boolean isChoiceDeleted;
+	private boolean choiceDeleted;
+	private String movieTitleBackup;
 	
 	//참여자 수
 	private int voterCount;

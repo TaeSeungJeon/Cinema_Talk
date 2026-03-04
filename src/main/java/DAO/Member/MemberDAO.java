@@ -34,8 +34,12 @@ public interface MemberDAO {
 
 	List<MemberDTO> getMemberList();
 
-	List<MemberDTO> getMemberListByState(int memState);
+	List<MemberDTO> getMemberListByState(String memState);
 
 	int updateMemberState(int memNo, int targetState);
+
+	List<MemberDTO> searchMembers(String keyword);
+
+	List<MemberDTO> searchMembersByState(String keyword, String memState);
 
 }

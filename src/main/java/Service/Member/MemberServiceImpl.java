@@ -106,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
 	}//회원목록 조회
 
 	@Override
-	public List<MemberDTO> getMemberListByState(int memState) {
+	public List<MemberDTO> getMemberListByState(String memState) {
 		return mdao.getMemberListByState(memState);
 	}//상태에 따른 회원목록 조회
 
@@ -114,6 +114,16 @@ public class MemberServiceImpl implements MemberService {
 	public int updateMemberState(int memNo, int targetState) {
 		return mdao.updateMemberState(memNo, targetState);
 	}//회원 상태 변경 1(정상), 2(정지)
+
+	@Override
+	public List<MemberDTO> searchMembers(String keyword) {
+		return mdao.searchMembers(keyword);
+	}//검색하여 회원 목록 조회
+
+	@Override
+	public List<MemberDTO> searchMembersByState(String keyword, String memState) {
+		return mdao.searchMembersByState(keyword, memState);
+	}//상태+검색 회원목록 조회
 
 }
 

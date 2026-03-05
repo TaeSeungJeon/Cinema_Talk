@@ -31,13 +31,13 @@
 <button class="skip" id="skip">Skip</button>
 
 <div class="splash" id="splash">
-    <img id="gif" src="${pageContext.request.contextPath}/main/webapp/Image/start.gif" alt="intro" />
+    <img id="gif" src="${pageContext.request.contextPath}/Image/PIXAR.gif" alt="intro" />
     <div class="fade-layer" id="fade"></div>
 </div>
 
 <script>
     const HOME_URL = "${pageContext.request.contextPath}/index.do";
-    const DURATION_MS = 9500;
+    const DURATION_MS = 8200;
     const FADE_TIME = 400;
 
     const fade = document.getElementById("fade");

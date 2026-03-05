@@ -9,7 +9,7 @@
 /* ========== 전체 2단 레이아웃 ========== */
 .notice-mgmt-page {
 	display: flex;
-	height: calc(100vh - 12rem);
+	height: 100%;
 	background-color: white;
 	border-radius: 1rem;
 	overflow: hidden;

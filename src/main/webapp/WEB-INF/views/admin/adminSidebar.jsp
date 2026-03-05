@@ -56,7 +56,7 @@
 <aside class="admin-sidebar">
 	<ul class="side-list">
 		<li><a class="side-link active"
-			href="${pageContext.request.contextPath}/admin/home.do">home</a></li>
+			href="${pageContext.request.contextPath}/admin/stats.do">대시보드</a></li>
 		<li><a class="side-link"
 			href="${pageContext.request.contextPath}/admin/member.do">회원관리</a></li>
 		<li><a class="side-link"
@@ -71,7 +71,6 @@
 			href="${pageContext.request.contextPath}/admin/notice.do">공지사항</a></li>
 		<li><a class="side-link"
 			href="${pageContext.request.contextPath}/admin/quiry.do">문의관리</a></li>
-		<li><a class="side-link"
-			href="${pageContext.request.contextPath}/admin/stats.do">통계</a></li>
+		
 	</ul>
 </aside>

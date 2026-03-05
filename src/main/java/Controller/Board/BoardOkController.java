@@ -45,6 +45,7 @@ public class BoardOkController implements Action {
         String boardTitle = request.getParameter("boardTitle");
         String boardCont = request.getParameter("boardContent");
         String linkUrl = request.getParameter("linkUrl");
+        String movieId = request.getParameter("movieId");
 
 
         if (boardTitle == null || boardTitle.trim().isEmpty() ||
@@ -59,11 +60,14 @@ public class BoardOkController implements Action {
         // 세션에서 값 가져오기
         Integer memNo = (Integer) session.getAttribute("memNo");
         String memId = (String) session.getAttribute("memId");
+        int movieIdInt = movieId == null ? -1 :Integer.parseInt(movieId);
+//        String movieTitle
 
         BoardDTO bdto = new BoardDTO();
         bdto.setBoardTitle(boardTitle);
         bdto.setBoardContent(boardCont);
         bdto.setMemNo(memNo);
+        bdto.setMovieId(movieIdInt);
 
         String typeStr = request.getParameter("boardType");
 

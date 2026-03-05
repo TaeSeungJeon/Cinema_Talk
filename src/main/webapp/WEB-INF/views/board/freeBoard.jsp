@@ -587,7 +587,15 @@
 		}
 
 		.write-modal{ max-height: 90vh; overflow: auto; }
+		
+		/* 자동완성 결과창 */
+		.search-results { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid var(--border); border-radius: 8px; z-index: 10; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: none; max-height: 200px; overflow-y: auto; }
+		.result-item { padding: 10px 15px; cursor: pointer; transition: 0.2s; }
+		.result-item:hover { background: #f0f4ff; color: var(--primary); }
+		
+		
 	</style>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -767,17 +775,34 @@
 			  action="${pageContext.request.contextPath}/boardOk.do"
 			  enctype="multipart/form-data"
 			  class="write-form"
-			  style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+			  style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;"
+			  onsubmit="return validateForm()">
 
 			<div style="display: flex; gap: 10px;">
 				<select name="boardType" required
-						style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-weight: 600;">
+						style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-weight: 600;align-self: flex-start;">
 					<option value="" disabled selected>게시판 선택</option>
 					<option value="1">자유게시판</option>
 					<option value="2">영화 리뷰/토론</option>
 				</select>
-				<input type="text" name="boardTag" placeholder="영화 제목을 입력해주세요."
-					   style="flex: 2; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+				
+<!-- 				<input type="text" name="boardTag" placeholder="영화 제목을 입력해주세요." -->
+<!-- 					   style="flex: 2; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;" -->
+<!-- 					   onkeydown="if(event.keyCode==13) event.preventDefault();" -->
+<!-- 					   onkeyup="handleSearch(this, event)" autocomplete="off"> -->
+					   
+				 <div style="flex: 2; position: relative;width:100%;" class="option-item">
+				  	<input type="hidden" name="movieId" class="movie-id-hidden" value="\${movieId}">
+				 	<input class="movie-search" type="text" name="boardTag" placeholder="영화 제목을 입력해주세요."
+					   style="padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;width:100%;box-sizing: border-box;"
+					   onkeydown="if(event.keyCode==13) event.preventDefault();"
+					   onkeyup="handleSearch(this, event)" autocomplete="off">
+				  	<div class="search-results"></div>
+	                <div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+	                    존재하지 않은 영화입니다. 검색 결과에서 선택해주세요.
+	                </div>
+				 </div>
+				
 			</div>
 
 			<input type="text" placeholder="제목을 입력하세요"
@@ -885,6 +910,11 @@
 			if (boardSelect && filter) {
 				boardSelect.value = filter === 'free' ? '1' : (filter === 'hot' ? '2' : '');
 			}
+			
+			//검색 결과 숨김
+			$(".db-error-msg").hide();
+			$(".result-item").hide();
+			
 		};
 		
 		window.closeModal = function () {
@@ -1462,6 +1492,158 @@
 			preview.style.display = "none";
 		});
 	});
+	
+	
+	//영화 검색 기능
+	var searchTimer;
+	var currentFocus = -1; // 현재 선택된 항목의 인덱스
+	
+	  function handleSearch(input,e) {
+		  
+	     	  const query = $(input).val().trim();
+	     	  
+	           const $results = $(input).next('.search-results');
+	           const items = $results.find('.result-item');
+	           const $container = $(input).closest('div');
+	           const $errorMsg = $container.find('.db-error-msg');
+	           const $movieId = $container.find('.movie-id-hidden');
+	           
+	           // 방향키 위(38), 아래(40), 엔터(13) 처리
+	           if (e.keyCode == 40) { // Down
+		              currentFocus++;
+		              addActive(items);
+		              return;
+			      } else if (e.keyCode == 38) { // Up
+			          currentFocus--;
+			          addActive(items);
+					         return;
+					     } else if (e.keyCode == 13) { // Enter
+					     e.preventDefault();
+					     if (currentFocus > -1) {
+					         if (items[currentFocus]) items[currentFocus].click();
+					     }
+					     return;
+					 }
+			    
+			    //  일반 글자 입력 시
+			    if (searchTimer) clearTimeout(searchTimer);
+			   
+			   
+			    if (query.length < 2) {
+			        $results.hide();
+			        return;
+			    }
+	
+	 		searchTimer = setTimeout(() => {
+	     	$.ajax({
+	         url: '${pageContext.request.contextPath}/searchMovie.do',
+	         data: { "search-words": query, "search-option": 0 },
+	         dataType: 'html',
+	         success: function(response) {
+	             const $html = $(response);
+	             // 모든 .movie-item (a 태그)을 찾습니다.
+	             const $movieItems = $html.find(".movie-item");
+	             
+	             let html = '';
+	             currentFocus = -1;
+	             
+	             if ($movieItems.length > 0) {
+	             	$errorMsg.hide();
+	                 $movieItems.each(function() {
+	                     const $item = $(this);
+	                     const title = $item.find("h3").text().trim();
+	                     
+	                     // a href="...id=123" 형태에서 ID 숫자만 추출
+	                     const href = $item.attr("href");
+	                     const id = href.split('movieId=')[1];
+	                     
+	                     html += `<div class="result-item"
+	                     onclick="selectMovie(this, '\${title}', '\${id}')"
+	                     style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
+	                     \${title}
+	                     </div>`;
+	                 });
+	                 
+	                 $results.html(html).show();
+	                 } else {
+	                 	$errorMsg.show();
+	                     $movieId.val("");
+	                     html += `<div class="result-item"
+	                    
+	                     style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
+	                     검색 결과가 없습니다.
+	                     </div>`;
+	                     $results.html(html).show();
+	                 }
+	             }
+	         });
+	     }, 300);
+	 }
+	
+	
+	  function selectMovie(element, title, id) {
+		  console.log(title)
+		     const $container = $(element).closest('.option-item');
+		     
+		     // 제목 입력창에 텍스트 세팅
+		     $container.find('.movie-search').val(title);
+		     
+		     // hidden 필드에 movieId 세팅
+		     $container.find('.movie-id-hidden').val(id);
+		     
+		     // 결과창 닫기
+		     $('.search-results').hide();
+		    
+		 }
+	  
+	  function addActive(items) {
+		     if (!items) return false;
+		     removeActive(items);
+		     if (currentFocus >= items.length) currentFocus = 0;
+		     if (currentFocus < 0) currentFocus = (items.length - 1);
+		     
+		     $(items[currentFocus]).addClass("item-active").css({
+		         "background-color": "#f0f4ff",
+		         "color": "#4f46e5"
+		     });
+		     
+		     // 포커스된 항목으로 스크롤 이동
+		     items[currentFocus].scrollIntoView({ block: 'nearest' });
+		 }
+	  
+	  function removeActive(items) {
+		     $(items).removeClass("item-active").css({
+		         "background-color": "white",
+		         "color": "black"
+		     });
+		 }
+	  
+	  function validateForm(){
+		  const mIdTag = document.getElementsByClassName("movie-id-hidden");
+		  const mId = document.querySelector('.movie-id-hidden').value;
+		  console.log(mId);
+		
+		let validated = true;
+		//없는 영화 체크
+		if(mId === ""){
+			 alert("존재하지 않는 영화가 포함되어 있습니다. 검색 결과에서 선택해주세요.");
+			 $(mIdTag).siblings('.movie-search').focus();
+			 validated = false;
+			
+		}
+		  return validated;
+	  }
+	  
+	  
+	  $(document).on("click", function(e) {
+		    // 클릭된 요소가 .option-item(인풋과 결과창을 감싸는 부모) 내부가 아니라면
+		    if (!$(e.target).closest(".option-item").length) {
+		        // 모든 검색 결과창을 비우거나 숨김
+		        $(".search-results").empty().hide();
+		       
+		    }
+		});
+	  
 </script>
 </body>
 </html>

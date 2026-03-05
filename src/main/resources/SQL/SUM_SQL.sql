@@ -10,7 +10,8 @@
 --                                         VOTE_REGISTER, VOTE_OPTION, VOTE_RECORD
 --   4단계: 2~3단계 테이블 참조           - BOARD_LIKE, COMMENTS, ADD_FILE
 --   5단계: 4단계 테이블 참조             - COMMENTS_LIKE
---   6단계: 트리거                        - trgOnMovieDeleted, trgVoptId
+--   6단계: 트리거                     - trgOnMovieDeleted, trgVoptId
+--   7단계: 테이블, 트리거, 시퀸스 전부 제거
 -- ============================================================
 
 
@@ -124,11 +125,15 @@ CREATE TABLE BOARD (
     memNo          NUMBER         NULL,
     movieId        NUMBER         NULL,
     linkUrl        VARCHAR2(500)  NULL,
+    movieTitle	   VARCHAR2(255)  NULL,
+    
     CONSTRAINT pk_board_type PRIMARY KEY (boardId, boardType)
 );
 
 ALTER TABLE BOARD ADD CONSTRAINT fk_mem_no
     FOREIGN KEY (memNo) REFERENCES MEMBER (memNo);
+alter table board add constraint fk_movie_id foreign key (movieId)
+references MOVIE (movieId) ON DELETE SET NULL;
 
 -- ============================================================
 -- MOVIE_GENRE  (FK → GENRE, MOVIE)
@@ -399,3 +404,30 @@ VALUES (memNoSeq.NEXTVAL, 'admin',
         '관리자', '010-3333-3333', 'admin@gmail.com', 1, 1, SYSDATE);
 
 COMMIT;
+
+/*
+-- 테이블 삭제
+BEGIN
+  FOR t IN (SELECT table_name FROM user_tables)
+  LOOP
+    EXECUTE IMMEDIATE 'DROP TABLE ' || t.table_name || ' CASCADE CONSTRAINTS';
+  END LOOP;
+END;
+/
+-- 시퀸스 삭제
+BEGIN
+  FOR s IN (SELECT sequence_name FROM user_sequences)
+  LOOP
+    EXECUTE IMMEDIATE 'DROP SEQUENCE ' || s.sequence_name;
+  END LOOP;
+END;
+/
+-- 트리거 삭제
+BEGIN
+  FOR tr IN (SELECT trigger_name FROM user_triggers)
+  LOOP
+    EXECUTE IMMEDIATE 'DROP TRIGGER ' || tr.trigger_name;
+  END LOOP;
+END;
+/
+*/

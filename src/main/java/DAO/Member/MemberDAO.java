@@ -18,9 +18,9 @@ public interface MemberDAO {
 
 	MemberDTO findByIdAndPhone(String memId, String memPhone);
 
-	int phoneCheck(String memPhone);
+	MemberDTO phoneCheck(String memPhone);
 
-	int emailCheck(String memEmail);
+	MemberDTO emailCheck(String memEmail);
 
 	int updatePwd(MemberDTO mdto);
 

@@ -8,8 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 - 프리미엄 영화 큐레이션</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="./js/member.js"></script>
 
     <style>
         :root {
@@ -191,27 +189,28 @@
 
         <div class="input-group">
             <label>전화번호</label>
-            <input type="tel" id="mem-phone" name="mem-phone" placeholder="010-0000-0000" novalidate>
-   
-            <c:if test="${not empty phoneMsg}">
-   				<span class="field-msg bad">${phoneMsg}</span>         
-            </c:if>
+            <input type="tel" id="mem-phone" name="mem-phone" placeholder="전화번호" novalidate>
+            <input type="hidden" id="phoneChecked" value="N">
+   			<!-- AJAX 결과 메시지 (기본 숨김) -->
+  			<span id="phonecheck" class="id-check-msg" style="display:none;"></span>
+  			
+<%--             <c:if test="${not empty phoneMsg}"> --%>
+<%--    				<span class="field-msg bad">${phoneMsg}</span>          --%>
+<%--             </c:if> 이전 서버 포워드용으로 중복 확인 했던 부분--%>
         </div>
 
         <div class="input-group">
-            <label>email</label>
+            <label>이메일 주소</label>
             <input type="email" id="mem-email" name="mem-email" placeholder="직접입력" novalidate>
-            
-            <c:if test="${not empty emailMsg}">
-   				<span class="field-msg bad">${emailMsg}</span>         
-            </c:if>
+            <input type="hidden" id="emailChecked" value="N">
+            <span id="emailcheck" class="id-check-msg" style="display:none;"></span>
         </div>
 
         <button type="submit" class="btn-submit">회원가입</button>
     </form>
 
     <div class="footer-link">
-        <a href="memberLogin.do">로그인</a>
+        <a href="memberLogin.do">로그인으로 가기</a>
     </div>
 </div>
 

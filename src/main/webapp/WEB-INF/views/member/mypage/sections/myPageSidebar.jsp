@@ -42,7 +42,7 @@
         </button>
         <button class="sidebar-item" data-section="likes" onclick="showSection('likes')">
             <span class="sidebar-icon">❤️</span>
-            <span class="sidebar-text">좋아요 표시한 영화/게시판</span>
+            <span class="sidebar-text">좋아요 영화/게시판</span>
         </button>
         <button class="sidebar-item" data-section="genre" onclick="showSection('genre')">
             <span class="sidebar-icon">🎭</span>

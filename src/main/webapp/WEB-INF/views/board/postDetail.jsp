@@ -14,8 +14,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-
-
         /* 폰트 드롭다운 */
         .font-select-wrapper { position: relative; }
 
@@ -760,7 +758,7 @@
                 <button type="button" class="share-btn" id="shareBtn">🔗 공유하기</button>
             </div>
         </article>
-
+		<c:if test="${cont.boardType != 10}">
         <section class="glass-panel comment-section">
             <div class="comment-count">댓글 ${clist.size()}개</div>
 
@@ -885,6 +883,7 @@
                 </c:if>
             </div>
         </section>
+        </c:if>
     </main>
 
     <aside class="side-panel">

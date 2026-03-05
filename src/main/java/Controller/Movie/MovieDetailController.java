@@ -23,8 +23,6 @@ public class MovieDetailController implements Action {
 		response.setContentType("text/html;charset=UTF-8");
 		HttpSession session = request.getSession();
 		
-		
-        
 		// 1. 파라미터에서 영화 ID 가져오기
 		String idParam = request.getParameter("movieId");
 	

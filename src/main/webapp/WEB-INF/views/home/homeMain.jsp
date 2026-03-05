@@ -288,14 +288,13 @@
 	<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 10px; margin-bottom: 15px;">
 
 		<%-- 일간 인기글 --%>
-		<div class="board-card" style="margin: 0;">
+		<div class="board-card" style="margin: 0; padding-top: 0; overflow: hidden;">
+			<div style="background: linear-gradient(135deg, #fde68a, #fca5a5); height: 6px; margin: 0 -25px 20px -25px;"></div>
 			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
 				<div style="display: flex; align-items: center; gap: 8px;">
 					<span style="font-size: 1.1rem;">🔥</span>
 					<h3 style="margin: 0; font-size: 0.95rem; font-weight: 800;">일간 인기글</h3>
 				</div>
-				<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
-				   style="font-size: 0.75rem; color: #94a3b8; text-decoration: none;">전체보기 ›</a>
 			</div>
 			<c:choose>
 				<c:when test="${empty dailyPopularList}">
@@ -325,14 +324,13 @@
 		</div>
 
 		<%-- 주간 인기글 --%>
-		<div class="board-card" style="margin: 0;">
+		<div class="board-card" style="margin: 0; padding-top: 0; overflow: hidden;">
+			<div style="background: linear-gradient(135deg, #a5f3fc, #818cf8); height: 6px; margin: 0 -25px 20px -25px;"></div>
 			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
 				<div style="display: flex; align-items: center; gap: 8px;">
 					<span style="font-size: 1.1rem;">📅</span>
 					<h3 style="margin: 0; font-size: 0.95rem; font-weight: 800;">주간 인기글</h3>
 				</div>
-				<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
-				   style="font-size: 0.75rem; color: #94a3b8; text-decoration: none;">전체보기 ›</a>
 			</div>
 			<c:choose>
 				<c:when test="${empty weeklyPopularList}">
@@ -362,14 +360,13 @@
 		</div>
 
 		<%-- 월간 인기글 --%>
-		<div class="board-card" style="margin: 0;">
+		<div class="board-card" style="margin: 0; padding-top: 0; overflow: hidden;">
+			<div style="background: linear-gradient(135deg, #bbf7d0, #6ee7b7); height: 6px; margin: 0 -25px 20px -25px;"></div>
 			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
 				<div style="display: flex; align-items: center; gap: 8px;">
 					<span style="font-size: 1.1rem;">🏆</span>
 					<h3 style="margin: 0; font-size: 0.95rem; font-weight: 800;">월간 인기글</h3>
 				</div>
-				<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
-				   style="font-size: 0.75rem; color: #94a3b8; text-decoration: none;">전체보기 ›</a>
 			</div>
 			<c:choose>
 				<c:when test="${empty monthlyPopularList}">
@@ -397,7 +394,6 @@
 				</c:otherwise>
 			</c:choose>
 		</div>
-
 	</div>
 
 

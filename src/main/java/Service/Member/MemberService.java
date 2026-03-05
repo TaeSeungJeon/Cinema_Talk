@@ -20,9 +20,9 @@ public interface MemberService {
 
 	boolean resetPwdSendEmail(MemberDTO mdto);
 
-	int phoneCheck(String memPhone);
+	MemberDTO phoneCheck(String memPhone);
 
-	int emailCheck(String memEmail);
+	MemberDTO emailCheck(String memEmail);
 
 	int withdrawMember(int memNo);
 	

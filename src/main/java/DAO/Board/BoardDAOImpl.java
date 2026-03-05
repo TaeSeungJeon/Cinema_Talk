@@ -354,14 +354,14 @@ public class BoardDAOImpl implements BoardDAO {
     @Override
     public List<BoardDTO> getPopularBoardList(String period, int limit) {
         SqlSession sqlSession = null;
-        try{
+        try {
             sqlSession = getSqlSession();
             Map<String, Object> param = new HashMap<>();
             param.put("period", period);
             param.put("limit", limit);
             return sqlSession.selectList("Board.getPopularBoardList", param);
-        }finally{
-            if(sqlSession != null)
+        } finally {
+            if (sqlSession != null)
                 sqlSession.close();
         }
     }

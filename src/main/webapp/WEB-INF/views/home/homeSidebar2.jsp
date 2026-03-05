@@ -37,27 +37,13 @@
         white-space: nowrap;
     }
 
+
     .hot-hidden {
         display: none;
     }
 
 
-
 </style>
-
-<div class="side-widget" id="hotWidget">
-    <div class="widget-title">
-        <span>🔥 실시간 인기글</span>
-        <a href="#" class="widget-link" id="hotToggleBtn">더보기</a>
-    </div>
-
-    <ul class="hot-list" id="hotList">
-        <li class="hot-item">
-            <span class="rank-num">1</span>
-            <span class="hot-text">로딩중</span>
-        </li>
-    </ul>
-</div>
 
 <script>
     const contextPath = '<%=request.getContextPath()%>';

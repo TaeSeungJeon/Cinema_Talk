@@ -70,6 +70,15 @@ public class BoardListController implements Action {
         BoardDTO latestNotice = service.latestNotice();
         request.setAttribute("latestNotice", latestNotice);
 
+        // 일, 주, 월간 인기글 (사이드바용)
+        List<BoardDTO> dailyPopularList   = service.getPopularBoardList("daily",   10);
+        List<BoardDTO> weeklyPopularList  = service.getPopularBoardList("weekly",  10);
+        List<BoardDTO> monthlyPopularList = service.getPopularBoardList("monthly", 10);
+        
+        request.setAttribute("dailyPopularList", dailyPopularList);
+        request.setAttribute("weeklyPopularList", weeklyPopularList);
+        request.setAttribute("monthlyPopularList", monthlyPopularList);
+
         ActionForward forward = new ActionForward();
         forward.setPath("/WEB-INF/views/board/freeBoard.jsp");
         forward.setRedirect(false);

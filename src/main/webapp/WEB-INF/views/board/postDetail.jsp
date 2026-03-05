@@ -496,44 +496,6 @@
             text-overflow: ellipsis;
         }
 
-        /* ========== 실시간 인기글: freeBoard.jsp 스타일/두께/기울임/로직 동일 ========== */
-        .side-widget {
-            background: white;
-            border-radius: var(--radius-soft);
-            padding: 25px;
-            box-shadow: var(--shadow-subtle);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .widget-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .widget-link {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .widget-placeholder {
-            background: #f8fafc;
-            border: 2px dashed #e2e8f0;
-            border-radius: 16px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #cbd5e1;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
         .reply-to {
             font-size: 0.8rem;
             color: #94a3b8;
@@ -560,7 +522,21 @@
         <div class="glass-panel">
             <div class="side-title">👤 작성자 정보</div>
             <div style="text-align: center; padding: 10px 0;">
-                <div class="avatar" style="width: 60px; height: 60px; margin: 0 auto 10px auto;"></div>
+                <div class="profile-image-wrap">
+                    <c:choose>
+                        <c:when test="${not empty member.memProfilePhoto}">
+                            <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
+                                 src="${pageContext.request.contextPath}/profilePhoto.do?path=${member.memProfilePhoto}"
+                                 alt="프로필 사진" />
+                        </c:when>
+                        <c:otherwise>
+                            <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
+                                 src="${pageContext.request.contextPath}/images/default-avatar.png"
+                                 alt="기본 프로필" />
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
                 <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
                    style="font-weight: 700; color: var(--text-main); text-decoration: none;">
                     ${cont.boardName}
@@ -568,7 +544,7 @@
                 <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 댓글 42</div>
             </div>
             <div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
-                <a href="${pageContext.request.contextPath}/myPage.do?" class="side-item">작성자의 다른 글 보기</a>
+                <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}" class="side-item">작성자의 다른 글 보기</a>
                 <div class="side-item">팔로우 하기</div>
             </div>
         </div>
@@ -798,7 +774,20 @@
                 <c:forEach var="comm" items="${clist}">
                     <div class="comment-item"
                          style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
-                        <div class="avatar" style="width:35px; height:35px;"></div>
+                        <div class="profile-image-wrap">
+                            <c:choose>
+                                <c:when test="${not empty comm.memProfilePhoto}">
+                                    <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
+                                         src="${pageContext.request.contextPath}/profilePhoto.do?path=${comm.memProfilePhoto}"
+                                         alt="프로필 사진" />
+                                </c:when>
+                                <c:otherwise>
+                                    <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
+                                         src="${pageContext.request.contextPath}/images/default-avatar.png"
+                                         alt="기본 프로필" />
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
 
                         <div class="comment-content" style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -892,7 +881,7 @@
     </main>
 
     <aside class="side-panel">
-        <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
+        <jsp:include page="/WEB-INF/views/home/homeSidebar.jsp" />
     </aside>
 </div>
 <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
@@ -965,19 +954,6 @@
             document.getElementById("update-form").style.display = "none";
             document.querySelector(".post-footer-actions").style.display = "flex";
             document.querySelector(".post-actions").style.display = "flex";
-        }
-
-        function toggleLike(boardId, boardType) {
-            fetch("boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
-                .then(r => r.text())
-                .then(res => {
-                    if (res === "LOGIN_REQUIRED") {
-                        alert("로그인 후 이용 가능합니다.");
-                        location.href = "memberLogin.do";
-                        return;
-                    }
-                    document.getElementById("likeCount").innerText = res;
-                });
         }
 
         const CTX = "${pageContext.request.contextPath}";
@@ -1466,9 +1442,6 @@
             });
         })();
 
-
     </script>
-</div>
-
 </body>
 </html>

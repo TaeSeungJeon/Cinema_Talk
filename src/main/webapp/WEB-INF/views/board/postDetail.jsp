@@ -26,7 +26,7 @@
             font-size: 0.85rem;
             color: #374151;
             cursor: pointer;
-            background: white;
+            background: var(--glass-bg);
             min-width: 110px;
             user-select: none;
             display: flex;
@@ -48,7 +48,7 @@
             position: absolute;
             top: calc(100% + 4px);
             left: 0;
-            background: white;
+            background: var(--glass-bg);
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
@@ -74,14 +74,14 @@
         .font-option.selected { background: #ede9fe; color: #6366f1; }
 
         :root {
-            --bg-color: #f0f2f5;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --accent-color: #6366f1;
-            --text-main: #1f2937;
-            --text-sub: #64748b;
+            --bg-color: #0a0a0a;
+            --glass-bg: rgba(20, 20, 20, 0.8);
+            --accent-color: #818cf8;
+            --text-main: #e5e7eb;
+            --text-sub: #9ca3af;
             --radius-soft: 24px;
-            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
-            --shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
+            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-strong: 0 12px 24px rgba(129, 140, 248, 0.2);
         }
 
         body {
@@ -121,7 +121,7 @@
         }
 
         .glass-panel-btn:hover {
-            background: white;
+            background: var(--glass-bg);
             transform: translateY(-2px);
         }
 
@@ -143,7 +143,7 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            background: white;
+            background: var(--glass-bg);
             border-radius: 50px;
             box-shadow: var(--shadow-subtle);
             display: flex;
@@ -302,7 +302,7 @@
         }
 
         .action-btn {
-            background: white;
+            background: var(--glass-bg);
             border: 1px solid rgba(0, 0, 0, 0.05);
             padding: 12px 25px;
             border-radius: 50px;
@@ -332,7 +332,7 @@
         }
 
         .comment-write {
-            background: white;
+            background: var(--glass-bg);
             border-radius: 18px;
             padding: 15px;
             margin-bottom: 30px;
@@ -730,20 +730,20 @@
             <div class="post-footer-actions"
                  style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
                 <button type="button" class="btn-list"
-                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
+                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
                         onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
                 </button>
 
                 <c:if test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
                     <div class="right-actions" style="display: flex; gap: 10px;">
                         <button type="button" class="btn-edit"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
+                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
                                 onclick="showUpdateForm()">
                             수정하기
                         </button>
                         <button type="button" class="btn-delete"
                                 onclick="deletePost(${cont.boardId})"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">
+                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer; color: #ef4444;">
                             삭제하기
                         </button>
                     </div>

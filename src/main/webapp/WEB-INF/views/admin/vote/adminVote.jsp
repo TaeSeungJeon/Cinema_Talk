@@ -32,10 +32,6 @@
 			margin: 0;
 		}
 		
-		body::-webkit-scrollbar {
-		    display: none;
-		}
-		
 		.vote-mgmt-page {
 		   padding:0.5rem 2rem;height: calc(100vh - 12rem);background-color: white;
 		   border-radius: 1rem;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;

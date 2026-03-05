@@ -133,10 +133,10 @@
 
     <!-- 답변(댓글) 등록 -->
     <insert id="insertReply" parameterType="DTO.Board.CommentsDTO">
-        INSERT INTO COMMENTS (COMMENTSID, BOARDID, BOARDTYPE, COMMENTSCONTENT, COMMENTSNAME, COMMENTSDATE, MEMNO)
+        INSERT INTO COMMENTS (COMMENTSID, BOARDID, BOARDTYPE, COMMENTSCONTENT, COMMENTSNAME, COMMENTSDATE, MEMNO, COMMENTSNO)
         VALUES (
             (SELECT NVL(MAX(COMMENTSID), 0) + 1 FROM COMMENTS),
-            #{boardId}, 11, #{commentsContent}, #{commentsName}, SYSDATE, #{memNo}
+            #{boardId}, 11, #{commentsContent}, #{commentsName}, SYSDATE, #{memNo}, #{commentsNo}
         )
     </insert>
 

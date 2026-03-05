@@ -34,6 +34,7 @@ public class AdminQuiryReplyController implements Action {
         dto.setCommentsContent(content);
         dto.setCommentsName(commentsName);
         dto.setMemNo(memNo);
+        dto.setCommentsNo(1);
 
         int result = service.insertReply(dto);
 

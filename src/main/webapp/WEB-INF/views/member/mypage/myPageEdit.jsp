@@ -11,7 +11,7 @@
 <title>마이페이지 - Cinema Talk</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="./js/member.js"></script>
+	<script src="./js/memberEdit.js"></script>
 <!-- 공통 스타일시트 -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
 <style>
@@ -166,98 +166,38 @@
 </head>
 <body>
 	<div class="title">회원정보 수정</div>
-    <form action="memberEditOk.do" method="post" enctype="multipart/form-data" onsubmit="return joinCheck();">
-        <!-- 프로필 사진 업로드 -->
-        <div class="input-group" style="text-align:center; margin-bottom:25px;">
-            <div id="profilePreviewWrap" style="margin-bottom:10px;">
-                <c:choose>
-                    <c:when test="${not empty member.memProfilePhoto}">
-                        <img id="profilePreview" 
-                             src="${pageContext.request.contextPath}/profilePhoto.do?path=${member.memProfilePhoto}" 
-                             alt="프로필 사진" 
-                             style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid var(--accent-color);" />
-                    </c:when>
-                    <c:otherwise>
-                        <img id="profilePreview" 
-                             src="${pageContext.request.contextPath}/images/default-avatar.png" 
-                             alt="기본 프로필" 
-                             style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ddd;" />
-                    </c:otherwise>
-                </c:choose>
-            </div>
-            <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted);">프로필 사진 (선택)</label>
-            <input type="file" id="profilePhoto" name="profilePhoto" accept="image/jpeg,image/png,image/gif"
-                   style="margin-top:8px;" onchange="previewProfilePhoto(this);" />
-            <span id="photoMsg" class="field-msg"></span>
-        </div>
-
-        <div class="input-group">
-            <label>새 아이디</label>
-            <input type="text" id="mem-id" name="mem-id" required>
-            <input type="hidden" id="idChecked" value="N">
-            <input type="button" class="btn-idCheck" value="id중복확인" onclick="idCheck();">
-            <span id="idcheck" class="id-check-msg"></span>
-        </div>
+    <form action="memberEditOk.do" method="post" onsubmit="return editCheck();">
+        <!-- 프로필 사진은 마이페이지 사이드바의 📷 버튼으로 변경 가능합니다 -->
 
         <div class="input-group">
             <label>새 비밀번호</label>
-            <input type="password" id="mem-pwd" name="mem-pwd" required>
+            <input type="password" id="mem-pwd" name="mem-pwd" placeholder="변경하지 않으려면 비워두세요">
         </div>
 
         <div class="input-group">
             <label>새 비밀번호 확인</label>
-            <input type="password" id="mem-pwd-confirm" name="mem-pwd-confirm" required>
+            <input type="password" id="mem-pwd-confirm" name="mem-pwd-confirm" placeholder="변경하지 않으려면 비워두세요">
         </div>
 
         <div class="input-group">
             <label>새 이름</label>
-            <input type="text" id="mem-name" name="mem-name" required>
+            <input type="text" id="mem-name" name="mem-name" placeholder="${member.memName}">
         </div>
 
         <div class="input-group">
             <label>새 전화번호</label>
-            <input type="tel" id="mem-phone" name="mem-phone" placeholder="010-0000-0000" required>
+            <input type="tel" id="mem-phone" name="mem-phone" placeholder="${member.memPhone}">
         </div>
 
         <div class="input-group">
             <label>새 email</label>
-            <input type="email" id="mem-email" name="mem-email" required>
+            <input type="email" id="mem-email" name="mem-email" placeholder="${member.memEmail}">
         </div>
 
         <button type="submit" class="btn-submit">회원정보 수정</button>
         <input type="button" class="btn-submit" value="취소" onclick="history.back();">
     </form>
     
-    <script>
-    function previewProfilePhoto(input) {
-        var msgEl = document.getElementById('photoMsg');
-        if (input.files && input.files[0]) {
-            var file = input.files[0];
-            // 타입 검증
-            var allowed = ['image/jpeg', 'image/png', 'image/gif'];
-            if (allowed.indexOf(file.type) === -1) {
-                msgEl.className = 'field-msg bad';
-                msgEl.textContent = '허용되지 않는 파일 형식입니다. (JPG, PNG, GIF만 가능)';
-                input.value = '';
-                return;
-            }
-            // 크기 검증 (5MB)
-            if (file.size > 5242880) {
-                msgEl.className = 'field-msg bad';
-                msgEl.textContent = '파일 크기가 5MB를 초과합니다.';
-                input.value = '';
-                return;
-            }
-            msgEl.textContent = '';
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var preview = document.getElementById('profilePreview');
-                preview.src = e.target.result;
-                preview.style.border = '3px solid var(--accent-color)';
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-    </script>
+    
 </body>
 </html>

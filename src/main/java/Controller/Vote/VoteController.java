@@ -31,7 +31,7 @@ public class VoteController implements Action {
 		VoteService voteService = new VoteServiceImpl();
 		MemberService memberService = new MemberServiceImpl();
 		HttpSession session = request.getSession();
-
+		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
 
 		//로그인 사용자 정보 가져오기
 		String memId = (String) session.getAttribute("memId"); // 값이 없으면 자동으로 null

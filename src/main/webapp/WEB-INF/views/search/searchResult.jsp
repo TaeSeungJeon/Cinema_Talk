@@ -49,6 +49,7 @@
         border-radius: var(--radius-soft);
         padding: 20px 25px;
         margin: 30px 0;
+        margin-top: 0px;
         box-shadow: var(--shadow-subtle);
     }
 

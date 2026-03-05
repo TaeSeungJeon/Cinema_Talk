@@ -453,9 +453,6 @@
 
                 <c:if test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
                     <div class="right-actions" style="display: flex; gap: 10px;">
-                        <button type="button" class="btn-edit"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
-                                onclick="showUpdateForm()">수정하기</button>
                         <button type="button" class="btn-delete"
                                 onclick="deletePost(${cont.boardId})"
                                 style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">삭제하기</button>
@@ -476,7 +473,7 @@
             --%>
             <c:if test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
                 <div class="comment-write">
-                    <form action="commentsOk.do" method="post">
+                    <form action="quiryDetail.do" method="post">
                         <input type="hidden" name="boardId" value="${cont.boardId}">
                         <input type="hidden" name="boardType" value="${cont.boardType}">
                         <input type="hidden" name="parentBoardId" value="0">
@@ -501,83 +498,16 @@
                                 <div class="comment-user">
                                     ${comm.commentsName}
                                     <%-- 관리자 댓글에 배지 표시 (commentsNo==1이 최상위 댓글이므로 관리자 답변) --%>
-                                    <c:if test="${comm.commentsNo == 1 && comm.parentBoardId == null}">
+                                    <c:if test="${comm.commentsNo == 1}">
                                         <span class="admin-badge">관리자 답변</span>
                                     </c:if>
                                 </div>
-
-                                <%-- 수정/삭제: 댓글 작성자 본인만 --%>
-                                <c:if test="${not empty sessionScope.memNo and sessionScope.memNo == comm.memNo}">
-                                    <div class="comment-edit-delete" style="font-size: 0.75rem; color:var(--text-sub);">
-                                        <span style="cursor:pointer;" onclick="showEditForm(${comm.commentsId})">수정</span>
-                                        <span style="margin: 0 3px;">|</span>
-                                        <span style="cursor:pointer;" onclick="deleteComment(${comm.commentsId}, ${cont.boardId})">삭제</span>
-                                    </div>
-                                </c:if>
                             </div>
 
                             <div id="comment-text-${comm.commentsId}" class="comment-text">${comm.commentsContent}</div>
 
-                            <%-- 댓글 수정 폼 --%>
-                            <div id="edit-form-${comm.commentsId}" style="display:none; margin-top:10px;">
-                                <form action="commentsUpdateOk.do" method="post">
-                                    <input type="hidden" name="commentsId" value="${comm.commentsId}">
-                                    <input type="hidden" name="boardId" value="${cont.boardId}">
-                                    <textarea name="commentsContent" class="glass-panel"
-                                              style="width:100%; min-height: 60px; padding:10px; margin-bottom:5px; border:1px solid var(--accent-color); outline:none; resize:none; border-radius:12px;">${comm.commentsContent}</textarea>
-                                    <div style="display: flex; justify-content: flex-end; gap:5px;">
-                                        <button type="button" class="btn-submit"
-                                                style="background:var(--text-sub); padding:4px 12px; font-size:0.8rem;"
-                                                onclick="hideEditForm(${comm.commentsId})">취소</button>
-                                        <button type="submit" class="btn-submit"
-                                                style="padding:4px 12px; font-size:0.8rem;">수정완료</button>
-                                    </div>
-                                </form>
-                            </div>
-
                             <div class="comment-utils">
                                 <span>${comm.commentsDate}</span>
-
-                                <%--
-                                    답글 달기 노출 조건:
-                                    1) 관리자(memRole==1) → 모든 댓글에 답글 가능
-                                    2) 일반회원(memRole==2) → 자신의 문의글(cont.memNo == sessionScope.memNo)일 때만 대댓글 가능
-                                    3) 타인의 문의에는 일반회원 대댓글 불가
-                                --%>
-                                <c:if test="${(sessionScope.memRole == '1' || sessionScope.memRole == 1) || 
-                                             ((sessionScope.memRole == '2' || sessionScope.memRole == 2) && sessionScope.memNo == cont.memNo)}">
-                                    <span class="reply-trigger"
-                                          style="cursor:pointer; font-weight:600; color:var(--accent-color);"
-                                          onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
-                                </c:if>
-
-                                <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
-                                      onclick="toggleCommentLike(${comm.commentsId})"
-                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);">
-                                    <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
-                                    좋아요 ${comm.likeCount}
-                                </span>
-                            </div>
-
-                            <%-- 대댓글 폼 --%>
-                            <div id="reply-form-${comm.commentsId}" class="reply-form-container">
-                                <div class="comment-write"
-                                     style="background: #f8fafc; border: 1px solid var(--accent-color); margin-top: 10px;">
-                                    <form action="commentsOk.do" method="post">
-                                        <input type="hidden" name="boardId" value="${cont.boardId}">
-                                        <input type="hidden" name="boardType" value="${cont.boardType}">
-                                        <input type="hidden" name="parentBoardId" value="${comm.commentsId}">
-                                        <input type="hidden" name="parentBoardNo" value="${comm.commentsId}">
-                                        <input type="hidden" name="commentsNo" value="2">
-                                        <textarea name="commentsContent" placeholder="답글을 남겨보세요..." required></textarea>
-                                        <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                                            <button type="button" class="btn-submit"
-                                                    style="background: var(--text-sub);"
-                                                    onclick="hideReplyForm(${comm.commentsId})">취소</button>
-                                            <button type="submit" class="btn-submit">답글 등록</button>
-                                        </div>
-                                    </form>
-                                </div>
                             </div>
                         </div>
                     </div>

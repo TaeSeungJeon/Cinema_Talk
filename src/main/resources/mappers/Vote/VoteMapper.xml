@@ -195,11 +195,12 @@
 	<select id="vrecListVoteId" resultType="voterecord">
 		SELECT 
 	    vr.*, 
-	    m.memName 
+	    m.memName,
+	    m.memProfilePhoto
 	FROM VOTE_RECORD vr
 	JOIN MEMBER m ON vr.memNo = m.memNo
 	WHERE vr.voteId = #{voteId}
-	ORDER BY vr.recordId DESC
+	ORDER BY vr.recordCreatedDate DESC
 	</select>
 	
 	<select id="vregFullByVoteId" resultMap="voteRegisterMap">

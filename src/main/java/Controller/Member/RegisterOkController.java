@@ -33,7 +33,7 @@ public class RegisterOkController implements Action {
 		memPhone = (memPhone == null) ? "" : memPhone.trim();
 		memEmail = (memEmail == null) ? "" : memEmail.trim();
 		
-		//서버에서 필수 입력 체크
+		//서버에서 필수 입력 체크 재확인(보안상 한번 더 체크)
 		if (memId.isEmpty()) {
             request.setAttribute("msg", "아이디를 입력하세요.");
             forward.setRedirect(false);
@@ -69,23 +69,23 @@ public class RegisterOkController implements Action {
             return forward;
         }
         
-        //전화번호 중복체크
-        int phoneCnt = memberService.phoneCheck(memPhone);
-        if(phoneCnt > 0) {
-        	request.setAttribute("phoneMsg", "이미 가입된 전화번호입니다.");
-        	forward.setRedirect(false);
-        	forward.setPath("/WEB-INF/views/member/register.jsp");
-        	return forward;
-        }
+//        //전화번호 중복체크
+//        int phoneCnt = memberService.phoneCheck(memPhone);
+//        if(phoneCnt > 0) {
+//        	request.setAttribute("phoneMsg", "이미 가입된 전화번호입니다.");
+//        	forward.setRedirect(false);
+//        	forward.setPath("/WEB-INF/views/member/register.jsp");
+//        	return forward;
+//        }
         
-        //이메일 중복 체크
-        int emailCnt = memberService.emailCheck(memEmail);
-        if(emailCnt > 0) {
-        	request.setAttribute("emailMsg", "이미 가입된 이메일입니다.");
-        	forward.setRedirect(false);
-        	forward.setPath("/WEB-INF/views/member/register.jsp");
-        	return forward;
-        }
+//        //이메일 중복 체크
+//        int emailCnt = memberService.emailCheck(memEmail);
+//        if(emailCnt > 0) {
+//        	request.setAttribute("emailMsg", "이미 가입된 이메일입니다.");
+//        	forward.setRedirect(false);
+//        	forward.setPath("/WEB-INF/views/member/register.jsp");
+//        	return forward;
+//        }
         
         //비밀번호 암호화
         String encPwd = BCrypt.hashpw(memPwd, BCrypt.gensalt());

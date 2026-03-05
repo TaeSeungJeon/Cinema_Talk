@@ -82,12 +82,12 @@ public class MemberServiceImpl implements MemberService {
 	}//임시비밀번호 생성 메서드
 
 	@Override
-	public int phoneCheck(String memPhone) {
+	public MemberDTO phoneCheck(String memPhone) {
 		return mdao.phoneCheck(memPhone);
 	}//전화번호 중복 체크
 
 	@Override
-	public int emailCheck(String memEmail) {
+	public MemberDTO emailCheck(String memEmail) {
 		return mdao.emailCheck(memEmail);
 	}//이메일 중복 체크
 

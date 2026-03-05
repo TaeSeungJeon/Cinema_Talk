@@ -139,21 +139,18 @@ public class MemberDAOImpl implements MemberDAO {
 	}//updatePwd() -> 암호화된 임시비밀번호로 업데이트
 
 	@Override
-	public int phoneCheck(String memPhone) {
+	public MemberDTO phoneCheck(String memPhone) {
 		SqlSession sqlSession = null;
-		
-		try {
-			sqlSession = getSqlSession();
-			return sqlSession.selectOne("phoneCheck", memPhone);
-		}finally {
-			if(sqlSession != null) {
-				sqlSession.close();
-			}
-		}
+	    try {
+	        sqlSession = getSqlSession();
+	        return sqlSession.selectOne("phoneCheck", memPhone);
+	    } finally {
+	        if (sqlSession != null) sqlSession.close();
+	    }
 	}//phoneCheck() -> 전화번호 중복 체크
 
 	@Override
-	public int emailCheck(String memEmail) {
+	public MemberDTO emailCheck(String memEmail) {
 		SqlSession sqlSession = null;
 		
 		try {

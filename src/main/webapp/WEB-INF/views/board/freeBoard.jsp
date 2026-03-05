@@ -354,7 +354,7 @@
 		}
 
 		.write-modal {
-			background: var(--glass-bg);
+			background: #fff;
 			width: 90%;
 			max-width: 750px;
 			padding: 35px;

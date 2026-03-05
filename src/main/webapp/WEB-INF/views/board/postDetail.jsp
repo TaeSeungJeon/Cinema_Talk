@@ -251,9 +251,9 @@
 
         /* --- 게시글 본문 스타일 --- */
         .post-header {
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
         .post-category {
@@ -265,7 +265,7 @@
 
         .post-title {
             font-size: 2rem;
-            margin: 10px 0;
+            margin: 7px 0;
             line-height: 1.3;
             font-weight: 800;
         }
@@ -283,6 +283,11 @@
             line-height: 1.8;
             color: #374151;
             min-height: 250px;
+        }
+        .post-body img {
+            max-width: 100%;
+            height: auto;
+            display: block;
         }
 
         .post-actions {
@@ -380,9 +385,9 @@
         .comment-item {
             display: flex;
             gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+
         }
 
         .comment-user {
@@ -565,9 +570,9 @@
                 <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 댓글 42</div>
             </div>
             <div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
-            <a href="${pageContext.request.contextPath}/myPage.do?" class="side-item">작성자의 다른 글 보기</a>
-            <div class="side-item">팔로우 하기</div>
-        </div>
+                <a href="${pageContext.request.contextPath}/myPage.do?" class="side-item">작성자의 다른 글 보기</a>
+                <div class="side-item">팔로우 하기</div>
+            </div>
         </div>
         <div class="glass-panel">
             <div class="side-title">📋 카테고리 이동</div>
@@ -582,43 +587,43 @@
     <main class="main-content">
         <article class="glass-panel">
             <div class="post-header">
-                <span class="post-category">리뷰 · ${cont.boardName}</span>
+                <span class="post-category">게시글 제목</span>
                 <h1 class="post-title">${cont.boardTitle}</h1>
             </div>
 
             <div class="author-profile" style="margin-bottom: 20px;">
-                <span class="author-name" style="font-weight: 700;">${cont.boardName}</span>
+                <span class="author-name" style="font-weight: 700;">작성자 · ${cont.boardName}</span><br>
                 <span class="post-meta"
-                      style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardViewCount}</span>
+                      style="color: var(--text-sub); font-size: 0.9rem;">${cont.boardDate} · 조회수 ${cont.boardViewCount}</span>
             </div>
 
             <div class="post-body" id="post-body">
                 ${cont.boardContent}
-                    <c:if test="${not empty preview}">
-                        <a href="${preview.url}" target="_blank" class="link-preview">
-                            <div class="preview-card">
-                                <c:if test="${not empty preview.image}">
-                                    <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
+                <c:if test="${not empty preview}">
+                    <a href="${preview.url}" target="_blank" class="link-preview">
+                        <div class="preview-card">
+                            <c:if test="${not empty preview.image}">
+                                <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
+                            </c:if>
+
+                            <div class="preview-content">
+                                <div class="preview-domain">
+                                    <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
+                                </div>
+
+                                <c:if test="${not empty preview.title}">
+                                    <div class="preview-title">${preview.title}</div>
                                 </c:if>
 
-                                <div class="preview-content">
-                                    <div class="preview-domain">
-                                        <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
-                                    </div>
+                                <c:if test="${not empty preview.description}">
+                                    <div class="preview-desc">${preview.description}</div>
+                                </c:if>
 
-                                    <c:if test="${not empty preview.title}">
-                                        <div class="preview-title">${preview.title}</div>
-                                    </c:if>
-
-                                    <c:if test="${not empty preview.description}">
-                                        <div class="preview-desc">${preview.description}</div>
-                                    </c:if>
-
-                                    <div class="preview-url">${preview.url}</div>
-                                </div>
+                                <div class="preview-url">${preview.url}</div>
                             </div>
-                        </a>
-                    </c:if>
+                        </div>
+                    </a>
+                </c:if>
             </div>
 
             <div id="update-form" style="display:none; margin-top:20px;">
@@ -662,8 +667,13 @@
                               onmousedown="event.preventDefault(); editExecCmd('italic')">I</span>
                         <span style="cursor:pointer; text-decoration:underline;"
                               onmousedown="event.preventDefault(); editExecCmd('underline')">U</span>
-                    </div>
 
+                        <span id="editAttachTrigger" style="cursor:pointer;">🖼️ 사진첨부</span>
+                        <input id="editAttachInput" type="file" name="uploadFiles" accept="image/*"
+                               multiple style="display:none;" />
+                    </div>
+                    <div id="editAttachName"
+                         style="font-size:0.78rem; color:#94a3b8; padding:6px 4px; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;"></div>
 
                     <div id="editor"
                          contenteditable="true"
@@ -720,29 +730,6 @@
                         <%-- 미리보기 영역 --%>
                         <div id="updateLinkPreviewArea" style="margin-top:12px; position:relative;"></div>
                     </div>
-
-                    <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
-                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
-                        <input type="file" name="uploadFiles" multiple style="margin-bottom:8px;">
-                    </div>
-
-                    <c:if test="${not empty fileList}">
-                        <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
-                            <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
-
-                            <div style="display:flex; flex-direction:column; gap:12px;">
-                                <c:forEach var="f" items="${fileList}">
-                                    <div style="display:flex; flex-direction:column; gap:8px;">
-                                        <a href="${pageContext.request.contextPath}${f.filePath}"
-                                           target="_blank"
-                                           style="text-decoration:none; font-weight:700; color:#374151;">
-                                                ${f.fileName}
-                                        </a>
-                                    </div>
-                                </c:forEach>
-                            </div>
-                        </div>
-                    </c:if>
 
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
                         <button type="button"
@@ -903,12 +890,13 @@
                 </c:if>
             </div>
         </section>
-        <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
     </main>
 
     <aside class="side-panel">
         <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
     </aside>
+</div>
+<jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 
 
     <script>
@@ -969,11 +957,15 @@
         function showUpdateForm() {
             document.getElementById("post-body").style.display = "none";
             document.getElementById("update-form").style.display = "block";
+            document.querySelector(".post-footer-actions").style.display = "none";
+            document.querySelector(".post-actions").style.display = "none";
         }
 
         function hideUpdateForm() {
             document.getElementById("post-body").style.display = "block";
             document.getElementById("update-form").style.display = "none";
+            document.querySelector(".post-footer-actions").style.display = "flex";
+            document.querySelector(".post-actions").style.display = "flex";
         }
 
         function toggleLike(boardId, boardType) {
@@ -1078,6 +1070,97 @@
                     document.getElementById("editor").innerHTML;
             });
         }
+
+        /* ===== 수정폼 파일 첨부 (base64 방식 - 이미지 영구 저장) ===== */
+        (function () {
+            var trigger = document.getElementById('editAttachTrigger');
+            var input   = document.getElementById('editAttachInput');
+            var name    = document.getElementById('editAttachName');
+            var editor  = document.getElementById('editor');
+            var savedRange = null;
+
+            if (!trigger || !input || !name || !editor) return;
+
+            function saveEditSelection() {
+                var sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
+                var range = sel.getRangeAt(0);
+                savedRange = editor.contains(range.commonAncestorContainer) ? range.cloneRange() : null;
+            }
+
+            function restoreEditSelection() {
+                if (!savedRange) return;
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(savedRange);
+            }
+
+            editor.addEventListener('mouseup', saveEditSelection);
+            editor.addEventListener('keyup',   saveEditSelection);
+            editor.addEventListener('focus',   saveEditSelection);
+
+            trigger.addEventListener('click', function () {
+                saveEditSelection();
+                input.click();
+            });
+
+            function insertNodeAtCursor(node) {
+                editor.focus();
+                restoreEditSelection();
+                var sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) { editor.appendChild(node); return; }
+                var range = sel.getRangeAt(0);
+                if (!editor.contains(range.commonAncestorContainer)) {
+                    range = document.createRange();
+                    range.selectNodeContents(editor);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+                range.insertNode(node);
+                range.setStartAfter(node);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+                saveEditSelection();
+            }
+
+            function bindFileInput(inp) {
+                inp.addEventListener('change', function () {
+                    if (!inp.files || inp.files.length === 0) { name.textContent = ''; return; }
+                    var files = Array.from(inp.files);
+                    name.textContent = files.map(function (f) { return f.name; }).join(', ');
+
+                    files.forEach(function (f) {
+                        if (!f.type || !f.type.startsWith("image/")) return;
+
+                        // base64로 변환 → boardContent에 직접 저장되므로 이미지 영구 유지
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var img = document.createElement("img");
+                            img.src = e.target.result; // base64 data URL
+                            img.alt = f.name || "image";
+                            img.style.cssText = "max-width:100%; height:auto; display:block; margin:10px 0; border-radius:12px; border:1px solid #e5e7eb;";
+
+                            var wrapper = document.createElement("div");
+                            wrapper.appendChild(img);
+
+                            insertNodeAtCursor(wrapper);
+                            insertNodeAtCursor(document.createElement("br"));
+                        };
+                        reader.readAsDataURL(f);
+                    });
+
+                    // 같은 파일 재선택 UX를 위해 input 교체
+                    var newInput = inp.cloneNode(true);
+                    inp.parentNode.replaceChild(newInput, inp);
+                    input = newInput;
+                    bindFileInput(newInput);
+                });
+            }
+
+            bindFileInput(input);
+        })();
 
         /* 실시간 인기글: 더보기 누르면 10개 (5개 추가 노출), 다시 누르면 접기 */
         (function () {
@@ -1231,6 +1314,7 @@
                     this.textContent = "✔ 적용됨";
                     this.style.background = "#10b981";
                     this.disabled = true;
+                    area.style.display = "none";
                 });
             }
         })();

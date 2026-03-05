@@ -74,16 +74,18 @@
 
     <!-- 댓글 목록 조회 시 좋아요 정보 포함 -->
     <select id="commentsListWithLike" parameterType="map" resultType="cdto">
-    SELECT c.*,
-    (SELECT COUNT(*) FROM COMMENTS_LIKE cl WHERE cl.commentsId = c.commentsId) as likeCount,
-    CASE WHEN #{memNo} IS NOT NULL THEN
-    (SELECT COUNT(*) FROM COMMENTS_LIKE cl2 WHERE cl2.commentsId = c.commentsId AND cl2.memNo = #{memNo})
-    ELSE 0 END as isLiked
-    FROM COMMENTS c
-    WHERE c.BOARDID = #{boardId}
-    START WITH c.PARENTBOARDID IS NULL
-    CONNECT BY PRIOR c.COMMENTSID = c.PARENTBOARDID
-    ORDER SIBLINGS BY c.COMMENTSID ASC
+        SELECT c.COMMENTSID, c.BOARDID, c.BOARDTYPE, c.COMMENTSCONTENT,
+               c.COMMENTSNAME, c.COMMENTSNO, c.MEMNO, c.PARENTBOARDNO, c.PARENTBOARDID,
+               TO_CHAR(c.COMMENTSDATE, 'YYYY-MM-DD HH24:MI') AS commentsDate,
+               (SELECT COUNT(*) FROM COMMENTS_LIKE cl WHERE cl.commentsId = c.commentsId) as likeCount,
+               CASE WHEN #{memNo} IS NOT NULL THEN
+                        (SELECT COUNT(*) FROM COMMENTS_LIKE cl2 WHERE cl2.commentsId = c.commentsId AND cl2.memNo = #{memNo})
+                    ELSE 0 END as isLiked
+        FROM COMMENTS c
+        WHERE c.BOARDID = #{boardId}
+        START WITH c.PARENTBOARDID IS NULL
+        CONNECT BY PRIOR c.COMMENTSID = c.PARENTBOARDID
+        ORDER SIBLINGS BY c.COMMENTSID ASC
     </select>
 
 

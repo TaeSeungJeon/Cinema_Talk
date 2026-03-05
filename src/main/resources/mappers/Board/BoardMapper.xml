@@ -214,4 +214,23 @@
         /* 좋아요 기반, 좋아요가 같으면 조회수 순 */
     </select>
 
+    <!-- 일, 주, 월간 인기글 -->
+    <select id="getPopularBoardList" parameterType="map" resultType="DTO.Board.BoardDTO">
+        SELECT * FROM (
+        SELECT b.BOARDID AS boardId, b.BOARDTYPE AS boardType,
+        b.BOARDTITLE AS boardTitle, b.BOARDVIEWCOUNT AS boardViewCount,
+        b.BOARDDATE AS boardDate,
+        (SELECT COUNT(*) FROM BOARD_LIKE l
+        WHERE l.BOARDID = b.BOARDID AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
+        FROM BOARD b
+        WHERE b.BOARDTYPE IN (1, 2)
+        AND (
+        #{period} = 'daily'  AND b.BOARDDATE >= SYSDATE - 1 OR
+        #{period} = 'weekly' AND b.BOARDDATE >= SYSDATE - 7 OR
+        #{period} = 'monthly' AND b.BOARDDATE >= SYSDATE - 30
+        )
+        ORDER BY likeCount DESC, b.BOARDVIEWCOUNT DESC
+        ) WHERE ROWNUM <![CDATA[<=]]> #{limit}
+    </select>
+
 </mapper>

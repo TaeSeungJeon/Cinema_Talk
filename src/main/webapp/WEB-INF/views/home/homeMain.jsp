@@ -11,8 +11,8 @@
 	}
 
 	.post-item .post-thumb{
-		width: 80px;
-		height: 80px;
+		width: 96px;
+		height: 96px;
 		border-radius: 14px;
 		overflow: hidden;
 		background: #e5e7eb;
@@ -21,6 +21,7 @@
 
 </style>
 
+<main style="position: relative;">
 
 <div class="quick-booking-aside" id="floatingMenu">
 	<div class="booking-box">
@@ -34,7 +35,7 @@
 	</div>
 </div>
 
-<main>
+
 	<div class="notice-bar">
 		<span style="font-weight: 700; color: var(--accent-color);">📢
 			공지사항</span> <span style="color: #64748b;">신규 투표 기능 업데이트 안내 및 이용 가이드</span>
@@ -208,7 +209,7 @@
 						   class="movie-card-small">
 							<div class="poster-area"
 								 style="border-radius: 12px; overflow: hidden; background: #e5e7eb;">
-								<img src="https://images.tmdb.org/t/p/w300/${m.moviePosterPath}"
+								<img src="https://image.tmdb.org/t/p/w300/${m.moviePosterPath}"
 									 alt="${m.movieTitle}"
 									 onerror="this.onerror=null; this.src='https://via.placeholder.com/230x330?text=No+Image';"
 									 style="width: 100%; height: 100%; object-fit: cover; display: block;" />
@@ -223,6 +224,120 @@
 		</div>
 	</section>
 
+	<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 10px; margin-bottom: 15px;">
+
+		<%-- 일간 인기글 --%>
+		<div class="board-card" style="margin: 0;">
+			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+				<div style="display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 1.1rem;">🔥</span>
+					<h3 style="margin: 0; font-size: 0.95rem; font-weight: 800;">일간 인기글</h3>
+				</div>
+				<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
+				   style="font-size: 0.75rem; color: #94a3b8; text-decoration: none;">전체보기 ›</a>
+			</div>
+			<c:choose>
+				<c:when test="${empty dailyPopularList}">
+					<div style="padding: 20px 0; text-align: center; color: #94a3b8; font-size: 0.85rem;">오늘의 인기글이 없습니다.</div>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="b" items="${dailyPopularList}" varStatus="vs">
+						<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
+						   style="display: flex; align-items: center; gap: 10px;
+                              padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+                              text-decoration: none; color: inherit;">
+                        <span style="font-size: 0.8rem; font-weight: 800; min-width: 16px; text-align: center;
+								color: ${vs.index == 0 ? '#ef4444' : vs.index == 1 || vs.index == 2 ? '#6366f1' : '#94a3b8'};">
+								${vs.index + 1}
+						</span>
+							<span style="font-size: 0.85rem; font-weight: 600; flex: 1;
+                                     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <c:out value="${b.boardTitle}" />
+                        </span>
+							<span style="font-size: 0.75rem; color: #94a3b8; white-space: nowrap;">
+                            👍${b.likeCount} · 👁${b.boardViewCount}
+                        </span>
+						</a>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+		</div>
+
+		<%-- 주간 인기글 --%>
+		<div class="board-card" style="margin: 0;">
+			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+				<div style="display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 1.1rem;">📅</span>
+					<h3 style="margin: 0; font-size: 0.95rem; font-weight: 800;">주간 인기글</h3>
+				</div>
+				<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
+				   style="font-size: 0.75rem; color: #94a3b8; text-decoration: none;">전체보기 ›</a>
+			</div>
+			<c:choose>
+				<c:when test="${empty weeklyPopularList}">
+					<div style="padding: 20px 0; text-align: center; color: #94a3b8; font-size: 0.85rem;">이번 주 인기글이 없습니다.</div>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="b" items="${weeklyPopularList}" varStatus="vs">
+						<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
+						   style="display: flex; align-items: center; gap: 10px;
+                              padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+                              text-decoration: none; color: inherit;">
+                        <span style="font-size: 0.8rem; font-weight: 800; min-width: 16px; text-align: center;
+								color: ${vs.index == 0 ? '#ef4444' : vs.index == 1 || vs.index == 2 ? '#6366f1' : '#94a3b8'};">
+								${vs.index + 1}
+						</span>
+							<span style="font-size: 0.85rem; font-weight: 600; flex: 1;
+                                     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <c:out value="${b.boardTitle}" />
+                        </span>
+							<span style="font-size: 0.75rem; color: #94a3b8; white-space: nowrap;">
+                            👍${b.likeCount} · 👁${b.boardViewCount}
+                        </span>
+						</a>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+		</div>
+
+		<%-- 월간 인기글 --%>
+		<div class="board-card" style="margin: 0;">
+			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+				<div style="display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 1.1rem;">🏆</span>
+					<h3 style="margin: 0; font-size: 0.95rem; font-weight: 800;">월간 인기글</h3>
+				</div>
+				<a href="${pageContext.request.contextPath}/freeBoard.do?filter=all"
+				   style="font-size: 0.75rem; color: #94a3b8; text-decoration: none;">전체보기 ›</a>
+			</div>
+			<c:choose>
+				<c:when test="${empty monthlyPopularList}">
+					<div style="padding: 20px 0; text-align: center; color: #94a3b8; font-size: 0.85rem;">이번 달 인기글이 없습니다.</div>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="b" items="${monthlyPopularList}" varStatus="vs">
+						<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
+						   style="display: flex; align-items: center; gap: 10px;
+                              padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+                              text-decoration: none; color: inherit;">
+                        <span style="font-size: 0.8rem; font-weight: 800; min-width: 16px; text-align: center;
+								color: ${vs.index == 0 ? '#ef4444' : vs.index == 1 || vs.index == 2 ? '#6366f1' : '#94a3b8'};">
+								${vs.index + 1}
+						</span>
+							<span style="font-size: 0.85rem; font-weight: 600; flex: 1;
+                                     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <c:out value="${b.boardTitle}" />
+                        </span>
+							<span style="font-size: 0.75rem; color: #94a3b8; white-space: nowrap;">
+                            👍${b.likeCount} · 👁${b.boardViewCount}
+                        </span>
+						</a>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+		</div>
+
+	</div>
 
 
 	<div class="board-card">
@@ -258,14 +373,14 @@
 					<div class="post-main-title">
 						<c:out value="${b.boardTitle}" />
 					</div>
-					<div class="post-preview" style="display:none;"> ${b.boardContent}</div>
-					<%--
-					게시글 내용 미리보기 부분
-					<div style="font-size: 0.9rem; color: #64748b;">
-						<c:out value="${fn:substring(b.boardContent, 0, 60)}" />
-						<c:if test="${fn:length(b.boardContent) > 60}">...</c:if>
-					</div>
-					--%>
+						<div class="post-preview" style="display:none;">${b.boardContent}</div>
+                        <%--
+                        게시글 내용 미리보기 부분
+                        <div style="font-size: 0.9rem; color: #64748b;">
+                            <c:out value="${fn:substring(b.boardContent, 0, 60)}" />
+                            <c:if test="${fn:length(b.boardContent) > 60}">...</c:if>
+                        </div>
+                        --%>
 					<div class="post-stats">
 						<span>💬 댓글 <c:out value="${b.commentCount}" /></span>
 						<span>👍 좋아요 <c:out value="${b.likeCount}" /></span>
@@ -275,13 +390,6 @@
 		</c:forEach>
 	</div>
 
-	<section class="board-card" style="margin-top: 10px;">
-		<h3 style="margin-top: 0;">최근 리뷰</h3>
-		<div class="sub-grid">
-			<a href="#" class="review-card">로그인 후 나만의 리뷰를 작성해보세요.</a> <a href="#"
-																		 class="review-card">영상미가 정말 훌륭했습니다! 👍</a>
-		</div>
-	</section>
 </main>
 <script>
 
@@ -308,6 +416,26 @@
 			// 더미 제거 후 썸네일 삽입
 			thumbBox.innerHTML = "";
 			thumbBox.appendChild(timg);
+		});
+	});
+	// 일, 주, 월간 인기글
+	document.querySelectorAll(".popular-tab-btn").forEach(function(btn) {
+		btn.addEventListener("click", function() {
+			// 탭 버튼 스타일 초기화
+			document.querySelectorAll(".popular-tab-btn").forEach(function(b) {
+				b.style.background = "white";
+				b.style.color = "#64748b";
+				b.style.border = "1px solid #e2e8f0";
+			});
+			this.style.background = "#6366f1";
+			this.style.color = "white";
+			this.style.border = "none";
+
+			// 탭 컨텐츠 전환
+			document.querySelectorAll(".popular-tab-content").forEach(function(c) {
+				c.style.display = "none";
+			});
+			document.getElementById("popular-" + this.dataset.tab).style.display = "block";
 		});
 	});
 

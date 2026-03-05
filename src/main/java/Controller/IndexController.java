@@ -54,6 +54,15 @@ public class IndexController implements Action {
 		List<BoardDTO> recentBoardList = boardService.recentBoardList(5);
 		request.setAttribute("recentBoardList", recentBoardList);
 
+		// 일, 주, 월간 인기글
+		List<BoardDTO> dailyPopularList   = boardService.getPopularBoardList("daily",   5);
+		List<BoardDTO> weeklyPopularList  = boardService.getPopularBoardList("weekly",  5);
+		List<BoardDTO> monthlyPopularList = boardService.getPopularBoardList("monthly", 5);
+
+		request.setAttribute("dailyPopularList", dailyPopularList);
+		request.setAttribute("weeklyPopularList", weeklyPopularList);
+		request.setAttribute("monthlyPopularList", monthlyPopularList);
+
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/home/index.jsp");

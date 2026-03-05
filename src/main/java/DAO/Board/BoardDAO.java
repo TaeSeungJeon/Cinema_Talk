@@ -34,4 +34,6 @@ public interface BoardDAO {
     List<BoardDTO> hotBoardList(int limit);
 
     List<BoardDTO> recentBoardList(int limit);
+
+    List<BoardDTO> getPopularBoardList(String period, int limit);
 }

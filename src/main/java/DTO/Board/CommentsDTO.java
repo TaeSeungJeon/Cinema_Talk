@@ -1,7 +1,6 @@
 package DTO.Board;
 
 import lombok.Data;
-import java.sql.Date;
 
 @Data
 public class CommentsDTO {
@@ -10,7 +9,7 @@ public class CommentsDTO {
     private int boardType;
     private String commentsContent;
     private String commentsName;
-    private Date commentsDate;
+    private String commentsDate;
     private Integer commentsNo;
     private Integer memNo;
     private Integer parentBoardNo; // null 허용을 위해 Integer 사용

@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 
-
 <c:forEach var="movie" items="${movieList}">
 	<div class="movie-card" data-id="${movie.movieId}">
 		<c:choose>

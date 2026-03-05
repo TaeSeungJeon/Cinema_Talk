@@ -1,4 +1,4 @@
-package Controller.Admin;
+package Controller.Admin.Stats;
 
 import java.time.LocalDate;
 
@@ -64,9 +64,9 @@ public class AdminStatsController implements Action {
 	    request.setAttribute("inquiryStat", adminStatsService.getInquiryStat(last7DaysRange));
 	    
 	    if (isAjax) {
-	    	forward.setPath("/WEB-INF/views/admin/adminStats.jsp");
+	    	forward.setPath("/WEB-INF/views/admin/stats/adminStats.jsp");
 	    } else {
-	        request.setAttribute("contentPage", "/WEB-INF/views/admin/adminStats.jsp");
+	        request.setAttribute("contentPage", "/WEB-INF/views/admin/stats/adminStats.jsp");
 	        forward.setPath("/WEB-INF/views/admin/adminMyPage.jsp");
 	    }
 

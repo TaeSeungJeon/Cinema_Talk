@@ -1,4 +1,4 @@
-package Controller.Admin;
+package Controller.Admin.Movie;
 
 import java.util.List;
 
@@ -24,9 +24,9 @@ public class AdminMovieController implements Action {
 	    request.setAttribute("movieList", movieList);
 	    
 	    if (isAjax) {
-	    	forward.setPath("/WEB-INF/views/admin/adminMovie.jsp");
+	    	forward.setPath("/WEB-INF/views/admin/movie/adminMovie.jsp");
 	    } else {
-	        request.setAttribute("contentPage", "/WEB-INF/views/admin/adminMovie.jsp");
+	        request.setAttribute("contentPage", "/WEB-INF/views/admin/movie/adminMovie.jsp");
 	        forward.setPath("/WEB-INF/views/admin/adminMyPage.jsp");
 	    }
 

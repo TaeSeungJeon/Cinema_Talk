@@ -1,4 +1,4 @@
-package Controller.Admin;
+package Controller.Admin.Movie;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class AdminMovieSearchController implements Action {
         forward.setRedirect(false);
 
         // 왼쪽 목록 조각 JSP
-        forward.setPath("/WEB-INF/views/admin/adminMovieSearch.jsp");
+        forward.setPath("/WEB-INF/views/admin/movie/adminMovieSearch.jsp");
 
         return forward;
 	}

@@ -4,8 +4,8 @@ import java.util.*;
 
 import org.apache.ibatis.session.SqlSession;
 
-import DTO.Admin.MovieSaveDTO.CastSaveDTO;
-import DTO.Admin.MovieSaveDTO.CrewSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CastSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CrewSaveDTO;
 import DTO.Movie.MovieDTO;
 
 public class AdminMovieDAOImpl implements AdminMovieDAO {

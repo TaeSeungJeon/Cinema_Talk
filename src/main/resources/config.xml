@@ -34,12 +34,12 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="DTO.Vote.VoteResultDTO" alias="voteresult" />
 		<typeAlias type="DTO.Vote.VoteRegisterDTO" alias="voteregister" />
 		<typeAlias type="DTO.Vote.VoteOptionDTO" alias="voteoption" />
-    <typeAlias type="DTO.Board.BoardDTO" alias="bdto" />
+    	<typeAlias type="DTO.Board.BoardDTO" alias="bdto" />
 		<typeAlias type="DTO.Board.CommentsDTO" alias="cdto"/>
-    <typeAlias type="DTO.Member.MyPage.MyPageDTO" alias="mypage" />
-    <typeAlias type="DTO.Admin.AdminMovieDetailDTO" alias="adminmoviedetail" />
-    <typeAlias type="DTO.Admin.Stats.TrendDTO" alias="trend" />
-    <typeAlias type="DTO.Admin.MovieSaveDTO" alias="moviesave" />
+	    <typeAlias type="DTO.Member.MyPage.MyPageDTO" alias="mypage" />
+	    <typeAlias type="DTO.Admin.Movie.AdminMovieDetailDTO" alias="adminmoviedetail" />
+        <typeAlias type="DTO.Admin.Movie.MovieSaveDTO" alias="moviesave" />
+    	<typeAlias type="DTO.Admin.Stats.TrendDTO" alias="trend" />
 	</typeAliases>
 
 	<!-- 마이바티스의 실행 환경을 세팅한 구간 특히 이 구간에서는 마이바티스가 JDBC 수준에서 트랜잭션을 관리(transactionManager)하게 
@@ -100,9 +100,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/Board/CommentsMapper.xml"/>
 		<mapper resource="mappers/Board/AddFileMapper.xml"/>
 		<mapper resource="mappers/Board/BoardSearchMapper.xml"/>
-    <mapper resource="mappers/Admin/AdminBoardMapper.xml"/>
-    <mapper resource="mappers/Admin/AdminNoticeMapper.xml"/>
-    <mapper resource="mappers/Admin/AdminQuiryMapper.xml"/>
+	    <mapper resource="mappers/Admin/AdminBoardMapper.xml"/>
+	    <mapper resource="mappers/Admin/AdminNoticeMapper.xml"/>
+	    <mapper resource="mappers/Admin/AdminQuiryMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMovieMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminSummaryStatsMapper.xml"/>
 		<mapper resource="mappers/Admin/AdminMemberStatsMapper.xml"/>

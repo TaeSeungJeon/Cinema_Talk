@@ -919,7 +919,7 @@ h3 {
 								</c:choose>
 
 								<div class="person-info">
-									<span class="person-text person-name-text">
+									<span class="person-name-text">
 										${director.personName} </span> <input type="text" name="crewNames"
 										value="${director.personName}" class="person-input hidden">
 
@@ -972,7 +972,7 @@ h3 {
 								</c:choose>
 
 								<div class="person-info">
-									<span class="person-text person-name-text">
+									<span class="person-name-text">
 										${cast.personName} </span> <input type="text" name="castNames"
 										value="${cast.personName}" class="person-input hidden">
 
@@ -1070,7 +1070,7 @@ function addPersonCard(person, type) {
         '<img src="https://image.tmdb.org/t/p/w200' + (person.profilePath || '') + '">' +
         '<div class="person-info">' +
 
-        '<span class="person-text person-name-text">' +
+        '<span class="person-name-text">' +
         person.personName +
     '</span>' +
 

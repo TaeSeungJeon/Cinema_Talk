@@ -232,13 +232,15 @@ header {
 	background: #6366f1;
 	color: white;
 }
+
+
 </style>
 
 <header>
 	<a href="${pageContext.request.contextPath}/index.do">
-		<img src="${pageContext.request.contextPath}/main/webapp/Image/logo1.png"
+		<img src="${pageContext.request.contextPath}/Image/Logo.png"
 			 alt="Cinema Talk"
-			 style="height: 100px; width: auto;">
+			 style="height: 60px; width: auto;">
 	</a>
 	<div class="search-bar">
 		<form action="searchMovie.do" method="get">

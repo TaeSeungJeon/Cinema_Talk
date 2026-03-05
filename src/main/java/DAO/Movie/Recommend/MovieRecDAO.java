@@ -21,7 +21,10 @@ public interface MovieRecDAO {
 	List<MovieRecResponse> selGenreMovies(List<Integer> genreIds, int movieLimit);
 		
 	List<MovieRecResponse> getIndexGenreList(int memNo);
-
+	List<MovieRecResponse> getIndexGenreList();
+	
 	List<MovieRecResponse> getIndexTrendList();
+
+	
 	
 }

@@ -23,8 +23,8 @@ public class AdminMovieSaveController implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		request.setCharacterEncoding("UTF-8");
+		boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 
-        // 🔥 1️⃣ Movie 기본 정보 세팅
         MovieDTO movie = new MovieDTO();
 
         String movieIdStr = request.getParameter("movieId");
@@ -55,7 +55,6 @@ public class AdminMovieSaveController implements Action {
             movie.setMovieRatingCount(Integer.parseInt(ratingCountStr));
         }
 
-        // 🔥 2️⃣ 장르 처리
         String[] genreIds = request.getParameterValues("genreIds");
         List<Integer> genreIdList = new ArrayList<>();
 
@@ -65,7 +64,6 @@ public class AdminMovieSaveController implements Action {
             }
         }
 
-        // 🔥 3️⃣ 출연진 처리
         String[] castPersonIds = request.getParameterValues("castPersonIds");
         String[] characterNames = request.getParameterValues("characterNames");
         String[] castOrders = request.getParameterValues("castOrders");
@@ -93,7 +91,6 @@ public class AdminMovieSaveController implements Action {
             }
         }
 
-        // 🔥 4️⃣ 제작진 처리
         String[] crewPersonIds = request.getParameterValues("crewPersonIds");
         String[] crewJobs = request.getParameterValues("crewJobs");
 
@@ -112,24 +109,23 @@ public class AdminMovieSaveController implements Action {
             }
         }
 
-        // 🔥 5️⃣ SaveDTO 구성
         MovieSaveDTO saveDTO = new MovieSaveDTO();
         saveDTO.setMovie(movie);
         saveDTO.setGenreIds(genreIdList);
         saveDTO.setCasts(castList);
         saveDTO.setCrews(crewList);
 
-        // 🔥 6️⃣ 서비스 호출
         adminMovieService.updateMovie(saveDTO);
 
-        // 🔥 7️⃣ ActionForward 반환 (Redirect)
+        if (isAjax) {
+			response.setContentType("text/plain; charset=UTF-8");
+		    response.getWriter().write("success");
+		    return null;
+		}
+
         ActionForward forward = new ActionForward();
         forward.setRedirect(true);
-        forward.setPath(
-                request.getContextPath()
-                + "/admin/movieDetail.do?movieId="
-                + saveDTO.getMovie().getMovieId()
-        );
+        forward.setPath(request.getContextPath() + "/adminMypage.do");
 
         return forward;
 	}

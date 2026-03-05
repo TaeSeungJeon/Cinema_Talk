@@ -294,6 +294,7 @@
             margin-top: auto; /* 위쪽 마진을 최대로 하여 바닥에 밀착 */
         }
 
+       
         .post-actions {
             display: flex;
             justify-content: center;
@@ -542,10 +543,10 @@
         .movie-tag.disabled-tag {
             background-color: #f8fafc;
             color: #94a3b8; /* 흐릿한 회색 */
-            border: 1px dashed #cbd5e1; /* 점선 테두리로 '유령' 느낌 부여 */
+            border: 1px solid #cbd5e1; /* 점선 테두리로 '유령' 느낌 부여 */
             cursor: not-allowed; /* 금지 표시 커서 */
             opacity: 0.7;
-            text-decoration: line-through; /* 글자에 취소선 추가 (선택 사항) */
+           
         }
 
         /* 자동완성 결과창 */
@@ -646,14 +647,33 @@
                 </c:if>
                 <%-- 영화태그 --%>
                 <c:if test="${not empty cont.movieTitle}">
-                    <div class="movie-tag-container">
+                <div class="movie-tag-container">
+                <c:choose>
+                <%-- 삭제된 영화 --%>
+                    <c:when test="${(empty cont.movieId or cont.movieId eq 0 ) }">
+                     <button type="button" 
+                            onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
+                            class="movie-tag disabled-tag"
+                            disabled
+                            title="정보가 삭제된 영화입니다">
+                        #${cont.movieTitle}
+                    </button>
+
+                    </c:when>
+
+                    <c:otherwise>
                         <button type="button" 
-                                onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
-                                class="movie-tag ${empty cont.movieId or cont.movieId eq 0 ? 'disabled-tag' : ''}"
-                                ${empty cont.movieId or cont.movieId eq 0 ? 'disabled' : ''}>
-                            #${cont.movieTitle}
-                        </button>
-                    </div>
+                                    onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
+                                    class="movie-tag"
+                                    >
+                                #${cont.movieTitle}
+                            </button>
+
+                    </c:otherwise>
+
+                </c:choose>
+                </div>
+                    
                 </c:if>
                 
                 

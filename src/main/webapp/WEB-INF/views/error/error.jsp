@@ -40,7 +40,7 @@
 <body>
 <div class="error-container">
     <h1>⚠️ 오류</h1>
-    <p>잘못된 요청입니다.</p>
+    <p>존재하지 않는 영화입니다.</p>
     <a href="${pageContext.request.contextPath}/index.do">메인으로 돌아가기</a>
 </div>
 </body>

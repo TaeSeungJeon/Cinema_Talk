@@ -177,7 +177,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+
     public List<BoardDTO> getPopularBoardList(String period, int limit) {
         return bdao.getPopularBoardList(period, limit);
+    }
+  
+    @Override
+    public BoardDTO latestNotice() {
+        return bdao.latestNotice();
     }
 }

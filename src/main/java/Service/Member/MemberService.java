@@ -11,6 +11,7 @@ public interface MemberService {
 	MemberDTO idCheck(String memId);
 
 	MemberDTO loginCheck(String id);
+	
     MemberDTO getMemberInfo(Integer memNo);
 
 	MemberDTO findId(MemberDTO mdto);
@@ -29,7 +30,11 @@ public interface MemberService {
 
 	List<MemberDTO> getMemberList();
 
-	List<MemberDTO> getMemberListByState(int memState);
+	List<MemberDTO> getMemberListByState(String memState);
 
 	int updateMemberState(int memNo, int targetState);
+
+	List<MemberDTO> searchMembers(String keyword);
+
+	List<MemberDTO> searchMembersByState(String keyword, String memState);
 }

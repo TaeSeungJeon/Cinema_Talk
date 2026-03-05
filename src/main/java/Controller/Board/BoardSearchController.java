@@ -8,6 +8,8 @@ import Controller.ActionForward;
 import DTO.Board.BoardDTO;
 import Service.Board.BoardSearchService;
 import Service.Board.BoardSearchServiceImpl;
+import Service.Board.BoardService;
+import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -54,7 +56,7 @@ public class BoardSearchController implements Action {
 			int page = 1;
 	        int limit = 10;
 	        
-	        BoardSearchService service = BoardSearchServiceImpl.getInstance();
+	        BoardSearchService searchService = BoardSearchServiceImpl.getInstance();
 	        if (request.getParameter("page") != null) {
 	            try {
 	                page = Integer.parseInt(request.getParameter("page"));
@@ -73,8 +75,8 @@ public class BoardSearchController implements Action {
 	        
 	        String requestedURL = "freeBoard.jsp";
 	        if(movieId != 0) {
-	        	totalCount = service.getBoardCountByMovieId(movieId);
-	        	list = service.boardListPageByMovieId(movieId, startRow, endRow);
+	        	totalCount = searchService.getBoardCountByMovieId(movieId);
+	        	list = searchService.boardListPageByMovieId(movieId, startRow, endRow);
 	        } else {
 	        	if ("free".equals(filter)) {
 	        		type = 1;
@@ -84,8 +86,8 @@ public class BoardSearchController implements Action {
 		        	type = 10;
 		        	requestedURL = "noticeBoard.jsp";
 		        }
-	        	totalCount = service.getBoardCountByTypeAndWord(type, searchWords, searchOption);
-	            list = service.boardListPageByTypeAndWord(type, startRow, endRow, searchWords, searchOption);
+	        	totalCount = searchService.getBoardCountByTypeAndWord(type, searchWords, searchOption);
+	            list = searchService.boardListPageByTypeAndWord(type, startRow, endRow, searchWords, searchOption);
 	        }
 	        
 	        int maxPage = (totalCount + limit - 1) / limit;
@@ -94,7 +96,11 @@ public class BoardSearchController implements Action {
 	        int startPage = ((page - 1) / 10) * 10 + 1;
 	        int endPage = startPage + 9;
 	        if (endPage > maxPage) endPage = maxPage;
-
+	        
+	        BoardService boardService = BoardServiceImpl.getInstance();
+	        // 최신 공지사항 1건
+	        BoardDTO latestNotice = boardService.latestNotice();
+	        request.setAttribute("latestNotice", latestNotice);
 	        request.setAttribute("page", page);
 	        request.setAttribute("maxPage", maxPage);
 	        request.setAttribute("startPage", startPage);

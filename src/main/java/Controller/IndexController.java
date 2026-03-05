@@ -14,6 +14,7 @@ import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 public class IndexController implements Action {
 
@@ -27,6 +28,7 @@ public class IndexController implements Action {
 
 		response.setContentType("text/html;charset=UTF-8");
 		HttpSession session = request.getSession();
+		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
 
 		Object memNoObj = session.getAttribute("memNo");
 
@@ -35,14 +37,19 @@ public class IndexController implements Action {
 		String todayKey = "visited_" + java.time.LocalDate.now();
 
 	    if (session.getAttribute(todayKey) == null) {
-
 	        homeService.increaseTodayDau();
-
 	        session.setAttribute(todayKey, true);
 	    }
-	    
-	  List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
-	  List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList(memNo);
+      List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
+
+	    List<MovieRecResponse> indexGenreMovieList;
+
+	    if (memNo != -1) {
+	        indexGenreMovieList = homeService.getIndexGenreList(memNo); // 개인 선호 장르
+	    } else {
+	        indexGenreMovieList = homeService.getIndexGenreList(); // 랜덤
+	    }
+
 	   
 	  request.setAttribute("indexTrendMovieList", indexTrendMovieList);
 	  request.setAttribute("homeGenreMovieList", indexGenreMovieList);
@@ -62,6 +69,11 @@ public class IndexController implements Action {
 		request.setAttribute("dailyPopularList", dailyPopularList);
 		request.setAttribute("weeklyPopularList", weeklyPopularList);
 		request.setAttribute("monthlyPopularList", monthlyPopularList);
+
+		// 최신 공지사항 1건
+		BoardDTO latestNotice = boardService.latestNotice();
+		request.setAttribute("latestNotice", latestNotice);
+
 
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

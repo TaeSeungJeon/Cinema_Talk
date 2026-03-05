@@ -4,6 +4,22 @@
 
 <style>
 
+	/* 히어로 슬라이드 전환 효과 */
+	.hero-section {
+		transition: background 0.6s ease-in-out;
+	}
+	.hero-content {
+		transition: opacity 0.4s ease, transform 0.4s ease;
+	}
+	.hero-content.slide-out {
+		opacity: 0;
+		transform: translateX(-40px);
+	}
+	.hero-content.slide-in {
+		opacity: 0;
+		transform: translateX(40px);
+	}
+
 	.post-item .post-preview img,
 	.post-item .post-preview video,
 	.post-item .post-preview iframe {
@@ -38,7 +54,18 @@
 
 	<div class="notice-bar">
 		<span style="font-weight: 700; color: var(--accent-color);">📢
-			공지사항</span> <span style="color: #64748b;">신규 투표 기능 업데이트 안내 및 이용 가이드</span>
+			공지사항</span>
+		<c:choose>
+			<c:when test="${not empty latestNotice}">
+				<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${latestNotice.boardId}&boardType=${latestNotice.boardType}"
+				   style="color: #64748b; text-decoration: none;">
+					<c:out value="${latestNotice.boardTitle}" />
+				</a>
+			</c:when>
+			<c:otherwise>
+				<span style="color: #64748b;">현재 등록된 공지사항이 없습니다.</span>
+			</c:otherwise>
+		</c:choose>
 	</div>
 
 	<c:if test="${not empty indexTrendMovieList}">
@@ -118,43 +145,62 @@
 
 					var movie = trendMovies[currentIndex];
 					var heroBanner = document.getElementById('hero-banner');
+					var heroContent = heroBanner.querySelector('.hero-content');
 					var titleLink = document.getElementById('movie-title-link');
 					var titleEl = document.getElementById('movie-title');
 					var infoEl = document.getElementById('movie-info');
 					var detailBtn = document.getElementById('objBtn');
 					var pageIdx = document.getElementById('pageIdx');
 
-					if (movie.movieBackdropPath) {
-						heroBanner
-								.setAttribute(
-										'style',
-										"background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280"
-										+ movie.movieBackdropPath
-										+ "'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;");
-					}
+					// 1) slide-out: 왼쪽으로 사라짐
+					heroContent.classList.add('slide-out');
 
-					titleEl.textContent = movie.movieTitle;
-					titleLink.href = contextPath + "/movieDetail.do?movieId="
-							+ movie.movieId;
+					setTimeout(function() {
+						// 2) 배경 교체
+						if (movie.movieBackdropPath) {
+							heroBanner
+									.setAttribute(
+											'style',
+											"background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280"
+											+ movie.movieBackdropPath
+											+ "'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;");
+						}
 
-					var infoText = movie.genreName + " • ⭐ "
-							+ movie.movieRatingAverage.toFixed(1) + " • 💖 "
-							+ movie.movieRecommendCount;
-					if (movie.movieRuntime > 0) {
-						infoText += " • " + movie.movieRuntime + "분";
-					}
-					if (movie.movieReleaseDate) {
-						infoText += " • " + movie.movieReleaseDate;
-					}
-					infoEl.textContent = infoText;
-
-					detailBtn.onclick = function() {
-						location.href = contextPath + "/movieDetail.do?movieId="
+						// 3) 콘텐츠 교체
+						titleEl.textContent = movie.movieTitle;
+						titleLink.href = contextPath + "/movieDetail.do?movieId="
 								+ movie.movieId;
-					};
 
-					pageIdx.textContent = (currentIndex + 1) + " / "
-							+ trendMovies.length;
+						var infoText = movie.genreName + " • ⭐ "
+								+ movie.movieRatingAverage.toFixed(1) + " • 💖 "
+								+ movie.movieRecommendCount;
+						if (movie.movieRuntime > 0) {
+							infoText += " • " + movie.movieRuntime + "분";
+						}
+						if (movie.movieReleaseDate) {
+							infoText += " • " + movie.movieReleaseDate;
+						}
+						infoEl.textContent = infoText;
+
+						detailBtn.onclick = function() {
+							location.href = contextPath + "/movieDetail.do?movieId="
+									+ movie.movieId;
+						};
+
+						pageIdx.textContent = (currentIndex + 1) + " / "
+								+ trendMovies.length;
+
+						// 4) slide-in 준비: 오른쪽에서 들어올 위치로 이동
+						heroContent.classList.remove('slide-out');
+						heroContent.classList.add('slide-in');
+
+						// 5) 다음 프레임에서 slide-in 제거 → 원래 위치로 부드럽게 복귀
+						requestAnimationFrame(function() {
+							requestAnimationFrame(function() {
+								heroContent.classList.remove('slide-in');
+							});
+						});
+					}, 400); // slide-out 지속 시간과 동일
 				}
 
 				document
@@ -165,6 +211,7 @@
 									currentIndex = (currentIndex - 1 + trendMovies.length)
 											% trendMovies.length;
 									updateHero();
+									resetAutoSlide();
 								});
 
 				document.getElementById('nextBtn').addEventListener(
@@ -173,7 +220,21 @@
 							currentIndex = (currentIndex + 1)
 									% trendMovies.length;
 							updateHero();
+							resetAutoSlide();
 						});
+
+				// 5초마다 자동 슬라이드
+				var autoSlideTimer = setInterval(autoSlide, 5000);
+
+				function autoSlide() {
+					currentIndex = (currentIndex + 1) % trendMovies.length;
+					updateHero();
+				}
+
+				function resetAutoSlide() {
+					clearInterval(autoSlideTimer);
+					autoSlideTimer = setInterval(autoSlide, 5000);
+				}
 			})();
 		</script>
 

@@ -128,14 +128,14 @@ tbody td{
         <input type="text" id="memberKeyword" placeholder="아이디/이름 검색">
       </div>
 
+      <button class="btn" id="btnSearch" type="submit" onclick="loadMemberList()">검색</button>
+      
       <select id="stateFilter" name="mem-state">
         <option value="">상태 전체</option>
         <option value="1">정상</option>
         <option value="2">정지</option>
         <option value="3">탈퇴</option>
       </select>
-
-      <button class="btn" id="btnSearch" type="submit">검색</button>
     </div>
 
     <button class="btn primary" id="btnReload"><i class="fa-solid fa-rotate"></i> 새로고침</button>
@@ -181,8 +181,36 @@ tbody td{
     $("#stateFilter").val("");
     loadMemberList();
   });
+  
+//   function btnChangeState(){
+// 	  const memNo = $(this).data("memno");
+// 	  const targetState = $(this).data("targetstate"); // 1(정상) 또는 2(정지)
+	    
+// 	    const msg = (targetState === "2") ? "정지 처리할까요?" : "정지를 해제할까요?";
+// 	    if (!confirm(msg)) return;
 
-  // 정지 전환 버튼 클릭
+// 	    $.ajax({
+// 	      url: "${pageContext.request.contextPath}/admin/memberSetDormant.do",
+// 	      type: "POST",
+// 	      data: { memNo: memNo, targetState: targetState},
+// 	      headers: { "X-Requested-With": "XMLHttpRequest" },
+// 	      success: function(res){
+	    	 
+// 	    	const successMsg = (targetState === "2")
+// 	        ? "정지 처리되었습니다."
+// 	        : "정지 해제되었습니다."; 
+	    	
+// 	        alert(successMsg);
+// 	        loadMemberList();
+// 	      },
+// 	      error: function(xhr){
+// 	        console.log("정지 전환 실패:", xhr.status);
+// 	        alert("정지 전환에 실패했습니다.");
+// 	      }
+// 	    });
+//   }
+
+  //정지 전환 버튼 클릭
   $(document).on("click", ".btn-change-state", function(){
     const memNo = $(this).data("memno");
     const targetState = $(this).data("targetstate"); // 1(정상) 또는 2(정지)

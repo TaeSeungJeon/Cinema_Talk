@@ -364,6 +364,20 @@ public class BoardDAOImpl implements BoardDAO {
             if(sqlSession != null)
                 sqlSession.close();
         }
+
+    public BoardDTO latestNotice() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            return sqlSession.selectOne("Board.latestNotice");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return null;
     }
 
 

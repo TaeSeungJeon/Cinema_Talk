@@ -246,7 +246,7 @@ public class MemberDAOImpl implements MemberDAO {
 	}//getMemberList() -> 회원 목록 조회
 
 	@Override
-	public List<MemberDTO> getMemberListByState(int memState) {
+	public List<MemberDTO> getMemberListByState(String memState) {
 		SqlSession sqlSession = null;
 		
 		try {
@@ -279,5 +279,44 @@ public class MemberDAOImpl implements MemberDAO {
 		}
 		return result;
 	}//updateMemberState() -> 회원 상태 변경
+
+	@Override
+	public List<MemberDTO> searchMembers(String keyword) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			
+			// keyword가 null/빈값이면 전체 조회 (안전장치)
+	        if (keyword == null || keyword.trim().isEmpty()) {
+	            return sqlSession.selectList("getMemberList");
+	        }
+
+	        // 검색 쿼리 호출
+	        return sqlSession.selectList("searchMembers", keyword);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//searchMembers() -> 검색하여 회원 목록 조회
+
+	@Override
+	public List<MemberDTO> searchMembersByState(String keyword, String memState) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("keyword", keyword);
+	        map.put("memState", memState);
+	      
+	        return sqlSession.selectList("searchMembersByState", map);
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}	
+	}//searchMembersByState() -> 상태+검색 후 회원목록 조회
 
 }

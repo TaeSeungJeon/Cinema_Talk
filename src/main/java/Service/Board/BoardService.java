@@ -43,4 +43,7 @@ public interface BoardService {
     List<BoardDTO> recentBoardList(int limit);
 
     List<BoardDTO> getPopularBoardList(String period, int limit);
+    // 최신 공지사항 1건
+    BoardDTO latestNotice();
+
 }

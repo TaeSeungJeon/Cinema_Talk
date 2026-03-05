@@ -40,9 +40,6 @@ body {
 	padding: 25px;
 }
 
-body::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-}
 
 .glass-panel {
 	background: var(--glass-bg);

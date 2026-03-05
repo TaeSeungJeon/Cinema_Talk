@@ -35,6 +35,7 @@
 </div>
 
 <!-- 통계 -->
+<h3 class="section-title">📊 활동 요약</h3>
 <div class="stats-container">
     <div class="stat-box">
         <div class="stat-number">${myPageInfo.boardCount}</div>
@@ -52,7 +53,7 @@
 
 <!-- 최근 활동 요약 -->
 <div class="profile-summary-card">
-    <h3 class="section-title">📊 활동 요약</h3>
+	<h3 class="section-title">최근 활동</h3>
     <div class="summary-grid">
         <div class="summary-item">
             <span class="summary-icon">📝</span>

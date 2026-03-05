@@ -131,7 +131,7 @@ body {
 	border-radius: var(--radius-soft);
 	box-shadow: var(--shadow-subtle);
 	padding: 22px;
-	height: 1035.31px;
+	height: 1035px;
 }
 
 /* stats board */
@@ -289,16 +289,7 @@ body {
 
 			<!-- CONTENT -->
 			<div class="admin-content" id="admin-content">
-
-				<c:choose>
-					<c:when test="${not empty contentPage}">
-						<jsp:include page="${contentPage}" />
-					</c:when>
-					<c:otherwise>
-						<jsp:include page="/WEB-INF/views/admin/adminIndex.jsp" />
-					</c:otherwise>
-				</c:choose>
-
+				<jsp:include page="/WEB-INF/views/admin/stats/adminStats.jsp" />
 			</div>
 		</div>
 

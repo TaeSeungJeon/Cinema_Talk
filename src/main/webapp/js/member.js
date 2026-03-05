@@ -112,6 +112,123 @@ function joinCheck() {
 	return true;
 }
 
+//이메일 중복 체크 (ajax)
+function emailCheck(){
+	const memEmail = $.trim($("#mem-email").val()); //입력된 이메일 주소 변수에 저장
+	
+	//빈 값이면 아무 것도 안 함
+	if(memEmail === ""){
+		$("#emailcheck").hide().text("").removeClass("ok bad");
+		$("#emailChecked").val("N");
+		return;
+	}
+	
+	//초기화
+	$("#phonecheck").hide().text("").removeClass("ok bad");
+	$("#phoneChecked").val("N");
+	
+	//이메일 형식 검사
+	const emailReg = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+	if (!emailReg.test(memEmail)) {
+		alert("이메일 형식이 올바르지 않습니다. (예: test@example.com)");
+		$("#mem-email").focus();
+		return false;
+	}
+	
+	//ajax
+	$.ajax({
+		url: "memberEmailCheck.do",
+		type: "get",
+		data: { "memEmail": memEmail },
+		dataType: "json",
+		success: function(res) {
+			$("#emailcheck").show().text(res.msg).removeClass("ok bad");
+
+			if (res.available) {
+				$("#emailcheck").addClass("ok");
+				$("#emailChecked").val("Y");
+			} else {
+				$("#emailcheck").addClass("bad");
+				$("#emailChecked").val("N");
+			}
+		},
+		error: function(xhr) {
+			$("#emailcheck").show().text("확인 중 오류 발생").addClass("bad");
+			$("#emailChecked").val("N");
+			console.log("emailCheck error:", xhr.responseText);
+		}
+	});
+}
+
+//전화번호 중복 ajax
+function phoneCheck(){
+  const raw = $.trim($("#mem-phone").val());
+
+  // 빈 값이면 아무것도 안 함
+  if(raw === ""){
+    $("#phonecheck").hide().text("").removeClass("ok bad");
+    $("#phoneChecked").val("N");
+    return;
+  }
+
+  // 초기화
+  $("#phonecheck").hide().text("").removeClass("ok bad");
+  $("#phoneChecked").val("N");
+
+  // 숫자만 추출
+  const digits = raw.replace(/[^0-9]/g, "");
+
+  // 형식 검사
+  if(digits.length !== 11 || !digits.startsWith("010")){
+    $("#phonecheck").show().text("전화번호는 010으로 시작하는 11자리여야 합니다.").addClass("bad");
+    return;
+  }
+
+  // 하이픈 포맷으로 통일
+  const memPhone = digits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  $("#mem-phone").val(memPhone);
+
+  $.ajax({
+    url: "memberPhoneCheck.do",
+    type: "get",
+    data: { "memPhone": memPhone },
+    dataType: "json",
+    success: function(res){
+      $("#phonecheck").show().text(res.msg).removeClass("ok bad");
+
+      if(res.available){
+        $("#phonecheck").addClass("ok");
+        $("#phoneChecked").val("Y");
+      }else{
+        $("#phonecheck").addClass("bad");
+        $("#phoneChecked").val("N");
+      }
+    },
+    error:function(xhr){
+      $("#phonecheck").show().text("확인 중 오류 발생").addClass("bad");
+      $("#phoneChecked").val("N");
+      console.log("phoneCheck error:", xhr.responseText);
+    }
+  });
+}
+
+// 페이지 로딩 후 전화번호 input에 blur 이벤트 바인딩 (포커스가 빠지면 phoneCheck() 실행)
+$(function(){
+  $("#mem-phone").on("blur", function(){
+    phoneCheck();
+  });
+});
+
+// 페이지 로딩 후 이메일 input에 blur 이벤트 바인딩 (포커스가 빠지면 emailCheck() 실행)
+$(function(){
+	$("#mem-email").on("blur", function(){
+		emailCheck();
+	});
+})
+
+
+
 //중복 아이디 검색 (프론트 + Ajax)
 function idCheck(){
 	const memId = $.trim($("#mem-id").val()); //입력된 아이디 값 가져오기
@@ -191,7 +308,7 @@ function findId(){
 	//010시작 + 11자리 확인
 	if(phoneDigits.length !== 11 || !phoneDigits.startsWith("010")){
 		alert("전화번호는 010으로 시작하는 11자리여야 합니다. (예: 010-1234-5678)");
-		$("id-mem-phone").focus();
+		$("#id-mem-phone").focus();
 		return false;
 	}
 	
@@ -225,7 +342,7 @@ function findPwd(){
 	//010시작 + 11자리 확인
 	if(phoneDigits.length !== 11 || !phoneDigits.startsWith("010")){
 		alert("전화번호는 010으로 시작하는 11자리여야 합니다. (예: 010-1234-5678)");
-		$("pwd-mem-phone").focus();
+		$("#pwd-mem-phone").focus();
 		return false;
 	}
 		

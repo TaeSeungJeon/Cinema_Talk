@@ -16,6 +16,5 @@ public class AdminMemberStatDTO {
 
     private List<TrendDTO> dailyNewMemberTrend;
     
-    private List<TopMemberDTO> topBoardMembers;
-    private List<TopMemberDTO> topCommentMembers;
+    private List<TopMemberDTO> topMembers;
 }

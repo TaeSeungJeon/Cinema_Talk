@@ -32,7 +32,7 @@ public class AdminStatsController implements Action {
 	    DateRangeDTO last7DaysRange = new DateRangeDTO();
 	    last7DaysRange.setStartDate(LocalDate.now().minusDays(7));
 	    last7DaysRange.setEndDate(LocalDate.now());
-	    if (selectedDays == null || selectedDays.isEmpty()) {
+	    if (selectedDays == null) {
 	        selectedDays = "7";
 	    }
 	    try {

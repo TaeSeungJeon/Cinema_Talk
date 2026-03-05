@@ -284,69 +284,58 @@
 	<!-- 인덱스 영화 배너: 7일 내 좋아요 TOP3 영화 -->
 	<select id="indexTrendMovie" resultType="MovieRecResponse">
 		<![CDATA[
-		WITH weeklyTop AS (
-		    SELECT *
-		    FROM (
-		        SELECT
-		            MR.movieId,
-		            COUNT(*) AS likeCount,
-		            ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rn
-		        FROM MEMBER_MOVIE_RECOMMEND MR
-		        WHERE MR.recommendCreatedAt >= SYSDATE - 7
-		        GROUP BY MR.movieId
-		    )
-		    WHERE rn <= 3
+		WITH movieLike AS (
+		    SELECT
+		        MR.movieId,
+		        COUNT(*) AS likeCount
+		    FROM MEMBER_MOVIE_RECOMMEND MR
+		    WHERE MR.recommendCreatedAt >= SYSDATE - 7
+		    GROUP BY MR.movieId
 		),
-		fallbackTop AS (
-		    SELECT *
-		    FROM (
-		        SELECT
-		            M.movieId,
-		            NVL(COUNT(MR.movieId),0) AS likeCount,
-		            ROW_NUMBER() OVER (ORDER BY COUNT(MR.movieId) DESC) AS rn
-		        FROM MOVIE M
-		        LEFT JOIN MEMBER_MOVIE_RECOMMEND MR
-		        ON M.movieId = MR.movieId
-		        WHERE M.movieId NOT IN (SELECT movieId FROM weeklyTop)
-		        GROUP BY M.movieId
-		    )
-		    WHERE rn <= 3
+		movieTotalLike AS (
+		    SELECT
+		        MR.movieId,
+		        COUNT(*) AS likeCount
+		    FROM MEMBER_MOVIE_RECOMMEND MR
+		    GROUP BY MR.movieId
 		),
-		combined AS (
-		    SELECT movieId, likeCount, 1 AS sortOrder FROM weeklyTop
-		    UNION ALL
-		    SELECT movieId, likeCount, 2 AS sortOrder FROM fallbackTop
+		ranked AS (
+		    SELECT
+		        M.movieId,
+		        NVL(ML.likeCount,0) AS weeklyLike,
+		        NVL(MTL.likeCount,0) AS totalLike
+		    FROM MOVIE M
+		    LEFT JOIN movieLike ML ON M.movieId = ML.movieId
+		    LEFT JOIN movieTotalLike MTL ON M.movieId = MTL.movieId
+		    WHERE M.moviePosterPath IS NOT NULL
 		)
 		SELECT *
 		FROM (
 		    SELECT
-		        M.movieId AS movieId,
-		        M.movieTitle AS movieTitle,
-		        M.movieOverview AS movieOverview,
-		        M.movieReleaseDate AS movieReleaseDate,
-		        M.movieRuntime AS movieRuntime,
-		        M.moviePosterPath AS moviePosterPath,
-		        M.movieBackdropPath AS movieBackdropPath,
-		        M.movieRatingAverage AS movieRatingAverage,
+		        M.movieId,
+		        M.movieTitle,
+		        M.movieOverview,
+		        M.movieReleaseDate,
+		        M.movieRuntime,
+		        M.moviePosterPath,
+		        M.movieBackdropPath,
+		        M.movieRatingAverage,
 		
-		        -- 좋아요 수
-		        (SELECT COUNT(*)
-		         FROM MEMBER_MOVIE_RECOMMEND MR
-		         WHERE MR.movieId = M.movieId) AS movieRecommendCount,
+		        R.totalLike AS movieRecommendCount,
 		
 		        (SELECT LISTAGG(G.genreName, ',') WITHIN GROUP (ORDER BY G.genreName)
 		         FROM MOVIE_GENRE MG
 		         JOIN GENRE G ON MG.genreId = G.genreId
 		         WHERE MG.movieId = M.movieId) AS genreName,
 		
-		        C.sortOrder,
-		        C.likeCount
+		        ROW_NUMBER() OVER (
+		            ORDER BY R.weeklyLike DESC, R.totalLike DESC
+		        ) AS rn
 		
-		    FROM combined C
-		    JOIN MOVIE M ON M.movieId = C.movieId
-		    ORDER BY C.sortOrder, C.likeCount DESC
+		    FROM ranked R
+		    JOIN MOVIE M ON M.movieId = R.movieId
 		)
-		WHERE ROWNUM <= 3
+		WHERE rn <= 3
 		]]>
 	</select>
 

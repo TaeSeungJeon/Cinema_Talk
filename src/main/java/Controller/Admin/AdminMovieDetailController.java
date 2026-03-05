@@ -26,7 +26,6 @@ public class AdminMovieDetailController implements Action {
 		String idParam = request.getParameter("movieId");
         int movieId = Integer.parseInt(idParam);
 
-        // 1️⃣ 영화 상세 조회
         MovieDetailService movieService = new MovieDetailServiceImpl();
         MovieDetailDTO movieDetail = movieService.getMovieDetail(movieId);
 
@@ -37,16 +36,13 @@ public class AdminMovieDetailController implements Action {
             return forward;
         }
 
-        // 2️⃣ 좋아요 수 조회
         MemberMovieRecommendService recommendService =
                 new MemberMovieRecommendServiceImpl();
         int favoriteCount = recommendService.getFavoriteCount(movieId);
 
-        // 3️⃣ 전체 장르 목록 조회 (체크박스용)
         GenreService genreService = new GenreServiceImpl();
         List<GenreDTO> allGenres = genreService.getAllGenres();
 
-        // 4️⃣ 관리자 DTO 생성
         AdminMovieDetailDTO adminDto = new AdminMovieDetailDTO();
         
         adminDto.setMovieId(movieId);

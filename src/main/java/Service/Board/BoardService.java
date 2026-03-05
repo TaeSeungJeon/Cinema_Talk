@@ -42,4 +42,8 @@ public interface BoardService {
     // 최근 게시글
     List<BoardDTO> recentBoardList(int limit);
 
+    List<BoardDTO> getPopularBoardList(String period, int limit);
+    // 최신 공지사항 1건
+    BoardDTO latestNotice();
+
 }

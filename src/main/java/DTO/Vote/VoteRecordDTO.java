@@ -20,4 +20,7 @@ public class VoteRecordDTO {
 
 	private String memName;
 	
+	private int movieDeleted; //0 false, 1 true
+	private String movieTitleBackup;
+	
 }

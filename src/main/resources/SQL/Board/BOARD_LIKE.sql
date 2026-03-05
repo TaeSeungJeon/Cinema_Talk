@@ -6,7 +6,7 @@ CREATE TABLE BOARD_LIKE(
 
     CONSTRAINT pk_board_like PRIMARY KEY (boardId, boardType, memNo),
     CONSTRAINT fk_like_board FOREIGN KEY (boardId, boardType)
-        REFERENCES BOARD (boardId, boardType),
+        REFERENCES BOARD (boardId, boardType) ON DELETE CASCADE,
     CONSTRAINT fk_like_member FOREIGN KEY (memNo)
         REFERENCES MEMBER (memNo)
 );

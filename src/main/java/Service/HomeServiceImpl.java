@@ -17,7 +17,12 @@ public class HomeServiceImpl implements HomeService {
 	public List<MovieRecResponse> getIndexGenreList(int memNo) {
 		return movieRecDAO.getIndexGenreList(memNo);
 	}
-
+	
+	@Override
+	public List<MovieRecResponse> getIndexGenreList() {
+		return movieRecDAO.getIndexGenreList();
+	}
+	
 	@Override
 	public List<MovieRecResponse> getIndexTrendList() {
 		return movieRecDAO.getIndexTrendList();
@@ -27,5 +32,7 @@ public class HomeServiceImpl implements HomeService {
 	public void increaseTodayDau() {
 		homeDAO.increaseTodayDau();
 	}
+
+
 
 }

@@ -27,7 +27,8 @@ public class IndexController implements Action {
 
 		response.setContentType("text/html;charset=UTF-8");
 		HttpSession session = request.getSession();
-
+		
+		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
 		Object memNoObj = session.getAttribute("memNo");
 
 		int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함
@@ -41,6 +42,7 @@ public class IndexController implements Action {
 	        session.setAttribute(todayKey, true);
 	    }
 	    
+	    
 	  List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
 	  List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList(memNo);
 	   
@@ -53,6 +55,10 @@ public class IndexController implements Action {
 		// 최근 게시글 5개
 		List<BoardDTO> recentBoardList = boardService.recentBoardList(5);
 		request.setAttribute("recentBoardList", recentBoardList);
+
+		// 최신 공지사항 1건
+		BoardDTO latestNotice = boardService.latestNotice();
+		request.setAttribute("latestNotice", latestNotice);
 
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

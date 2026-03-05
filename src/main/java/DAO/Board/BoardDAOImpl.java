@@ -364,7 +364,8 @@ public class BoardDAOImpl implements BoardDAO {
             if(sqlSession != null)
                 sqlSession.close();
         }
-
+        
+    @Override
     public BoardDTO latestNotice() {
         SqlSession sqlSession = null;
         try {

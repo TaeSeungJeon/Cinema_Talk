@@ -24,9 +24,7 @@ public interface MemberService {
 
 	MemberDTO emailCheck(String memEmail);
 
-	int withdrawMember(int memNo);
-	
-	int updateLastLogin(String memId);
+	int withdrawMember(int memNo);	
 
 	List<MemberDTO> getMemberList();
 

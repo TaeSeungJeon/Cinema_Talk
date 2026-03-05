@@ -10,7 +10,7 @@
 			<th>이름</th>
 			<th>전화번호</th>
 			<th>이메일</th>
-			<th>마지막 로그인 날짜</th>
+			<th>가입 날짜</th>
 			<th>상태</th>
 			<th>관리</th>
 		</tr>
@@ -34,15 +34,16 @@
 						<td>${m.memName}</td>
 						<td>${m.memPhone}</td>
 						<td>${m.memEmail}</td>
-						<td><c:choose>
-								<c:when test="${not empty m.memLastLogin}">
-									<fmt:formatDate value="${m.memLastLogin}" pattern="yyyy-MM-dd" />
-								</c:when>
-								<c:otherwise>
-     		  			-
-    			</c:otherwise>
-							</c:choose></td>
-
+						<td>
+    					<c:choose>
+        					<c:when test="${not empty m.memDate}">
+            					${m.memDate}
+        					</c:when>
+        					<c:otherwise>
+           					 	-
+        					</c:otherwise>
+    					</c:choose></td>
+						
 						<td><c:choose>
 								<c:when test="${m.memState == 1}">
 									<span class="badge ok">정상</span>
@@ -59,12 +60,12 @@
 							<div class="row-actions">
 								<c:choose>
 									<c:when test="${m.memState == 1}">
-										<button class="btn btn-change-state" data-memno="${m.memNo}"
+										<button class="btn btn-change-state1 js-btn-change-state" data-memno="${m.memNo}"
 											data-targetstate="2"  data-memid="${m.memId}">정지</button>
 									</c:when>
 
 									<c:when test="${m.memState == 2}">
-										<button class="btn btn-change-state" data-memno="${m.memNo}"
+										<button class="btn btn-change-state2 js-btn-change-state" data-memno="${m.memNo}"
 											data-targetstate="1"  data-memid="${m.memId}">해제</button>
 									</c:when>
 

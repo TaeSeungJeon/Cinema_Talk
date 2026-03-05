@@ -173,6 +173,13 @@
     </script>
 </c:if>
 
+<!-- 회원가입 완료 메시지 -->
+<c:if test="${param.join == 'success'}">
+  <script>
+    alert("회원가입이 완료되었습니다. ✔");
+  </script>
+</c:if>
+
 <script src="<%=request.getContextPath()%>/js/member.js?v=1"></script>	<!-- javaScript 사용 -->
 </body>
 </html>

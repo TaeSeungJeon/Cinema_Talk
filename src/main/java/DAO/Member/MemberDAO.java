@@ -28,9 +28,7 @@ public interface MemberDAO {
 
 	String findProfilePhotoPath(int memNo);
 
-	int updateProfilePhotoPath(int memNo, String relativePath);
-	
-	int updateLastLogin(String memId);
+	int updateProfilePhotoPath(int memNo, String relativePath);	
 
 	List<MemberDTO> getMemberList();
 

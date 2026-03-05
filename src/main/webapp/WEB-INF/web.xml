@@ -35,7 +35,8 @@
       <name>JSESSIONID</name>
       <path>/Cinema_Talk</path>
       <http-only>true</http-only>
-      <secure>false</secure> 
+
+      <secure>false</secure>
     </cookie-config>
   </session-config>
 </web-app>

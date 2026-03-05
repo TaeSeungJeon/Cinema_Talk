@@ -70,14 +70,14 @@
 		.font-option.selected { background: #ede9fe; color: #6366f1; }
 
 		:root {
-			--bg-color: #0a0a0a;
-			--glass-bg: rgba(20, 20, 20, 0.8);
-			--accent-color: #818cf8;
-			--text-main: #e5e7eb;
-			--text-sub: #9ca3af;
+			--bg-color: #f0f2f5;
+			--glass-bg: rgba(255, 255, 255, 0.7);
+			--accent-color: #6366f1;
+			--text-main: #1f2937;
+			--text-sub: #64748b;
 			--radius-soft: 24px;
-			--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.3);
-			--shadow-strong: 0 12px 24px rgba(129, 140, 248, 0.2);
+			--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
+			--shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
 		}
 
 		body {

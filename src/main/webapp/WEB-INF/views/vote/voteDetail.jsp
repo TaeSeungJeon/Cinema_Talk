@@ -651,7 +651,7 @@ pageEncoding="UTF-8"%>
 						createdDate: "${res.recordCreatedDate}",
 						cont: `${res.voteCommentText}`, <%-- 따옴표 에러 방지 --%>
 						profilePhoto:"${(empty res.memProfilePhoto || fn:trim(res.memProfilePhoto) eq '') 
-		                    ? pageContext.request.contextPath.concat('/images/default-avatar.png') 
+		                    ? pageContext.request.contextPath.concat('/image/default-avatar.png')
 		                            : pageContext.request.contextPath.concat('/profilePhoto.do?path=').concat(res.memProfilePhoto)}"
 					},
 					</c:if>
@@ -815,7 +815,7 @@ pageEncoding="UTF-8"%>
 						if(c.commentText){
 							let profilePhoto = (c.profilePhoto && c.profilePhoto.trim() !== "") 
 		                    ? getContextPath() + `/profilePhoto.do?path=` + c.profilePhoto
-									        : getContextPath() + `/images/default-avatar.png`;
+									        : getContextPath() + `/image/default-avatar.png`;
 							html += `
 							<div class="comment-item">
 							<div class="user-avatar"><img src="\${profilePhoto}"/></div>

@@ -31,7 +31,7 @@
 <button class="skip" id="skip">Skip</button>
 
 <div class="splash" id="splash">
-    <img id="gif" src="${pageContext.request.contextPath}/images/start.gif" alt="intro" />
+    <img id="gif" src="${pageContext.request.contextPath}/main/webapp/Image/start.gif" alt="intro" />
     <div class="fade-layer" id="fade"></div>
 </div>
 

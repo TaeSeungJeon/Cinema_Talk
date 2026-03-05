@@ -536,7 +536,7 @@
                         </c:when>
                         <c:otherwise>
                             <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
-                                 src="${pageContext.request.contextPath}/images/default-avatar.png"
+                                 src="${pageContext.request.contextPath}/main/webapp/Image/default-avatar.png"
                                  alt="기본 프로필" />
                         </c:otherwise>
                     </c:choose>
@@ -789,7 +789,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
-                                         src="${pageContext.request.contextPath}/images/default-avatar.png"
+                                         src="${pageContext.request.contextPath}/main/webapp/Image/default-avatar.png"
                                          alt="기본 프로필" />
                                 </c:otherwise>
                             </c:choose>

@@ -236,7 +236,7 @@ header {
 
 <header>
 	<a href="${pageContext.request.contextPath}/index.do">
-		<img src="${pageContext.request.contextPath}/images/logo1.png"
+		<img src="${pageContext.request.contextPath}/main/webapp/Image/logo1.png"
 			 alt="Cinema Talk"
 			 style="height: 100px; width: auto;">
 	</a>

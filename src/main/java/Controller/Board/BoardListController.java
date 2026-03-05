@@ -63,6 +63,10 @@ public class BoardListController implements Action {
         request.setAttribute("boardList", list);
         request.setAttribute("filter", filter);
 
+        // 최신 공지사항 1건
+        BoardDTO latestNotice = service.latestNotice();
+        request.setAttribute("latestNotice", latestNotice);
+
         ActionForward forward = new ActionForward();
         forward.setPath("/WEB-INF/views/board/freeBoard.jsp");
         forward.setRedirect(false);

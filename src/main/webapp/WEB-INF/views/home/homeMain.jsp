@@ -37,7 +37,18 @@
 <main>
 	<div class="notice-bar">
 		<span style="font-weight: 700; color: var(--accent-color);">📢
-			공지사항</span> <span style="color: #64748b;">신규 투표 기능 업데이트 안내 및 이용 가이드</span>
+			공지사항</span>
+		<c:choose>
+			<c:when test="${not empty latestNotice}">
+				<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${latestNotice.boardId}&boardType=${latestNotice.boardType}"
+				   style="color: #64748b; text-decoration: none;">
+					<c:out value="${latestNotice.boardTitle}" />
+				</a>
+			</c:when>
+			<c:otherwise>
+				<span style="color: #64748b;">현재 등록된 공지사항이 없습니다.</span>
+			</c:otherwise>
+		</c:choose>
 	</div>
 
 	<c:if test="${not empty indexTrendMovieList}">

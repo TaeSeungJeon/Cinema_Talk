@@ -12,7 +12,7 @@
             </c:when>
             <c:otherwise>
                 <img class="profile-photo" 
-                     src="${pageContext.request.contextPath}/images/default-avatar.png" 
+                     src="${pageContext.request.contextPath}/image/default-avatar.png" 
                      alt="기본 프로필" />
             </c:otherwise>
         </c:choose>

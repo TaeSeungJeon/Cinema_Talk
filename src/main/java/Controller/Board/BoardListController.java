@@ -7,6 +7,7 @@ import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -16,7 +17,9 @@ public class BoardListController implements Action {
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         BoardService service = BoardServiceImpl.getInstance();
-
+		HttpSession session = request.getSession();
+		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
+		
         String filter = request.getParameter("filter");
         if (filter == null || filter.trim().isEmpty()) {
             filter = "all";

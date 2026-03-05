@@ -25,7 +25,7 @@ public class VoteListController implements Action {
 		VoteService voteService = new VoteServiceImpl();
 		MemberService memberService = new MemberServiceImpl();
 		HttpSession session = request.getSession();
-
+		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
 		//투표전체를 가져와서
 		//상태 지정하고 투표전체에 set하고
 		//종료투표는 댓글기록과 집계 가져오고 투표전체에 set하고

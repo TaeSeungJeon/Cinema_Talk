@@ -90,6 +90,8 @@
         .btn-cont {  background: #e0f2fe; color: var(--info); border: 1px solid #bae6fd; }
 
         .btn-cont:hover { background: var(--info); color: #fff; border-color: var(--info-hover); }
+        .btn-edit:hover { background: #4f46e5; color: #fff; border-color: var(--info-hover); }
+        .btn-del:hover { background: #ef4444; color: #fff; border-color: var(--info-hover); }
 
         .v-badge {  padding: 4px 10px; border-radius: 20px;  font-size: 0.8rem; font-weight: 600;}
 		.v-badge.ready { background: #dcfce7; color: var(--success); }
@@ -572,7 +574,7 @@
      			   
      			   //투표 결과
      			   if(mode === 'cont'){
-					console.log("상세")
+					
      				  displayVoteResult(vote);
      			   }
      			},
@@ -811,7 +813,7 @@
 		                       onkeyup="handleSearch(this, event)" autocomplete="off">
 		                <div class="search-results"></div>
 		                <div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
-		                    DB에 없는 영화입니다. 검색 결과에서 선택해주세요.
+		                    존재하지 않은 영화입니다. 검색 결과에서 선택해주세요.
 		                </div>
 						<div class="delete-warning" 
                                 style="display: \${mode == 'cont' ? 'none' : 'block'}; display: \${movieDeleted == 1 ? 'flex' : 'none'}; align-items: center; gap: 4px; color: #e11d48; font-size: 11px; font-weight: 700; margin-top: 6px; letter-spacing: -0.5px;">
@@ -939,7 +941,7 @@
 			     
 			     // 결과창 닫기
 			     $('.search-results').hide();
-			     console.log("선택된 영화 ID:", id); // 확인용
+			    
 			 }
 			 
 			 // 결과창 외 클릭 시 닫기
@@ -1011,12 +1013,23 @@
 			 	
 			 	let validated = true;
 
+			 
 				//optItems 중에 삭제된영화가 있으면 수정 못하게 
 				for (let i = 0, ids = new Set(); i < optItems.length; i++) {
+					const mIdTag = optItems[i].querySelector('.movie-id-hidden')
 					const mId = optItems[i].querySelector('.movie-id-hidden').value;
+					
+					//없는 영화 체크
+					if(mId === ""){
+						 alert("존재하지 않는 영화가 포함되어 있습니다. 검색 결과에서 선택해주세요.");
+						 $(mIdTag).siblings('.movie-search').focus();
+						 validated = false;
+						 break;
+					}
 
 					// 1. 삭제된 영화 체크
 					if (optItems[i].classList.contains("is-deleted") || optItems[i].innerText.includes("(삭제된 영화)")) {
+						
 						alert("목록에 삭제된 영화가 포함되어 수정할 수 없습니다. 삭제 후 다시 시도해 주세요.");
 						validated = false;
 						break;
@@ -1033,18 +1046,6 @@
 				}
 
 				if (!validated) return false;
-
-
-			 	$('.movie-id-hidden').each(function() {
-			         if ($(this).val() === "") {
-			             alert("DB에 존재하지 않는 영화가 포함되어 있습니다. 검색 결과에서 선택해주세요.");
-			             $(this).siblings('.movie-search').focus();
-			             validated = false;
-			             return false; // each 반복 중단
-			         }
-			     });
-			 	
-			 	if(!validated) return false;
 			 	
 			 	let formData = $("#voteForm").serialize();
 			 	if(state)
@@ -1091,7 +1092,7 @@
 			    //  요약 정보 업데이트
 			    $("#total-voters").text(voteData.voterCount);
 			    $("#total-comments").text(voteData.commentCount);
-			console.log(voteData)
+			
 			    //  리스트 초기화
 			    const $list = $("#result-list");
 			    $list.empty();

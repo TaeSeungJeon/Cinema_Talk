@@ -1,49 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="https://jakarta.ee/xml/ns/jakartaee"
-	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
-	id="WebApp_ID" version="5.0">
-	<display-name>Cinema_Talk</display-name>
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-		<!-- ?쒕쾭媛 ?쒖옉????泥섏쓬 ?꾩슱 ?섏씠吏 紐낅떒 -->
-	</welcome-file-list>
-	<servlet>
-		<servlet-name>FrontController</servlet-name>
-		<!-- ?쒕툝由??대옒?ㅻ챸 -->
-		<servlet-class>Controller.FrontController</servlet-class>
-		<!-- ?쒕툝由??대옒????⑦궎吏 寃쎈줈 (fixed to match Java package) -->
-		<multipart-config>
-			<max-file-size>10485760</max-file-size>
-			<max-request-size>52428800</max-request-size>
-			<file-size-threshold>1048576</file-size-threshold>
-		</multipart-config>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>FrontController</servlet-name>
-		<url-pattern>*.do</url-pattern>
-	</servlet-mapping>
-	<filter>
-		<filter-name>RequestEncoding</filter-name>
-		<filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>UTF-8</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>RequestEncoding</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<session-config>
-		<session-timeout>30</session-timeout>
-		<cookie-config>
-			<name>JSESSIONID</name>
-			<path>/Cinema_Talk</path>
-			<http-only>true</http-only>
-			<secure>false</secure>
-			<!-- https ?꾨땲硫?false -->
-		</cookie-config>
-	</session-config>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" id="WebApp_ID" version="5.0">
+  <display-name>Cinema_Talk</display-name>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>   
+  </welcome-file-list>
+  <servlet>
+    <servlet-name>FrontController</servlet-name>
+    <servlet-class>Controller.FrontController</servlet-class>
+    <multipart-config>
+      <max-file-size>10485760</max-file-size>
+      <max-request-size>52428800</max-request-size>
+      <file-size-threshold>1048576</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>FrontController</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <filter-name>RequestEncoding</filter-name>
+    <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>RequestEncoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <session-config>
+    <session-timeout>30</session-timeout>
+    <cookie-config>
+      <name>JSESSIONID</name>
+      <path>/Cinema_Talk</path>
+      <http-only>true</http-only>
+      <secure>false</secure> 
+    </cookie-config>
+  </session-config>
 </web-app>

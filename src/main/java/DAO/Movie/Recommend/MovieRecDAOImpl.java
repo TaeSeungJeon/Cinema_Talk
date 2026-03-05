@@ -124,15 +124,31 @@ public class MovieRecDAOImpl implements MovieRecDAO {
 	public List<MovieRecResponse> getIndexGenreList(int memNo) {
 
 		try (SqlSession sqlSession = getSqlSession()) {
-			List<MovieRecResponse> indexGenreList = sqlSession.selectList("MovieRecommend.indexGenreMovie", memNo);
+			List<Integer> likeGenres = sqlSession.selectList("MovieRecommend.memLikeGenre", memNo);
 
-			return indexGenreList;
+	        if (likeGenres == null || likeGenres.isEmpty()) {
+	            // 선호 장르 없으면 랜덤 추천
+	            return sqlSession.selectList("MovieRecommend.indexGenreMovie");
+	        }
+
+	        return sqlSession.selectList("MovieRecommend.indexGenreMovieByMember", memNo);
 		} catch (RuntimeException e) {
 		    log.error("getIndexGenreList 메서드 실패. memNo={}", memNo, e);
 		    throw new RuntimeException("DB Error - getIndexGenreList", e);
 		}
 	}
 
+	@Override
+	public List<MovieRecResponse> getIndexGenreList() {
+		try (SqlSession sqlSession = getSqlSession()) {
+			List<MovieRecResponse> indexGenreList = sqlSession.selectList("MovieRecommend.indexGenreMovie");
+
+			return indexGenreList;
+		} catch (RuntimeException e) {
+		    throw new RuntimeException("DB Error - getIndexGenreList", e);
+		}
+	}
+	
 	// 인덱스 페이지용 트렌드 영화 추천 섹션 조회
 	@Override
 	public List<MovieRecResponse> getIndexTrendList() {

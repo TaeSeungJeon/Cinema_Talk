@@ -20,6 +20,8 @@ import jakarta.servlet.http.HttpSession;
 
 public class MyPageGenreSaveController implements Action {
 
+	private static final int MAX_GENRES = 3;
+
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setCharacterEncoding("UTF-8");
@@ -61,20 +63,44 @@ public class MyPageGenreSaveController implements Action {
 		}
 		String body = sb.toString();
 		// body 형식: genreIds=1&genreIds=2 ...
-		String[] pairs = body.split("&");
-		for (String pair : pairs) {
-			int idx = pair.indexOf('=');
-			if (idx > -1) {
-				String key = URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8.name());
-				String value = URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8.name());
-				if ("genreIds".equals(key) && value != null && !value.isBlank()) {
-					try {
-						genreIds.add(Integer.parseInt(value));
-					} catch (NumberFormatException ex) {
-						// ignore invalid
+		if (body != null && !body.isEmpty()) {
+			String[] pairs = body.split("&");
+			for (String pair : pairs) {
+				int idx = pair.indexOf('=');
+				if (idx > -1) {
+					String key = URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8.name());
+					String value = URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8.name());
+					if ("genreIds".equals(key) && value != null && !value.isBlank()) {
+						try {
+							genreIds.add(Integer.parseInt(value));
+						} catch (NumberFormatException ex) {
+							// ignore invalid
+						}
 					}
 				}
 			}
+		} else {
+			// Fallback: request.getParameterValues 사용 (서블릿이 바디를 파싱한 경우)
+			String[] params = request.getParameterValues("genreIds");
+			if (params != null) {
+				for (String p : params) {
+					try {
+						genreIds.add(Integer.parseInt(p));
+					} catch (NumberFormatException ex) {
+						// ignore
+					}
+				}
+			}
+		}
+
+		// Server-side validation: enforce maximum 3 genres
+		if (genreIds.size() > MAX_GENRES) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.setContentType("text/plain; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.print("MAX_3_ALLOWED");
+			out.flush();
+			return null;
 		}
 
 		// 선호 장르 저장

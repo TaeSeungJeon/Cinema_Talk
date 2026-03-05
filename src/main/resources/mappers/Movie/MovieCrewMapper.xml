@@ -39,6 +39,5 @@
         FROM MOVIE_CREW mc
         JOIN PERSON p ON mc.personId = p.personId
         WHERE mc.movieId = #{movieId}
-        AND mc.crewJob = 'Director'
     </select>
 </mapper>

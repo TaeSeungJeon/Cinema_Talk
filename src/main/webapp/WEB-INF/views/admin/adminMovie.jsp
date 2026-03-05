@@ -478,4 +478,15 @@
 		});
 
 	});
+
+	// 장르 pill 클릭 시 체크박스 토글 및 색상 변경 (부모 페이지에서 한 번만 등록)
+	$(document).on("click", ".genre-grid .pill", function(e) {
+		e.preventDefault(); // 브라우저 기본 label→checkbox 토글 방지
+		var inputId = $(this).attr("for");
+		var input = document.getElementById(inputId);
+		if (input) {
+			input.checked = !input.checked;
+			$(this).toggleClass("selected", input.checked);
+		}
+	});
 </script>

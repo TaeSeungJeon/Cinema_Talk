@@ -4,7 +4,7 @@ CREATE TABLE COMMENTS_LIKE(
 
     CONSTRAINT pk_comments_like PRIMARY KEY (commentsId, memNo),
     CONSTRAINT fk_like_comments FOREIGN KEY (commentsId)
-        REFERENCES COMMENTS (commentsId),
+        REFERENCES COMMENTS (commentsId) ON DELETE CASCADE,
     CONSTRAINT fk_like_comments_member FOREIGN KEY (memNo)
         REFERENCES MEMBER (memNo)
 );

@@ -943,7 +943,6 @@ aside {
 				</div>
 				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
 					<p style="margin: 0;">• 문의글은 일반 회원만 작성 가능합니다.</p>
-					<p style="margin: 0;">• 관리자가 댓글로 답변을 드립니다.</p>
 					<p style="margin: 0;">• 개인정보가 포함되지 않도록 주의해주세요.</p>
 				</div>
 			</div>

@@ -10,8 +10,6 @@
     <title>프리미엄 영화 큐레이션 - 게시글 상세</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Black+Han+Sans&family=Gaegu&family=Jua&family=Cute+Font&family=Do+Hyeon&family=Gugi&family=Sunflower:wght@300;500;700&family=Gothic+A1:wght@400;700&family=Stylish&display=swap" rel="stylesheet">
     <style>
-
-
         /* 폰트 드롭다운 */
         .font-select-wrapper { position: relative; }
 
@@ -778,7 +776,7 @@
                 <button type="button" class="share-btn" id="shareBtn">🔗 공유하기</button>
             </div>
         </article>
-
+		<c:if test="${cont.boardType != 10}">
         <section class="glass-panel comment-section">
             <div class="comment-count">댓글 ${clist.size()}개</div>
 
@@ -890,6 +888,7 @@
                 </c:if>
             </div>
         </section>
+        </c:if>
     </main>
 
     <aside class="side-panel">

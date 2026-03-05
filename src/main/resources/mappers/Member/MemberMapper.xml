@@ -43,13 +43,13 @@
   </update>
   
   <!-- 전화번호 중복체크 -->
-  <select id="phoneCheck" parameterType="String" resultType="int">
-   select count(*) from member where memPhone = #{memPhone}
+  <select id="phoneCheck" parameterType="String" resultType="member">
+   select * from member where memPhone = #{memPhone}
   </select>
   
   <!-- 이메일 중복 체크 -->
-  <select id="emailCheck" parameterType="String" resultType="int">
-  	select count(*) from member where memEmail = #{memEmail}
+  <select id="emailCheck" parameterType="String" resultType="member">
+  	select * from member where memEmail = #{memEmail}
   </select>
   
   <!-- 회원 탈퇴 (상태값 변경: 1 -> 3) -->

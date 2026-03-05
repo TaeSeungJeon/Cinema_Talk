@@ -8,14 +8,11 @@ import DTO.Member.MemberDTO;
 import DTO.Member.MyPage.MyPageDTO;
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
-import Service.Member.ProfilePhotoService;
-import Service.Member.ProfilePhotoServiceImpl;
 import Service.Member.MyPage.MyPageService;
 import Service.Member.MyPage.MyPageServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
 
 public class MemberEditOkController implements Action {
 
@@ -29,43 +26,39 @@ public class MemberEditOkController implements Action {
 		
 		MemberService memberService = new MemberServiceImpl();
 		MyPageService myPageService = new MyPageServiceImpl();
-		ProfilePhotoService photoService = new ProfilePhotoServiceImpl();
 		
 		int memNo = (int) session.getAttribute("memNo");
-		String memId = request.getParameter("mem-id"); //회원 아이디
-		String memPwd = request.getParameter("mem-pwd"); //회원 비밀번호
-		String memPassword = BCrypt.hashpw(memPwd, BCrypt.gensalt(12));
-		String memName = request.getParameter("mem-name"); //회원 이름
-		String memPhone = request.getParameter("mem-phone"); //회원 전화번호
-		String memEmail = request.getParameter("mem-email"); //회원 이메일
 		
-		MemberDTO member = memberService.getMemberInfo(memNo); // 아이디로 회원 정보 조회 (비밀번호 검증을 위해)
-		member.setMemNo(memNo);
-		member.setMemId(memId);
-		// DTO에 암호화된 비밀번호 다시 저장
-		member.setMemPwd(memPassword);
-		member.setMemName(memName);
-		member.setMemPhone(memPhone);
-		member.setMemEmail(memEmail);
+		// 기존 회원 정보 조회
+		MemberDTO member = memberService.getMemberInfo(memNo);
+		
+		// 각 필드를 선택적으로 업데이트: 입력값이 있을 때만 반영, 없으면 기존값 유지
+		String memPwd = request.getParameter("mem-pwd");
+		String memName = request.getParameter("mem-name");
+		String memPhone = request.getParameter("mem-phone");
+		String memEmail = request.getParameter("mem-email");
+		
+		// 비밀번호: 입력된 경우에만 암호화하여 세팅
+		if (memPwd != null && !memPwd.trim().isEmpty()) {
+			member.setMemPwd(BCrypt.hashpw(memPwd.trim(), BCrypt.gensalt(12)));
+		}
+		
+		// 이름: 입력된 경우에만 세팅
+		if (memName != null && !memName.trim().isEmpty()) {
+			member.setMemName(memName.trim());
+		}
+		
+		// 전화번호: 입력된 경우에만 세팅
+		if (memPhone != null && !memPhone.trim().isEmpty()) {
+			member.setMemPhone(memPhone.trim());
+		}
+		
+		// 이메일: 입력된 경우에만 세팅
+		if (memEmail != null && !memEmail.trim().isEmpty()) {
+			member.setMemEmail(memEmail.trim());
+		}
 		
 		myPageService.updateMemberInfo(member);
-		
-		// 프로필 사진 업로드 처리 (파일이 선택된 경우에만)
-		try {
-			Part filePart = request.getPart("profilePhoto");
-			if (filePart != null && filePart.getSize() > 0) {
-				photoService.updateMemberProfilePhoto(
-						memNo,
-						filePart.getInputStream(),
-						filePart.getContentType(),
-						filePart.getSize()
-				);
-			}
-		} catch (Exception e) {
-			// 프로필 사진 업로드 실패는 회원정보 수정과 별개로 처리
-			request.setAttribute("profileError", e.getMessage());
-			e.printStackTrace();
-		}
 		
 		// 수정된 회원정보 다시 조회
 		member = memberService.getMemberInfo(memNo);
@@ -84,7 +77,5 @@ public class MemberEditOkController implements Action {
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;
 	}
-
-	
 
 }

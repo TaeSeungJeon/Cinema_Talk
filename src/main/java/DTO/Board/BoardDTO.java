@@ -18,4 +18,5 @@ public class BoardDTO {
     private int likeCount;
     private int commentCount;
     private String linkUrl;
+    private String movieTitle;
 }

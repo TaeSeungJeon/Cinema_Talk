@@ -11,8 +11,15 @@
         </selectKey>
 
         INSERT INTO BOARD
-        (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo, linkUrl)
-        VALUES (#{boardId}, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo}, #{linkUrl})
+        (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo, linkUrl
+        <if test="movieId != -1">
+            , movieId, movieTitle
+        </if>)
+        VALUES (#{boardId}, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo}, #{linkUrl}
+        <if test="movieId != -1">
+            , #{movieId}, #{movieTitle}
+        </if>
+        )
     </insert>
 
     <select id="boardList" resultType="DTO.Board.BoardDTO">
@@ -35,7 +42,8 @@
                BOARDDATE           as boardDate,
                MEMNO               as memNo,
                LINKURL             as linkUrl,
-               BOARDVIEWCOUNT as boardViewCount
+               BOARDVIEWCOUNT as boardViewCount,
+               MOVIEID,MOVIETITLE
         FROM BOARD
         WHERE BOARDID = #{boardId}
     </select>
@@ -48,8 +56,21 @@
 
     <update id="updateBoard" parameterType="DTO.Board.BoardDTO">
         UPDATE BOARD
-        SET BOARDTITLE   = #{boardTitle},
-            BOARDCONTENT = #{boardContent}
+       <set>
+            <if test="boardTitle != null">BOARDTITLE = #{boardTitle},</if>
+            <if test="boardContent != null">BOARDCONTENT = #{boardContent},</if>
+            
+            <choose>
+                <when test="movieId != -1">
+                    MOVIEID = #{movieId},
+                    MOVIETITLE = #{movieTitle}
+                </when>
+                <otherwise>
+                    MOVIEID = NULL,
+                    MOVIETITLE = NULL
+                </otherwise>
+            </choose>
+        </set>
         WHERE BOARDID = #{boardId}
     </update>
 
@@ -247,6 +268,10 @@
             ORDER BY b.BOARDDATE DESC NULLS LAST, b.BOARDID DESC
         )
         WHERE ROWNUM = 1
+    </select>
+
+    <select id="getMovieTitleforBoard" resultType="String" parameterType="int">
+        SELECT movieTitle from movie where movieId = #{movieId}
     </select>
 
 </mapper>

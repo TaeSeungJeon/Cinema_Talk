@@ -42,6 +42,9 @@ public class MovieSearchServiceImpl implements MovieSearchService {
 		}
 		for (MovieDTO movie : movies) {
 				String originalDate = movie.getMovieReleaseDate();
+				if(originalDate == null) {
+					continue;
+				}
 				String fixedDate = originalDate.substring(0, 10);
 				movie.setMovieReleaseDate(fixedDate);
 		}		

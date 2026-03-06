@@ -17,8 +17,11 @@ body {
 
 /* ── 메인 컨테이너 ── */
 .container {
-	padding:1.5rem 2rem;height: calc(100vh - 12rem);background-color: white;
-	border-radius: 1rem;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;
+	padding:1.5rem 2rem;
+	height: 100%;
+	background-color: white;
+	border-radius: 1rem;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;
 }
 
 /* ── 페이지 제목 ── */

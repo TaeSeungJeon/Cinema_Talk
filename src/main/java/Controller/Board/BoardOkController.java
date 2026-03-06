@@ -63,8 +63,8 @@ public class BoardOkController implements Action {
         String memId = (String) session.getAttribute("memId");
         int movieIdInt = (movieId == null || movieId.trim().isEmpty()) ? -1 :Integer.parseInt(movieId);
        String movieTitle = boardService.getMovieTitleforBoard(movieIdInt);
-System.out.println("=========================");
-System.out.println(movieIdInt);
+       System.out.println("=========================");
+       System.out.println(movieIdInt);
         BoardDTO bdto = new BoardDTO();
         bdto.setBoardTitle(boardTitle);
         bdto.setBoardContent(boardCont);
@@ -92,7 +92,6 @@ System.out.println(movieIdInt);
         }
 
         try {
-            
             boardService.boardIn(bdto);
 
             out.println("<script>");

@@ -6,6 +6,7 @@ import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
 import DTO.Board.LinkPreviewDTO;
 import DTO.Member.MemberDTO;
+import DTO.Member.MyPage.MyPageDTO;
 import DTO.Vote.VoteRegisterDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
@@ -13,6 +14,8 @@ import Service.Board.CommentsService;
 import Service.Board.CommentsServiceImpl;
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
+import Service.Member.MyPage.MyPageService;
+import Service.Member.MyPage.MyPageServiceImpl;
 import Service.Vote.VoteService;
 import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +36,9 @@ public class PostDetailController implements Action {
         BoardService service = BoardServiceImpl.getInstance();
         MemberService memberService = new MemberServiceImpl();
         Map<String, Object> result = service.getBoardDetailWithPreview(boardId);
-
+        
+        
+        
         BoardDTO cont = (BoardDTO) result.get("board");
         LinkPreviewDTO preview = (LinkPreviewDTO) result.get("preview");
         //사이드바 투표 데이터
@@ -86,11 +91,15 @@ public class PostDetailController implements Action {
 
         // 모든 HTML 태그 제거
         String textOnly = rawContent.replaceAll("<[^>]*>", "");
-
+        
+        MyPageService myPageService = new MyPageServiceImpl();
+        MyPageDTO myPageInfo = myPageService.getMyPageInfo(member.getMemNo());
+        
         request.setAttribute("textOnlyContent", textOnly);
         request.setAttribute("clist", clist);
         request.setAttribute("member", member);
-
+        request.setAttribute("myPageInfo", myPageInfo);
+        
         ActionForward forward = new ActionForward();
         forward.setPath("/WEB-INF/views/board/postDetail.jsp");
         forward.setRedirect(false);

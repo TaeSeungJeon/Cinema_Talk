@@ -368,13 +368,28 @@
         <div class="glass-panel">
             <div class="side-title">👤 작성자 정보</div>
             <div style="text-align: center; padding: 10px 0;">
-					<div class="avatar"
-						style="width: 60px; height: 60px; margin: 0 auto 10px auto;">
-					</div>
-					<a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
+                <div class="profile-image-wrap">
+                    <c:choose>
+                        <c:when test="${not empty member.memProfilePhoto}">
+                            <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
+                                 src="${pageContext.request.contextPath}/profilePhoto.do?path=${member.memProfilePhoto}"
+                                 alt="프로필 사진" />
+                        </c:when>
+                        <c:otherwise>
+                            <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
+                                 src="${pageContext.request.contextPath}/Image/default-avatar.png"
+                                 alt="기본 프로필" />
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
+                <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
                    style="font-weight: 700; color: var(--text-main); text-decoration: none;">
                     ${cont.boardName}
                 </a>
+                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 ${myPageInfo.boardCount} | 댓글 ${myPageInfo.commentCount}</div>
+            	<div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
+                <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}" class="side-item">작성자의 다른 글 보기</a>
             </div>
         </div>
         <div class="glass-panel">
@@ -473,7 +488,7 @@
             --%>
             <c:if test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
                 <div class="comment-write">
-                    <form action="quiryDetail.do" method="post">
+                    <form action="commentsOk.do" method="post">
                         <input type="hidden" name="boardId" value="${cont.boardId}">
                         <input type="hidden" name="boardType" value="${cont.boardType}">
                         <input type="hidden" name="parentBoardId" value="0">
@@ -491,16 +506,26 @@
                 <c:forEach var="comm" items="${clist}">
                     <div class="comment-item"
                          style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
-                        <div class="avatar" style="width:35px; height:35px;"></div>
-
+                        <div class="profile-image-wrap">
+                            <c:choose>
+                                <c:when test="${not empty comm.memProfilePhoto}">
+                                    <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
+                                         src="${pageContext.request.contextPath}/profilePhoto.do?path=${comm.memProfilePhoto}"
+                                         alt="프로필 사진" />
+                                </c:when>
+                                <c:otherwise>
+                                    <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
+                                         src="${pageContext.request.contextPath}/Image/default-avatar.png"
+                                         alt="기본 프로필" />
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
                         <div class="comment-content" style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div class="comment-user">
                                     ${comm.commentsName}
                                     <%-- 관리자 댓글에 배지 표시 (commentsNo==1이 최상위 댓글이므로 관리자 답변) --%>
-                                    <c:if test="${comm.commentsNo == 1}">
-                                        <span class="admin-badge">관리자 답변</span>
-                                    </c:if>
+                                    <span class="admin-badge">관리자 답변</span>
                                 </div>
                             </div>
 

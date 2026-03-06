@@ -1,22 +1,28 @@
 package Controller.Board.Quiry;
 
+import java.util.List;
+import java.util.Map;
+
 import Controller.Action;
 import Controller.ActionForward;
+import DTO.Board.AddFileDTO;
 import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
 import DTO.Board.LinkPreviewDTO;
-import DTO.Board.AddFileDTO;
+import DTO.Member.MemberDTO;
+import DTO.Member.MyPage.MyPageDTO;
+import Service.Board.AddFileService;
+import Service.Board.AddFileServiceImpl;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
 import Service.Board.CommentsService;
 import Service.Board.CommentsServiceImpl;
-import Service.Board.AddFileService;
-import Service.Board.AddFileServiceImpl;
+import Service.Member.MemberService;
+import Service.Member.MemberServiceImpl;
+import Service.Member.MyPage.MyPageService;
+import Service.Member.MyPage.MyPageServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.List;
-import java.util.Map;
 
 public class QuiryDetailController implements Action {
 	@Override
@@ -46,7 +52,7 @@ public class QuiryDetailController implements Action {
 
 		CommentsService cService = CommentsServiceImpl.getInstance();
 
-		Integer memNo = (Integer) request.getSession().getAttribute("memNo");
+		Integer memNo = (Integer) request.getAttribute("memNo");
 		List<CommentsDTO> clist = cService.commentsListWithLike(boardId, memNo);
 
 		// 좋아요
@@ -55,12 +61,19 @@ public class QuiryDetailController implements Action {
 		request.setAttribute("likeCount", likeCount);
 		request.setAttribute("cont", cont);
 		request.setAttribute("preview", preview);
-
+		
+		MemberService memberService = new MemberServiceImpl();
+		MyPageService myPageService = new MyPageServiceImpl();
+		
+		MemberDTO member = memberService.getMemberInfo(memNo);
+		MyPageDTO myPageInfo = myPageService.getMyPageInfo(member.getMemNo());
+        
 		String rawContent = cont.getBoardContent();
 		String textOnly = rawContent.replaceAll("<[^>]*>", "");
 		request.setAttribute("textOnlyContent", textOnly);
 		request.setAttribute("clist", clist);
-
+		request.setAttribute("myPageInfo", myPageInfo);
+		
 		ActionForward forward = new ActionForward();
 		forward.setPath("/WEB-INF/views/board/quiryDetail.jsp");
 		forward.setRedirect(false);

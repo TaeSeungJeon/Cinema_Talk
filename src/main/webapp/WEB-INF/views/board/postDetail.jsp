@@ -593,11 +593,10 @@
                    style="font-weight: 700; color: var(--text-main); text-decoration: none;">
                     ${cont.boardName}
                 </a>
-                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 124 | 댓글 42</div>
-            </div>
-            <div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
+                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 ${myPageInfo.boardCount} | 댓글 ${myPageInfo.commentCount}</div>
+            	<div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
                 <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}" class="side-item">작성자의 다른 글 보기</a>
-                <div class="side-item">팔로우 하기</div>
+            </div>
             </div>
         </div>
         <div class="glass-panel">
@@ -680,9 +679,6 @@
                 </div>
                     
                 </c:if>
-                
-                
-                
             </div>
 
             <div id="update-form" style="display:none; margin-top:20px;">

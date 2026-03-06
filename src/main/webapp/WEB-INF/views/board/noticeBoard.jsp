@@ -950,33 +950,21 @@ aside {
 
 			<div class="side-widget">
 				<div class="widget-title">
-					<span>📊 영화 투표</span>
+					<span>📋 공지 안내</span>
 				</div>
-				<div class="widget-placeholder">
-					<div style="text-align: center;">
-						<p style="margin: 0; font-size: 0.8rem;">올해 최고의 기대작은?</p>
-						<button
-							style="margin-top: 10px; font-size: 0.7rem; padding: 5px 10px; border-radius: 8px; border: none; background: var(--accent-color); color: white; cursor: pointer;">
-							투표하기</button>
-					</div>
+				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+					<p style="margin: 0;">• 공지글은 관리자만 작성 가능합니다.</p>
+					<p style="margin: 0;">• 사이트 사용 규칙을 위반하지 않도록 주의해주세요.</p>
 				</div>
 			</div>
 
 			<div class="side-widget">
 				<div class="widget-title">
-					<span>🏆 우수 리뷰어</span>
+					<span>📞 고객센터</span>
 				</div>
-				<div style="display: flex; flex-direction: column; gap: 12px;">
-					<div style="display: flex; align-items: center; gap: 10px;">
-						<div
-							style="width: 32px; height: 32px; border-radius: 50%; background: #ddd;"></div>
-						<span style="font-size: 0.85rem; font-weight: 600;">MovieMaster</span>
-					</div>
-					<div style="display: flex; align-items: center; gap: 10px;">
-						<div
-							style="width: 32px; height: 32px; border-radius: 50%; background: #ccc;"></div>
-						<span style="font-size: 0.85rem; font-weight: 600;">Critic_Lee</span>
-					</div>
+				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+					<p style="margin: 0;">운영시간: 평일 09:00 ~ 18:00</p>
+					<p style="margin: 0;">이메일: support@cinematalk.com</p>
 				</div>
 			</div>
 		</aside>

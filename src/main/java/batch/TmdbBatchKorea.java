@@ -172,6 +172,8 @@ public class TmdbBatchKorea {
 		while (movieIdSet.size() < count && page <= totalPages) {
 			try {
 				String url = BASE_URL + "/discover/movie?language=ko-KR&with_origin_country=KR"
+						+ "&include_adult=false"
+						+ "&certification_country=KR&certification.lte=15"
 						+ "&sort_by=popularity.desc&page=" + page;
 				String jsonResponse = makeHttpRequest(url);
 				JSONObject json = new JSONObject(jsonResponse);
@@ -483,10 +485,27 @@ public class TmdbBatchKorea {
 	// ==================== TMDB API 호출 ====================
 
 	private MovieDTO fetchMovieDetails(int movieId) throws Exception {
-		String url = BASE_URL + "/movie/" + movieId + "?language=ko-KR";
+		String url = BASE_URL + "/movie/" + movieId + "?language=ko-KR&append_to_response=release_dates";
 		String jsonResponse = makeHttpRequest(url);
 
 		JSONObject json = new JSONObject(jsonResponse);
+
+		// 성인 영화 필터링 (adult 플래그)
+		if (json.optBoolean("adult", false)) {
+			System.out.println("  - 영화 ID " + movieId + " 성인 영화(adult=true)이므로 제외");
+			return null;
+		}
+
+		// 한국 영화등급 기반 성인물 필터링
+		// TMDB certification: "All", "12", "15", "18", "Restricted Screening"
+		// "18" 또는 "Restricted Screening"이면 성인물로 판단하여 제외
+		String krCertification = extractKrCertification(json);
+		if (krCertification != null) {
+			if ("18".equals(krCertification) || "Restricted Screening".equals(krCertification)) {
+				System.out.println("  - 영화 ID " + movieId + " 한국등급 [" + krCertification + "] 성인물이므로 제외");
+				return null;
+			}
+		}
 
 		MovieDTO movie = new MovieDTO();
 		movie.setMovieId(json.getInt("id"));
@@ -595,6 +614,50 @@ public class TmdbBatchKorea {
 		person.setProfilePath(json.optString("profile_path", null));
 
 		return person;
+	}
+
+	// ==================== 한국 영화등급 추출 ====================
+
+	/**
+	 * TMDB release_dates 응답에서 한국(KR) certification 추출
+	 * append_to_response=release_dates 로 호출 시 JSON 구조:
+	 * {
+	 *   "release_dates": {
+	 *     "results": [
+	 *       { "iso_3166_1": "KR", "release_dates": [ { "certification": "15", ... } ] },
+	 *       ...
+	 *     ]
+	 *   }
+	 * }
+	 */
+	private String extractKrCertification(JSONObject movieJson) {
+		try {
+			JSONObject releaseDates = movieJson.optJSONObject("release_dates");
+			if (releaseDates == null) return null;
+
+			JSONArray results = releaseDates.optJSONArray("results");
+			if (results == null) return null;
+
+			for (int i = 0; i < results.length(); i++) {
+				JSONObject country = results.getJSONObject(i);
+				if ("KR".equals(country.optString("iso_3166_1"))) {
+					JSONArray dates = country.optJSONArray("release_dates");
+					if (dates != null && dates.length() > 0) {
+						// 가장 최근 등급 정보 사용 (마지막 항목)
+						for (int j = dates.length() - 1; j >= 0; j--) {
+							String cert = dates.getJSONObject(j).optString("certification", "");
+							if (!cert.isEmpty()) {
+								return cert;
+							}
+						}
+					}
+					break;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("한국 등급 추출 중 오류: " + e.getMessage());
+		}
+		return null;
 	}
 
 	// ==================== HTTP 요청 ====================

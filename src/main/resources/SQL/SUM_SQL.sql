@@ -405,7 +405,6 @@ VALUES (memNoSeq.NEXTVAL, 'admin',
 
 COMMIT;
 
-/*
 -- 테이블 삭제
 BEGIN
   FOR t IN (SELECT table_name FROM user_tables)
@@ -430,4 +429,3 @@ BEGIN
   END LOOP;
 END;
 /
-*/

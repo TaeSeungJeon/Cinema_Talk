@@ -1,6 +1,7 @@
 package Service.Member;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -97,13 +98,13 @@ public class MemberServiceImpl implements MemberService {
 	}//회원 탈퇴 (상태값 3으로 변경)
 	
 	@Override
-	public List<MemberDTO> getMemberList() {
-		return mdao.getMemberList();
+	public List<MemberDTO> getMemberList(int startRow, int endRow) {
+		return mdao.getMemberList(startRow, endRow);
 	}//회원목록 조회
 
 	@Override
-	public List<MemberDTO> getMemberListByState(String memState) {
-		return mdao.getMemberListByState(memState);
+	public List<MemberDTO> getMemberListByState(String memState, int startRow, int endRow) {
+		return mdao.getMemberListByState(memState, startRow, endRow);
 	}//상태에 따른 회원목록 조회
 
 	@Override
@@ -112,14 +113,19 @@ public class MemberServiceImpl implements MemberService {
 	}//회원 상태 변경 1(정상), 2(정지)
 
 	@Override
-	public List<MemberDTO> searchMembers(String keyword) {
-		return mdao.searchMembers(keyword);
+	public List<MemberDTO> searchMembers(String keyword, int startRow, int endRow) {
+		return mdao.searchMembers(keyword, startRow, endRow);
 	}//검색하여 회원 목록 조회
 
 	@Override
-	public List<MemberDTO> searchMembersByState(String keyword, String memState) {
-		return mdao.searchMembersByState(keyword, memState);
+	public List<MemberDTO> searchMembersByState(String keyword, String memState, int startRow, int endRow) {
+		return mdao.searchMembersByState(keyword, memState, startRow, endRow);
 	}//상태+검색 회원목록 조회
+
+	@Override
+	public int countMembers(Map<String, Object> countParam) {
+		return mdao.countMembers(countParam);
+	}//전체, 상태, 검색, 상태+검색 회원 레코드 수 계산
 
 }
 

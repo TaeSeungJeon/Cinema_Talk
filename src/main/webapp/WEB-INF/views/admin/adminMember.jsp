@@ -164,15 +164,16 @@ tbody td{
 </div>
 
 <script>
-  // 목록 새로고침 (검색/필터 포함)
-  function loadMemberList(){
+  // 목록 새로고침 (검색/필터/페이징 포함)
+  function loadMemberList(page){
+	page = page || 1;
     const keyword = $("#memberKeyword").val();
     const state = $("#stateFilter").val();
 
     $.ajax({
       url: "${pageContext.request.contextPath}/admin/memberList.do",
       type: "GET",
-      data: { keyword: keyword, "mem-state": state },
+      data: { "keyword": keyword, "mem-state": state, "page" : page },
       headers: { "X-Requested-With": "XMLHttpRequest" },
       success: function(html){
         $("#memberListArea").html(html);
@@ -183,75 +184,57 @@ tbody td{
       }
     });
   }
+  
+  $(document).on("click", ".page-link", function(){
+	  const page = $(this).data("page");
+	  loadMemberList(page);
+	});
 
   // 검색 버튼/엔터
-  $(document).on("click", "#btnSearch", loadMemberList);
-  $(document).on("keyup", "#memberKeyword", function(e){
-    if(e.key === "Enter") loadMemberList();
+  $(document).on("click", "#btnSearch", function(){
+	  loadMemberList(1);
   });
-  $(document).on("change", "#stateFilter", loadMemberList);
+  $(document).on("keyup", "#memberKeyword", function(e){
+    if(e.key === "Enter") loadMemberList(1);
+  });
+  $(document).on("change", "#stateFilter", function(){
+	  loadMemberList(1);
+  });
   $(document).on("click", "#btnReload", function(){
     $("#memberKeyword").val("");
     $("#stateFilter").val("");
-    loadMemberList();
+    loadMemberList(1);
   });
   
-//   function btnChangeState(){
-// 	  const memNo = $(this).data("memno");
-// 	  const targetState = $(this).data("targetstate"); // 1(정상) 또는 2(정지)
-	    
-// 	    const msg = (targetState === "2") ? "정지 처리할까요?" : "정지를 해제할까요?";
-// 	    if (!confirm(msg)) return;
-
-// 	    $.ajax({
-// 	      url: "${pageContext.request.contextPath}/admin/memberSetDormant.do",
-// 	      type: "POST",
-// 	      data: { memNo: memNo, targetState: targetState},
-// 	      headers: { "X-Requested-With": "XMLHttpRequest" },
-// 	      success: function(res){
+  function btnChangeState(el){
+	  console.log(el)
+	  const memNo = $(el).data("memno");
+	  const targetState = $(el).data("targetstate"); // 1(정상) 또는 2(정지)
+	  console.log(targetState)
+	    const msg = (targetState == "2") ? "정지 처리할까요?" : "정지를 해제할까요?";
+	    if (!confirm(msg)) return;
+		
+	    console.log("AJAX 보내는 중", { memNo, targetState });
+	    $.ajax({
+	      url: "${pageContext.request.contextPath}/admin/memberSetDormant.do",
+	      type: "POST",
+	      data: { memNo: memNo, targetState: targetState},
+	      headers: { "X-Requested-With": "XMLHttpRequest" },
+	      success: function(res){
 	    	 
-// 	    	const successMsg = (targetState === "2")
-// 	        ? "정지 처리되었습니다."
-// 	        : "정지 해제되었습니다."; 
+	    	const successMsg = (targetState == "2")
+	        ? "정지 처리되었습니다."
+	        : "정지 해제되었습니다."; 
 	    	
-// 	        alert(successMsg);
-// 	        loadMemberList();
-// 	      },
-// 	      error: function(xhr){
-// 	        console.log("정지 전환 실패:", xhr.status);
-// 	        alert("정지 전환에 실패했습니다.");
-// 	      }
-// 	    });
-//   }
-
-  //정지 전환 버튼 클릭
-  $(document).on("click", ".js-btn-change-state", function(){
-    const memNo = $(this).data("memno");
-    const targetState = $(this).data("targetstate"); // 1(정상) 또는 2(정지)
-    
-    const msg = (targetState === 2) ? "정지 처리할까요?" : "정지를 해제할까요?";
-    if (!confirm(msg)) return;
-
-    $.ajax({
-      url: "${pageContext.request.contextPath}/admin/memberSetDormant.do",
-      type: "POST",
-      data: { memNo: memNo, targetState: targetState},
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      success: function(res){
-    	 
-    	const successMsg = (targetState === 2)
-        ? "정지 처리되었습니다."
-        : "정지 해제되었습니다."; 
-    	
-        alert(successMsg);
-        loadMemberList();
-      },
-      error: function(xhr){
-        console.log("정지 전환 실패:", xhr.status);
-        alert("정지 전환에 실패했습니다.");
-      }
-    });
-  });
+	        alert(successMsg);
+	        loadMemberList();
+	      },
+	      error: function(xhr){
+	        console.log("정지 전환 실패:", xhr.status);
+	        alert("정지 전환에 실패했습니다.");
+	      }
+	    });
+  }
   
   //새로고침 안 해도 회원목록 반영되게 함
   $(function(){

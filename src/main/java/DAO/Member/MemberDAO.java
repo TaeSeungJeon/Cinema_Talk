@@ -1,6 +1,7 @@
 package DAO.Member;
 
 import java.util.List;
+import java.util.Map;
 
 import DTO.Member.MemberDTO;
 
@@ -30,14 +31,16 @@ public interface MemberDAO {
 
 	int updateProfilePhotoPath(int memNo, String relativePath);	
 
-	List<MemberDTO> getMemberList();
+	List<MemberDTO> getMemberList(int startRow, int endRow);
 
-	List<MemberDTO> getMemberListByState(String memState);
+	List<MemberDTO> getMemberListByState(String memState, int startRow, int endRow);
 
 	int updateMemberState(int memNo, int targetState);
 
-	List<MemberDTO> searchMembers(String keyword);
+	List<MemberDTO> searchMembers(String keyword, int startRow, int endRow);
 
-	List<MemberDTO> searchMembersByState(String keyword, String memState);
+	List<MemberDTO> searchMembersByState(String keyword, String memState, int startRow, int endRow);
+
+	int countMembers(Map<String, Object> countParam);
 
 }

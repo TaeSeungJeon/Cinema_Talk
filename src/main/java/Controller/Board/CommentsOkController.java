@@ -38,14 +38,14 @@ public class CommentsOkController implements Action {
         int cNo = Integer.parseInt(request.getParameter("commentsNo"));
 
         int memNo = (int) session.getAttribute("memNo");
-        String memName = (String) session.getAttribute("memName");
+        String memId = (String) session.getAttribute("memId");
 
         CommentsDTO cdto = new CommentsDTO();
         cdto.setBoardId(boardId);
         cdto.setBoardType(boardType);
         cdto.setCommentsContent(content);
         cdto.setMemNo(memNo);
-        cdto.setCommentsName(memName != null ? memName : "익명");
+        cdto.setCommentsName(memId != null ? memId : "익명");
 
         // 핵심: 0이면 null로 세팅하여 DB FK 에러 방지
         cdto.setParentBoardId(pId == 0 ? null : pId);

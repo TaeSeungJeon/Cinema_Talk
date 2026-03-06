@@ -214,26 +214,30 @@ public class MemberDAOImpl implements MemberDAO {
 	}//updateProfilePhotoPath() -> 프로필 사진 경로 업데이트
 
 	@Override
-	public List<MemberDTO> getMemberList() {
-		SqlSession sqlSession = null;
-		
-		try {
-			sqlSession = getSqlSession();
-			return sqlSession.selectList("getMemberList");	
-		}finally {
-			if(sqlSession != null) {
-				sqlSession.close();
-			}
-		}
+	public List<MemberDTO> getMemberList(int startRow, int endRow) {
+		 SqlSession session = null;
+	        try {
+	            session = getSqlSession();
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("startRow", startRow);
+	            map.put("endRow", endRow);
+	            return session.selectList("getMemberList", map);
+	        } finally {
+	            if (session != null) session.close();
+	        }
 	}//getMemberList() -> 회원 목록 조회
 
 	@Override
-	public List<MemberDTO> getMemberListByState(String memState) {
+	public List<MemberDTO> getMemberListByState(String memState, int startRow, int endRow) {
 		SqlSession sqlSession = null;
 		
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectList("getMemberListByState", memState);
+			Map<String, Object> map = new HashMap<>();
+			map.put("memState", memState);
+			map.put("startRow", startRow);
+			map.put("endRow", endRow);
+			return sqlSession.selectList("getMemberListByState", map);
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();
@@ -263,19 +267,16 @@ public class MemberDAOImpl implements MemberDAO {
 	}//updateMemberState() -> 회원 상태 변경
 
 	@Override
-	public List<MemberDTO> searchMembers(String keyword) {
+	public List<MemberDTO> searchMembers(String keyword, int startRow, int endRow) {
 		SqlSession sqlSession = null;
 		
 		try {
 			sqlSession = getSqlSession();
-			
-			// keyword가 null/빈값이면 전체 조회 (안전장치)
-	        if (keyword == null || keyword.trim().isEmpty()) {
-	            return sqlSession.selectList("getMemberList");
-	        }
-
-	        // 검색 쿼리 호출
-	        return sqlSession.selectList("searchMembers", keyword);
+			Map<String, Object> map = new HashMap<>();
+			map.put("keyword", keyword);
+			map.put("startRow", startRow);
+			map.put("endRow", endRow);
+	        return sqlSession.selectList("searchMembers", map);
 		}finally {
 			if(sqlSession != null) {
 				sqlSession.close();
@@ -284,21 +285,31 @@ public class MemberDAOImpl implements MemberDAO {
 	}//searchMembers() -> 검색하여 회원 목록 조회
 
 	@Override
-	public List<MemberDTO> searchMembersByState(String keyword, String memState) {
+	public List<MemberDTO> searchMembersByState(String keyword, String memState, int startRow, int endRow) {
+		SqlSession session = null;
+        try {
+            session = getSqlSession();
+            Map<String, Object> map = new HashMap<>();
+            map.put("keyword", keyword);
+            map.put("memState", memState);
+            map.put("startRow", startRow);
+            map.put("endRow", endRow);
+            return session.selectList("searchMembersByState", map);
+        } finally {
+            if (session != null) session.close();
+        }
+	}//searchMembersByState() -> 상태+검색 후 회원목록 조회
+
+	@Override
+	public int countMembers(Map<String, Object> countParam) {
 		SqlSession sqlSession = null;
 		
 		try {
 			sqlSession = getSqlSession();
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("keyword", keyword);
-	        map.put("memState", memState);
-	      
-	        return sqlSession.selectList("searchMembersByState", map);
-		} finally {
-			if(sqlSession != null) {
-				sqlSession.close();
-			}
-		}	
-	}//searchMembersByState() -> 상태+검색 후 회원목록 조회
+			return sqlSession.selectOne("countMembers", countParam);
+		}finally {
+			if(sqlSession != null) sqlSession.close();
+		}
+	}//countMembers() -> 전체, 상태, 검색, 상태+검색 회원 레코드 수 계산
 
 }

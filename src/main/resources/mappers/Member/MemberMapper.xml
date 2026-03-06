@@ -68,13 +68,30 @@
   </update>
   
   <!-- 회원목록 조회 -->
-  <select id="getMemberList" parameterType="String"  resultType="member">
-  	select memNo, memId, memName, memPhone, memEmail, memState, to_char(memDate, 'YYYY-MM-DD') as memDate from member order by memNo asc
+  <select id="getMemberList" parameterType="map"  resultType="member">
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
   </select>
   
   <!-- 상태에 따른 회원목록 조회 -->
-  <select id="getMemberListByState" parameterType="String" resultType="member">
-  	select memNo, memId, memName, memPhone, memEmail, memState, to_char(memDate, 'YYYY-MM-DD') as memDate from member where memState = #{value} order by memNo
+  <select id="getMemberListByState" parameterType="map" resultType="member">
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	WHERE memState = #{memState}
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
   </select>
   
   <!-- 회원 상태 전환 -->
@@ -83,17 +100,52 @@
   </update>
   
   <!-- 검색 후 회원 목록 조회 -->
-  <select id="searchMembers" parameterType="String" resultType="member">
-	select memNo, memId, memName, memPhone, memEmail, memState, to_char(memDate, 'YYYY-MM-DD') as memDate from member
-	where memId like '%' || #{value} || '%' or memName like '%' || #{value} || '%'
-	order by memNo
+  <select id="searchMembers" parameterType="map" resultType="member">
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	WHERE (memId LIKE '%' || #{keyword} || '%'
+	OR memName LIKE '%' || #{keyword} || '%')
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
   </select>
   
   <!-- 상태+검색 회원목록 조회 -->
   <select id="searchMembersByState" parameterType="map" resultType="member">
-	select memNo, memId, memName, memPhone, memEmail, memState, to_char(memDate, 'YYYY-MM-DD') as memDate from member
-	where memState = #{memState} and (memId like '%' || #{keyword} || '%' or memName like '%' || #{keyword} || '%')
-	order by memNo
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	WHERE memState = #{memState}
+	AND (memId LIKE '%' || #{keyword} || '%'
+	OR memName LIKE '%' || #{keyword} || '%')
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+  </select>
+  
+  <!-- 전체, 상태, 검색, 상태+검색 회원 레코드 수 계산 -->
+  <select id="countMembers" parameterType="map" resultType="int">
+  	SELECT COUNT(*)
+    FROM member
+    WHERE 1=1
+
+    <!-- 검색 조건 -->
+    <if test="keyword != null and keyword != ''">
+        AND (memId LIKE '%' || #{keyword} || '%'
+        OR memName LIKE '%' || #{keyword} || '%')
+    </if>
+
+    <!-- 상태 조건 -->
+    <if test="memState != null and memState != ''">
+        AND memState = #{memState}
+    </if>
   </select>
   
   </mapper>

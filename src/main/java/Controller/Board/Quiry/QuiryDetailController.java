@@ -64,9 +64,8 @@ public class QuiryDetailController implements Action {
 		
 		MemberService memberService = new MemberServiceImpl();
 		MyPageService myPageService = new MyPageServiceImpl();
-		
-		MemberDTO member = memberService.getMemberInfo(memNo);
-		MyPageDTO myPageInfo = myPageService.getMyPageInfo(member.getMemNo());
+
+		MyPageDTO myPageInfo = myPageService.getMyPageInfo(cont.getMemNo());
         
 		String rawContent = cont.getBoardContent();
 		String textOnly = rawContent.replaceAll("<[^>]*>", "");

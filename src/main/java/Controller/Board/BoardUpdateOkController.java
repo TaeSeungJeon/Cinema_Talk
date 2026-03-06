@@ -38,7 +38,6 @@ public class BoardUpdateOkController implements Action {
         System.out.println("boardContent 길이: " + (boardContent != null ? boardContent.length() : "null"));
         System.out.println("movieId: " + movieId);
         System.out.println("================================");
-        
 
         BoardService boardService = BoardServiceImpl.getInstance();
 

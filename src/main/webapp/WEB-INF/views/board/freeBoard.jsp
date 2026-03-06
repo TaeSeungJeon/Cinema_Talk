@@ -564,6 +564,45 @@
 		.result-item { padding: 10px 15px; cursor: pointer; transition: 0.2s; }
 		.result-item:hover { background: #f0f4ff; color: var(--primary); }
 		
+		/* 영화태그 */
+		 .movie-tag-container {
+            margin-top: auto; /* 위쪽 마진을 최대로 하여 바닥에 밀착 */
+        }
+         .movie-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background-color: #f1f5f9; /* 연한 블루 그레이 */
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 4px;
+        }
+
+        /* 마우스 호버 효과 (정상 데이터일 때만) */
+        .movie-tag:not(.disabled-tag):hover {
+            background-color: #6366f1; /* 메인 블루 */
+            color: white;
+            border-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* ⚠️ 삭제된 영화 태그 스타일 (disabled-tag) */
+        .movie-tag.disabled-tag {
+            background-color: #f8fafc;
+            color: #94a3b8; /* 흐릿한 회색 */
+            border: 1px solid #cbd5e1; /* 점선 테두리로 '유령' 느낌 부여 */
+            cursor: not-allowed; /* 금지 표시 커서 */
+            opacity: 0.7;
+           
+        }
+		
+		
 		
 	</style>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -652,6 +691,37 @@
 								<c:otherwise>전체</c:otherwise>
 							</c:choose>
 						</span>
+						
+						<%-- 영화태그 --%>
+		                <c:if test="${not empty board.movieTitle}">
+		                <span class="movie-tag-container">
+		                <c:choose>
+		                <%-- 삭제된 영화 --%>
+		                    <c:when test="${(empty board.movieId or board.movieId eq 0 ) }">
+		                     <button type="button" 
+		                            onclick="location.href='movieDetail.do?movieId=${board.movieId}'"
+		                            class="movie-tag disabled-tag"
+		                            disabled
+		                            title="정보가 삭제된 영화입니다">
+		                        #${board.movieTitle}
+		                    </button>
+		
+		                    </c:when>
+		
+		                    <c:otherwise>
+		                        <button type="button" 
+		                                    onclick="location.href='movieDetail.do?movieId=${board.movieId}'"
+		                                    class="movie-tag"
+		                                    >
+		                                #${board.movieTitle}
+		                            </button>
+		
+		                    </c:otherwise>
+		
+		                </c:choose>
+		                </span>
+		                    
+		                </c:if>
 					</div>
 
 					<div class="post-meta">

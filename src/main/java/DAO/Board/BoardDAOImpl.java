@@ -354,14 +354,14 @@ public class BoardDAOImpl implements BoardDAO {
     @Override
     public List<BoardDTO> getPopularBoardList(String period, int limit) {
         SqlSession sqlSession = null;
-        try{
+        try {
             sqlSession = getSqlSession();
             Map<String, Object> param = new HashMap<>();
             param.put("period", period);
             param.put("limit", limit);
             return sqlSession.selectList("Board.getPopularBoardList", param);
-        }finally{
-            if(sqlSession != null)
+        } finally {
+            if (sqlSession != null)
                 sqlSession.close();
         }
     }
@@ -372,6 +372,22 @@ public class BoardDAOImpl implements BoardDAO {
         try {
             sqlSession = getSqlSession();
             return sqlSession.selectOne("Board.latestNotice");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getMovieTitleforBoard(int movieIdInt) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            return sqlSession.selectOne("Board.getMovieTitleforBoard", movieIdInt);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

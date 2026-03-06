@@ -4,9 +4,9 @@ import org.apache.ibatis.session.SqlSession;
 
 import DAO.Admin.AdminMovieDAO;
 import DAO.Admin.AdminMovieDAOImpl;
-import DTO.Admin.MovieSaveDTO;
-import DTO.Admin.MovieSaveDTO.CastSaveDTO;
-import DTO.Admin.MovieSaveDTO.CrewSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CastSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CrewSaveDTO;
 import DTO.Movie.MovieDTO;
 import mybatis.DBService;
 

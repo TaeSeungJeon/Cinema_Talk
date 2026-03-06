@@ -125,11 +125,15 @@ CREATE TABLE BOARD (
     memNo          NUMBER         NULL,
     movieId        NUMBER         NULL,
     linkUrl        VARCHAR2(500)  NULL,
+    movieTitle	   VARCHAR2(255)  NULL,
+    
     CONSTRAINT pk_board_type PRIMARY KEY (boardId, boardType)
 );
 
 ALTER TABLE BOARD ADD CONSTRAINT fk_mem_no
     FOREIGN KEY (memNo) REFERENCES MEMBER (memNo);
+alter table board add constraint fk_movie_id foreign key (movieId)
+references MOVIE (movieId) ON DELETE SET NULL;
 
 -- ============================================================
 -- MOVIE_GENRE  (FK → GENRE, MOVIE)
@@ -401,7 +405,6 @@ VALUES (memNoSeq.NEXTVAL, 'admin',
 
 COMMIT;
 
-/*
 -- 테이블 삭제
 BEGIN
   FOR t IN (SELECT table_name FROM user_tables)
@@ -426,4 +429,3 @@ BEGIN
   END LOOP;
 END;
 /
-*/

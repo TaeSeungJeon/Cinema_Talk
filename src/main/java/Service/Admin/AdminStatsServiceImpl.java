@@ -115,10 +115,8 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 	    	// 신규 회원 추이
 	    	memberStatDTO.setDailyNewMemberTrend(dao.selNewMemberTrend(dataRange));
 	    	
-	    	// 우수 회원 TOP 10(게시글)
-	    	memberStatDTO.setTopBoardMembers(dao.selTopBoardMembers());
-	    	// 우수 회원 TOP 10(댓글)
-	    	memberStatDTO.setTopCommentMembers(dao.selTopCommentMembers());
+	    	// 우수 회원 TOP 10
+	    	memberStatDTO.setTopMembers(dao.selTopMembers());
 	    }
 
 	    return memberStatDTO;
@@ -164,10 +162,6 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 	public AdminVoteStatDTO getVoteStat(DateRangeDTO dataRange) {
 		AdminVoteStatDTO voteStatDTO = new AdminVoteStatDTO();
 		
-		DateRangeDTO oneMonthRange = new DateRangeDTO();
-		oneMonthRange.setStartDate(LocalDate.now().minusDays(30));
-		oneMonthRange.setEndDate(LocalDate.now());
-		
 		try (SqlSession session = getSqlSession()) {
 			AdminVoteStatsDAO dao = new AdminVoteStatsDAOImpl(session);
 			
@@ -189,8 +183,8 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 	    	// 진행 중인 투표 수
 	    	voteStatDTO.setActiveVoteStat(dao.selActiveVoteStat());
 	   
-	    	// 월별 투표 참여 추이
-	    	voteStatDTO.setMonthlyVoteTrend(dao.selMonthlyVoteTrend(oneMonthRange));
+	    	// 일별 투표 참여 추이
+	    	voteStatDTO.setMonthlyVoteTrend(dao.selMonthlyVoteTrend(dataRange));
 	    	
 	    	// 인기 투표 TOP 10
 	    	voteStatDTO.setTopVotes(dao.selTopVotes());
@@ -223,7 +217,7 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 	    	inquiryStatDTO.setCompletedInquiryStat(calculatePeriodStat(currentCompletedInquiryCnt, previousCompletedInquiryCnt));
 
 			// 처리 중인 문의 수
-	    	inquiryStatDTO.setProcessingCnt(dao.selProcessingInquiryCnt());
+	    	inquiryStatDTO.setPendingInquiryCnt(dao.selPendingInquiryCnt());
 	    	
 			// 평균 문의 처리 시간(처리일 - 문의 등록일)
 	    	double hours = dao.selAvgProcessingTime();

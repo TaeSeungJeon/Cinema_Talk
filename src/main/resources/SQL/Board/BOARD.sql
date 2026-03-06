@@ -8,11 +8,14 @@ create table BOARD(
     boardViewCount 		 NUMBER        null,     -- 게시판 조회 수
     boardDate            DATE          null,     -- 게시판 작성일
     memNo                NUMBER        null,     -- 회원번호
-    movieId              NUMBER        null,  -- 영화 고유 ID
-
-    constraint pk_board_type primary key (boardId ,boardType)
-
+    movieId              NUMBER        null,  	 -- 영화 고유 ID
+	movieTitle			 VARCHAR2(255) null,
+	
+    constraint pk_board_type primary key (boardId ,boardType),
+    constraint fk_mem_no foreign key (memNo) references MEMBER (memNo),
+    constraint fk_movie_id foreign key (movieId) references MOVIE (movieId) ON DELETE SET NULL
 );
+
 -- bbs_file_no 컬럼에 정수 숫자 레코드 값으로 활용할 시퀀스 생성
 create sequence boardIdSeq      -- file_no_seq 시퀀스 생성
 nocache;                        -- start with 1, increment by 1, nocycle 옵션은 기본값이어서 생략.
@@ -21,11 +24,14 @@ select boardIdSeq.nextval as "boardIdSeq 다음 시퀀스 번호값 확인" from
 
 alter table board add constraint fk_mem_no foreign key (memNo)
 references MEMBER (memNo);
--- MOVIEID 컬럼을 NULL 허용으로 변경
-ALTER TABLE BOARD MODIFY (MOVIEID NULL);
+
+alter table board add constraint fk_movie_id foreign key (movieId)
+references MOVIE (movieId) ON DELETE SET NULL;
+
 -- 링크 프리뷰 사용을 위한 컬럼 추가 (삭제해도될 듯)
 ALTER TABLE BOARD ADD (linkUrl VARCHAR2(500) NULL);
 
+ALTER TABLE BOARD ADD (movieTitle VARCHAR2(255) NULL);
 
 ALTER TABLE BOARD RENAME COLUMN boardViewCount TO boardViewCount;
 

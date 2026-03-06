@@ -3,8 +3,11 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
+import DTO.Vote.VoteRegisterDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
+import Service.Vote.VoteService;
+import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +22,10 @@ public class BoardListController implements Action {
         BoardService service = BoardServiceImpl.getInstance();
 		HttpSession session = request.getSession();
 		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
+
+        VoteService voteService = new VoteServiceImpl();
+        List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
+        request.setAttribute("activeVoteRegList", activeVoteRegList);
 		
         String filter = request.getParameter("filter");
         if (filter == null || filter.trim().isEmpty()) {
@@ -69,6 +76,15 @@ public class BoardListController implements Action {
         // 최신 공지사항 1건
         BoardDTO latestNotice = service.latestNotice();
         request.setAttribute("latestNotice", latestNotice);
+
+        // 일, 주, 월간 인기글 (사이드바용)
+        List<BoardDTO> dailyPopularList   = service.getPopularBoardList("daily",   10);
+        List<BoardDTO> weeklyPopularList  = service.getPopularBoardList("weekly",  10);
+        List<BoardDTO> monthlyPopularList = service.getPopularBoardList("monthly", 10);
+        
+        request.setAttribute("dailyPopularList", dailyPopularList);
+        request.setAttribute("weeklyPopularList", weeklyPopularList);
+        request.setAttribute("monthlyPopularList", monthlyPopularList);
 
         ActionForward forward = new ActionForward();
         forward.setPath("/WEB-INF/views/board/freeBoard.jsp");

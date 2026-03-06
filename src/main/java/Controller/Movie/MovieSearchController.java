@@ -67,19 +67,14 @@ public class MovieSearchController implements Action {
 			
 			if(movies != null) {
 				request.setAttribute("movies", movies);			//movies 속성 키이름에 영화 목록을 저장
-			    request.setAttribute("page", page);				//쪽번호 -> 내가 본 쪽번호로 바로 이동하기 위한 책갈피 기능 구현
-			    request.setAttribute("startpage", startpage);	//시작페이지
-			    request.setAttribute("endpage", endpage);		//마지막 페이지
-			    request.setAttribute("maxpage", maxpage);		//최대 페이지
-			    request.setAttribute("listcount", totalCount);	//검색전후 레코드 개수
-			    request.setAttribute("findField", searchOption);//검색 필드
-			    request.setAttribute("findName", searchWords);//검색어
-			} else {
-				out.println("<script>");
-				out.println("alert('검색된 영화가 없습니다.');");
-				out.println("history.back();");
-				out.println("</script>");
 			}
+			request.setAttribute("page", page);				//쪽번호
+			request.setAttribute("startpage", startpage);	//시작페이지
+			request.setAttribute("endpage", endpage);		//마지막 페이지
+			request.setAttribute("maxpage", maxpage);		//최대 페이지
+			request.setAttribute("listcount", totalCount);	//검색전후 레코드 개수
+			request.setAttribute("findField", searchOption);//검색 필드
+			request.setAttribute("findName", searchWords);	//검색어
 			
 			ActionForward forward = new ActionForward();
 			forward.setRedirect(false);

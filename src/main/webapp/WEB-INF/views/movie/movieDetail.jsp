@@ -442,11 +442,20 @@
     </div>
 
     <!-- 감독 -->
+    <c:set var="hasDirectors" value="false" />
     <c:if test="${not empty directors}">
+        <c:forEach var="crew" items="${directors}">
+            <c:if test="${fn:containsIgnoreCase(crew.crewJob, 'director')}">
+                <c:set var="hasDirectors" value="true" />
+            </c:if>
+        </c:forEach>
+    </c:if>
+    <c:if test="${hasDirectors}">
         <div class="section">
             <h2 class="section-title">🎬 감독</h2>
             <div class="directors-list">
                 <c:forEach var="director" items="${directors}">
+                    <c:if test="${fn:containsIgnoreCase(director.crewJob, 'director')}">
                     <div class="director-card" onclick="searchByDirector('${director.personName}')">
                         <div class="director-photo">
                             <c:choose>
@@ -464,6 +473,45 @@
                             <div class="director-job">${director.crewJob}</div>
                         </div>
                     </div>
+                    </c:if>
+                </c:forEach>
+            </div>
+        </div>
+    </c:if>
+
+    <!-- 기타 제작진 (작가, 프로듀서 등) -->
+    <c:set var="hasOtherCrew" value="false" />
+    <c:if test="${not empty directors}">
+        <c:forEach var="crew" items="${directors}">
+            <c:if test="${not fn:containsIgnoreCase(crew.crewJob, 'director')}">
+                <c:set var="hasOtherCrew" value="true" />
+            </c:if>
+        </c:forEach>
+    </c:if>
+    <c:if test="${hasOtherCrew}">
+        <div class="section">
+            <h2 class="section-title">✍️ 제작진</h2>
+            <div class="directors-list">
+                <c:forEach var="crew" items="${directors}">
+                    <c:if test="${not fn:containsIgnoreCase(crew.crewJob, 'director')}">
+                    <div class="director-card" onclick="searchByCrew('${crew.personName}')">
+                        <div class="director-photo">
+                            <c:choose>
+                                <c:when test="${not empty crew.profilePath}">
+                                    <img src="https://image.tmdb.org/t/p/w185${crew.profilePath}" 
+                                         alt="${crew.personName}">
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#8b949e;">👤</div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div>
+                            <div class="director-name">${crew.personName}</div>
+                            <div class="director-job">${crew.crewJob}</div>
+                        </div>
+                    </div>
+                    </c:if>
                 </c:forEach>
             </div>
         </div>
@@ -511,6 +559,9 @@
     }
     function searchByGenre(genreName) {
         window.location.href = 'searchMovie.do?search-option=3&search-words=' + encodeURIComponent(genreName);
+    }
+    function searchByCrew(personName) {
+        window.location.href = 'searchMovie.do?search-option=4&search-words=' + encodeURIComponent(personName);
     }
     function pressFavorite() {
         var btn = document.getElementById('favoriteBtn');

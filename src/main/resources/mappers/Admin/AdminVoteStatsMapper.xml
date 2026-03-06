@@ -52,15 +52,15 @@
         ]]>
     </select>
     
-    <!-- 월별 투표 참여 추이 -->
+    <!-- 일별 투표 참여 추이 -->
     <select id="selMonthlyVoteTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.TrendDTO">
         <![CDATA[
         SELECT
-            TO_CHAR(recordCreatedDate, 'YYYY-MM') AS regDate,
+            TO_CHAR(recordCreatedDate, 'YYYY-MM-DD') AS regDate,
             COUNT(*) AS cnt
         FROM VOTE_RECORD
         WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate}
-        GROUP BY TO_CHAR(recordCreatedDate, 'YYYY-MM')
+        GROUP BY TO_CHAR(recordCreatedDate, 'YYYY-MM-DD')
         ORDER BY regDate
         ]]>
     </select>

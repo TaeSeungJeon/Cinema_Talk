@@ -30,6 +30,7 @@ public class BoardOkController implements Action {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String contextPath = request.getContextPath();
+         BoardService boardService = BoardServiceImpl.getInstance();
 
         // 세션 확인
         HttpSession session = request.getSession(false);
@@ -45,6 +46,7 @@ public class BoardOkController implements Action {
         String boardTitle = request.getParameter("boardTitle");
         String boardCont = request.getParameter("boardContent");
         String linkUrl = request.getParameter("linkUrl");
+        String movieId = request.getParameter("movieId");
 
 
         if (boardTitle == null || boardTitle.trim().isEmpty() ||
@@ -59,11 +61,16 @@ public class BoardOkController implements Action {
         // 세션에서 값 가져오기
         Integer memNo = (Integer) session.getAttribute("memNo");
         String memId = (String) session.getAttribute("memId");
-
+        int movieIdInt = (movieId == null || movieId.trim().isEmpty()) ? -1 :Integer.parseInt(movieId);
+       String movieTitle = boardService.getMovieTitleforBoard(movieIdInt);
+System.out.println("=========================");
+System.out.println(movieIdInt);
         BoardDTO bdto = new BoardDTO();
         bdto.setBoardTitle(boardTitle);
         bdto.setBoardContent(boardCont);
         bdto.setMemNo(memNo);
+        bdto.setMovieId(movieIdInt);
+        bdto.setMovieTitle(movieTitle);
 
         String typeStr = request.getParameter("boardType");
 
@@ -85,7 +92,7 @@ public class BoardOkController implements Action {
         }
 
         try {
-            BoardService boardService = BoardServiceImpl.getInstance();
+            
             boardService.boardIn(bdto);
 
             out.println("<script>");

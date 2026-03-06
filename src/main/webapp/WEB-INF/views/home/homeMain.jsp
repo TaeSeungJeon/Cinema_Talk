@@ -81,7 +81,7 @@
 		</c:forEach>
 
 		<section class="hero-section" id="hero-banner"
-				 style="background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280${indexTrendMovieList[0].movieBackdropPath}'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;">
+				 style="background: linear-gradient(to right, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%), url('https://image.tmdb.org/t/p/w1280${indexTrendMovieList[0].movieBackdropPath}'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;">
 			<div class="hero-content">
 				<a
 						href="${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}"
@@ -161,7 +161,7 @@
 							heroBanner
 									.setAttribute(
 											'style',
-											"background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280"
+											"background: linear-gradient(to right, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%), url('https://image.tmdb.org/t/p/w1280"
 											+ movie.movieBackdropPath
 											+ "'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;");
 						}
@@ -411,7 +411,7 @@
 		</c:if>
 
 		<c:forEach var="b" items="${recentBoardList}">
-            <a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
+            <div onclick="location.href='${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}'"
 			   class="post-item">
 				<div class="post-thumb" data-thumb-scope>
 					<div class="thumb-placeholder">unfile</div>
@@ -427,7 +427,7 @@
 							<c:out value="${b.boardDate}" />
 						</span>
 					</div>
-					<div class="post-main-title">
+					<div class="post-main-title" style="cursor:pointer;">
 						<c:out value="${b.boardTitle}" />
 					</div>
 						<div class="post-preview" style="display:none;">${b.boardContent}</div>
@@ -443,7 +443,7 @@
 						<span>👍 좋아요 <c:out value="${b.likeCount}" /></span>
 					</div>
 				</div>
-			</a>
+			</div>
 		</c:forEach>
 	</div>
 

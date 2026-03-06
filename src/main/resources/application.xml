@@ -19,5 +19,5 @@
     <property name="profile.photo.thumbnail-height" value="150" />
     
     <!-- 기본 아바타 파일 경로 (contextPath 기준) -->
-    <property name="profile.photo.default-filename" value="/images/default-avatar.png" />
+    <property name="profile.photo.default-filename" value="/image/default-avatar.png" />
 </application>

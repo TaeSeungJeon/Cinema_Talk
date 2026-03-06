@@ -34,11 +34,7 @@ pageEncoding="UTF-8"%>
 				align-items: center;
 				gap: 20px;
 			}
-			
-			body::-webkit-scrollbar {
-				display: none; /* Chrome, Safari, Opera */
-			}
-			
+		
 			.glass-panel2 {
 				background: var(--glass-bg);
 				backdrop-filter: blur(15px);
@@ -108,10 +104,11 @@ pageEncoding="UTF-8"%>
 			
 			/* --- 투표 섹션 레이아웃 --- */
 			.vote-section {
-				display: flex;
-				gap: 30px;
-				align-items: flex-start;
-				max-width: 1200px;
+				
+				display: grid;
+				gap: 35px;
+				grid-template-columns: 1fr 280px;
+				max-width: 1400px;
 				margin: 0 auto;
 				
 			}
@@ -186,6 +183,7 @@ pageEncoding="UTF-8"%>
 				overflow-y: auto;
 				padding-right: 10px;
 				margin-bottom: 15px;
+				flex:1;
 			}
 			
 			.vote-options-list::-webkit-scrollbar {
@@ -301,7 +299,7 @@ pageEncoding="UTF-8"%>
 			
 			/* --- 댓글 섹션 --- */
 			.comment-section {
-				margin-top: 20px;
+/* 				margin-top: 20px; */
 				padding: 25px;
 				background: white;
 				border-radius: 12px;
@@ -406,10 +404,21 @@ pageEncoding="UTF-8"%>
 			}
 			
 			.user-avatar {
-				width: 35px;
-				height: 35px;
-				background: #e2e8f0;
-				border-radius: 50%;
+			    width: 35px;
+			    height: 35px;
+			    background: #e2e8f0;
+			    border-radius: 50%;
+			    overflow: hidden; /* 사진이 원 밖으로 나가지 않게 함 */
+			    display: flex;
+			    align-items: center;
+			    justify-content: center;
+			    border: 3px solid #6366f1;
+			}
+			
+			.user-avatar img {
+			    width: 100%;
+			    height: 100%;
+			    object-fit: cover; /* 비율을 유지하면서 영역을 꽉 채움 */
 			}
 			
 			.page-title {
@@ -574,6 +583,28 @@ pageEncoding="UTF-8"%>
 			
 			.deleted-msg { font-size: 0.75rem; color: #94a3b8; display: flex; align-items: center; gap: 4px; margin-bottom: 5px }
 			.icon-point { color: #94a3b8; font-size: 0.5rem; vertical-align: middle; }
+			.tab-content {height:650px;}
+			.vote-content {display:flex; flex-direction:column;height: 100%;}
+			.empty-comment-wrapper {
+			  
+			    flex-direction: column;
+			    justify-content: center;
+			    align-items: center;
+			    height: 100%; /* 남은 공간 가득 채우기 */
+			    color: #94a3b8; /* 차분한 Slate 색상 */
+			    gap: 15px;
+			}
+			
+			.empty-comment-wrapper .icon {
+			    font-size: 3rem;
+			    opacity: 0.3; /* 너무 튀지 않게 반투명 처리 */
+			}
+			
+			.empty-comment-wrapper p {
+			    font-size: 0.95rem;
+			    font-weight: 500;
+			}
+			
 						
 	
 		</style>
@@ -618,7 +649,10 @@ pageEncoding="UTF-8"%>
 					{
 						writer: "${res.memName}",
 						createdDate: "${res.recordCreatedDate}",
-						cont: `${res.voteCommentText}` <%-- 따옴표 에러 방지 --%>
+						cont: `${res.voteCommentText}`, <%-- 따옴표 에러 방지 --%>
+						profilePhoto:"${(empty res.memProfilePhoto || fn:trim(res.memProfilePhoto) eq '') 
+		                    ? pageContext.request.contextPath.concat('/image/default-avatar.png')
+		                            : pageContext.request.contextPath.concat('/profilePhoto.do?path=').concat(res.memProfilePhoto)}"
 					},
 					</c:if>
 					</c:forEach>
@@ -631,6 +665,7 @@ pageEncoding="UTF-8"%>
 				
 				// 데이터가 있을 때만 실행하는 함수 정의
 				function displayVoteResults(data) {
+					console.log(data)
 					if (!data || !data.results) return;
 					data.results.forEach(function(item) {
 						// 해당 영화 ID를 가진 input 찾기
@@ -660,9 +695,9 @@ pageEncoding="UTF-8"%>
 					}
 					
 					
-					$(".comment-count").text(`댓글 \${data.commentCount}개`);
-					$(".filter-cmnt-cnt").text(`댓글 (\${data.commentCount})`);
-					$(".comment-count-span").html(`<strong>\${data.commentCount}</strong> 댓글`);
+				//	$(".comment-count").text(`댓글 \${data.commentCount}개`);
+				//	$(".filter-cmnt-cnt").text(`댓글 (\${data.commentCount})`);
+				//	$(".comment-count-span").html(`<strong>\${data.commentCount}</strong> 댓글`);
 					const $commentList = $(".comment-list");
 					if (data.commentCount === 0) {
 						// 댓글이 없을 때
@@ -677,7 +712,7 @@ pageEncoding="UTF-8"%>
 							data.comments.forEach(function(cmnt) {
 								const commentHtml = `
 								<div class="comment-item">
-								<div class="user-avatar"></div>
+								<div class="user-avatar" ><img src="\${cmnt.profilePhoto}"/></div>
 								<div class="comment-content" style="flex: 1;">
 								<div style="display: flex; justify-content: space-between; align-items: center;">
 								<div class="comment-user">\${cmnt.writer}</div>
@@ -766,15 +801,24 @@ pageEncoding="UTF-8"%>
 		    	  if(item.length > 0)  item.click();
 		       }
 			});//document ready 종료
+			
+			function getContextPath() {
+			    const host = window.location.origin; // http://localhost:8080
+			    const context = window.location.pathname.split('/')[1]; // Cinema_Talk
+			    return host + '/' + context;
+			}
 				
 				function updateComments(comments) {
 					let html = "";
 					let validCommentCount = 0;
 					comments.forEach(c => {
 						if(c.commentText){
+							let profilePhoto = (c.profilePhoto && c.profilePhoto.trim() !== "") 
+		                    ? getContextPath() + `/profilePhoto.do?path=` + c.profilePhoto
+									        : getContextPath() + `/image/default-avatar.png`;
 							html += `
 							<div class="comment-item">
-							<div class="user-avatar"></div>
+							<div class="user-avatar"><img src="\${profilePhoto}"/></div>
 							<div class="comment-content" style="flex: 1;">
 							<div style="display: flex; justify-content: space-between; align-items: center;">
 							<div class="comment-user">\${c.memName}</div>
@@ -801,7 +845,6 @@ pageEncoding="UTF-8"%>
 					
 				}
 
-				
 
 
 			</script>
@@ -817,7 +860,7 @@ pageEncoding="UTF-8"%>
 					<p style="color: var(--text-sub); margin-top:10px; font-weight: 500;" class="poll-desc">${voteInfo.voteContent}</p>
 					<div class="meta-stats">
 						<span class="voter-count-span"> <strong>${voteInfo.voterCount}</strong> 참여</span> |
-						<span class="comment-count-span"></span> |
+						<span class="comment-count-span"><strong>${voteInfo.commentCount}</strong> 댓글</span> |
 						<span> 종료 ${voteInfo.voteEndDate}</span>
 					</div>
 				</div>
@@ -831,13 +874,14 @@ pageEncoding="UTF-8"%>
 					<nav class="filter-nav">
 						<div class="tab-item active" data-target="#vote-content-area">투표</div>
 						<%-- <div class="tab-item" data-target="#result-content-area">결과</div> --%>
-						<div class="tab-item filter-cmnt-cnt" data-target="#comment-content-area" >댓글 (${fn:length(voteRecordList)})</div>
+<%-- 						<div class="tab-item filter-cmnt-cnt" data-target="#comment-content-area" >댓글 (${fn:length(voteRecordList)})</div> --%>
+						<div class="tab-item filter-cmnt-cnt" data-target="#comment-content-area">댓글 (${voteInfo.commentCount})</div>
 					</nav>
 				</div>
 
 
 				<div class="vote-section"  style="width: 100%">
-					<section class="glass-panel2 vote-card-container tab-content" id="vote-content-area" style="width: 60%">
+					<section class="glass-panel2 vote-card-container tab-content" id="vote-content-area" style="width: 100%">
 
 								<div class="vote-content">
 									<div class="vote-header">
@@ -942,7 +986,7 @@ pageEncoding="UTF-8"%>
 								</div>
 					</section>
 
-					<section id = "comment-content-area" class="glass-panel2 tab-content" style="width: 60%;display:none">
+					<section id = "comment-content-area" class="glass-panel2 tab-content" style="width: 100%;display:none">
 						<c:if test="${voteInfo.voteStatus ne 'READY' }">
 
 
@@ -973,14 +1017,15 @@ pageEncoding="UTF-8"%>
 											<div class="comment-list"></div>
 										</div>
 										
-										<div class="comment-section" style="display: ${(!voteInfo.voted && voteInfo.voteStatus eq 'ACTIVE') ? 'flex' : 'none'};flex-direction: column; 
+										<div class="empty-comment-wrapper" style="display: ${(!voteInfo.voted && voteInfo.voteStatus eq 'ACTIVE') ? 'flex' : 'none'};flex-direction: column; 
 								            justify-content: center; 
 								            align-items: center; 
 								            min-height: 400px; 
 								            margin: 0 auto; 
 								            color: #64748b; 
 								            text-align: center;">
-										투표하고 다른 사람들 댓글을 확인하세요
+										<span class="icon">💬</span>
+              							  <p>투표하고 다른 사람들의 댓글을 확인하세요</p>
 										</div>
 
 									</c:if>
@@ -997,7 +1042,7 @@ pageEncoding="UTF-8"%>
 										</div>
 									</c:if>
 					</section>
-					<aside class="aside" style="width: 30%;">
+					<aside class="aside" style="width: 100%;">
 						<div class="glass-panel"
 								style="display: flex; flex-direction: column; min-height: 200px;  justify-content: start;">
 								<div class="sidebar-title"

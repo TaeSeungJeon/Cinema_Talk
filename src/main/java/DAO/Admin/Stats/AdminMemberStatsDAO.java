@@ -33,8 +33,6 @@ public interface AdminMemberStatsDAO {
 
 	List<TrendDTO> selNewMemberTrend(DateRangeDTO dataRange);
 
-	List<TopMemberDTO> selTopBoardMembers();
-
-	List<TopMemberDTO> selTopCommentMembers();
+	List<TopMemberDTO> selTopMembers();
 
 }

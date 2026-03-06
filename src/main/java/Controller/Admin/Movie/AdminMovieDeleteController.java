@@ -1,4 +1,4 @@
-package Controller.Admin;
+package Controller.Admin.Movie;
 
 import Controller.Action;
 import Controller.ActionForward;

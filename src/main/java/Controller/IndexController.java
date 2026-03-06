@@ -31,6 +31,17 @@ public class IndexController implements Action {
 		HttpSession session = request.getSession();
 		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
 
+		// ===== 인트로 영역 =====
+		if (session.getAttribute("intro") == null) {
+			session.setAttribute("intro", "done");
+
+			ActionForward introForward = new ActionForward();
+			introForward.setRedirect(false);
+			introForward.setPath("/WEB-INF/views/index.jsp");
+			return introForward;
+		}
+		// ==================================
+
 		Object memNoObj = session.getAttribute("memNo");
 
 		int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함

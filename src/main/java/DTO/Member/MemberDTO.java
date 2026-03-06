@@ -21,6 +21,5 @@ public class MemberDTO {
 	private int memState; //회원 상태(1:정상, 2:휴먼, 3:탈퇴)
 	private String memDate; //회원 가입날짜
 	private String memProfilePhoto; //프로필 사진 상대 경로 (예: members/123/20260226/20260226-uuid.jpg)
-	
-	private Date memLastLogin; //마지막 로그인 날짜
+
 }

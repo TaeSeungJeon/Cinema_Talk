@@ -30,13 +30,6 @@ public class AdminMemberListController implements Action {
 	    
 		MemberService memberService = new MemberServiceImpl();
 		List<MemberDTO> memberList;
-
-//		//상태 선택하지 않은 경우 -> 전체 회원 목록 조회
-//		if(memState == null || memState.equals("")) { 
-//		  memberList = memberService.getMemberList(); //기존 전체조회 메서드
-//		} else { //상태를 선택한 경우 -> 해당 상태의 회원 목록 조회
-//		  memberList = memberService.getMemberListByState(Integer.parseInt(memState)); //상태선택 기준 회원 목록 조회
-//		}
 		
 		if (keyword == null && memState == null) {
 		    memberList = memberService.getMemberList();                 // 1) 전체

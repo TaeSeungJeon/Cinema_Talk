@@ -1,532 +1,603 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프리미엄 영화 큐레이션 - 문의 상세</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #f0f2f5;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --accent-color: #6366f1;
-            --text-main: #1f2937;
-            --text-sub: #64748b;
-            --radius-soft: 24px;
-            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
-            --shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프리미엄 영화 큐레이션 - 문의 상세</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap"
+	rel="stylesheet">
+<style>
+:root {
+	--bg-color: #f0f2f5;
+	--glass-bg: rgba(255, 255, 255, 0.7);
+	--accent-color: #6366f1;
+	--text-main: #1f2937;
+	--text-sub: #64748b;
+	--radius-soft: 24px;
+	--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
+	--shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
+}
 
-        body {
-            font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+body {
+	font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
+	background-color: var(--bg-color);
+	color: var(--text-main);
+	margin: 0;
+	padding: 25px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            position: relative;
-            z-index: 1200;
-        }
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 1400px;
+	margin: 0 auto;
+	width: 100%;
+	position: relative;
+	z-index: 1200;
+}
 
-        .glass-panel-btn {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: var(--shadow-subtle);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
+.glass-panel-btn {
+	background: var(--glass-bg);
+	backdrop-filter: blur(10px);
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	box-shadow: var(--shadow-subtle);
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.3s;
+}
 
-        .glass-panel-btn:hover {
-            background: white;
-            transform: translateY(-2px);
-        }
+.glass-panel-btn:hover {
+	background: white;
+	transform: translateY(-2px);
+}
 
-        .category-nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            position: relative;
-            z-index: 5000;
-        }
+.category-nav {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	max-width: 1400px;
+	margin: 0 auto;
+	width: 100%;
+	position: relative;
+	z-index: 5000;
+}
 
-        .category-bubble {
-            flex: 1;
-            height: 50px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            background: white;
-            border-radius: 50px;
-            box-shadow: var(--shadow-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.category-bubble {
+	flex: 1;
+	height: 50px;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	background: white;
+	border-radius: 50px;
+	box-shadow: var(--shadow-subtle);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-        .category-bubble:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-strong);
-        }
+.category-bubble:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-strong);
+}
 
-        .category-bubble.active {
-            background: var(--accent-color) !important;
-            color: white !important;
-        }
+.category-bubble.active {
+	background: var(--accent-color) !important;
+	color: white !important;
+}
 
-        .cat-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            pointer-events: none;
-        }
+.cat-title {
+	font-weight: 700;
+	font-size: 0.95rem;
+	pointer-events: none;
+}
 
-        .sub-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            top: 110%;
-            left: 0;
-            right: 0;
-            background: #ffffff !important;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 9999;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: center;
-            opacity: 0;
-            pointer-events: none;
-        }
+.sub-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 110%;
+	left: 0;
+	right: 0;
+	background: #ffffff !important;
+	border-radius: 20px;
+	box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+	max-height: 0;
+	overflow: hidden;
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	z-index: 9999;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	text-align: center;
+	opacity: 0;
+	pointer-events: none;
+}
 
-        .category-bubble.active .sub-menu {
-            max-height: 400px;
-            padding: 15px 0;
-            opacity: 1;
-            pointer-events: auto;
-        }
+.category-bubble.active .sub-menu {
+	max-height: 400px;
+	padding: 15px 0;
+	opacity: 1;
+	pointer-events: auto;
+}
 
-        .sub-menu li a {
-            text-decoration: none;
-            color: #64748b !important;
-            display: block;
-            padding: 12px 0;
-            margin: 2px 10px;
-            border-radius: 12px;
-            transition: 0.2s;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
+.sub-menu li a {
+	text-decoration: none;
+	color: #64748b !important;
+	display: block;
+	padding: 12px 0;
+	margin: 2px 10px;
+	border-radius: 12px;
+	transition: 0.2s;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
 
-        .sub-menu li a:hover {
-            background: var(--accent-color) !important;
-            color: white !important;
-        }
+.sub-menu li a:hover {
+	background: var(--accent-color) !important;
+	color: white !important;
+}
 
-        .layout-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 280px 750px 280px;
-            gap: 25px;
-        }
+.layout-wrapper {
+	max-width: 1400px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: 280px 750px 280px;
+	gap: 25px;
+}
 
-        .side-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+.side-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
 
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: var(--radius-soft);
-            padding: 25px;
-            box-shadow: var(--shadow-subtle);
-            display: block !important;
-        }
+.glass-panel {
+	background: var(--glass-bg);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: var(--radius-soft);
+	padding: 25px;
+	box-shadow: var(--shadow-subtle);
+	display: block !important;
+}
 
-        .post-header {
-            margin-bottom: 30px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 20px;
-        }
+.post-header {
+	margin-bottom: 30px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	padding-bottom: 20px;
+}
 
-        .post-category {
-            color: var(--accent-color);
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
+.post-category {
+	color: var(--accent-color);
+	font-weight: 700;
+	font-size: 0.9rem;
+	margin-bottom: 10px;
+}
 
-        .post-title {
-            font-size: 2rem;
-            margin: 10px 0;
-            line-height: 1.3;
-            font-weight: 800;
-        }
+.post-title {
+	font-size: 2rem;
+	margin: 10px 0;
+	line-height: 1.3;
+	font-weight: 800;
+}
 
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            border: 2px solid white;
-        }
+.avatar {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	background: #e2e8f0;
+	border: 2px solid white;
+}
 
-        .post-body {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: #374151;
-            min-height: 250px;
-        }
+.post-body {
+	font-size: 1.05rem;
+	line-height: 1.8;
+	color: #374151;
+	min-height: 250px;
+}
 
-        .post-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 40px;
-        }
+.post-actions {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	margin-top: 40px;
+}
 
-        .action-btn {
-            background: white;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 12px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            transition: 0.3s;
-            box-shadow: var(--shadow-subtle);
-        }
+.action-btn {
+	background: white;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	padding: 12px 25px;
+	border-radius: 50px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 600;
+	transition: 0.3s;
+	box-shadow: var(--shadow-subtle);
+}
 
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-strong);
-        }
+.action-btn:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--shadow-strong);
+}
 
-        .comment-section {
-            margin-top: 25px;
-        }
+.comment-section {
+	margin-top: 25px;
+}
 
-        .comment-count {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
+.comment-count {
+	font-size: 1.1rem;
+	font-weight: 700;
+	margin-bottom: 20px;
+}
 
-        .comment-write {
-            background: white;
-            border-radius: 18px;
-            padding: 15px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
+.comment-write {
+	background: white;
+	border-radius: 18px;
+	padding: 15px;
+	margin-bottom: 30px;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+}
 
-        .comment-write textarea {
-            width: 100%;
-            border: none;
-            outline: none;
-            resize: none;
-            min-height: 60px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
+.comment-write textarea {
+	width: 100%;
+	border: none;
+	outline: none;
+	resize: none;
+	min-height: 60px;
+	font-family: inherit;
+	font-size: 0.95rem;
+	margin-bottom: 10px;
+}
 
-        .btn-submit {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.btn-submit {
+	background: var(--accent-color);
+	color: white;
+	border: none;
+	padding: 8px 20px;
+	border-radius: 12px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: 0.2s;
+}
 
-        .side-title {
-            font-weight: 800;
-            font-size: 1rem;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.side-title {
+	font-weight: 800;
+	font-size: 1rem;
+	margin-bottom: 18px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
 
-        .side-item {
-            font-size: 0.9rem;
-            color: var(--text-sub);
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.side-item {
+	font-size: 0.9rem;
+	color: black;
+	padding: 8px 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+	cursor: pointer;
+	transition: 0.2s;
+	text-decoration: none;
+	display: block;
+}
 
-        .side-item:hover {
-            color: var(--accent-color);
-            padding-left: 5px;
-        }
+.side-item:hover {
+	color: var(--accent-color);
+	padding-left: 5px;
+}
 
-        .comment-item {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
+.comment-item {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 25px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
 
-        .comment-user {
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
+.comment-user {
+	font-weight: 700;
+	font-size: 0.95rem;
+	margin-bottom: 5px;
+}
 
-        .comment-text {
-            font-size: 0.95rem;
-            color: #374151;
-            line-height: 1.5;
-        }
+.comment-text {
+	font-size: 0.95rem;
+	color: #374151;
+	line-height: 1.5;
+}
 
-        .comment-utils {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            display: flex;
-            gap: 15px;
-        }
+.comment-utils {
+	margin-top: 10px;
+	font-size: 0.8rem;
+	color: var(--text-sub);
+	display: flex;
+	gap: 15px;
+}
 
-        .reply-form-container {
-            width: 100%;
-            margin-top: 15px;
-            display: none;
-        }
+.reply-form-container {
+	width: 100%;
+	margin-top: 15px;
+	display: none;
+}
 
-        .admin-badge {
-            display: inline-block;
-            background: var(--accent-color);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 8px;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
+.admin-badge {
+	display: inline-block;
+	background: var(--accent-color);
+	color: white;
+	font-size: 0.7rem;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 8px;
+	margin-left: 8px;
+	vertical-align: middle;
+}
 
-        .side-widget {
-            background: white;
-            border-radius: var(--radius-soft);
-            padding: 25px;
-            box-shadow: var(--shadow-subtle);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
+.side-widget {
+	background: white;
+	border-radius: var(--radius-soft);
+	padding: 25px;
+	box-shadow: var(--shadow-subtle);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+}
 
-        .widget-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-    </style>
+.widget-title {
+	font-weight: 700;
+	font-size: 1rem;
+	margin-bottom: 18px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+</style>
 </head>
 <body>
 
-<%@ include file="../home/homeHeader.jsp" %>
+	<%@ include file="../home/homeHeader.jsp"%>
 
-<div class="layout-wrapper">
-    <aside class="side-panel">
-        <div class="glass-panel">
-            <div class="side-title">👤 작성자 정보</div>
-            <div style="text-align: center; padding: 10px 0;">
-					<div class="avatar"
-						style="width: 60px; height: 60px; margin: 0 auto 10px auto;">
+	<div class="layout-wrapper">
+		<aside class="side-panel">
+			<div class="glass-panel">
+				<div class="side-title">👤 작성자 정보</div>
+				<div style="text-align: center; padding: 10px 0;">
+					<div class="profile-image-wrap">
+						<c:choose>
+							<c:when test="${not empty member.memProfilePhoto}">
+								<img
+									style="max-height: 60px; max-width: 60px; border-radius: 50%;"
+									class="profile-photo"
+									src="${pageContext.request.contextPath}/profilePhoto.do?path=${member.memProfilePhoto}"
+									alt="프로필 사진" />
+							</c:when>
+							<c:otherwise>
+								<img
+									style="max-height: 60px; max-width: 60px; border-radius: 50%;"
+									class="profile-photo"
+									src="${pageContext.request.contextPath}/Image/default-avatar.png"
+									alt="기본 프로필" />
+							</c:otherwise>
+						</c:choose>
 					</div>
-					<a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
-                   style="font-weight: 700; color: var(--text-main); text-decoration: none;">
-                    ${cont.boardName}
-                </a>
-            </div>
-        </div>
-        <div class="glass-panel">
-            <div class="side-title">📋 문의 안내</div>
-            <div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
-                <p style="margin: 0;">• 관리자가 댓글로 답변합니다.</p>
-                <p style="margin: 0;">• 추가 문의는 대댓글로 남겨주세요.</p>
-                <p style="margin: 0;">• 개인정보 노출에 주의해주세요.</p>
-            </div>
-        </div>
-    </aside>
 
-    <main class="main-content">
-        <article class="glass-panel">
-            <div class="post-header">
-                <span class="post-category">💬 문의사항 · ${cont.boardName}</span>
-                <h1 class="post-title">${cont.boardTitle}</h1>
-            </div>
+					<a
+						href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
+						style="font-weight: 700; color: var(--text-main); text-decoration: none;">
+						${cont.boardName} </a>
+					<div style="font-size: 0.8rem; color: var(--text-sub);">작성글
+						${myPageInfo.boardCount} | 댓글 ${myPageInfo.commentCount}</div>
+					<div>
+						<%--class="side-item">작성자의 다른 글 보기</div> --%>
+						<a
+							href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
+							class="side-item">작성자의 다른 글 보기</a>
+					</div>
+				</div>
+			</div>
+			<div class="glass-panel">
+					<div class="side-title">📋 문의 안내</div>
+					<div
+						style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+						<p style="margin: 0;">• 관리자가 댓글로 답변합니다.</p>
+						<p style="margin: 0;">• 추가 문의는 대댓글로 남겨주세요.</p>
+						<p style="margin: 0;">• 개인정보 노출에 주의해주세요.</p>
+					</div>
+			</div>
+		</aside>
 
-            <div class="author-profile" style="margin-bottom: 20px;">
-                <span class="author-name" style="font-weight: 700;">${cont.boardName}</span>
-                <span class="post-meta"
-                      style="color: var(--text-sub); font-size: 0.9rem;"> · ${cont.boardDate} · 조회수 ${cont.boardViewCount}</span>
-            </div>
+		<main class="main-content">
+			<article class="glass-panel">
+				<div class="post-header">
+					<span class="post-category">💬 문의사항 · ${cont.boardName}</span>
+					<h1 class="post-title">${cont.boardTitle}</h1>
+				</div>
 
-            <div class="post-body" id="post-body">
-                ${cont.boardContent}
-            </div>
+				<div class="author-profile" style="margin-bottom: 20px;">
+					<span class="author-name" style="font-weight: 700;">${cont.boardName}</span>
+					<span class="post-meta"
+						style="color: var(--text-sub); font-size: 0.9rem;"> ·
+						${cont.boardDate} · 조회수 ${cont.boardViewCount}</span>
+				</div>
 
-            <c:if test="${not empty fileList}">
-                <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0;">
-                    <div style="font-weight:800; margin-bottom:12px;">첨부파일</div>
-                    <div style="display:flex; flex-direction:column; gap:12px;">
-                        <c:forEach var="f" items="${fileList}">
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <a href="${pageContext.request.contextPath}${f.filePath}"
-                                   target="_blank"
-                                   style="text-decoration:none; font-weight:700; color:#374151;">
-                                        ${f.fileName}
-                                </a>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-            </c:if>
+				<div class="post-body" id="post-body">${cont.boardContent}</div>
 
-            <%-- 수정/삭제: 작성자 본인만 --%>
-            <div id="update-form" style="display:none; margin-top:20px;">
-                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="boardId" value="${cont.boardId}">
-                    <input type="text" name="boardTitle" value="${cont.boardTitle}"
-                           style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
-                    <div id="editor" contenteditable="true"
-                         style="width:100%; min-height:250px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
-                        ${cont.boardContent}
-                    </div>
-                    <input type="hidden" name="boardContent" id="hiddenContent">
-                    <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
-                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">파일 첨부</div>
-                        <input type="file" name="uploadFiles" multiple style="margin-bottom:8px;">
-                    </div>
-                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
-                        <button type="button" onclick="hideUpdateForm()"
-                                style="padding:8px 18px; border-radius:10px; border:none; background:#9ca3af; color:white; font-weight:600; cursor:pointer;">취소</button>
-                        <button type="submit"
-                                style="padding:8px 18px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:700; cursor:pointer;">수정완료</button>
-                    </div>
-                </form>
-            </div>
+				<c:if test="${not empty fileList}">
+					<div
+						style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+						<div style="font-weight: 800; margin-bottom: 12px;">첨부파일</div>
+						<div style="display: flex; flex-direction: column; gap: 12px;">
+							<c:forEach var="f" items="${fileList}">
+								<div style="display: flex; flex-direction: column; gap: 8px;">
+									<a href="${pageContext.request.contextPath}${f.filePath}"
+										target="_blank"
+										style="text-decoration: none; font-weight: 700; color: #374151;">
+										${f.fileName} </a>
+								</div>
+							</c:forEach>
+						</div>
+					</div>
+				</c:if>
 
-            <div class="post-footer-actions"
-                 style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                <button type="button" class="btn-list"
-                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
-                        onclick="location.href='${pageContext.request.contextPath}/quiry.do'">목록으로</button>
+				<%-- 수정/삭제: 작성자 본인만 --%>
+				<div id="update-form" style="display: none; margin-top: 20px;">
+					<form action="${pageContext.request.contextPath}/boardUpdateOk.do"
+						method="post" enctype="multipart/form-data">
+						<input type="hidden" name="boardId" value="${cont.boardId}">
+						<input type="text" name="boardTitle" value="${cont.boardTitle}"
+							style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem;">
+						<div id="editor" contenteditable="true"
+							style="width: 100%; min-height: 250px; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem; outline: none;">
+							${cont.boardContent}</div>
+						<input type="hidden" name="boardContent" id="hiddenContent">
+						<div
+							style="margin-top: 12px; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f9fafb;">
+							<div
+								style="font-weight: 600; margin-bottom: 8px; color: #374151;">파일
+								첨부</div>
+							<input type="file" name="uploadFiles" multiple
+								style="margin-bottom: 8px;">
+						</div>
+						<div
+							style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+							<button type="button" onclick="hideUpdateForm()"
+								style="padding: 8px 18px; border-radius: 10px; border: none; background: #9ca3af; color: white; font-weight: 600; cursor: pointer;">취소</button>
+							<button type="submit"
+								style="padding: 8px 18px; border-radius: 10px; border: none; background: #6366f1; color: white; font-weight: 700; cursor: pointer;">수정완료</button>
+						</div>
+					</form>
+				</div>
 
-                <c:if test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
-                    <div class="right-actions" style="display: flex; gap: 10px;">
-                        <button type="button" class="btn-delete"
-                                onclick="deletePost(${cont.boardId})"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">삭제하기</button>
-                    </div>
-                </c:if>
-            </div>
-        </article>
+				<div class="post-footer-actions"
+					style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+					<button type="button" class="btn-list"
+						style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
+						onclick="location.href='${pageContext.request.contextPath}/quiry.do'">목록으로</button>
 
-        <%-- ===================== 댓글(답변) 섹션 ===================== --%>
-        <section class="glass-panel comment-section">
-            <div class="comment-count">답변 ${clist.size()}개</div>
+					<c:if
+						test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
+						<div class="right-actions" style="display: flex; gap: 10px;">
+							<button type="button" class="btn-delete"
+								onclick="deletePost(${cont.boardId})"
+								style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">삭제하기</button>
+						</div>
+					</c:if>
+				</div>
+			</article>
 
-            <%--
+			<%-- ===================== 댓글(답변) 섹션 ===================== --%>
+			<section class="glass-panel comment-section">
+				<div class="comment-count">답변 ${clist.size()}개</div>
+
+				<%--
                 댓글 작성 폼 노출 조건:
                 1) 관리자(memRole==1) → 모든 문의에 답변(댓글) 가능
                 2) 일반회원(memRole==2) → 본인 문의글에만 대댓글 가능 (아래 답글 달기에서 처리)
                    → 최상위 댓글 작성은 관리자만 가능
             --%>
-            <c:if test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
-                <div class="comment-write">
-                    <form action="quiryDetail.do" method="post">
-                        <input type="hidden" name="boardId" value="${cont.boardId}">
-                        <input type="hidden" name="boardType" value="${cont.boardType}">
-                        <input type="hidden" name="parentBoardId" value="0">
-                        <input type="hidden" name="parentBoardNo" value="0">
-                        <input type="hidden" name="commentsNo" value="1">
-                        <textarea name="commentsContent" placeholder="관리자 답변을 작성해주세요..." required></textarea>
-                        <div style="display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-submit">답변 등록</button>
-                        </div>
-                    </form>
-                </div>
-            </c:if>
+				<c:if
+					test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
+					<div class="comment-write">
+						<form action="commentsOk.do" method="post">
+							<input type="hidden" name="boardId" value="${cont.boardId}">
+							<input type="hidden" name="boardType" value="${cont.boardType}">
+							<input type="hidden" name="parentBoardId" value="0"> <input
+								type="hidden" name="parentBoardNo" value="0"> <input
+								type="hidden" name="commentsNo" value="1">
+							<textarea name="commentsContent" placeholder="관리자 답변을 작성해주세요..."
+								required></textarea>
+							<div style="display: flex; justify-content: flex-end;">
+								<button type="submit" class="btn-submit">답변 등록</button>
+							</div>
+						</form>
+					</div>
+				</c:if>
 
-            <div class="comment-list">
-                <c:forEach var="comm" items="${clist}">
-                    <div class="comment-item"
-                         style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
-                        <div class="avatar" style="width:35px; height:35px;"></div>
+				<div class="comment-list">
+					<c:forEach var="comm" items="${clist}">
+						<div class="comment-item"
+							style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
+							<div class="profile-image-wrap">
+								<c:choose>
+									<c:when test="${not empty comm.memProfilePhoto}">
+										<img
+											style="max-height: 30px; max-width: 30px; border-radius: 50%;"
+											class="profile-photo"
+											src="${pageContext.request.contextPath}/profilePhoto.do?path=${comm.memProfilePhoto}"
+											alt="프로필 사진" />
+									</c:when>
+									<c:otherwise>
+										<img
+											style="max-height: 30px; max-width: 30px; border-radius: 50%;"
+											class="profile-photo"
+											src="${pageContext.request.contextPath}/Image/default-avatar.png"
+											alt="기본 프로필" />
+									</c:otherwise>
+								</c:choose>
+							</div>
+							<div class="comment-content" style="flex: 1;">
+								<div
+									style="display: flex; justify-content: space-between; align-items: center;">
+									<div class="comment-user">
+										${comm.commentsName}
+										<%-- 관리자 댓글에 배지 표시 (commentsNo==1이 최상위 댓글이므로 관리자 답변) --%>
+										<span class="admin-badge">관리자 답변</span>
+									</div>
+								</div>
 
-                        <div class="comment-content" style="flex: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div class="comment-user">
-                                    ${comm.commentsName}
-                                    <%-- 관리자 댓글에 배지 표시 (commentsNo==1이 최상위 댓글이므로 관리자 답변) --%>
-                                    <c:if test="${comm.commentsNo == 1}">
-                                        <span class="admin-badge">관리자 답변</span>
-                                    </c:if>
-                                </div>
-                            </div>
+								<div id="comment-text-${comm.commentsId}" class="comment-text">${comm.commentsContent}</div>
 
-                            <div id="comment-text-${comm.commentsId}" class="comment-text">${comm.commentsContent}</div>
+								<div class="comment-utils">
+									<span>${comm.commentsDate}</span>
+								</div>
+							</div>
+						</div>
+					</c:forEach>
 
-                            <div class="comment-utils">
-                                <span>${comm.commentsDate}</span>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
+					<c:if test="${empty clist}">
+						<div
+							style="text-align: center; color: var(--text-sub); padding: 20px;">
+							아직 답변이 없습니다. 관리자가 곧 답변해드립니다.</div>
+					</c:if>
+				</div>
+			</section>
+		</main>
 
-                <c:if test="${empty clist}">
-                    <div style="text-align: center; color: var(--text-sub); padding: 20px;">
-                        아직 답변이 없습니다. 관리자가 곧 답변해드립니다.
-                    </div>
-                </c:if>
-            </div>
-        </section>
-    </main>
+		<aside class="side-panel">
+			<jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
+			<div class="side-widget">
+				<div class="widget-title">
+					<span>📋 문의 안내</span>
+				</div>
+				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+					<p style="margin: 0;">• 문의글은 일반 회원만 작성 가능합니다.</p>
+					<p style="margin: 0;">• 개인정보가 포함되지 않도록 주의해주세요.</p>
+				</div>
+			</div>
 
-    <aside class="side-panel">
-        <jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
-    </aside>
+			<div class="side-widget">
+				<div class="widget-title">
+					<span>📞 고객센터</span>
+				</div>
+				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+					<p style="margin: 0;">운영시간: 평일 09:00 ~ 18:00</p>
+					<p style="margin: 0;">이메일: support@cinematalk.com</p>
+				</div>
+			</div>
+		</aside>
 
-    <script>
+		<script>
         function toggleMenu(element) {
             const isActive = element.classList.contains('active');
             document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
@@ -618,7 +689,7 @@
             }
         });
     </script>
-</div>
+	</div>
 
 </body>
 </html>

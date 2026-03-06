@@ -9,7 +9,7 @@
   		<![CDATA[
         SELECT COUNT(*)
         FROM MEMBER
-        WHERE memDate BETWEEN #{startDate} AND #{endDate}
+        WHERE memDate BETWEEN #{startDate} AND #{endDate} + 1
         ]]>
   	</select>
   	
@@ -18,7 +18,7 @@
   		<![CDATA[
         SELECT COUNT(*)
         FROM BOARD
-        WHERE boardDate BETWEEN #{startDate} AND #{endDate}
+        WHERE boardDate BETWEEN #{startDate} AND #{endDate} + 1
         ]]>
   	</select>
   	
@@ -27,36 +27,35 @@
   		<![CDATA[
         SELECT COUNT(*)
         FROM VOTE_RECORD
-        WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate}
+        WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate} + 1
         ]]>
   	</select>
   	
-  	<!-- 기간 내 신규 문의 수 
+  	<!-- 기간 내 신규 문의 수 -->
   	<select id="selNewInquiryCntByRange" resultType="int">
   		<![CDATA[
         SELECT COUNT(*)
-        FROM INQUIRY
-        WHERE inquiryCreatedDate BETWEEN #{startDate} AND #{endDate}
-        ]]>
-  	</select>-->
-  	<!--기간 내 신규 문의 수(더미) -->
-  	<select id="selNewInquiryCntByRange" resultType="int">
-  		<![CDATA[
-        SELECT COUNT(*)
-        FROM VOTE_RECORD
-        WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate}
+        FROM BOARD
+        WHERE BoardType = 11
+      	  AND BoardDate BETWEEN #{startDate} AND #{endDate} + 1
         ]]>
   	</select>
   	
   	<!-- 일별 방문자 추이 -->
   	<select id="selDailyVisitorTrend" resultType="trend">
   		<![CDATA[
-	    SELECT
-	        TO_CHAR(statDate, 'YYYY-MM-DD') AS regDate,
-	        NVL(dauCount, 0) AS cnt
-	    FROM DAILY_VISIT
-	    WHERE statDate BETWEEN #{startDate} AND #{endDate}
-	    ORDER BY statDate
+		WITH date_range AS (
+		    SELECT TRUNC(#{startDate}) + LEVEL - 1 AS dt
+		    FROM dual
+		    CONNECT BY LEVEL <= TRUNC(#{endDate}) - TRUNC(#{startDate}) + 1
+		)
+		SELECT
+		    TO_CHAR(d.dt, 'YYYY-MM-DD') AS regDate,
+		    NVL(v.dauCount, 0) AS cnt
+		FROM date_range d
+		LEFT JOIN DAILY_VISIT v
+		    ON v.statDate = d.dt
+		ORDER BY d.dt
 		]]>
   	</select>
   	

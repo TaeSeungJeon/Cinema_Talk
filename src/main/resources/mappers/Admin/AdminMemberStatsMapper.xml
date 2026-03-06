@@ -27,7 +27,7 @@
     	<![CDATA[
         SELECT COUNT(*)
         FROM MEMBER
-        WHERE memDate BETWEEN #{startDate} AND #{endDate}
+        WHERE memDate BETWEEN #{startDate} AND #{endDate} + 1
         AND memState != 3
         ]]>
     </select>

@@ -85,6 +85,9 @@ public class BoardSearchController implements Action {
 		        } else if ("notice".equals(filter)) {
 		        	type = 10;
 		        	requestedURL = "noticeBoard.jsp";
+		        } else if("quiry".equals(filter)) {
+		        	type = 11;
+		        	requestedURL = "quiryBoard.jsp";
 		        }
 	        	totalCount = searchService.getBoardCountByTypeAndWord(type, searchWords, searchOption);
 	            list = searchService.boardListPageByTypeAndWord(type, startRow, endRow, searchWords, searchOption);

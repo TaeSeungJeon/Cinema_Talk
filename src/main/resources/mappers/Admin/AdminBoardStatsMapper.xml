@@ -50,14 +50,20 @@
     <!-- 일별 게시글 추이 -->
     <select id="selMonthlyBoardTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.TrendDTO">
         <![CDATA[
-        SELECT
-            TO_CHAR(boardDate, 'YYYY-MM-DD') AS regDate,
-            COUNT(*) AS cnt
-        FROM BOARD
-        WHERE boardDate BETWEEN #{startDate} AND #{endDate}
-        GROUP BY TO_CHAR(boardDate, 'YYYY-MM-DD')
-        ORDER BY regDate
-        ]]>
+		WITH date_range AS (
+		    SELECT TRUNC(#{startDate}) + LEVEL - 1 AS dt
+		    FROM dual
+		    CONNECT BY LEVEL <= TRUNC(#{endDate}) - TRUNC(#{startDate}) + 1
+		)
+		SELECT
+		    TO_CHAR(d.dt, 'YYYY-MM-DD') AS regDate,
+		    NVL(COUNT(b.boardDate), 0) AS cnt
+		FROM date_range d
+		LEFT JOIN BOARD b
+		    ON TRUNC(b.boardDate) = d.dt
+		GROUP BY d.dt
+		ORDER BY d.dt
+		]]>
     </select>
     
     <!-- 인기 게시글 TOP 10 -->

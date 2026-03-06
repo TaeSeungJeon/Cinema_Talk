@@ -120,6 +120,25 @@ public class BoardDAOImpl implements BoardDAO {
         }
     }
 
+    // 게시글 내용(content) 직접 수정
+    @Override
+    public void updateBoardContent(BoardDTO bdto) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            int result = sqlSession.update("Board.updateBoardContent", bdto);
+            if (result > 0) {
+                sqlSession.commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
     // 게시글 삭제
     @Override
     public void deleteBoard(int boardId) {

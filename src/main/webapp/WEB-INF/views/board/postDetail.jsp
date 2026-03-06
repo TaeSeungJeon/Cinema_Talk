@@ -1,992 +1,1075 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프리미엄 영화 큐레이션 - 게시글 상세</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Black+Han+Sans&family=Gaegu&family=Jua&family=Cute+Font&family=Do+Hyeon&family=Gugi&family=Sunflower:wght@300;500;700&family=Gothic+A1:wght@400;700&family=Stylish&display=swap" rel="stylesheet">
-
-    <!-- ✅ 좋아요 빵빠레(Confetti) 라이브러리: 다른 코드와 충돌 거의 없음 -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <style>
-        /* 폰트 드롭다운 */
-        .font-select-wrapper { position: relative; }
-
-        .font-select-trigger {
-            padding: 4px 28px 4px 8px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            font-size: 0.85rem;
-            color: #374151;
-            cursor: pointer;
-            background: var(--glass-bg);
-            min-width: 110px;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-        }
-
-        .font-select-trigger::after {
-            content: "▾";
-            position: absolute;
-            right: 8px;
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-
-        .font-select-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 4px);
-            left: 0;
-            background: var(--glass-bg);
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            z-index: 9999;
-            min-width: 160px;
-            max-height: 280px;
-            overflow-y: auto;
-            padding: 6px 0;
-        }
-
-        .font-select-dropdown.open { display: block; }
-
-        .font-option {
-            padding: 9px 14px;
-            cursor: pointer;
-            font-size: 1rem;
-            color: #374151;
-            transition: background 0.15s;
-            white-space: nowrap;
-        }
-
-        .font-option:hover { background: #f1f5f9; }
-        .font-option.selected { background: #ede9fe; color: #6366f1; }
-
-        :root {
-            --bg-color: #0a0a0a;
-            --glass-bg: rgba(20, 20, 20, 0.8);
-            --accent-color: #818cf8;
-            --text-main: #e5e7eb;
-            --text-sub: #9ca3af;
-            --radius-soft: 24px;
-            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.3);
-            --shadow-strong: 0 12px 24px rgba(129, 140, 248, 0.2);
-        }
-
-        body {
-            font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* --- 상단 헤더 --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            position: relative;
-            z-index: 1200;
-        }
-
-        .glass-panel-btn {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: var(--shadow-subtle);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-
-        .glass-panel-btn:hover {
-            background: var(--glass-bg);
-            transform: translateY(-2px);
-        }
-
-        /* --- 카테고리 네비게이션 --- */
-        .category-nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            position: relative;
-            z-index: 5000;
-        }
-
-        .category-bubble {
-            flex: 1;
-            height: 50px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            background: var(--glass-bg);
-            border-radius: 50px;
-            box-shadow: var(--shadow-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .category-bubble:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-strong);
-        }
-
-        .category-bubble.active {
-            background: var(--accent-color) !important;
-            color: white !important;
-        }
-
-        .cat-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            pointer-events: none;
-        }
-
-        /* 공유버튼 */
-        .share-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background-color: #6366f1;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .share-btn:hover {
-            background-color: #4f46e5;
-            transform: translateY(-2px);
-        }
-
-        .sub-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            top: 110%;
-            left: 0;
-            right: 0;
-            background: #ffffff !important;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 9999;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: center;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .category-bubble.active .sub-menu {
-            max-height: 400px;
-            padding: 15px 0;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .sub-menu li a {
-            text-decoration: none;
-            color: #64748b !important;
-            display: block;
-            padding: 12px 0;
-            margin: 2px 10px;
-            border-radius: 12px;
-            transition: 0.2s;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .sub-menu li a:hover {
-            background: var(--accent-color) !important;
-            color: white !important;
-        }
-
-        /* --- 게시판 레이아웃 설정 --- */
-        .layout-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 280px 750px 280px;
-            gap: 25px;
-        }
-
-        .side-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: var(--radius-soft);
-            padding: 25px;
-            box-shadow: var(--shadow-subtle);
-            display: block !important;
-        }
-
-        /* --- 게시글 본문 스타일 --- */
-        .post-header {
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 15px;
-        }
-
-        .post-category {
-            color: var(--accent-color);
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        .post-title {
-            font-size: 2rem;
-            margin: 7px 0;
-            line-height: 1.3;
-            font-weight: 800;
-        }
-
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            border: 2px solid white;
-        }
-
-        .post-body {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: #374151;
-            min-height: 250px;
-            display: flex;
-            flex-direction: column;
-        }
-        .post-body img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .movie-tag-container {
-            margin-top: auto; /* 위쪽 마진을 최대로 하여 바닥에 밀착 */
-        }
-
-       
-        .post-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 40px;
-        }
-
-        .action-btn {
-            background: var(--glass-bg);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 12px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            transition: 0.3s;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-strong);
-        }
-
-        /* --- 댓글 섹션 --- */
-        .comment-section {
-            margin-top: 25px;
-        }
-
-        .comment-count {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .comment-write {
-            background: var(--glass-bg);
-            border-radius: 18px;
-            padding: 15px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .comment-write textarea {
-            width: 100%;
-            border: none;
-            outline: none;
-            resize: none;
-            min-height: 60px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
-
-        .btn-submit {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .side-title {
-            font-weight: 800;
-            font-size: 1rem;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .side-item {
-            font-size: 0.9rem;
-            color: black;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-            cursor: pointer;
-            transition: 0.2s;
-            text-decoration:none;
-            display:block;
-        }
-
-        .side-item:hover {
-            color: var(--accent-color);
-            padding-left: 5px;
-        }
-
-        .comment-item {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-
-        }
-
-        .comment-user {
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
-
-        .comment-text {
-            font-size: 0.95rem;
-            color: #374151;
-            line-height: 1.5;
-        }
-
-        .comment-utils {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            display: flex;
-            gap: 15px;
-        }
-
-        .reply-form-container {
-            width: 100%;
-            margin-top: 15px;
-            display: none;
-        }
-
-        /* 링크 영역 */
-        .link-preview {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            margin-top: 14px;
-        }
-
-        .preview-card {
-            display: flex;
-            gap: 14px;
-            background: black;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 18px;
-            padding: 14px;
-            box-shadow: var(--shadow-subtle);
-            transition: 0.2s;
-        }
-
-        .preview-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        .preview-thumb {
-            width: 150px;
-            min-width: 150px;
-            height: 110px;
-            border-radius: 14px;
-            background-size: cover;
-            background-position: center;
-            background-color: #e2e8f0;
-        }
-
-        .preview-content {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 0;
-            flex: 1;
-        }
-
-        .preview-domain {
-            font-size: 0.78rem;
-            color: #94a3b8;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .preview-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.35;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .preview-desc {
-            font-size: 0.9rem;
-            color: #cbd5e1;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .preview-url {
-            font-size: 0.8rem;
-            color: #818cf8;
-            font-weight: 700;
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .reply-to {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .reply-to-name {
-            color: #a5b4fc;
-            font-weight: 700;
-        }
-
-        .movie-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background-color: #f1f5f9; /* 연한 블루 그레이 */
-            color: #475569;
-            border: 1px solid #e2e8f0;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin: 4px;
-        }
-
-        /* 마우스 호버 효과 (정상 데이터일 때만) */
-        .movie-tag:not(.disabled-tag):hover {
-            background-color: #6366f1; /* 메인 블루 */
-            color: white;
-            border-color: #2563eb;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-
-        /* ⚠️ 삭제된 영화 태그 스타일 (disabled-tag) */
-        .movie-tag.disabled-tag {
-            background-color: #f8fafc;
-            color: #94a3b8; /* 흐릿한 회색 */
-            border: 1px solid #cbd5e1; /* 점선 테두리로 '유령' 느낌 부여 */
-            cursor: not-allowed; /* 금지 표시 커서 */
-            opacity: 0.7;
-           
-        }
-
-        /* 자동완성 결과창 */
-		.search-results { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid var(--border); border-radius: 8px; z-index: 10; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: none; max-height: 200px; overflow-y: auto; }
-		.result-item { padding: 10px 15px; cursor: pointer; transition: 0.2s; }
-		.result-item:hover { background: #f0f4ff; color: var(--primary); }
-
-
-    </style>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프리미엄 영화 큐레이션 - 게시글 상세</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Black+Han+Sans&family=Gaegu&family=Jua&family=Cute+Font&family=Do+Hyeon&family=Gugi&family=Sunflower:wght@300;500;700&family=Gothic+A1:wght@400;700&family=Stylish&display=swap"
+	rel="stylesheet">
+
+<!-- ✅ 좋아요 빵빠레(Confetti) 라이브러리: 다른 코드와 충돌 거의 없음 -->
+<script
+	src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+/* 폰트 드롭다운 */
+.font-select-wrapper {
+	position: relative;
+}
+
+.font-select-trigger {
+	padding: 4px 28px 4px 8px;
+	border-radius: 8px;
+	border: 1px solid #e2e8f0;
+	font-size: 0.85rem;
+	color: #374151;
+	cursor: pointer;
+	background: var(--glass-bg);
+	min-width: 110px;
+	user-select: none;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	position: relative;
+}
+
+.font-select-trigger::after {
+	content: "▾";
+	position: absolute;
+	right: 8px;
+	font-size: 0.75rem;
+	color: #94a3b8;
+}
+
+.font-select-dropdown {
+	display: none;
+	position: absolute;
+	top: calc(100% + 4px);
+	left: 0;
+	background: var(--glass-bg);
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	z-index: 9999;
+	min-width: 160px;
+	max-height: 280px;
+	overflow-y: auto;
+	padding: 6px 0;
+}
+
+.font-select-dropdown.open {
+	display: block;
+}
+
+.font-option {
+	padding: 9px 14px;
+	cursor: pointer;
+	font-size: 1rem;
+	color: #374151;
+	transition: background 0.15s;
+	white-space: nowrap;
+}
+
+.font-option:hover {
+	background: #f1f5f9;
+}
+
+.font-option.selected {
+	background: #ede9fe;
+	color: #6366f1;
+}
+
+:root {
+	--bg-color: #0a0a0a;
+	--glass-bg: rgba(20, 20, 20, 0.8);
+	--accent-color: #818cf8;
+	--text-main: #e5e7eb;
+	--text-sub: #9ca3af;
+	--radius-soft: 24px;
+	--shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.3);
+	--shadow-strong: 0 12px 24px rgba(129, 140, 248, 0.2);
+}
+
+body {
+	font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif;
+	background-color: var(--bg-color);
+	color: var(--text-main);
+	margin: 0;
+	padding: 25px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+/* --- 상단 헤더 --- */
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 1400px;
+	margin: 0 auto;
+	width: 100%;
+	position: relative;
+	z-index: 1200;
+}
+
+.glass-panel-btn {
+	background: var(--glass-bg);
+	backdrop-filter: blur(10px);
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	box-shadow: var(--shadow-subtle);
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.3s;
+}
+
+.glass-panel-btn:hover {
+	background: var(--glass-bg);
+	transform: translateY(-2px);
+}
+
+/* --- 카테고리 네비게이션 --- */
+.category-nav {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	max-width: 1400px;
+	margin: 0 auto;
+	width: 100%;
+	position: relative;
+	z-index: 5000;
+}
+
+.category-bubble {
+	flex: 1;
+	height: 50px;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	background: var(--glass-bg);
+	border-radius: 50px;
+	box-shadow: var(--shadow-subtle);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.category-bubble:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-strong);
+}
+
+.category-bubble.active {
+	background: var(--accent-color) !important;
+	color: white !important;
+}
+
+.cat-title {
+	font-weight: 700;
+	font-size: 0.95rem;
+	pointer-events: none;
+}
+
+/* 공유버튼 */
+.share-btn {
+	padding: 8px 16px;
+	border-radius: 20px;
+	background-color: #6366f1;
+	color: white;
+	border: none;
+	cursor: pointer;
+	transition: 0.2s ease;
+}
+
+.share-btn:hover {
+	background-color: #4f46e5;
+	transform: translateY(-2px);
+}
+
+.sub-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 110%;
+	left: 0;
+	right: 0;
+	background: #ffffff !important;
+	border-radius: 20px;
+	box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+	max-height: 0;
+	overflow: hidden;
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	z-index: 9999;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	text-align: center;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.category-bubble.active .sub-menu {
+	max-height: 400px;
+	padding: 15px 0;
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.sub-menu li a {
+	text-decoration: none;
+	color: #64748b !important;
+	display: block;
+	padding: 12px 0;
+	margin: 2px 10px;
+	border-radius: 12px;
+	transition: 0.2s;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.sub-menu li a:hover {
+	background: var(--accent-color) !important;
+	color: white !important;
+}
+
+/* --- 게시판 레이아웃 설정 --- */
+.layout-wrapper {
+	max-width: 1400px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: 280px 750px 280px;
+	gap: 25px;
+}
+
+.side-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.glass-panel {
+	background: var(--glass-bg);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: var(--radius-soft);
+	padding: 25px;
+	box-shadow: var(--shadow-subtle);
+	display: block !important;
+}
+
+/* --- 게시글 본문 스타일 --- */
+.post-header {
+	margin-bottom: 10px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	padding-bottom: 15px;
+}
+
+.post-category {
+	color: var(--accent-color);
+	font-weight: 700;
+	font-size: 0.9rem;
+	margin-bottom: 10px;
+}
+
+.post-title {
+	font-size: 2rem;
+	margin: 7px 0;
+	line-height: 1.3;
+	font-weight: 800;
+}
+
+.avatar {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	background: #e2e8f0;
+	border: 2px solid white;
+}
+
+.post-body {
+	font-size: 1.05rem;
+	line-height: 1.8;
+	color: #374151;
+	min-height: 250px;
+	display: flex;
+	flex-direction: column;
+}
+
+.post-body img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+.movie-tag-container {
+	margin-top: auto; /* 위쪽 마진을 최대로 하여 바닥에 밀착 */
+}
+
+.post-actions {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	margin-top: 40px;
+}
+
+.action-btn {
+	background: var(--glass-bg);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	padding: 12px 25px;
+	border-radius: 50px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 600;
+	transition: 0.3s;
+	box-shadow: var(--shadow-subtle);
+}
+
+.action-btn:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--shadow-strong);
+}
+
+/* --- 댓글 섹션 --- */
+.comment-section {
+	margin-top: 25px;
+}
+
+.comment-count {
+	font-size: 1.1rem;
+	font-weight: 700;
+	margin-bottom: 20px;
+}
+
+.comment-write {
+	background: var(--glass-bg);
+	border-radius: 18px;
+	padding: 15px;
+	margin-bottom: 30px;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-write textarea {
+	width: 100%;
+	border: none;
+	outline: none;
+	resize: none;
+	min-height: 60px;
+	font-family: inherit;
+	font-size: 0.95rem;
+	margin-bottom: 10px;
+}
+
+.btn-submit {
+	background: var(--accent-color);
+	color: white;
+	border: none;
+	padding: 8px 20px;
+	border-radius: 12px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.side-title {
+	font-weight: 800;
+	font-size: 1rem;
+	margin-bottom: 18px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.side-item {
+	font-size: 0.9rem;
+	color: black;
+	padding: 8px 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+	cursor: pointer;
+	transition: 0.2s;
+	text-decoration: none;
+	display: block;
+}
+
+.side-item:hover {
+	color: var(--accent-color);
+	padding-left: 5px;
+}
+
+.comment-item {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+}
+
+.comment-user {
+	font-weight: 700;
+	font-size: 0.95rem;
+	margin-bottom: 5px;
+}
+
+.comment-text {
+	font-size: 0.95rem;
+	color: #374151;
+	line-height: 1.5;
+}
+
+.comment-utils {
+	margin-top: 10px;
+	font-size: 0.8rem;
+	color: var(--text-sub);
+	display: flex;
+	gap: 15px;
+}
+
+.reply-form-container {
+	width: 100%;
+	margin-top: 15px;
+	display: none;
+}
+
+/* 링크 영역 */
+.link-preview {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	margin-top: 14px;
+}
+
+.preview-card {
+	display: flex;
+	gap: 14px;
+	background: black;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-radius: 18px;
+	padding: 14px;
+	box-shadow: var(--shadow-subtle);
+	transition: 0.2s;
+}
+
+.preview-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.preview-thumb {
+	width: 150px;
+	min-width: 150px;
+	height: 110px;
+	border-radius: 14px;
+	background-size: cover;
+	background-position: center;
+	background-color: #e2e8f0;
+}
+
+.preview-content {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+	flex: 1;
+}
+
+.preview-domain {
+	font-size: 0.78rem;
+	color: #94a3b8;
+	font-weight: 700;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.preview-title {
+	font-size: 1rem;
+	font-weight: 800;
+	color: #ffffff;
+	line-height: 1.35;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.preview-desc {
+	font-size: 0.9rem;
+	color: #cbd5e1;
+	line-height: 1.5;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.preview-url {
+	font-size: 0.8rem;
+	color: #818cf8;
+	font-weight: 700;
+	margin-top: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.reply-to {
+	font-size: 0.8rem;
+	color: #94a3b8;
+	font-weight: 500;
+	margin-bottom: 4px;
+}
+
+.reply-to-name {
+	color: #a5b4fc;
+	font-weight: 700;
+}
+
+.movie-tag {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 14px;
+	border-radius: 20px;
+	background-color: #f1f5f9; /* 연한 블루 그레이 */
+	color: #475569;
+	border: 1px solid #e2e8f0;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	margin: 4px;
+}
+
+/* 마우스 호버 효과 (정상 데이터일 때만) */
+.movie-tag:not(.disabled-tag):hover {
+	background-color: #6366f1; /* 메인 블루 */
+	color: white;
+	border-color: #2563eb;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 6px -1px rgb(0 0 0/ 0.1);
+}
+
+/* ⚠️ 삭제된 영화 태그 스타일 (disabled-tag) */
+.movie-tag.disabled-tag {
+	background-color: #f8fafc;
+	color: #94a3b8; /* 흐릿한 회색 */
+	border: 1px solid #cbd5e1; /* 점선 테두리로 '유령' 느낌 부여 */
+	cursor: not-allowed; /* 금지 표시 커서 */
+	opacity: 0.7;
+}
+
+/* 자동완성 결과창 */
+.search-results {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	background: white;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	z-index: 10;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	display: none;
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.result-item {
+	padding: 10px 15px;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.result-item:hover {
+	background: #f0f4ff;
+	color: var(--primary);
+}
+</style>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/common.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
 
-<%-- include 헤더/네비 유지 --%>
-<%@ include file="../home/homeHeader.jsp" %>
+	<%-- include 헤더/네비 유지 --%>
+	<%@ include file="../home/homeHeader.jsp"%>
 
-<div class="layout-wrapper">
-    <aside class="side-panel">
-        <div class="glass-panel">
-            <div class="side-title">👤 작성자 정보</div>
-            <div style="text-align: center; padding: 10px 0;">
-                <div class="profile-image-wrap">
-                    <c:choose>
-                        <c:when test="${not empty member.memProfilePhoto}">
-                            <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
-                                 src="${pageContext.request.contextPath}/profilePhoto.do?path=${member.memProfilePhoto}"
-                                 alt="프로필 사진" />
-                        </c:when>
-                        <c:otherwise>
-                            <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
-                                 src="${pageContext.request.contextPath}/Image/default-avatar.png"
-                                 alt="기본 프로필" />
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+	<div class="layout-wrapper">
+		<aside class="side-panel">
+			<div class="glass-panel">
+				<div class="side-title">👤 작성자 정보</div>
+				<div style="text-align: center; padding: 10px 0;">
+					<div class="profile-image-wrap">
+						<c:choose>
+							<c:when test="${not empty member.memProfilePhoto}">
+								<img
+									style="max-height: 60px; max-width: 60px; border-radius: 50%;"
+									class="profile-photo"
+									src="${pageContext.request.contextPath}/profilePhoto.do?path=${member.memProfilePhoto}"
+									alt="프로필 사진" />
+							</c:when>
+							<c:otherwise>
+								<img
+									style="max-height: 60px; max-width: 60px; border-radius: 50%;"
+									class="profile-photo"
+									src="${pageContext.request.contextPath}/Image/default-avatar.png"
+									alt="기본 프로필" />
+							</c:otherwise>
+						</c:choose>
+					</div>
 
-                <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
-                   style="font-weight: 700; color: var(--text-main); text-decoration: none;">
-                    ${cont.boardName}
-                </a>
-                <div style="font-size: 0.8rem; color: var(--text-sub);">작성글 ${myPageInfo.boardCount} | 댓글 ${myPageInfo.commentCount}</div>
-            	<div> <%--class="side-item">작성자의 다른 글 보기</div> --%>
-                <a href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}" class="side-item">작성자의 다른 글 보기</a>
-            </div>
-            </div>
-        </div>
-        <div class="glass-panel">
-            <div class="side-title">📋 카테고리 이동</div>
-            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=free" class="side-item">자유게시판</a>
-            <a href="${pageContext.request.contextPath}/freeBoard.do?filter=hot" class="side-item">영화 추천/후기</a>
-            <a href="${pageContext.request.contextPath}/vote.do?" class="side-item">오늘의 투표</a>
-            <a href="${pageContext.request.contextPath}/voteList.do?" class="side-item">투표 목록</a>
-        </div>
+					<a
+						href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
+						style="font-weight: 700; color: var(--text-main); text-decoration: none;">
+						${cont.boardName} </a>
+					<div style="font-size: 0.8rem; color: var(--text-sub);">작성글
+						${myPageInfo.boardCount} | 댓글 ${myPageInfo.commentCount}</div>
+					<div>
+						<%--class="side-item">작성자의 다른 글 보기</div> --%>
+						<a
+							href="${pageContext.request.contextPath}/myPage.do?memNo=${cont.memNo}"
+							class="side-item">작성자의 다른 글 보기</a>
+					</div>
+				</div>
+			</div>
+			<div class="glass-panel">
+				<div class="side-title">📋 카테고리 이동</div>
+				<a
+					href="${pageContext.request.contextPath}/freeBoard.do?filter=free"
+					class="side-item">자유게시판</a> <a
+					href="${pageContext.request.contextPath}/freeBoard.do?filter=hot"
+					class="side-item">영화 추천/후기</a> <a
+					href="${pageContext.request.contextPath}/vote.do?"
+					class="side-item">오늘의 투표</a> <a
+					href="${pageContext.request.contextPath}/voteList.do?"
+					class="side-item">투표 목록</a>
+			</div>
 
-    </aside>
+		</aside>
 
-    <main class="main-content">
-        <article class="glass-panel">
-            <div class="post-header">
-                <span class="post-category">게시글 제목</span>
-                <h1 class="post-title">${cont.boardTitle}</h1>
-            </div>
+		<main class="main-content">
+			<article class="glass-panel">
+				<div class="post-header">
+					<span class="post-category">게시글 제목</span>
+					<h1 class="post-title">${cont.boardTitle}</h1>
+				</div>
 
-            <div class="author-profile" style="margin-bottom: 20px;">
-                <span class="author-name" style="font-weight: 700;">작성자 · ${cont.boardName}</span><br>
-                <span class="post-meta"
-                      style="color: var(--text-sub); font-size: 0.9rem;">${cont.boardDate} · 조회수 ${cont.boardViewCount}</span>
-            </div>
+				<div class="author-profile" style="margin-bottom: 20px;">
+					<span class="author-name" style="font-weight: 700;">작성자 ·
+						${cont.boardName}</span><br> <span class="post-meta"
+						style="color: var(--text-sub); font-size: 0.9rem;">${cont.boardDate}
+						· 조회수 ${cont.boardViewCount}</span>
+				</div>
 
-            <div class="post-body" id="post-body">
-                ${cont.boardContent}
-                <c:if test="${not empty preview}">
-                    <a href="${preview.url}" target="_blank" class="link-preview">
-                        <div class="preview-card">
-                            <c:if test="${not empty preview.image}">
-                                <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
-                            </c:if>
+				<div class="post-body" id="post-body">
+					${cont.boardContent}
+					<c:if test="${not empty preview}">
+						<a href="${preview.url}" target="_blank" class="link-preview">
+							<div class="preview-card">
+								<c:if test="${not empty preview.image}">
+									<div class="preview-thumb"
+										style="background-image:url('${preview.image}');"></div>
+								</c:if>
 
-                            <div class="preview-content">
-                                <div class="preview-domain">
-                                    <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
-                                </div>
+								<div class="preview-content">
+									<div class="preview-domain">
+										<c:out value="${fn:replace(preview.url, 'https://', '')}" />
+									</div>
 
-                                <c:if test="${not empty preview.title}">
-                                    <div class="preview-title">${preview.title}</div>
-                                </c:if>
+									<c:if test="${not empty preview.title}">
+										<div class="preview-title">${preview.title}</div>
+									</c:if>
 
-                                <c:if test="${not empty preview.description}">
-                                    <div class="preview-desc">${preview.description}</div>
-                                </c:if>
+									<c:if test="${not empty preview.description}">
+										<div class="preview-desc">${preview.description}</div>
+									</c:if>
 
-                                <div class="preview-url">${preview.url}</div>
-                            </div>
-                        </div>
-                    </a>
-                </c:if>
-                <%-- 영화태그 --%>
-                <c:if test="${not empty cont.movieTitle}">
-                <div class="movie-tag-container">
-                <c:choose>
-                <%-- 삭제된 영화 --%>
-                    <c:when test="${(empty cont.movieId or cont.movieId eq 0 ) }">
-                     <button type="button" 
-                            onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
-                            class="movie-tag disabled-tag"
-                            disabled
-                            title="정보가 삭제된 영화입니다">
-                        #${cont.movieTitle}
-                    </button>
+									<div class="preview-url">${preview.url}</div>
+								</div>
+							</div>
+						</a>
+					</c:if>
+					<%-- 영화태그 --%>
+					<c:if test="${not empty cont.movieTitle}">
+						<div class="movie-tag-container">
+							<c:choose>
+								<%-- 삭제된 영화 --%>
+								<c:when test="${(empty cont.movieId or cont.movieId eq 0 ) }">
+									<button type="button"
+										onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
+										class="movie-tag disabled-tag" disabled title="정보가 삭제된 영화입니다">
+										#${cont.movieTitle}</button>
 
-                    </c:when>
+								</c:when>
 
-                    <c:otherwise>
-                        <button type="button" 
-                                    onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
-                                    class="movie-tag"
-                                    >
-                                #${cont.movieTitle}
-                            </button>
+								<c:otherwise>
+									<button type="button"
+										onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
+										class="movie-tag">#${cont.movieTitle}</button>
 
-                    </c:otherwise>
+								</c:otherwise>
 
-                </c:choose>
-                </div>
-                    
-                </c:if>
-            </div>
+							</c:choose>
+						</div>
 
-            <div id="update-form" style="display:none; margin-top:20px;">
-                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-                    <input type="hidden" name="boardId" value="${cont.boardId}">
+					</c:if>
+				</div>
 
-                    <input type="text" name="boardTitle"
-                           value="${cont.boardTitle}"
-                           style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid #e2e8f0; font-size:1rem;">
+				<div id="update-form" style="display: none; margin-top: 20px;">
+					<form action="${pageContext.request.contextPath}/boardUpdateOk.do"
+						method="post"
+						onsubmit="document.getElementById('hiddenContent').value = document.getElementById('editor').innerHTML; return validateForm()">
+						<input type="hidden" name="boardId" value="${cont.boardId}">
 
-                    <%-- 툴바 --%>
-                    <div style="background:#f8fafc; padding:8px 15px; border-radius:10px 10px 0 0;
-            border:1px solid #e2e8f0; border-bottom:none;
-            display:flex; gap:15px; color:#64748b; font-size:0.9rem;
-            align-items:center; flex-wrap:wrap;">
+						<input type="text" name="boardTitle" value="${cont.boardTitle}"
+							style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem;">
 
-                        <div class="font-select-wrapper" id="editFontSelectWrapper">
-                            <div class="font-select-trigger" id="editFontSelectTrigger"
-                                 onmousedown="event.preventDefault(); editSaveSelection(); editToggleFontDropdown();">
-                                <span id="editFontSelectLabel" style="font-family:'Inter',sans-serif;">Inter (기본)</span>
-                            </div>
-                            <div class="font-select-dropdown" id="editFontSelectDropdown">
-                                <div class="font-option selected" style="font-family:'Inter',sans-serif;"          data-font="Inter">Inter (기본)</div>
-                                <div class="font-option" style="font-family:'Noto Sans KR',sans-serif;"            data-font="Noto Sans KR">노토 산스</div>
-                                <div class="font-option" style="font-family:'Noto Serif KR',serif;"                data-font="Noto Serif KR">노토 세리프</div>
-                                <div class="font-option" style="font-family:'Gothic A1',sans-serif;"               data-font="Gothic A1">고딕 A1</div>
-                                <div class="font-option" style="font-family:'Do Hyeon',sans-serif;"                data-font="Do Hyeon">도현체</div>
-                                <div class="font-option" style="font-family:'Jua',sans-serif;"                     data-font="Jua">주아체</div>
-                                <div class="font-option" style="font-family:'Gugi',cursive;"                       data-font="Gugi">구기체</div>
-                                <div class="font-option" style="font-family:'Sunflower',sans-serif;"               data-font="Sunflower">해바라기체</div>
-                                <div class="font-option" style="font-family:'Stylish',sans-serif;"                 data-font="Stylish">스타일리시</div>
-                                <div class="font-option" style="font-family:'Black Han Sans',sans-serif;"          data-font="Black Han Sans">블랙 한 산스</div>
-                                <div class="font-option" style="font-family:'Cute Font',cursive;"                  data-font="Cute Font">귀여운 폰트</div>
-                                <div class="font-option" style="font-family:'Gaegu',cursive;"                      data-font="Gaegu">개구체</div>
-                            </div>
-                        </div>
+						<%-- 툴바 --%>
+						<div
+							style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; gap: 15px; color: #64748b; font-size: 0.9rem; align-items: center; flex-wrap: wrap;">
 
-                        <span style="cursor:pointer; font-weight:800;"
-                              onmousedown="event.preventDefault(); editExecCmd('bold')">B</span>
-                        <span style="cursor:pointer; font-style:italic;"
-                              onmousedown="event.preventDefault(); editExecCmd('italic')">I</span>
-                        <span style="cursor:pointer; text-decoration:underline;"
-                              onmousedown="event.preventDefault(); editExecCmd('underline')">U</span>
+							<div class="font-select-wrapper" id="editFontSelectWrapper">
+								<div class="font-select-trigger" id="editFontSelectTrigger"
+									onmousedown="event.preventDefault(); editSaveSelection(); editToggleFontDropdown();">
+									<span id="editFontSelectLabel"
+										style="font-family: 'Inter', sans-serif;">Inter (기본)</span>
+								</div>
+								<div class="font-select-dropdown" id="editFontSelectDropdown">
+									<div class="font-option selected"
+										style="font-family: 'Inter', sans-serif;" data-font="Inter">Inter
+										(기본)</div>
+									<div class="font-option"
+										style="font-family: 'Noto Sans KR', sans-serif;"
+										data-font="Noto Sans KR">노토 산스</div>
+									<div class="font-option"
+										style="font-family: 'Noto Serif KR', serif;"
+										data-font="Noto Serif KR">노토 세리프</div>
+									<div class="font-option"
+										style="font-family: 'Gothic A1', sans-serif;"
+										data-font="Gothic A1">고딕 A1</div>
+									<div class="font-option"
+										style="font-family: 'Do Hyeon', sans-serif;"
+										data-font="Do Hyeon">도현체</div>
+									<div class="font-option"
+										style="font-family: 'Jua', sans-serif;" data-font="Jua">주아체</div>
+									<div class="font-option" style="font-family: 'Gugi', cursive;"
+										data-font="Gugi">구기체</div>
+									<div class="font-option"
+										style="font-family: 'Sunflower', sans-serif;"
+										data-font="Sunflower">해바라기체</div>
+									<div class="font-option"
+										style="font-family: 'Stylish', sans-serif;"
+										data-font="Stylish">스타일리시</div>
+									<div class="font-option"
+										style="font-family: 'Black Han Sans', sans-serif;"
+										data-font="Black Han Sans">블랙 한 산스</div>
+									<div class="font-option"
+										style="font-family: 'Cute Font', cursive;"
+										data-font="Cute Font">귀여운 폰트</div>
+									<div class="font-option" style="font-family: 'Gaegu', cursive;"
+										data-font="Gaegu">개구체</div>
+								</div>
+							</div>
 
-                        <span id="editAttachTrigger" style="cursor:pointer;">🖼️ 사진첨부</span>
-                        <input id="editAttachInput" type="file" name="uploadFiles" accept="image/*"
-                               multiple style="display:none;" />
-                    </div>
-                    <div id="editAttachName"
-                         style="font-size:0.78rem; color:#94a3b8; padding:6px 4px; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;"></div>
+							<span style="cursor: pointer; font-weight: 800;"
+								onmousedown="event.preventDefault(); editExecCmd('bold')">B</span>
+							<span style="cursor: pointer; font-style: italic;"
+								onmousedown="event.preventDefault(); editExecCmd('italic')">I</span>
+							<span style="cursor: pointer; text-decoration: underline;"
+								onmousedown="event.preventDefault(); editExecCmd('underline')">U</span>
 
-                    <div id="editor"
-                         contenteditable="true"
-                         style="width:100%; min-height:250px; padding:12px; border-radius:0 0 12px 12px; border:1px solid #e2e8f0; font-size:1rem; outline:none;">
-                        ${cont.boardContent}
-                    </div>
+							<span id="editAttachTrigger" style="cursor: pointer;">🖼️
+								사진첨부</span> <input id="editAttachInput" type="file"
+								accept="image/*" multiple style="display: none;" />
+						</div>
+						<div id="editAttachName"
+							style="font-size: 0.78rem; color: #94a3b8; padding: 6px 4px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;"></div>
 
-                    <input type="hidden" name="boardContent" id="hiddenContent">
+						<div id="editor" contenteditable="true"
+							style="width: 100%; min-height: 250px; padding: 12px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; font-size: 1rem; outline: none;">
+							${cont.boardContent}</div>
 
-                    <c:if test="${not empty preview}">
-                        <a href="${preview.url}" target="_blank" class="link-preview">
-                            <div class="preview-card">
-                                <c:if test="${not empty preview.image}">
-                                    <div class="preview-thumb" style="background-image:url('${preview.image}');"></div>
-                                </c:if>
+						<input type="hidden" name="boardContent" id="hiddenContent">
 
-                                <div class="preview-content">
-                                    <div class="preview-domain">
-                                        <c:out value="${fn:replace(preview.url, 'https://', '')}"/>
-                                    </div>
+						<c:if test="${not empty preview}">
+							<a href="${preview.url}" target="_blank" class="link-preview">
+								<div class="preview-card">
+									<c:if test="${not empty preview.image}">
+										<div class="preview-thumb"
+											style="background-image:url('${preview.image}');"></div>
+									</c:if>
 
-                                    <c:if test="${not empty preview.title}">
-                                        <div class="preview-title">${preview.title}</div>
-                                    </c:if>
+									<div class="preview-content">
+										<div class="preview-domain">
+											<c:out value="${fn:replace(preview.url, 'https://', '')}" />
+										</div>
 
-                                    <c:if test="${not empty preview.description}">
-                                        <div class="preview-desc">${preview.description}</div>
-                                    </c:if>
+										<c:if test="${not empty preview.title}">
+											<div class="preview-title">${preview.title}</div>
+										</c:if>
 
-                                    <div class="preview-url">${preview.url}</div>
-                                </div>
-                            </div>
-                        </a>
-                    </c:if>
+										<c:if test="${not empty preview.description}">
+											<div class="preview-desc">${preview.description}</div>
+										</c:if>
 
-                    <%-- 태그수정 --%>
-                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
-                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">영화 태그</div>
-                         <div style="flex: 2; position: relative;width:100%;" class="option-item">
-                            <input type="hidden" name="movieId" class="movie-id-hidden" value="${cont.movieId}">
-                            <input class="movie-search" type="text" name="boardTag" placeholder="영화 제목을 입력해주세요." value="${cont.movieTitle}"
-                            style="padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;width:100%;box-sizing: border-box;"
-                            onkeydown="if(event.keyCode==13) event.preventDefault();"
-                            onkeyup="handleSearch(this, event)" autocomplete="off">
-                            <div class="search-results"></div>
-                            <div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
-                                존재하지 않은 영화입니다. 검색 결과에서 선택해주세요.
-                            </div>
-                        </div>
-                    </div>
+										<div class="preview-url">${preview.url}</div>
+									</div>
+								</div>
+							</a>
+						</c:if>
 
-                    <%-- 링크 첨부 --%>
-                    <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
-                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">🔗 링크 첨부</div>
-                        <div style="display:flex; gap:8px;">
-                            <input type="text" id="updateLinkInput"
-                                   placeholder="https://..."
-                                   style="flex:1; padding:8px 12px; border-radius:10px; border:1px solid #e2e8f0; font-size:0.9rem; outline:none;">
-                            <button type="button" id="updateLinkBtn"
-                                    style="padding:8px 16px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:600; cursor:pointer;">
-                                미리보기
-                            </button>
-                            <button type="button" id="updateLinkClearBtn"
-                                    style="display:none; padding:8px 16px; border-radius:10px; border:none; background:#e2e8f0; color:#374151; font-weight:600; cursor:pointer;">
-                                ✕ 제거
-                            </button>
-                        </div>
-                        <input type="hidden" name="linkUrl" id="updateLinkUrl" value="${preview.url}">
+						<%-- 태그수정 --%>
+						<div
+							style="margin-top: 12px; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f9fafb;">
+							<div
+								style="font-weight: 600; margin-bottom: 8px; color: #374151;">영화
+								태그</div>
+							<div style="flex: 2; position: relative; width: 100%;"
+								class="option-item">
+								<input type="hidden" name="movieId" class="movie-id-hidden"
+									value="${cont.movieId == 0 ? '' : cont.movieId}"> <input class="movie-search"
+									type="text" name="boardTag" placeholder="영화 제목을 입력해주세요."
+									value="${cont.movieTitle}"
+									style="padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; width: 100%; box-sizing: border-box;"
+									onkeydown="if(event.keyCode==13) event.preventDefault();"
+									onkeyup="handleSearch(this, event)" autocomplete="off">
+								<div class="search-results"></div>
+								<div class="db-error-msg"
+									style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+									존재하지 않은 영화입니다. 검색 결과에서 선택해주세요.</div>
+							</div>
+						</div>
 
-                        <%-- 미리보기 영역 --%>
-                        <div id="updateLinkPreviewArea" style="margin-top:12px; position:relative;"></div>
-                    </div>
+						<%-- 링크 첨부 --%>
+						<div
+							style="margin-top: 12px; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f9fafb;">
+							<div
+								style="font-weight: 600; margin-bottom: 8px; color: #374151;">🔗
+								링크 첨부</div>
+							<div style="display: flex; gap: 8px;">
+								<input type="text" id="updateLinkInput"
+									placeholder="https://..."
+									style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; outline: none;">
+								<button type="button" id="updateLinkBtn"
+									style="padding: 8px 16px; border-radius: 10px; border: none; background: #6366f1; color: white; font-weight: 600; cursor: pointer;">
+									미리보기</button>
+								<button type="button" id="updateLinkClearBtn"
+									style="display: none; padding: 8px 16px; border-radius: 10px; border: none; background: #e2e8f0; color: #374151; font-weight: 600; cursor: pointer;">
+									✕ 제거</button>
+							</div>
+							<input type="hidden" name="linkUrl" id="updateLinkUrl"
+								value="${preview.url}">
 
-                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
-                        <button type="button"
-                                onclick="hideUpdateForm()"
-                                style="padding:8px 18px; border-radius:10px; border:none; background:#9ca3af; color:white; font-weight:600; cursor:pointer;">
-                            취소
-                        </button>
+							<%-- 미리보기 영역 --%>
+							<div id="updateLinkPreviewArea"
+								style="margin-top: 12px; position: relative;"></div>
+						</div>
 
-                        <button type="submit"
-                                style="padding:8px 18px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:700; cursor:pointer;">
-                            수정완료
-                        </button>
-                    </div>
-                </form>
-            </div>
+						<div
+							style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+							<button type="button" onclick="hideUpdateForm()"
+								style="padding: 8px 18px; border-radius: 10px; border: none; background: #9ca3af; color: white; font-weight: 600; cursor: pointer;">
+								취소</button>
 
-            <div class="post-footer-actions"
-                 style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                <button type="button" class="btn-list"
-                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
-                        onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
-                </button>
+							<button type="submit"
+								style="padding: 8px 18px; border-radius: 10px; border: none; background: #6366f1; color: white; font-weight: 700; cursor: pointer;">
+								수정완료</button>
+						</div>
+					</form>
+				</div>
 
-                <c:if test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
-                    <div class="right-actions" style="display: flex; gap: 10px;">
-                        <button type="button" class="btn-edit"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
-                                onclick="showUpdateForm()">
-                            수정하기
-                        </button>
-                        <button type="button" class="btn-delete"
-                                onclick="deletePost(${cont.boardId})"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer; color: #ef4444;">
-                            삭제하기
-                        </button>
-                    </div>
-                </c:if>
-            </div>
+				<div class="post-footer-actions"
+					style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+					<button type="button" class="btn-list"
+						style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
+						onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
+					</button>
 
-            <div class="post-actions">
-                <!-- ✅ 변경 포인트: this를 넘겨서 버튼 위치 기준으로 효과 터뜨리기 -->
-                <button class="action-btn" type="button"
-                        onclick="toggleLike(${cont.boardId}, ${cont.boardType}, this)">
-                    👍 <span id="likeCount">${likeCount}</span>
-                </button>
+					<c:if
+						test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
+						<div class="right-actions" style="display: flex; gap: 10px;">
+							<button type="button" class="btn-edit"
+								style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
+								onclick="showUpdateForm()">수정하기</button>
+							<button type="button" class="btn-delete"
+								onclick="deletePost(${cont.boardId})"
+								style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer; color: #ef4444;">
+								삭제하기</button>
+						</div>
+					</c:if>
+				</div>
 
-                <button type="button" class="share-btn" id="shareBtn">🔗 공유하기</button>
-            </div>
-        </article>
-		<c:if test="${cont.boardType != 10}">
-        <section class="glass-panel comment-section">
-            <div class="comment-count">댓글 ${clist.size()}개</div>
+				<div class="post-actions">
+					<!-- ✅ 변경 포인트: this를 넘겨서 버튼 위치 기준으로 효과 터뜨리기 -->
+					<button class="action-btn" type="button"
+						onclick="toggleLike(${cont.boardId}, ${cont.boardType}, this)">
+						👍 <span id="likeCount">${likeCount}</span>
+					</button>
 
-            <div class="comment-write">
-                <form action="commentsOk.do" method="post">
-                    <input type="hidden" name="boardId" value="${cont.boardId}">
-                    <input type="hidden" name="boardType" value="${cont.boardType}">
-                    <input type="hidden" name="parentBoardId" value="0">
-                    <input type="hidden" name="parentBoardNo" value="0">
-                    <input type="hidden" name="commentsNo" value="1">
-                    <textarea name="commentsContent" placeholder="댓글을 남겨보세요..." required></textarea>
-                    <div style="display: flex; justify-content: flex-end;">
-                        <button type="submit" class="btn-submit">등록</button>
-                    </div>
-                </form>
-            </div>
+					<button type="button" class="share-btn" id="shareBtn">🔗
+						공유하기</button>
+				</div>
+			</article>
+			<c:if test="${cont.boardType != 10}">
+				<section class="glass-panel comment-section">
+					<div class="comment-count">댓글 ${clist.size()}개</div>
 
-            <div class="comment-list">
-                <c:forEach var="comm" items="${clist}">
-                    <div class="comment-item"
-                         style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
-                        <div class="profile-image-wrap">
-                            <c:choose>
-                                <c:when test="${not empty comm.memProfilePhoto}">
-                                    <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
-                                         src="${pageContext.request.contextPath}/profilePhoto.do?path=${comm.memProfilePhoto}"
-                                         alt="프로필 사진" />
-                                </c:when>
-                                <c:otherwise>
-                                    <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
-                                         src="${pageContext.request.contextPath}/Image/default-avatar.png"
-                                         alt="기본 프로필" />
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
+					<div class="comment-write">
+						<form action="commentsOk.do" method="post">
+							<input type="hidden" name="boardId" value="${cont.boardId}">
+							<input type="hidden" name="boardType" value="${cont.boardType}">
+							<input type="hidden" name="parentBoardId" value="0"> <input
+								type="hidden" name="parentBoardNo" value="0"> <input
+								type="hidden" name="commentsNo" value="1">
+							<textarea name="commentsContent" placeholder="댓글을 남겨보세요..."
+								required></textarea>
+							<div style="display: flex; justify-content: flex-end;">
+								<button type="submit" class="btn-submit">등록</button>
+							</div>
+						</form>
+					</div>
 
-                        <div class="comment-content" style="flex: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div class="comment-user">
-                                        ${comm.commentsName}
-                                    <c:if test="${comm.parentBoardId > 0}">
-                                        <c:forEach var="parent" items="${clist}">
-                                            <c:if test="${parent.commentsId == comm.parentBoardId}">
-                                                <span class="reply-to">
-                                                    ↩ <span class="reply-to-name">@${parent.commentsName}</span>
-                                                </span>
-                                            </c:if>
-                                        </c:forEach>
-                                    </c:if>
-                                </div>
+					<div class="comment-list">
+						<c:forEach var="comm" items="${clist}">
+							<div class="comment-item"
+								style="${comm.parentBoardId > 0 ? 'margin-left: 50px; border-left: 2px solid var(--accent-color); padding-left: 15px;' : ''}">
+								<div class="profile-image-wrap">
+									<c:choose>
+										<c:when test="${not empty comm.memProfilePhoto}">
+											<img
+												style="max-height: 30px; max-width: 30px; border-radius: 50%;"
+												class="profile-photo"
+												src="${pageContext.request.contextPath}/profilePhoto.do?path=${comm.memProfilePhoto}"
+												alt="프로필 사진" />
+										</c:when>
+										<c:otherwise>
+											<img
+												style="max-height: 30px; max-width: 30px; border-radius: 50%;"
+												class="profile-photo"
+												src="${pageContext.request.contextPath}/Image/default-avatar.png"
+												alt="기본 프로필" />
+										</c:otherwise>
+									</c:choose>
+								</div>
 
-                                <c:if test="${not empty sessionScope.memNo and sessionScope.memNo == comm.memNo}">
-                                    <div class="comment-edit-delete" style="font-size: 0.75rem; color:var(--text-sub);">
-                                        <span style="cursor:pointer;"
-                                              onclick="showEditForm(${comm.commentsId})">수정</span>
-                                        <span style="margin: 0 3px;">|</span>
-                                        <span style="cursor:pointer;"
-                                              onclick="deleteComment(${comm.commentsId}, ${cont.boardId})">삭제</span>
-                                    </div>
-                                </c:if>
-                            </div>
+								<div class="comment-content" style="flex: 1;">
+									<div
+										style="display: flex; justify-content: space-between; align-items: center;">
+										<div class="comment-user">
+											${comm.commentsName}
+											<c:if test="${comm.parentBoardId > 0}">
+												<c:forEach var="parent" items="${clist}">
+													<c:if test="${parent.commentsId == comm.parentBoardId}">
+														<span class="reply-to"> ↩ <span
+															class="reply-to-name">@${parent.commentsName}</span>
+														</span>
+													</c:if>
+												</c:forEach>
+											</c:if>
+										</div>
 
-                            <div id="comment-text-${comm.commentsId}" class="comment-text">${comm.commentsContent}</div>
+										<c:if
+											test="${not empty sessionScope.memNo and sessionScope.memNo == comm.memNo}">
+											<div class="comment-edit-delete"
+												style="font-size: 0.75rem; color: var(--text-sub);">
+												<span style="cursor: pointer;"
+													onclick="showEditForm(${comm.commentsId})">수정</span> <span
+													style="margin: 0 3px;">|</span> <span
+													style="cursor: pointer;"
+													onclick="deleteComment(${comm.commentsId}, ${cont.boardId})">삭제</span>
+											</div>
+										</c:if>
+									</div>
 
-                            <div id="edit-form-${comm.commentsId}" style="display:none; margin-top:10px;">
-                                <form action="commentsUpdateOk.do" method="post">
-                                    <input type="hidden" name="commentsId" value="${comm.commentsId}">
-                                    <input type="hidden" name="boardId" value="${cont.boardId}">
-                                    <textarea name="commentsContent" class="glass-panel"
-                                              style="width:100%; min-height: 60px; padding:10px; margin-bottom:5px; border:1px solid var(--accent-color); outline:none; resize:none; border-radius:12px;">${comm.commentsContent}</textarea>
-                                    <div style="display: flex; justify-content: flex-end; gap:5px;">
-                                        <button type="button" class="btn-submit"
-                                                style="background:var(--text-sub); padding:4px 12px; font-size:0.8rem;"
-                                                onclick="hideEditForm(${comm.commentsId})">취소
-                                        </button>
-                                        <button type="submit" class="btn-submit"
-                                                style="padding:4px 12px; font-size:0.8rem;">수정완료
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+									<div id="comment-text-${comm.commentsId}" class="comment-text">${comm.commentsContent}</div>
 
-                            <div class="comment-utils">
-                                <span>${comm.commentsDate}</span>
-                                <span class="reply-trigger"
-                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);"
-                                      onclick="showReplyForm(${comm.commentsId})">답글 달기</span>
-                                <span class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
-                                      onclick="toggleCommentLike(${comm.commentsId}, this)"
-                                      style="cursor:pointer; font-weight:600; color:var(--accent-color);">
-                                    <span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
-                                    좋아요 ${comm.likeCount}
-                                </span>
-                            </div>
+									<div id="edit-form-${comm.commentsId}"
+										style="display: none; margin-top: 10px;">
+										<form action="commentsUpdateOk.do" method="post">
+											<input type="hidden" name="commentsId"
+												value="${comm.commentsId}"> <input type="hidden"
+												name="boardId" value="${cont.boardId}">
+											<textarea name="commentsContent" class="glass-panel"
+												style="width: 100%; min-height: 60px; padding: 10px; margin-bottom: 5px; border: 1px solid var(--accent-color); outline: none; resize: none; border-radius: 12px;">${comm.commentsContent}</textarea>
+											<div
+												style="display: flex; justify-content: flex-end; gap: 5px;">
+												<button type="button" class="btn-submit"
+													style="background: var(--text-sub); padding: 4px 12px; font-size: 0.8rem;"
+													onclick="hideEditForm(${comm.commentsId})">취소</button>
+												<button type="submit" class="btn-submit"
+													style="padding: 4px 12px; font-size: 0.8rem;">수정완료
+												</button>
+											</div>
+										</form>
+									</div>
 
-                            <div id="reply-form-${comm.commentsId}" class="reply-form-container">
-                                <div class="comment-write"
-                                     style="background: #f8fafc; border: 1px solid var(--accent-color); margin-top: 10px;">
-                                    <form action="commentsOk.do" method="post">
-                                        <input type="hidden" name="boardId" value="${cont.boardId}">
-                                        <input type="hidden" name="boardType" value="${cont.boardType}">
-                                        <input type="hidden" name="parentBoardId" value="${comm.commentsId}">
-                                        <input type="hidden" name="parentBoardNo" value="${comm.commentsId}">
-                                        <input type="hidden" name="commentsNo" value="2">
-                                        <textarea name="commentsContent" placeholder="답글을 남겨보세요..." required></textarea>
-                                        <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                                            <button type="button" class="btn-submit"
-                                                    style="background: var(--text-sub);"
-                                                    onclick="hideReplyForm(${comm.commentsId})">취소
-                                            </button>
-                                            <button type="submit" class="btn-submit">답글 등록</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
+									<div class="comment-utils">
+										<span>${comm.commentsDate}</span> <span class="reply-trigger"
+											style="cursor: pointer; font-weight: 600; color: var(--accent-color);"
+											onclick="showReplyForm(${comm.commentsId})">답글 달기</span> <span
+											class="comment-like-btn ${comm.isLiked ? 'liked' : ''}"
+											onclick="toggleCommentLike(${comm.commentsId}, this)"
+											style="cursor: pointer; font-weight: 600; color: var(--accent-color);">
+											<span class="like-icon">${comm.isLiked ? '❤️' : '🤍'}</span>
+											좋아요 ${comm.likeCount}
+										</span>
+									</div>
 
-                <c:if test="${empty clist}">
-                    <div style="text-align: center; color: var(--text-sub); padding: 20px;">첫 번째 댓글을 남겨보세요!</div>
-                </c:if>
-            </div>
-        </section>
-        </c:if>
-    </main>
+									<div id="reply-form-${comm.commentsId}"
+										class="reply-form-container">
+										<div class="comment-write"
+											style="background: #f8fafc; border: 1px solid var(--accent-color); margin-top: 10px;">
+											<form action="commentsOk.do" method="post">
+												<input type="hidden" name="boardId" value="${cont.boardId}">
+												<input type="hidden" name="boardType"
+													value="${cont.boardType}"> <input type="hidden"
+													name="parentBoardId" value="${comm.commentsId}"> <input
+													type="hidden" name="parentBoardNo"
+													value="${comm.commentsId}"> <input type="hidden"
+													name="commentsNo" value="2">
+												<textarea name="commentsContent" placeholder="답글을 남겨보세요..."
+													required></textarea>
+												<div
+													style="display: flex; justify-content: flex-end; gap: 10px;">
+													<button type="button" class="btn-submit"
+														style="background: var(--text-sub);"
+														onclick="hideReplyForm(${comm.commentsId})">취소</button>
+													<button type="submit" class="btn-submit">답글 등록</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
 
-    <aside class="side-panel">
-		<%@ include file="/WEB-INF/views/home/homeSidebar.jsp"%>
+						<c:if test="${empty clist}">
+							<div
+								style="text-align: center; color: var(--text-sub); padding: 20px;">첫
+								번째 댓글을 남겨보세요!</div>
+						</c:if>
+					</div>
+				</section>
+			</c:if>
+		</main>
 
-	</aside>
-</div>
-<jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
+		<aside class="side-panel">
+			<%@ include file="/WEB-INF/views/home/homeSidebar.jsp"%>
+
+		</aside>
+	</div>
+	<jsp:include page="/WEB-INF/views/home/homeFooter.jsp" />
 
 
-<script>
+	<script>
     function toggleMenu(element) {
         const isActive = element.classList.contains('active');
         document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
@@ -1597,6 +1680,6 @@
 
     </script>
 
-    <script src="${pageContext.request.contextPath}/js/board.js"></script>
+	<script src="${pageContext.request.contextPath}/js/board.js"></script>
 </body>
 </html>

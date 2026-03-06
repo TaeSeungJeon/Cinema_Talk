@@ -74,6 +74,24 @@
         WHERE BOARDID = #{boardId}
     </update>
 
+    <!-- 게시글 내용(content) 직접 수정 - BoardUpdateOkController 전용 -->
+    <update id="updateBoardContent" parameterType="DTO.Board.BoardDTO">
+        UPDATE BOARD
+        SET BOARDTITLE   = #{boardTitle},
+            BOARDCONTENT = #{boardContent},
+            <choose>
+                <when test="movieId != -1">
+                    MOVIEID    = #{movieId},
+                    MOVIETITLE = #{movieTitle}
+                </when>
+                <otherwise>
+                    MOVIEID    = NULL,
+                    MOVIETITLE = NULL
+                </otherwise>
+            </choose>
+        WHERE BOARDID = #{boardId}
+    </update>
+
     <delete id="deleteBoard" parameterType="int">
         DELETE
         FROM BOARD

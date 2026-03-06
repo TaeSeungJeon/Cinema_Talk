@@ -3,20 +3,11 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
-import DTO.Board.AddFileDTO;
-import Service.Board.AddFileService;
-import Service.Board.AddFileServiceImpl;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
-
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.UUID;
 
 public class BoardUpdateOkController implements Action {
 
@@ -40,11 +31,19 @@ public class BoardUpdateOkController implements Action {
         String boardTitle = request.getParameter("boardTitle");
         String boardContent = request.getParameter("boardContent");
         String movieId = request.getParameter("movieId");
+
+        System.out.println("===== BoardUpdateOk 디버그 =====");
+        System.out.println("boardId: " + boardId);
+        System.out.println("boardTitle: " + boardTitle);
+        System.out.println("boardContent 길이: " + (boardContent != null ? boardContent.length() : "null"));
+        System.out.println("movieId: " + movieId);
+        System.out.println("================================");
         
 
         BoardService boardService = BoardServiceImpl.getInstance();
 
         int movieIdInt = (movieId == null || movieId.trim().isEmpty()) ? -1 :Integer.parseInt(movieId);
+        if (movieIdInt == 0) movieIdInt = -1;
         String movieTitle = boardService.getMovieTitleforBoard(movieIdInt);
 
         // 기존 글 조회
@@ -64,46 +63,6 @@ public class BoardUpdateOkController implements Action {
             return forward;
         }
 
-        // 파일 업로드 처리
-        try {
-            AddFileService fileService = AddFileServiceImpl.getInstance();
-            Collection<Part> parts = request.getParts();
-            if (parts != null) {
-                String uploadDirPath = request.getServletContext().getRealPath("/upload/board");
-                File uploadDir = new File(uploadDirPath);
-                if (!uploadDir.exists()) uploadDir.mkdirs();
-
-                for (Part part : parts) {
-                    if (!"uploadFiles".equals(part.getName())) continue;
-                    if (part.getSize() <= 0) continue;
-
-                    String originalName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-
-                    String ext = "";
-                    int dot = originalName.lastIndexOf('.');
-                    if (dot >= 0) ext = originalName.substring(dot);
-
-                    String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
-                    File dest = new File(uploadDir, savedName);
-
-                    part.write(dest.getAbsolutePath());
-
-                    String savedRelativePath = "/upload/board/" + savedName;
-
-                    AddFileDTO fdto = new AddFileDTO();
-                    fdto.setBoardId(boardId);
-                    fdto.setBoardType(originalBoard.getBoardType());
-                    fdto.setFileName(originalName);
-                    fdto.setFilePath(savedRelativePath);
-                    fdto.setFileSize((int) part.getSize());
-
-                    fileService.insertFile(fdto);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         // 수정 DTO 세팅
         BoardDTO bdto = new BoardDTO();
         bdto.setBoardId(boardId);
@@ -113,7 +72,7 @@ public class BoardUpdateOkController implements Action {
         bdto.setMovieTitle(movieTitle);
 
         // 수정 실행
-        boardService.updateBoard(bdto);
+        boardService.updateBoardContent(bdto);
 
         // 상세페이지로 이동
         forward.setPath("postDetail.do?boardId=" + boardId);

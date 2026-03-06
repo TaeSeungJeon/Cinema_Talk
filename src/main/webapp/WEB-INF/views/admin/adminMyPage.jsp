@@ -289,7 +289,7 @@ body {
 
 			<!-- CONTENT -->
 			<div class="admin-content" id="admin-content">
-				<jsp:include page="/WEB-INF/views/admin/stats/adminStats.jsp" />
+				<%-- 초기 데이터는 아래 AJAX로 로드 --%>
 			</div>
 		</div>
 
@@ -302,6 +302,7 @@ var contextPath = "${pageContext.request.contextPath}";
 
 $(function(){
 
+    // 사이드바 클릭 이벤트
     $(".admin-sidebar").on("click", ".side-link", function(e){
 
         e.preventDefault();
@@ -326,6 +327,24 @@ $(function(){
         });
 
     });
+
+    // 페이지 최초 로드 시 활성 사이드바 링크의 콘텐츠를 자동으로 불러오기
+    var $activeLink = $(".admin-sidebar .side-link.active");
+    if ($activeLink.length) {
+        $.ajax({
+            url: $activeLink.attr("href"),
+            type: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            success: function(response){
+                $("#admin-content").html(response);
+            },
+            error: function(xhr){
+                console.log("초기 로드 에러:", xhr.status);
+            }
+        });
+    }
 
 });
 function showToast(message, type = "success") {

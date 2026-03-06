@@ -74,7 +74,10 @@ public class MyPageController implements Action {
 		
 		// 전체 장르 목록 (선호 장르 선정 화면용)
 		request.setAttribute("allGenreList", myPageService.getAllGenres());
-
+		
+		//마이페이지에서만 로그아웃 가능하도록 설정
+		request.setAttribute("canLogout", true);
+		
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;

@@ -20,9 +20,9 @@
 			border-radius: 8px;
 			border: 1px solid var(--border-color);
 			font-size: 0.85rem;
-			color: #374151;
+			color: var(--text-main);
 			cursor: pointer;
-			background: white;
+			background: var(--glass-bg);
 			min-width: 110px;
 			user-select: none;
 			display: flex;
@@ -44,7 +44,7 @@
 			position: absolute;
 			top: calc(100% + 4px);
 			left: 0;
-			background: white;
+			background: var(--glass-bg);
 			border: 1px solid var(--border-color);
 			border-radius: 12px;
 			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -61,7 +61,7 @@
 			padding: 9px 14px;
 			cursor: pointer;
 			font-size: 1rem;
-			color: #374151;
+			color: var(--text-main);
 			transition: background 0.15s;
 			white-space: nowrap;
 		}
@@ -83,7 +83,7 @@
 		body {
 			font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
 			background-color: var(--bg-color);
-			color: #374151;
+			color: var(--text-main);
 			margin: 0;
 			padding: 25px;
 			display: flex;
@@ -103,7 +103,7 @@
 		}
 
 		.board-search-bar {
-			background: white;
+			background: var(--glass-bg);
 			border-radius: 50px;
 			padding: 12px 30px;
 			width: 50%;
@@ -160,7 +160,7 @@
 			left: 50%;
 			transform: translateX(-50%);
 			width: 90px;
-			background: white;
+			background: var(--glass-bg);
 			border-radius: 12px;
 			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
 			opacity: 0;
@@ -190,7 +190,7 @@
 			outline: none;
 			flex: 1;
 			text-align: center;
-			color: #374151;
+			color: var(--text-main);
 			font-size: 0.95rem;
 		}
 
@@ -227,7 +227,7 @@
 		}
 
 		.glass-panel:hover {
-			background: white;
+			background: var(--glass-bg);
 			transform: translateY(-2px);
 		}
 
@@ -255,7 +255,7 @@
 		}
 
 		.filter-btn {
-			background: white;
+			background: var(--glass-bg);
 			border: 1px solid rgba(0, 0, 0, 0.03);
 			padding: 10px 24px;
 			border-radius: 50px;
@@ -280,7 +280,7 @@
 		}
 
 		.post-card {
-			background: white;
+			background: var(--glass-bg);
 			border-radius: var(--radius-soft);
 			padding: 15px;
 			margin-bottom: 14px;
@@ -308,7 +308,7 @@
 
 		.post-author {
 			font-weight: 700;
-			color: #374151;
+			color: var(--text-main);
 			text-decoration: none;
 		}
 
@@ -334,39 +334,10 @@
 			font-weight: 700;
 		}
 
-		.post-content h2 a { text-decoration: none; color: #374151; }
+		.post-content h2 a { text-decoration: none; color: var(--text-main); }
 
 		aside { display: flex; flex-direction: column; gap: 20px; }
 
-		.side-widget {
-			background: white;
-			border-radius: var(--radius-soft);
-			padding: 25px;
-			box-shadow: var(--shadow-subtle);
-			border: 1px solid rgba(255, 255, 255, 0.5);
-		}
-
-		.widget-title {
-			font-weight: 700;
-			font-size: 1rem;
-			margin-bottom: 18px;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.widget-placeholder {
-			background: var(--bg-elevated);
-			border: 2px dashed var(--border-color);
-			border-radius: 16px;
-			height: 100px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: #94a3b8;
-			font-weight: 700;
-			font-size: 0.85rem;
-		}
 
 		.modal-overlay {
 			position: fixed;
@@ -383,7 +354,7 @@
 		}
 
 		.write-modal {
-			background: white;
+			background: #fff;
 			width: 90%;
 			max-width: 750px;
 			padding: 35px;
@@ -414,7 +385,7 @@
 		.page-btn {
 			padding: 8px 16px;
 			border-radius: 50px;
-			background: white;
+			background: var(--glass-bg);
 			color: #94a3b8;
 			text-decoration: none;
 			font-size: 0.85rem;
@@ -425,7 +396,7 @@
 
 		.page-btn:hover {
 			background: var(--bg-elevated);
-			color: #374151;
+			color: var(--text-main);
 			transform: translateY(-2px);
 		}
 
@@ -576,7 +547,7 @@
 		}
 
 		.notice-bar {
-			background: white;
+			background: var(--glass-bg);
 			border-radius: 50px;
 			padding: 15px 30px;
 			margin-bottom: 25px;
@@ -727,33 +698,8 @@
 	</main>
 
 	<aside>
-		<jsp:include page="/WEB-INF/views/home/homeSidebar2.jsp" />
+		<%@ include file="/WEB-INF/views/home/homeSidebar.jsp"%>
 
-		<div class="side-widget">
-			<div class="widget-title"><span>📊 영화 투표</span></div>
-			<div class="widget-placeholder">
-				<div style="text-align: center;">
-					<p style="margin:0; font-size: 0.8rem;">올해 최고의 기대작은?</p>
-					<button style="margin-top:10px; font-size:0.7rem; padding:5px 10px; border-radius:8px; border:none; background:var(--accent-color); color:white; cursor:pointer;">
-						투표하기
-					</button>
-				</div>
-			</div>
-		</div>
-
-		<div class="side-widget">
-			<div class="widget-title"><span>🏆 우수 리뷰어</span></div>
-			<div style="display: flex; flex-direction: column; gap: 12px;">
-				<div style="display: flex; align-items: center; gap: 10px;">
-					<div style="width:32px; height:32px; border-radius:50%; background:#ddd;"></div>
-					<span style="font-size:0.85rem; font-weight:600;">MovieMaster</span>
-				</div>
-				<div style="display: flex; align-items: center; gap: 10px;">
-					<div style="width:32px; height:32px; border-radius:50%; background:#ccc;"></div>
-					<span style="font-size:0.85rem; font-weight:600;">Critic_Lee</span>
-				</div>
-			</div>
-		</div>
 	</aside>
 </div>
 
@@ -771,7 +717,7 @@
 
 			<div style="display: flex; gap: 10px;">
 				<select name="boardType" required
-						style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-weight: 600;">
+						style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); font-weight: 600;">
 					<option value="" disabled selected>게시판 선택</option>
 					<option value="1">자유게시판</option>
 					<option value="2">영화 리뷰/토론</option>
@@ -925,15 +871,7 @@
 				// 파일 첨부 input 재설정
 				var attachInput = document.getElementById('writeAttachInput');
 				if (attachInput) {
-					// 기존 input 제거 및 새로운 input 생성
-					var newInput = attachInput.cloneNode(true);
-					newInput.dataset.bound = "0"; // 바인딩 상태 초기화
-					attachInput.parentNode.replaceChild(newInput, attachInput);
-
-					// 파일 첨부 이벤트 재바인딩
-					if (typeof window.rebindFileInput === 'function') {
-						window.rebindFileInput();
-					}
+					attachInput.value = "";
 				}
 			}
 		};
@@ -1240,6 +1178,10 @@
 
 					// 같은 파일 재선택 UX를 위해 input 교체
 					var newInput = inp.cloneNode(true);
+
+					delete newInput.dataset.bound;
+					newInput.value = "";
+
 					inp.parentNode.replaceChild(newInput, inp);
 					input = newInput;
 					bindFileInput(newInput);
@@ -1248,24 +1190,6 @@
 
 			bindFileInput(input);
 		})();
-		// 파일 첨부 재바인딩을 위한 전역 함수
-		window.rebindFileInput = function() {
-			var trigger = document.getElementById('writeAttachTrigger');
-			var input   = document.getElementById('writeAttachInput');
-			var name    = document.getElementById('writeAttachName');
-
-			if (!trigger || !input || !name) return;
-
-			// 기존 이벤트 제거 후 새로 바인딩
-			trigger.removeEventListener('click', arguments.callee);
-
-			trigger.addEventListener('click', function () {
-				saveEditSelection();
-				input.click();
-			});
-
-			bindFileInput(input);
-		};
 
 		(function () {
 			const CTX_L    = window.__CTX || "";

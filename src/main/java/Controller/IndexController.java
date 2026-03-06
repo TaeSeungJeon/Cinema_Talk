@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 public class IndexController implements Action {
 
+
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -29,6 +30,17 @@ public class IndexController implements Action {
 		response.setContentType("text/html;charset=UTF-8");
 		HttpSession session = request.getSession();
 		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
+
+		// ===== 인트로 영역 =====
+		if (session.getAttribute("intro") == null) {
+			session.setAttribute("intro", "done");
+
+			ActionForward introForward = new ActionForward();
+			introForward.setRedirect(false);
+			introForward.setPath("/WEB-INF/views/splash.jsp");
+			return introForward;
+		}
+		// ==================================
 
 		Object memNoObj = session.getAttribute("memNo");
 

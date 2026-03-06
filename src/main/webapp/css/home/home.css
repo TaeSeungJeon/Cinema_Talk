@@ -1,9 +1,9 @@
 .side-widget {
-    background: rgba(20, 20, 20, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     border-radius: var(--radius-soft);
     padding: 25px;
     box-shadow: var(--shadow-subtle);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .widget-title {
@@ -34,7 +34,7 @@
 
 .hot-item {
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 10px;
     align-items: center;
@@ -88,8 +88,8 @@
 .side-popular-tab-btn {
     padding: 5px 7px;
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
     color: var(--text-sub);
     font-weight: 800;
     cursor: pointer;
@@ -117,14 +117,14 @@
     align-items: center;
     gap: 10px;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: inherit;
     transition: 0.2s;
 }
 
 .side-popular-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     padding-left: 8px;
     padding-right: 8px;
@@ -160,7 +160,7 @@
     padding: 30px 10px;
     font-size: 0.8rem;
     color: var(--text-sub);
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 0, 0, 0.02);
     border-radius: 10px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border: 1px dashed rgba(0, 0, 0, 0.1);
 }

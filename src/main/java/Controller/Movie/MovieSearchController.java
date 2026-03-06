@@ -20,14 +20,19 @@ public class MovieSearchController implements Action {
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession(false);
 		
-		String requestSessionURL = request.getRequestURL().toString();
+		//검색어 리스트 박스
+		int searchOption = Integer.parseInt(request.getParameter("search-option"));
 		
 		//검색 창의 문자열을 가져와 저장
 		String searchWords = request.getParameter("search-words");
 		String encodedSearchWords = java.net.URLEncoder.encode(searchWords, "UTF-8");
-		//검색어 리스트 박스
-		int searchOption = Integer.parseInt(request.getParameter("search-option"));
-		session.setAttribute("requestSessionURL", requestSessionURL + "?search-option=" + searchOption + "&search-words=" + encodedSearchWords);
+		
+		if((request.getParameter("request-option") == null) || !(request.getParameter("request-option").equals("false")))
+		    {
+			String requestSessionURL = request.getRequestURL().toString();
+			session.setAttribute("requestSessionURL", requestSessionURL + "?search-option=" + searchOption + "&search-words=" + encodedSearchWords);
+		}
+		
 		//검색어 유효성 검사		
 		if(searchWords == null) {
 			out.println("<script>");

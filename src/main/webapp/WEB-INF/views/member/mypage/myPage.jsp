@@ -1112,6 +1112,18 @@ body.page-mypage {
 			}
 			return confirm('정말로 탈퇴하시겠습니까?\n탈퇴 후에는 계정을 복구할 수 없습니다.');
 		}
+
+		/* ===== URL 해시 기반 섹션 복원 ===== */
+		(function() {
+			var hash = location.hash.replace('#', '');
+			if (hash) {
+				showSection(hash);
+				// 해시 제거 (뒤로가기 시 혼란 방지)
+				if (history.replaceState) {
+					history.replaceState(null, null, location.pathname + location.search);
+				}
+			}
+		})();
 	</script>
 
 </body>

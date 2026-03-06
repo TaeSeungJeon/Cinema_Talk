@@ -50,7 +50,7 @@ function handleSearch(input,e) {
     searchTimer = setTimeout(() => {
     $.ajax({
         url: 'searchMovie.do',
-        data: { "search-words": query, "search-option": 0 },
+        data: { "search-words": query, "search-option": 0 , "request-option": "false"},
         dataType: 'html',
         success: function(response) {
             const $html = $(response);

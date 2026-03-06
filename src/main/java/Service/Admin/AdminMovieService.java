@@ -1,6 +1,6 @@
 package Service.Admin;
 
-import DTO.Admin.MovieSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO;
 
 public interface AdminMovieService {
 

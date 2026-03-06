@@ -1,14 +1,14 @@
-package Controller.Admin;
+package Controller.Admin.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import Controller.Action;
 import Controller.ActionForward;
-import DTO.Admin.AdminMovieDetailDTO;
-import DTO.Admin.MovieSaveDTO;
-import DTO.Admin.MovieSaveDTO.CastSaveDTO;
-import DTO.Admin.MovieSaveDTO.CrewSaveDTO;
+import DTO.Admin.Movie.AdminMovieDetailDTO;
+import DTO.Admin.Movie.MovieSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CastSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CrewSaveDTO;
 import DTO.Movie.MovieDTO;
 import Service.Admin.AdminMovieService;
 import Service.Admin.AdminMovieServiceImpl;

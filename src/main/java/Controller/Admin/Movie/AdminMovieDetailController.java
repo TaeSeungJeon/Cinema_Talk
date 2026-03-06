@@ -1,4 +1,4 @@
-package Controller.Admin;
+package Controller.Admin.Movie;
 
 import java.util.List;
 import java.util.Set;
@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import Controller.Action;
 import Controller.ActionForward;
-import DTO.Admin.AdminMovieDetailDTO;
+import DTO.Admin.Movie.AdminMovieDetailDTO;
 import DTO.Movie.GenreDTO;
 import DTO.Movie.MovieDetailDTO;
 import Service.Member.MovieRecommend.MemberMovieRecommendService;
@@ -74,7 +74,7 @@ public class AdminMovieDetailController implements Action {
 
         ActionForward forward = new ActionForward();
         forward.setRedirect(false);
-        forward.setPath("/WEB-INF/views/admin/adminMovieDetail.jsp");
+        forward.setPath("/WEB-INF/views/admin/movie/adminMovieDetail.jsp");
 
         return forward;
 	}

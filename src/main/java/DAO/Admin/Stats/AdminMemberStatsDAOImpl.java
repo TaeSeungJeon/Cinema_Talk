@@ -96,15 +96,8 @@ public class AdminMemberStatsDAOImpl implements AdminMemberStatsDAO {
 
 	// 게시글 TOP 10 회원
 	@Override
-	public List<TopMemberDTO> selTopBoardMembers() {
+	public List<TopMemberDTO> selTopMembers() {
 		return session.selectList("AdminMemberStats.selTopBoardMembers");
 	}
-
-	// 댓글 TOP 10 회원
-	@Override
-	public List<TopMemberDTO> selTopCommentMembers() {
-		return session.selectList("AdminMemberStats.selTopCommentMembers");
-	}
-
 
 }

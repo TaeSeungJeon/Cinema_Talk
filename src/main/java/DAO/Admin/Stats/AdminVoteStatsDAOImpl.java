@@ -53,7 +53,7 @@ public class AdminVoteStatsDAOImpl implements AdminVoteStatsDAO {
 		return session.selectOne("AdminVoteStats.selActiveVoteStat");
 	}
 
-	// 월별 투표 참여 추이
+	// 일별 투표 참여 추이
 	@Override
 	public List<TrendDTO> selMonthlyVoteTrend(DateRangeDTO dataRange) {
 		return session.selectList("AdminVoteStats.selMonthlyVoteTrend", dataRange);

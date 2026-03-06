@@ -43,8 +43,8 @@ public class AdminInquiryStatsDAOImpl implements AdminInquiryStatsDAO {
 
 	// 총 처리 중인 문의 수
 	@Override
-	public int selProcessingInquiryCnt() {
-		return session.selectOne("AdminInquiryStats.selProcessingInquiryCnt");
+	public int selPendingInquiryCnt() {
+		return session.selectOne("AdminInquiryStats.selPendingInquiryCnt");
 	}
 
 	// 평균 문의 처리 시간(처리 댓글 등록일 - 문의 등록일)

@@ -1,4 +1,4 @@
-package DTO.Admin;
+package DTO.Admin.Movie;
 
 import java.util.List;
 

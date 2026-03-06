@@ -45,19 +45,18 @@
 		]]>
     </select>
     
-    <!-- 총 처리 중인 문의 수 -->
-    <select id="selProcessingInquiryCnt" resultType="int">
+    <!-- 미처리 문의 수 -->
+    <select id="selPendingInquiryCnt" resultType="int">
         <![CDATA[
         SELECT COUNT(*)
-	    FROM BOARD b
-	    WHERE b.boardType = 11
-	      AND b.boardViewCount > 0
-	      AND NOT EXISTS (
-	            SELECT 1
-	            FROM COMMENTS c
-	            WHERE c.boardId = b.boardId
-	              AND c.boardType = b.boardType
-	      )
+		    FROM BOARD b
+		    WHERE b.boardType = 11
+		      AND NOT EXISTS (
+		            SELECT 1
+		            FROM COMMENTS c
+		            WHERE c.boardId = b.boardId
+		              AND c.boardType = b.boardType
+		      )
 		]]>
     </select>
     
@@ -82,13 +81,14 @@
         <![CDATA[
 		SELECT
 		    COUNT(CASE WHEN c.boardId IS NOT NULL THEN 1 END) AS completedCnt,
-		    COUNT(CASE WHEN c.boardId IS NULL AND NVL(b.boardViewCount, 0) > 0 THEN 1 END) AS processingCnt,
-		    COUNT(CASE WHEN c.boardId IS NULL AND NVL(b.boardViewCount, 0) = 0 THEN 1 END) AS pendingCnt
+		    COUNT(CASE WHEN c.boardId IS NULL THEN 1 END) AS pendingCnt
 		FROM BOARD b
-		LEFT OUTER JOIN (
-		    SELECT DISTINCT boardId, boardType 
+		LEFT JOIN (
+		    SELECT DISTINCT boardId, boardType
 		    FROM COMMENTS
-		) c ON b.boardId = c.boardId AND b.boardType = c.boardType
+		) c
+		ON b.boardId = c.boardId
+		AND b.boardType = c.boardType
 		WHERE b.boardType = 11
 		  AND b.boardDate >= #{startDate}
 		  AND b.boardDate < #{endDate} + 1
@@ -99,14 +99,14 @@
     <select id="selDailyReceivedInquiryTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="trend">
         <![CDATA[
         SELECT
-	        TRUNC(boardDate) AS regDate,
+	        TO_CHAR(TRUNC(boardDate), 'YYYY-MM-DD') AS regDate,
 	        COUNT(*) AS cnt
 	    FROM BOARD
 	    WHERE boardType = 11
 	      AND boardDate >= #{startDate}
-		  AND boardDate < #{endDate} + 1
+	      AND boardDate < #{endDate} + 1
 	    GROUP BY TRUNC(boardDate)
-	    ORDER BY regDate
+	    ORDER BY TRUNC(boardDate)
 	    ]]>
     </select>
   </mapper>

@@ -127,22 +127,32 @@
 	gap: 0.5rem;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit {
 	padding: 0.5rem 1rem;
 	font-size: 0.875rem;
 	font-weight: 500;
-	color: #fff;
-	background: #3b82f6;
+	background: #e0e7ff;
+	color: #6366f1;
 	border: none;
 	border-radius: 0.375rem;
 	cursor: pointer;
 	transition: background 0.3s;
 }
 
-.btn-edit:hover, .btn-delete:hover {
-	background: #2563eb;
+.btn-delete {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	background: #fee2e2;
+	color: #ef4444;
+	border: none;
+	border-radius: 0.375rem;
+	cursor: pointer;
+	transition: background 0.3s;
 }
 
+.btn-edit:hover { background: #4f46e5; color: #fff; border-color: #0284c7; }
+.btn-delete:hover { background: #ef4444; color: #fff; border-color: #0284c7; }
 .meta-row {
 	display: flex;
 	justify-content: flex-start;

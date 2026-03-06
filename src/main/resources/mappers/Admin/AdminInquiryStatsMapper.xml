@@ -98,15 +98,20 @@
     <!-- 일별 문의 접수 추이 -->
     <select id="selDailyReceivedInquiryTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="trend">
         <![CDATA[
-        SELECT
-	        TO_CHAR(TRUNC(boardDate), 'YYYY-MM-DD') AS regDate,
-	        COUNT(*) AS cnt
-	    FROM BOARD
-	    WHERE boardType = 11
-	      AND boardDate >= #{startDate}
-	      AND boardDate < #{endDate} + 1
-	    GROUP BY TRUNC(boardDate)
-	    ORDER BY TRUNC(boardDate)
-	    ]]>
+		WITH date_range AS (
+		    SELECT TRUNC(#{startDate}) + LEVEL - 1 AS dt
+		    FROM dual
+		    CONNECT BY LEVEL <= TRUNC(#{endDate}) - TRUNC(#{startDate}) + 1
+		)
+		SELECT
+		    TO_CHAR(d.dt, 'YYYY-MM-DD') AS regDate,
+		    NVL(COUNT(b.boardDate), 0) AS cnt
+		FROM date_range d
+		LEFT JOIN BOARD b
+		    ON TRUNC(b.boardDate) = d.dt
+		    AND b.boardType = 11
+		GROUP BY d.dt
+		ORDER BY d.dt
+		]]>
     </select>
   </mapper>

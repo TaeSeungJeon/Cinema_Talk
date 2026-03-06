@@ -13,7 +13,7 @@
                 </c:when>
                 <c:otherwise>
                     <img class="sidebar-profile-photo" 
-                         src="${pageContext.request.contextPath}/images/default-avatar.png" 
+                         src="${pageContext.request.contextPath}/main/webapp/Image/default-avatar.png"
                          alt="기본 프로필" />
                 </c:otherwise>
             </c:choose>
@@ -42,7 +42,7 @@
         </button>
         <button class="sidebar-item" data-section="likes" onclick="showSection('likes')">
             <span class="sidebar-icon">❤️</span>
-            <span class="sidebar-text">좋아요 표시한 영화/게시판</span>
+            <span class="sidebar-text">좋아요 영화/게시판</span>
         </button>
         <button class="sidebar-item" data-section="genre" onclick="showSection('genre')">
             <span class="sidebar-icon">🎭</span>

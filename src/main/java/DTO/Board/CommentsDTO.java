@@ -21,4 +21,6 @@ public class CommentsDTO {
     
     // 마이페이지용 추가 필드
     private String boardTitle;
+
+    private String memProfilePhoto;
 }

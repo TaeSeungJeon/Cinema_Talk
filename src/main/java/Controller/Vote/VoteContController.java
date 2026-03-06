@@ -80,14 +80,25 @@ public class VoteContController implements Action {
 		    voteReg.setVoterCount(totalCount); 
 		}
 		
+		List<VoteRecordDTO> voteRecordListbyVote = new ArrayList<>();
+		voteRecordListbyVote = voteService.getVoteRecordByVoteId(voteId);
+		
 		if(voteReg.getVoteStatus().equals("CLOSED") || 
 			(voteReg.getVoteStatus().equals("ACTIVE") && voted)) {
 				
 			voteReg.setResultList(voteResult);
-			request.setAttribute("voteRecordList", voteService.getVoteRecordByVoteId(voteId));
+			request.setAttribute("voteRecordList",voteRecordListbyVote);
 		}
-	
-
+		
+		long commentCount = 0;
+		
+		if (voteRecordListbyVote != null) {
+		    commentCount = voteRecordListbyVote.stream()
+		        .filter(record -> record.getVoteCommentText() != null && !record.getVoteCommentText().trim().isEmpty())
+		        .count();
+		}
+		voteReg.setCommentCount((int)commentCount);
+		
 		voteReg.setVoted(voted);
 		
 		

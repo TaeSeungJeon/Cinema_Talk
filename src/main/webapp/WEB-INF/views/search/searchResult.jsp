@@ -49,6 +49,7 @@
         border-radius: var(--radius-soft);
         padding: 20px 25px;
         margin: 30px 0;
+        margin-top: 0px;
         box-shadow: var(--shadow-subtle);
     }
 
@@ -278,6 +279,7 @@
                 <c:when test="${findField == 1}">감독</c:when>
                 <c:when test="${findField == 2}">배우</c:when>
                 <c:when test="${findField == 3}">장르</c:when>
+                <c:when test="${findField == 4}">제작진</c:when>
             </c:choose>
             검색: "<span class="highlight">${findName}</span>"
         </h2>

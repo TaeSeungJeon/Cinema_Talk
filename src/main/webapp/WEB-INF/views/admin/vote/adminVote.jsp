@@ -1,6 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <head>
     <meta charset="UTF-8">
     <title>Admin - 투표 관리 시스템</title>
@@ -32,12 +32,8 @@
 			margin: 0;
 		}
 		
-		body::-webkit-scrollbar {
-		    display: none;
-		}
-		
 		.vote-mgmt-page {
-		   padding:0.5rem 2rem;height: calc(100vh - 12rem);background-color: white;
+		   padding:0.5rem 2rem;height: 100%;background-color: white;
 		   border-radius: 1rem;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); display:flex;flex-direction:column;
 		}
 		
@@ -191,312 +187,503 @@
 		
 		.btn-cancel {background: #e2e8f0;color: #64748b;}
 
-		.btn-add-opt {background: #334155;color: white;font-size: 0.85rem;}
 		
-		/* 선택지(옵션) 아이템 스타일 */
-		.option-wrapper { background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 10px; }
-		
-		.option-item { display: flex; gap: 10px; margin-bottom: 10px; position: relative; }
-		
-		/* 자동완성 결과창 */
-		.search-results { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid var(--border); border-radius: 8px; z-index: 10; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: none; max-height: 200px; overflow-y: auto; }
-		.result-item { padding: 10px 15px; cursor: pointer; transition: 0.2s; }
-		.result-item:hover { background: #f0f4ff; color: var(--primary); }
-		
-		.vote-result-cont { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-		.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
-		.result-header h3 { font-size: 1.25rem; color: #1e293b; margin: 0; }
-		
-		.badge { background: #f1f5f9; color: #475569; padding: 6px 12px; border-radius: 20px; font-size: 0.875rem; margin-left: 8px; }
-		
-		.badge strong {color: #2563eb;}
-		
-		.item-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
-		.movie-title { font-weight: 600; color: #334155; }
-		.vote-count { color: #64748b; font-weight: 500; }
-		
-		/* 프로그레스 바 스타일 */
-		.progress-bar-wrap { width: 100%; height: 12px; background-color: #f1f5f9; border-radius: 6px; overflow: hidden; }
-		.progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); border-radius: 6px; width: 0%; transition: width 1.2s cubic-bezier(0.1, 0.5, 0.5, 1); }
-		.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; }
-		
-		.btn-close { background: none; border: none; font-size: 2rem; font-weight: 300; color: #64748b; cursor: pointer; line-height: 1; padding: 0 5px; transition: color 0.2s, transform 0.2s;position: absolute;
-    		top: 20px; right: 25px; }
-		.btn-close:hover { color: #1e293b; transform: scale(1.1); }
-		#vote-modal-header { margin: 0; font-size: 1.5rem; }
-		.status-badge-error {display: inline-flex;align-items: center;gap: 4px;
-		}
+}
+input[type="text"], input[type="date"], select, textarea {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	font-size: 1rem;
+	box-sizing: border-box;
+}
 
-	
-    </style>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+.section-title {
+	font-weight: 700;
+	margin-top: 25px;
+	margin-bottom: 10px;
+	display: block;
+	color: #475569;
+}
+
+.btn-group {
+	margin-top: 40px;
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+}
+
+.btn {
+	padding: 12px 24px;
+	border-radius: 8px;
+	font-weight: 600;
+	cursor: pointer;
+	border: none;
+	transition: 0.2s;
+}
+
+.btn-save {
+	background: var(--primary);
+	color: white;
+}
+
+.btn-cancel {
+	background: #e2e8f0;
+	color: #64748b;
+}
+
+.btn-add-opt {
+	background: #334155;
+	color: white;
+	font-size: 0.85rem;
+}
+
+/* 선택지(옵션) 아이템 스타일 */
+.option-wrapper {
+	background: #f1f5f9;
+	padding: 20px;
+	border-radius: 12px;
+	margin-top: 10px;
+}
+
+.option-item {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 10px;
+	position: relative;
+}
+
+/* 자동완성 결과창 */
+.search-results {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	background: white;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	z-index: 10;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	display: none;
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.result-item {
+	padding: 10px 15px;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.result-item:hover {
+	background: #f0f4ff;
+	color: var(--primary);
+}
+
+.vote-result-cont {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 24px;
+	margin-top: 20px;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.result-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+	border-bottom: 2px solid #f1f5f9;
+	padding-bottom: 15px;
+}
+
+.result-header h3 {
+	font-size: 1.25rem;
+	color: #1e293b;
+	margin: 0;
+}
+
+.badge {
+	background: #f1f5f9;
+	color: #475569;
+	padding: 6px 12px;
+	border-radius: 20px;
+	font-size: 0.875rem;
+	margin-left: 8px;
+}
+
+.badge strong {
+	color: #2563eb;
+}
+
+.item-info {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 8px;
+	font-size: 0.95rem;
+}
+
+.movie-title {
+	font-weight: 600;
+	color: #334155;
+}
+
+.vote-count {
+	color: #64748b;
+	font-weight: 500;
+}
+
+/* 프로그레스 바 스타일 */
+.progress-bar-wrap {
+	width: 100%;
+	height: 12px;
+	background-color: #f1f5f9;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.progress-bar-fill {
+	height: 100%;
+	background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+	border-radius: 6px;
+	width: 0%;
+	transition: width 1.2s cubic-bezier(0.1, 0.5, 0.5, 1);
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+	position: relative;
+}
+
+.btn-close {
+	background: none;
+	border: none;
+	font-size: 2rem;
+	font-weight: 300;
+	color: #64748b;
+	cursor: pointer;
+	line-height: 1;
+	padding: 0 5px;
+	transition: color 0.2s, transform 0.2s;
+	position: absolute;
+	top: 20px;
+	right: 25px;
+}
+
+.btn-close:hover {
+	color: #1e293b;
+	transform: scale(1.1);
+}
+
+#vote-modal-header {
+	margin: 0;
+	font-size: 1.5rem;
+}
+
+.status-badge-error {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <body>
 
 	<div class="vote-mgmt-page">
-			
-		   
-		
-			<div class="filter-bar" style="display: flex; justify-content: space-between; align-items: center;   border-radius: 10px;">
-		        <div style="display: flex; gap: 12px; align-items: center;   border-radius: 10px;">
-				    <label for="filterStatus" style="font-weight: 700; font-size: 0.85rem; color: #475569; letter-spacing: -0.02em;">
-				        상태 필터
-				    </label>
-				    
-				   <div class="custom-select-wrapper">
-					    <div class="custom-select-trigger" onclick="toggleDropdown()">
-					        <span id="selectedText">전체 보기</span>
-					        <span class="arrow-icon"></span>
-					    </div>
-					    <ul class="custom-options">
-					        <li class="custom-option" onclick="selectOption('ALL', '전체 보기')">전체 보기</li>
-					        <li class="custom-option" onclick="selectOption('ACTIVE', '진행중')">진행중</li>
-					        <li class="custom-option" onclick="selectOption('ENDED', '종료')">종료</li>
-					        <li class="custom-option" onclick="selectOption('READY', '예정')">예정</li>
-					    </ul>
-					    <input type="hidden" id="filterStatus" name="genre" value="${param.genre != null ? param.genre : 'ALL'}">
+
+
+
+		<div class="filter-bar"
+			style="display: flex; justify-content: space-between; align-items: center; border-radius: 10px;">
+			<div
+				style="display: flex; gap: 12px; align-items: center; border-radius: 10px;">
+				<label for="filterStatus"
+					style="font-weight: 700; font-size: 0.85rem; color: #475569; letter-spacing: -0.02em;">
+					상태 필터 </label>
+
+				<div class="custom-select-wrapper">
+					<div class="custom-select-trigger" onclick="toggleDropdown()">
+						<span id="selectedText">전체 보기</span> <span class="arrow-icon"></span>
 					</div>
+					<ul class="custom-options">
+						<li class="custom-option" onclick="selectOption('ALL', '전체 보기')">전체
+							보기</li>
+						<li class="custom-option" onclick="selectOption('ACTIVE', '진행중')">진행중</li>
+						<li class="custom-option" onclick="selectOption('ENDED', '종료')">종료</li>
+						<li class="custom-option" onclick="selectOption('READY', '예정')">예정</li>
+					</ul>
+					<input type="hidden" id="filterStatus" name="genre"
+						value="${param.genre != null ? param.genre : 'ALL'}">
 				</div>
-
-				 <div><button class="btn btn-add" onclick="addForm()" style="margin-bottom:5px;">+ 신규 투표 등록</button></div>
-			
-		    </div>
-
-			<div style="display:flex; justify-content: flex-end; border-bottom: 1px solid #f3f4f6; ">
-				<c:choose>
-				    <c:when test="${filter == 'ACTIVE'}">
-				    	<p id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인 투표 수: ${totalCount }개</p>
-				    </c:when>
-				    
-				     <c:when test="${filter == 'ENDED'}">
-				    	<p id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">종료된 투표 수: ${totalCount }개</p>
-				    </c:when>
-				    
-				     <c:when test="${filter == 'READY'}">
-				    	<p id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">예정된 투표 수: ${totalCount }개</p>
-				    </c:when>
-				    
-				    <c:otherwise>
-				     	<p  id="voteRegCount" style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총 투표 수: ${totalCount }개</p>
-				    </c:otherwise>
-			    </c:choose>
 			</div>
-			
-		   
-		    <div class="tbl-page-container">
-			    <div class="tbl-container">
-			     	 <table class="vote-table">
-				        <thead>
-				            <tr>
-				                <th onclick="sortTable('voteId',0)" style="cursor:pointer;">ID <span class="sort-icon">↕</span></th>
-				                <th>제목</th>
-				                <th onclick="sortTable('startDate',2)" style="cursor:pointer;">시작일 <span class="sort-icon">↕</span></th>
-				                <th onclick="sortTable('endDate',3)" style="cursor:pointer;">종료일 <span class="sort-icon">↕</span></th>
-				                <th>상태</th>
-								<th>비고</th>
-				                <th>관리</th>
-				            </tr>
-				        </thead>
-				        <tbody>
-						    <c:choose>
-						        <%--  투표 목록이 있을 때 --%>
-						        <c:when test="${not empty voteRegFullList}">
-						            <c:forEach var="vote" items="${voteRegFullList}">
-						                <tr class="vote-row" data-status="${vote.voteStatus}">
-						                    <td>${vote.voteId}</td>
-						                    <td><strong>${vote.voteTitle}</strong></td>
-						                    <td>${vote.voteStartDate}</td>
-						                    <td>${vote.voteEndDate}</td>
-						                    <td>
-						                    <c:choose>
-						                    <c:when test="${vote.voteStatus eq 'ACTIVE'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span></c:when>
-						                    <c:when test="${vote.voteStatus eq 'CLOSED'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span></c:when>
-						                    <c:when test="${vote.voteStatus eq 'READY'}"> <span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span></c:when>
-						                    </c:choose>
-						                      
-						                    </td>
-											<td style="text-align: center;">
-												<c:choose>
-													<c:when test="${(vote.validOptionCount) < 2}">
-														<span class="status-badge-error" 
-															title="현재 선택지: ${(vote.validOptionCount)}개 (최소 2개 필요)"
-															style="color: #ef4444; background: #fee2e2; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: help;">
-															⚠️ 선택지 부족 
-														</span>
-													</c:when>
-													<c:otherwise>
-														<span style="color: #10b981; font-size: 0.8rem;">정상</span>
-													</c:otherwise>
-												</c:choose>
-											</td>
 
-						                    <td>
-						                        <button class="btn btn-cont" onclick="contVote('${vote.voteId}')">상세</button>
-						                        <button class="btn btn-edit" onclick="editVote('${vote.voteId}')">수정</button>
-						                        <button class="btn btn-del" onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
-						                    </td>
-						                </tr>
-						            </c:forEach>
-						            
-						          
-						        </c:when>
-						
-						        <%-- 투표 목록이 없을 때 ⭐ --%>
-						        <c:otherwise>
-						            <tr>
-						                <td colspan="7" style="text-align: center; padding: 100px 0; color: #94a3b8;">
-						                    
-						                    <p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가 없습니다.</p>
-						                    <p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
-						                </td>
-						            </tr>
-						        </c:otherwise>
-						    </c:choose>
-						</tbody>
-				    </table>
-			    
-			    </div>
-			    
-			     <!-- 페이징 -->
-			     <div class="pagination">
-			         <!-- 이전 버튼 -->
-			         <c:choose>
-			             <c:when test="${page > 1}">
-			                 <a href="javascript:void(0);" onclick="pagingOnClick(${page -1})" 
-			                    class="nav-btn">← 이전</a>
-			             </c:when>
-			             <c:otherwise>
-			                 <span class="nav-btn disabled">← 이전</span>
-			             </c:otherwise>
-			         </c:choose>
-			
-			         <!-- 페이지 번호 -->
-			         <c:forEach var="i" begin="${startpage}" end="${endpage}">
-			             <c:choose>
-			                 <c:when test="${i == page}">
-			                     <span class="current">${i}</span>
-			                 </c:when>
-			                 <c:otherwise>
-			                     <a href="javascript:void(0);" onclick="pagingOnClick(${i})">${i}</a>
-			                 </c:otherwise>
-			             </c:choose>
-			         </c:forEach>
-			
-			         <!-- 다음 버튼 -->
-			         <c:choose>
-			             <c:when test="${page < maxpage}">
-			                 <a href="javascript:void(0);" onclick="pagingOnClick(${page + 1})" 
-			                    class="nav-btn">다음 →</a>
-			             </c:when>
-			             <c:otherwise>
-			                 <span class="nav-btn disabled">다음 →</span>
-			             </c:otherwise>
-			         </c:choose>
-			     </div>
-			  
-		    </div>
-		   
-</div>
+			<div>
+				<button class="btn btn-add" onclick="addForm()"
+					style="margin-bottom: 5px;">+ 신규 투표 등록</button>
+			</div>
+
+		</div>
+
+		<div
+			style="display: flex; justify-content: flex-end; border-bottom: 1px solid #f3f4f6;">
+			<c:choose>
+				<c:when test="${filter == 'ACTIVE'}">
+					<p id="voteRegCount"
+						style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">진행중인
+						투표 수: ${totalCount }개</p>
+				</c:when>
+
+				<c:when test="${filter == 'ENDED'}">
+					<p id="voteRegCount"
+						style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">종료된
+						투표 수: ${totalCount }개</p>
+				</c:when>
+
+				<c:when test="${filter == 'READY'}">
+					<p id="voteRegCount"
+						style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">예정된
+						투표 수: ${totalCount }개</p>
+				</c:when>
+
+				<c:otherwise>
+					<p id="voteRegCount"
+						style="font-weight: 700; font-size: 1rem; color: #475569; letter-spacing: -0.02em;">총
+						투표 수: ${totalCount }개</p>
+				</c:otherwise>
+			</c:choose>
+		</div>
+
+
+		<div class="tbl-page-container">
+			<div class="tbl-container">
+				<table class="vote-table">
+					<thead>
+						<tr>
+							<th onclick="sortTable('voteId',0)" style="cursor: pointer;">ID
+								<span class="sort-icon">↕</span>
+							</th>
+							<th>제목</th>
+							<th onclick="sortTable('startDate',2)" style="cursor: pointer;">시작일
+								<span class="sort-icon">↕</span>
+							</th>
+							<th onclick="sortTable('endDate',3)" style="cursor: pointer;">종료일
+								<span class="sort-icon">↕</span>
+							</th>
+							<th>상태</th>
+							<th>비고</th>
+							<th>관리</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:choose>
+							<%--  투표 목록이 있을 때 --%>
+							<c:when test="${not empty voteRegFullList}">
+								<c:forEach var="vote" items="${voteRegFullList}">
+									<tr class="vote-row" data-status="${vote.voteStatus}">
+										<td>${vote.voteId}</td>
+										<td><strong>${vote.voteTitle}</strong></td>
+										<td>${vote.voteStartDate}</td>
+										<td>${vote.voteEndDate}</td>
+										<td><c:choose>
+												<c:when test="${vote.voteStatus eq 'ACTIVE'}">
+													<span class="v-badge ${vote.voteStatus.toLowerCase()}">진행중</span>
+												</c:when>
+												<c:when test="${vote.voteStatus eq 'CLOSED'}">
+													<span class="v-badge ${vote.voteStatus.toLowerCase()}">종료</span>
+												</c:when>
+												<c:when test="${vote.voteStatus eq 'READY'}">
+													<span class="v-badge ${vote.voteStatus.toLowerCase()}">예정</span>
+												</c:when>
+											</c:choose></td>
+										<td style="text-align: center;"><c:choose>
+												<c:when test="${(vote.validOptionCount) < 2}">
+													<span class="status-badge-error"
+														title="현재 선택지: ${(vote.validOptionCount)}개 (최소 2개 필요)"
+														style="color: #ef4444; background: #fee2e2; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: help;">
+														⚠️ 선택지 부족 </span>
+												</c:when>
+												<c:otherwise>
+													<span style="color: #10b981; font-size: 0.8rem;">정상</span>
+												</c:otherwise>
+											</c:choose></td>
+
+										<td>
+											<button class="btn btn-cont"
+												onclick="contVote('${vote.voteId}')">상세</button>
+											<button class="btn btn-edit"
+												onclick="editVote('${vote.voteId}')">수정</button>
+											<button class="btn btn-del"
+												onclick="deleteVote('${vote.voteId}','${vote.voteStatus}')">삭제</button>
+										</td>
+									</tr>
+								</c:forEach>
+
+
+							</c:when>
+
+							<%-- 투표 목록이 없을 때 ⭐ --%>
+							<c:otherwise>
+								<tr>
+									<td colspan="7"
+										style="text-align: center; padding: 100px 0; color: #94a3b8;">
+
+										<p style="font-size: 1.1rem; font-weight: 600;">등록된 투표가
+											없습니다.</p>
+										<p style="font-size: 0.9rem;">새로운 투표를 등록하여 커뮤니티를 활성화해보세요!</p>
+									</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+					</tbody>
+				</table>
+
+			</div>
+
+			<!-- 페이징 -->
+			<div class="pagination">
+				<!-- 이전 버튼 -->
+				<c:choose>
+					<c:when test="${page > 1}">
+						<a href="javascript:void(0);" onclick="pagingOnClick(${page -1})"
+							class="nav-btn">← 이전</a>
+					</c:when>
+					<c:otherwise>
+						<span class="nav-btn disabled">← 이전</span>
+					</c:otherwise>
+				</c:choose>
+
+				<!-- 페이지 번호 -->
+				<c:forEach var="i" begin="${startpage}" end="${endpage}">
+					<c:choose>
+						<c:when test="${i == page}">
+							<span class="current">${i}</span>
+						</c:when>
+						<c:otherwise>
+							<a href="javascript:void(0);" onclick="pagingOnClick(${i})">${i}</a>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+
+				<!-- 다음 버튼 -->
+				<c:choose>
+					<c:when test="${page < maxpage}">
+						<a href="javascript:void(0);" onclick="pagingOnClick(${page + 1})"
+							class="nav-btn">다음 →</a>
+					</c:when>
+					<c:otherwise>
+						<span class="nav-btn disabled">다음 →</span>
+					</c:otherwise>
+				</c:choose>
+			</div>
+
+		</div>
+
+	</div>
 
 
 
 	<div class="modal-overlay" id="voteModal">
 
 		<div class="form-container">
-				 <button type="button" class="btn-close" onclick="closeModal()">&times;</button>
-				<div class="modal-header">
-			        <h2 id="vote-modal-header">투표 상세</h2>
-			    </div>
-		
-				<form id="voteForm" >
-					<input type="hidden" name="voteId" value="${vote.voteId}"> <label
-						class="section-title">투표 제목</label> <input type="text"
-						name="voteTitle" value="${vote.voteTitle}"
-						placeholder="사용자에게 보여질 투표 제목을 입력하세요" required> <label
-						class="section-title">투표 내용</label> <input type="text"
-						name="voteContent" value="${vote.voteContent}"
-						placeholder="이 투표에 대한 설명을 입력하세요" required>
-		
-		
-					<div style="display: flex; gap: 20px;">
-					    <div style="flex: 1;">
-					        <label class="section-title">시작일</label> 
-					        <input type="date" name="voteStartDate" 
-					               value="${not empty vote ? fn:substring(vote.voteStartDate, 0, 10) : ''}" 
-					               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
-					               required>
-					    </div>
-					    <div style="flex: 1;">
-					        <label class="section-title">종료일</label> 
-					        <input type="date" name="voteEndDate" 
-					               value="${not empty vote ? fn:substring(vote.voteEndDate, 0, 10) : ''}" 
-					               ${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''} 
-					               required>
-					    </div>
+			<button type="button" class="btn-close" onclick="closeModal()">&times;</button>
+			<div class="modal-header">
+				<h2 id="vote-modal-header">투표 상세</h2>
+			</div>
+
+			<form id="voteForm">
+				<input type="hidden" name="voteId" value="${vote.voteId}"> <label
+					class="section-title">투표 제목</label> <input type="text"
+					name="voteTitle" value="${vote.voteTitle}"
+					placeholder="사용자에게 보여질 투표 제목을 입력하세요" required> <label
+					class="section-title">투표 내용</label> <input type="text"
+					name="voteContent" value="${vote.voteContent}"
+					placeholder="이 투표에 대한 설명을 입력하세요" required>
+
+
+				<div style="display: flex; gap: 20px;">
+					<div style="flex: 1;">
+						<label class="section-title">시작일</label> <input type="date"
+							name="voteStartDate"
+							value="${not empty vote ? fn:substring(vote.voteStartDate, 0, 10) : ''}"
+							${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''}
+							required>
 					</div>
-					<div
-						style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
-						<label class="section-title">투표 선택지 (영화)</label>
-						<button type="button" class="btn btn-add-opt" onclick="addOption()">+
-							영화 추가</button>
+					<div style="flex: 1;">
+						<label class="section-title">종료일</label> <input type="date"
+							name="voteEndDate"
+							value="${not empty vote ? fn:substring(vote.voteEndDate, 0, 10) : ''}"
+							${(not empty vote and vote.voteStatus eq 'ACTIVE') ? 'readonly style="background-color: #f8fafc; cursor: not-allowed;"' : ''}
+							required>
 					</div>
-		
-					<div id="optionList" class="option-wrapper">
-						<c:choose>
-							<%--  수정 모드: 기존 옵션이 있는 경우 --%>
-							<c:when test="${not empty vote.optionList}">
-								<c:forEach var="opt" items="${vote.optionList}">
-									
-								</c:forEach>
-							</c:when>
-		
-							<%-- 등록 모드: 빈 입력창 하나를 기본으로 노출 --%>
-							<c:otherwise>
+				</div>
+				<div
+					style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
+					<label class="section-title">투표 선택지 (영화)</label>
+					<button type="button" class="btn btn-add-opt" onclick="addOption()">+
+						영화 추가</button>
+				</div>
+
+				<div id="optionList" class="option-wrapper">
+					<c:choose>
+						<%--  수정 모드: 기존 옵션이 있는 경우 --%>
+						<c:when test="${not empty vote.optionList}">
+							<c:forEach var="opt" items="${vote.optionList}">
+
+							</c:forEach>
+						</c:when>
+
+						<%-- 등록 모드: 빈 입력창 하나를 기본으로 노출 --%>
+						<c:otherwise>
 								영화를 추가해주세요
 							</c:otherwise>
-						</c:choose>
-					</div>
-		
-					
-				</form>
-				
-				<!-- 투표결과 -->
-				<div class="vote-result-cont" style="display:none;">
-					<div class="result-header">
-				        <h3> 투표 실시간 현황</h3>
-				        <div class="result-summary">
-				            <span class="badge">총 참여자 <strong id="total-voters">0</strong>명</span>
-				            <span class="badge">댓글 <strong id="total-comments">0</strong>개</span>
-				        </div>
-				    </div>
-				
-				    <div class="result-list" id="result-list">
-				        <div class="result-item">
-				            <div class="item-info">
-				                <span class="movie-title">영화 제목 A</span>
-				                <span class="vote-count">450표 (45%)</span>
-				            </div>
-				            <div class="progress-bar-wrap">
-				                <div class="progress-bar-fill" style="width: 45%;"></div>
-				            </div>
-				        </div>
-				        </div>
+					</c:choose>
 				</div>
-				
-				<div class="btn-group">
-						<button type="button" class="btn btn-cancel"
-							onclick="closeModal()">취소</button>
-						<button type="button"  class="btn btn-save" onclick="validateForm()">등록</button>
+
+
+			</form>
+
+			<!-- 투표결과 -->
+			<div class="vote-result-cont" style="display: none;">
+				<div class="result-header">
+					<h3>투표 실시간 현황</h3>
+					<div class="result-summary">
+						<span class="badge">총 참여자 <strong id="total-voters">0</strong>명
+						</span> <span class="badge">댓글 <strong id="total-comments">0</strong>개
+						</span>
 					</div>
+				</div>
+
+				<div class="result-list" id="result-list">
+					<div class="result-item">
+						<div class="item-info">
+							<span class="movie-title">영화 제목 A</span> <span class="vote-count">450표
+								(45%)</span>
+						</div>
+						<div class="progress-bar-wrap">
+							<div class="progress-bar-fill" style="width: 45%;"></div>
+						</div>
+					</div>
+				</div>
 			</div>
-		
-		
+
+			<div class="btn-group">
+				<button type="button" class="btn btn-cancel" onclick="closeModal()">취소</button>
+				<button type="button" class="btn btn-save" onclick="validateForm()">등록</button>
+			</div>
 		</div>
-	
 
 
-<script>
+	</div>
+
+
+
+	<script>
     var modal = document.getElementById('voteModal');
  
     function openModal(mode,voteId) {

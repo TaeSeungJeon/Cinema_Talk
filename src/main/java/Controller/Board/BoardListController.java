@@ -7,6 +7,7 @@ import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -16,7 +17,9 @@ public class BoardListController implements Action {
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         BoardService service = BoardServiceImpl.getInstance();
-
+		HttpSession session = request.getSession();
+		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
+		
         String filter = request.getParameter("filter");
         if (filter == null || filter.trim().isEmpty()) {
             filter = "all";
@@ -66,6 +69,15 @@ public class BoardListController implements Action {
         // 최신 공지사항 1건
         BoardDTO latestNotice = service.latestNotice();
         request.setAttribute("latestNotice", latestNotice);
+
+        // 일, 주, 월간 인기글 (사이드바용)
+        List<BoardDTO> dailyPopularList   = service.getPopularBoardList("daily",   10);
+        List<BoardDTO> weeklyPopularList  = service.getPopularBoardList("weekly",  10);
+        List<BoardDTO> monthlyPopularList = service.getPopularBoardList("monthly", 10);
+        
+        request.setAttribute("dailyPopularList", dailyPopularList);
+        request.setAttribute("weeklyPopularList", weeklyPopularList);
+        request.setAttribute("monthlyPopularList", monthlyPopularList);
 
         ActionForward forward = new ActionForward();
         forward.setPath("/WEB-INF/views/board/freeBoard.jsp");

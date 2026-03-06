@@ -263,10 +263,11 @@ header {
 </style>
 
 <header>
-	<a href="${pageContext.request.contextPath}/index.do"
-		class="glass-panel"
-		style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema
-		Talk</a>
+	<a href="${pageContext.request.contextPath}/index.do">
+		<img src="${pageContext.request.contextPath}/Image/Logo.png"
+			 alt="Cinema Talk"
+			 style="height: 60px; width: auto;">
+	</a>
 	<div class="search-bar">
 		<form action="searchMovie.do" method="get">
 			<select id="search-option" name="search-option">

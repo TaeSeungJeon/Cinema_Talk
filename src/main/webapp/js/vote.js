@@ -70,23 +70,42 @@ document.addEventListener("DOMContentLoaded", function() {
 						}
                         $this.text("댓글 보기").addClass("go-to-votecont");
                         alert("투표가 성공적으로 기록되었습니다!");
-
+						
 						const comments = data.comments;
+						console.log(comments)
 						let commentHtml = "";
 						if(comments){
 							comments.forEach(function(comment) {
-					            commentHtml += `
-					                <div class="comment-item">
-					                    <strong>${comment.memName}</strong>
-					                    <p>${comment.commentText}</p>
-					                    <small>${comment.createdDate}</small>
-					                </div>
-					            `;
+								if(comment.commentText && comment.commentText.trim() !== ""){
+									
+									
+									let profilePhoto = (comment.profilePhoto && comment.profilePhoto.trim() !== "") 
+									        ? getContextPath() + `/profilePhoto.do?path=` + comment.profilePhoto
+									        : getContextPath() + `/image/default-avatar.png`;
+							commentHtml += `
+							<div class="comment-item">
+								<div class="user-avatar"><img src="${profilePhoto}"/></div>
+								<div class="comment-content" style="flex: 1;">
+								<div style="display: flex; justify-content: space-between; align-items: center;">
+								<div class="comment-user">${comment.memName}</div>
+								</div>
+								<div  class="comment-text">${comment.commentText}</div>
+								
+								<div class="comment-utils">
+								<span>${comment.createdDate}</span>
+								</div>
+								</div>
+							
+							</div>
+						            `;
+								}
+					           
 					        });
 					        
-					
 					        $(".comment-list").html(commentHtml);
-					        $(".comment-count").text(comments.length);
+							$(".comment-section").show();
+							$(".empty-comment-wrapper").hide();
+							
 						}
 						
 						//투표메인페이지에서 투표후 '내가 참여한투표' 에 추가되게 하기 2026/02/25
@@ -132,6 +151,12 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
     };
+	
+	function getContextPath() {
+	    const host = window.location.origin; // http://localhost:8080
+	    const context = window.location.pathname.split('/')[1]; // Cinema_Talk
+	    return host + '/' + context;
+	}
 
     // 슬라이드 관련 로직
     const track = document.querySelector('.vote-track');

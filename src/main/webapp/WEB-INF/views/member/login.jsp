@@ -147,7 +147,9 @@
 <body>
 
 <div class="login-container">
-    <div class="logo-box">로고</div>
+    <img src="${pageContext.request.contextPath}/Image/Logo.png"
+         alt="Cinema Talk"
+         style="height: 60px; width: auto;"><br><br>
 
     <div class="title">로그인</div>
 

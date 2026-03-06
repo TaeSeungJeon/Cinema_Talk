@@ -75,7 +75,7 @@
 		WHERE rnum &gt; = #{startrow}
 	</select>
 
-	<!-- Director로 영화 검색 (페이징) -->
+	<!-- Director로 영화 검색 (페이징) - 정확한 이름 매칭 -->
 	<select id="searchByDirector" parameterType="map"
 		resultType="movie">
 		SELECT * FROM (
@@ -92,7 +92,7 @@
 		AND LOWER(mc.crewJob) LIKE '%director%'
 		AND (
 		<foreach collection="wordList" item="word" separator="OR">
-			LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+			LOWER(p.personName) = LOWER(#{word})
 		</foreach>
 		)
 		)
@@ -103,7 +103,7 @@
 		WHERE rnum &gt; = #{startrow}
 	</select>
 
-	<!-- Actor로 영화 검색 (페이징) -->
+	<!-- Actor로 영화 검색 (페이징) - 정확한 이름 매칭 -->
 	<select id="searchByActor" parameterType="map"
 		resultType="movie">
 		SELECT * FROM (
@@ -119,7 +119,34 @@
 		WHERE mc.movieId = m.movieId
 		AND (
 		<foreach collection="wordList" item="word" separator="OR">
-			LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+			LOWER(p.personName) = LOWER(#{word})
+		</foreach>
+		)
+		)
+		ORDER BY m.movieTitle ASC
+		) sub
+		WHERE ROWNUM &lt; = #{endrow}
+		)
+		WHERE rnum &gt; = #{startrow}
+	</select>
+
+	<!-- 제작진(스태프) 전체로 영화 검색 (감독, 작가, 프로듀서 등 모든 CREW) - 정확한 이름 매칭 -->
+	<select id="searchByCrew" parameterType="map"
+		resultType="movie">
+		SELECT * FROM (
+		SELECT ROWNUM AS rnum, sub.* FROM (
+		SELECT m.movieId, m.movieTitle, m.movieOriginalTitle, m.movieOverview,
+		m.movieReleaseDate, m.movieRuntime, m.moviePosterPath,
+		m.movieBackdropPath,
+		m.movieRatingAverage, m.movieRatingCount, m.movieCreatedAt
+		FROM MOVIE m
+		WHERE EXISTS (
+		SELECT 1 FROM MOVIE_CREW mc
+		JOIN PERSON p ON mc.personId = p.personId
+		WHERE mc.movieId = m.movieId
+		AND (
+		<foreach collection="wordList" item="word" separator="OR">
+			LOWER(p.personName) = LOWER(#{word})
 		</foreach>
 		)
 		)
@@ -173,7 +200,7 @@
 				)
 			</when>
 			<when test="searchOption == 1">
-				<!-- Director 검색 -->
+				<!-- Director 검색 (정확한 이름 매칭) -->
 				SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
 				WHERE EXISTS (
 				SELECT 1 FROM MOVIE_CREW mc
@@ -182,13 +209,13 @@
 				AND LOWER(mc.crewJob) LIKE '%director%'
 				AND (
 				<foreach collection="wordList" item="word" separator="OR">
-					LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+					LOWER(p.personName) = LOWER(#{word})
 				</foreach>
 				)
 				)
 			</when>
 			<when test="searchOption == 2">
-				<!-- Actor 검색 -->
+				<!-- Actor 검색 (정확한 이름 매칭) -->
 				SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
 				WHERE EXISTS (
 				SELECT 1 FROM MOVIE_CAST mc
@@ -196,7 +223,7 @@
 				WHERE mc.movieId = m.movieId
 				AND (
 				<foreach collection="wordList" item="word" separator="OR">
-					LOWER(p.personName) LIKE '%' || LOWER(#{word}) || '%'
+					LOWER(p.personName) = LOWER(#{word})
 				</foreach>
 				)
 				)
@@ -211,6 +238,20 @@
 				AND (
 				<foreach collection="wordList" item="word" separator="OR">
 					LOWER(g.genreName) LIKE '%' || LOWER(#{word}) || '%'
+				</foreach>
+				)
+				)
+			</when>
+			<when test="searchOption == 4">
+				<!-- 제작진(스태프) 전체 검색 (정확한 이름 매칭) -->
+				SELECT COUNT(DISTINCT m.movieId) FROM MOVIE m
+				WHERE EXISTS (
+				SELECT 1 FROM MOVIE_CREW mc
+				JOIN PERSON p ON mc.personId = p.personId
+				WHERE mc.movieId = m.movieId
+				AND (
+				<foreach collection="wordList" item="word" separator="OR">
+					LOWER(p.personName) = LOWER(#{word})
 				</foreach>
 				)
 				)

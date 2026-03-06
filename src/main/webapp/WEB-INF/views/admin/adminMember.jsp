@@ -116,6 +116,20 @@ tbody td{
   opacity:.5;
   cursor:not-allowed;
 }
+
+/* 정지/해제 버튼 */
+.btn-change-state1{
+	background: #ef4444; 
+	color: #fff; 
+	border-color: var(--info-hover);
+}
+
+.btn-change-state2{
+	background: #4f46e5; 
+	color: #fff; 
+	border-color: var(--info-hover);
+}
+
 </style>
 
 <div class="member-mgmt-wrap">
@@ -211,7 +225,7 @@ tbody td{
 //   }
 
   //정지 전환 버튼 클릭
-  $(document).on("click", ".btn-change-state", function(){
+  $(document).on("click", ".js-btn-change-state", function(){
     const memNo = $(this).data("memno");
     const targetState = $(this).data("targetstate"); // 1(정상) 또는 2(정지)
     

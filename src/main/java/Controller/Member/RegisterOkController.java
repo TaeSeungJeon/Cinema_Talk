@@ -69,24 +69,6 @@ public class RegisterOkController implements Action {
             return forward;
         }
         
-//        //전화번호 중복체크
-//        int phoneCnt = memberService.phoneCheck(memPhone);
-//        if(phoneCnt > 0) {
-//        	request.setAttribute("phoneMsg", "이미 가입된 전화번호입니다.");
-//        	forward.setRedirect(false);
-//        	forward.setPath("/WEB-INF/views/member/register.jsp");
-//        	return forward;
-//        }
-        
-//        //이메일 중복 체크
-//        int emailCnt = memberService.emailCheck(memEmail);
-//        if(emailCnt > 0) {
-//        	request.setAttribute("emailMsg", "이미 가입된 이메일입니다.");
-//        	forward.setRedirect(false);
-//        	forward.setPath("/WEB-INF/views/member/register.jsp");
-//        	return forward;
-//        }
-        
         //비밀번호 암호화
         String encPwd = BCrypt.hashpw(memPwd, BCrypt.gensalt());
         
@@ -102,7 +84,7 @@ public class RegisterOkController implements Action {
 		memberService.insertMember(member); //회원저장
 		
 		forward.setRedirect(true);
-		forward.setPath("memberLogin.do"); //로그인 매핑주소로 이동
+		forward.setPath(request.getContextPath() + "/memberLogin.do?join=success"); //회원가입 완료 후 로그인 페이지로 매핑 및 회원가입 완료 메시지
 		return forward;
 	}
 

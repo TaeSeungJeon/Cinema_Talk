@@ -128,6 +128,9 @@ public class MovieDAOImpl implements MovieDAO {
 				case 3:
 					movies = session.selectList("searchByGenre", paramMap);
 					break;
+				case 4:
+					movies = session.selectList("searchByCrew", paramMap);
+					break;
 			}
 
 		} finally {

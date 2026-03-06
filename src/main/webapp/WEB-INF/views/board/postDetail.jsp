@@ -9,6 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>프리미엄 영화 큐레이션 - 게시글 상세</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Black+Han+Sans&family=Gaegu&family=Jua&family=Cute+Font&family=Do+Hyeon&family=Gugi&family=Sunflower:wght@300;500;700&family=Gothic+A1:wght@400;700&family=Stylish&display=swap" rel="stylesheet">
+
+    <!-- ✅ 좋아요 빵빠레(Confetti) 라이브러리: 다른 코드와 충돌 거의 없음 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         /* 폰트 드롭다운 */
         .font-select-wrapper { position: relative; }
@@ -20,7 +24,7 @@
             font-size: 0.85rem;
             color: #374151;
             cursor: pointer;
-            background: white;
+            background: var(--glass-bg);
             min-width: 110px;
             user-select: none;
             display: flex;
@@ -42,7 +46,7 @@
             position: absolute;
             top: calc(100% + 4px);
             left: 0;
-            background: white;
+            background: var(--glass-bg);
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
@@ -68,14 +72,14 @@
         .font-option.selected { background: #ede9fe; color: #6366f1; }
 
         :root {
-            --bg-color: #f0f2f5;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --accent-color: #6366f1;
-            --text-main: #1f2937;
-            --text-sub: #64748b;
+            --bg-color: #0a0a0a;
+            --glass-bg: rgba(20, 20, 20, 0.8);
+            --accent-color: #818cf8;
+            --text-main: #e5e7eb;
+            --text-sub: #9ca3af;
             --radius-soft: 24px;
-            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.05);
-            --shadow-strong: 0 12px 24px rgba(99, 102, 241, 0.15);
+            --shadow-subtle: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-strong: 0 12px 24px rgba(129, 140, 248, 0.2);
         }
 
         body {
@@ -115,7 +119,7 @@
         }
 
         .glass-panel-btn:hover {
-            background: white;
+            background: var(--glass-bg);
             transform: translateY(-2px);
         }
 
@@ -137,7 +141,7 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            background: white;
+            background: var(--glass-bg);
             border-radius: 50px;
             box-shadow: var(--shadow-subtle);
             display: flex;
@@ -303,7 +307,7 @@
         }
 
         .action-btn {
-            background: white;
+            background: var(--glass-bg);
             border: 1px solid rgba(0, 0, 0, 0.05);
             padding: 12px 25px;
             border-radius: 50px;
@@ -333,7 +337,7 @@
         }
 
         .comment-write {
-            background: white;
+            background: var(--glass-bg);
             border-radius: 18px;
             padding: 15px;
             margin-bottom: 30px;
@@ -559,6 +563,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
 
 <%-- include 헤더/네비 유지 --%>
@@ -578,7 +583,7 @@
                         </c:when>
                         <c:otherwise>
                             <img style="max-height: 60px; max-width: 60px; border-radius: 50%;" class="profile-photo"
-                                 src="${pageContext.request.contextPath}/images/default-avatar.png"
+                                 src="${pageContext.request.contextPath}/main/webapp/Image/default-avatar.png"
                                  alt="기본 프로필" />
                         </c:otherwise>
                     </c:choose>
@@ -819,20 +824,20 @@
             <div class="post-footer-actions"
                  style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
                 <button type="button" class="btn-list"
-                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
+                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
                         onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
                 </button>
 
                 <c:if test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
                     <div class="right-actions" style="display: flex; gap: 10px;">
                         <button type="button" class="btn-edit"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer;"
+                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
                                 onclick="showUpdateForm()">
                             수정하기
                         </button>
                         <button type="button" class="btn-delete"
                                 onclick="deletePost(${cont.boardId})"
-                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; color: #ef4444;">
+                                style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer; color: #ef4444;">
                             삭제하기
                         </button>
                     </div>
@@ -840,8 +845,9 @@
             </div>
 
             <div class="post-actions">
+                <!-- ✅ 변경 포인트: this를 넘겨서 버튼 위치 기준으로 효과 터뜨리기 -->
                 <button class="action-btn" type="button"
-                        onclick="toggleLike(${cont.boardId}, ${cont.boardType})">
+                        onclick="toggleLike(${cont.boardId}, ${cont.boardType}, this)">
                     👍 <span id="likeCount">${likeCount}</span>
                 </button>
 
@@ -879,7 +885,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <img style="max-height: 30px; max-width: 30px; border-radius: 50%;" class="profile-photo"
-                                         src="${pageContext.request.contextPath}/images/default-avatar.png"
+                                         src="${pageContext.request.contextPath}/main/webapp/Image/default-avatar.png"
                                          alt="기본 프로필" />
                                 </c:otherwise>
                             </c:choose>
@@ -984,560 +990,603 @@
 <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 
 
-    <script>
-        function toggleMenu(element) {
-            const isActive = element.classList.contains('active');
+<script>
+    function toggleMenu(element) {
+        const isActive = element.classList.contains('active');
+        document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
+        if (!isActive) element.classList.add('active');
+    }
+
+    window.addEventListener('click', function (e) {
+        if (!e.target.closest('.category-bubble')) {
             document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
-            if (!isActive) element.classList.add('active');
         }
+    });
 
-        window.addEventListener('click', function (e) {
-            if (!e.target.closest('.category-bubble')) {
-                document.querySelectorAll('.category-bubble').forEach(b => b.classList.remove('active'));
-            }
-        });
+    function showReplyForm(id) {
+        document.querySelectorAll('.reply-form-container').forEach(el => el.style.display = 'none');
+        document.getElementById('reply-form-' + id).style.display = 'block';
+    }
 
-        function showReplyForm(id) {
-            document.querySelectorAll('.reply-form-container').forEach(el => el.style.display = 'none');
-            document.getElementById('reply-form-' + id).style.display = 'block';
+    function hideReplyForm(id) {
+        document.getElementById('reply-form-' + id).style.display = 'none';
+    }
+
+    function showEditForm(id) {
+        document.getElementById('comment-text-' + id).style.display = 'none';
+        document.getElementById('edit-form-' + id).style.display = 'block';
+    }
+
+    function hideEditForm(id) {
+        document.getElementById('comment-text-' + id).style.display = 'block';
+        document.getElementById('edit-form-' + id).style.display = 'none';
+    }
+
+    function deleteComment(cId, bId) {
+        if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+            location.href = "commentsDeleteOk.do?commentsId=" + cId + "&boardId=" + bId;
         }
+    }
 
-        function hideReplyForm(id) {
-            document.getElementById('reply-form-' + id).style.display = 'none';
+    function deletePost(boardId) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+            const form = document.createElement("form");
+            form.method = "post";
+            form.action = "<c:url value='/boardDelete.do'/>";
+
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "boardId";
+            input.value = boardId;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
+    }
 
-        function showEditForm(id) {
-            document.getElementById('comment-text-' + id).style.display = 'none';
-            document.getElementById('edit-form-' + id).style.display = 'block';
-        }
+    function showUpdateForm() {
+        document.getElementById("post-body").style.display = "none";
+        document.getElementById("update-form").style.display = "block";
+        document.querySelector(".post-footer-actions").style.display = "none";
+        document.querySelector(".post-actions").style.display = "none";
+    }
 
-        function hideEditForm(id) {
-            document.getElementById('comment-text-' + id).style.display = 'block';
-            document.getElementById('edit-form-' + id).style.display = 'none';
-        }
+    function hideUpdateForm() {
+        document.getElementById("post-body").style.display = "block";
+        document.getElementById("update-form").style.display = "none";
+        document.querySelector(".post-footer-actions").style.display = "flex";
+        document.querySelector(".post-actions").style.display = "flex";
+    }
 
-        function deleteComment(cId, bId) {
-            if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
-                location.href = "commentsDeleteOk.do?commentsId=" + cId + "&boardId=" + bId;
-            }
-        }
+    const CTX = "${pageContext.request.contextPath}";
 
-        function deletePost(boardId) {
-            if (confirm("정말 삭제하시겠습니까?")) {
-                const form = document.createElement("form");
-                form.method = "post";
-                form.action = "<c:url value='/boardDelete.do'/>";
+    /* 좋아요 버튼 효과 */
+    function likeConfettiFromButton(btn) {
+        try {
+            if (typeof confetti !== "function") return;
+            if (!btn || !btn.getBoundingClientRect) return;
 
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "boardId";
-                input.value = boardId;
+            const rect = btn.getBoundingClientRect();
+            const x = (rect.left + rect.width / 2) / window.innerWidth;
+            const y = (rect.top + rect.height / 2) / window.innerHeight;
 
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        function showUpdateForm() {
-            document.getElementById("post-body").style.display = "none";
-            document.getElementById("update-form").style.display = "block";
-            document.querySelector(".post-footer-actions").style.display = "none";
-            document.querySelector(".post-actions").style.display = "none";
-        }
-
-        function hideUpdateForm() {
-            document.getElementById("post-body").style.display = "block";
-            document.getElementById("update-form").style.display = "none";
-            document.querySelector(".post-footer-actions").style.display = "flex";
-            document.querySelector(".post-actions").style.display = "flex";
-        }
-
-        const CTX = "${pageContext.request.contextPath}";
-
-        function toggleLike(boardId, boardType) {
-            fetch(CTX + "/boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
-                .then(r => r.text())
-                .then(res => {
-                    if (res === "LOGIN_REQUIRED") {
-                        alert("로그인 후 이용 가능합니다.");
-                        location.href = CTX + "/memberLogin.do";
-                        return;
-                    }
-                    document.getElementById("likeCount").innerText = res;
-                });
-        }
-
-        function toggleCommentLike(commentsId, btnEl) {
-            fetch(CTX + "/commentsLike.do?commentsId=" + commentsId)
-                .then(r => r.text())
-                .then(res => {
-                    if (res === "LOGIN_REQUIRED") {
-                        alert("로그인 후 이용 가능합니다.");
-                        location.href = CTX + "/memberLogin.do";
-                        return;
-                    }
-                    var isLiked = btnEl.classList.contains("liked");
-                    var likeCount = parseInt(res);
-                    var newIcon = !isLiked ? '❤️' : '🤍';
-
-                    if (isLiked) {
-                        btnEl.classList.remove("liked");
-                    } else {
-                        btnEl.classList.add("liked");
-                    }
-
-                    btnEl.innerHTML =
-                        '<span class="like-icon">' + newIcon + '</span> 좋아요 ' + likeCount;
-
-                    // innerHTML 교체 후 onclick 재등록
-                    btnEl.onclick = function() { toggleCommentLike(commentsId, btnEl); };
-                });
-        }
-
-        (function () {
-            const btn = document.getElementById("shareBtn");
-            if (!btn) return;
-
-            btn.addEventListener("click", async function () {
-                const url = window.location.href;
-                const title = document.title || "게시글";
-
-                if (navigator.share) {
-                    try {
-                        await navigator.share({ title, text: "게시글 공유", url });
-                        return;
-                    } catch (e) {}
-                }
-
-                try {
-                    if (navigator.clipboard && window.isSecureContext) {
-                        await navigator.clipboard.writeText(url);
-                        alert("URL이 복사되었습니다!");
-                        return;
-                    }
-                } catch (e) {}
-
-                try {
-                    const ta = document.createElement("textarea");
-                    ta.value = url;
-                    ta.style.position = "fixed";
-                    ta.style.left = "-9999px";
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand("copy");
-                    document.body.removeChild(ta);
-                    alert("URL이 복사되었습니다!");
-                } catch (e) {
-                    alert("공유/복사가 차단되었습니다. 주소창 URL을 직접 복사해주세요.");
-                    console.error(e);
-                }
-            });
-        })();
-
-        const updateForm = document.querySelector("form[action$='boardUpdateOk.do']");
-        if (updateForm) {
-            updateForm.addEventListener("submit", function () {
-                document.getElementById("hiddenContent").value =
-                    document.getElementById("editor").innerHTML;
-            });
-        }
-
-        /* ===== 수정폼 파일 첨부 (base64 방식 - 이미지 영구 저장) ===== */
-        (function () {
-            var trigger = document.getElementById('editAttachTrigger');
-            var input   = document.getElementById('editAttachInput');
-            var name    = document.getElementById('editAttachName');
-            var editor  = document.getElementById('editor');
-            var savedRange = null;
-
-            if (!trigger || !input || !name || !editor) return;
-
-            function saveEditSelection() {
-                var sel = window.getSelection();
-                if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
-                var range = sel.getRangeAt(0);
-                savedRange = editor.contains(range.commonAncestorContainer) ? range.cloneRange() : null;
-            }
-
-            function restoreEditSelection() {
-                if (!savedRange) return;
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(savedRange);
-            }
-
-            editor.addEventListener('mouseup', saveEditSelection);
-            editor.addEventListener('keyup',   saveEditSelection);
-            editor.addEventListener('focus',   saveEditSelection);
-
-            trigger.addEventListener('click', function () {
-                saveEditSelection();
-                input.click();
+            confetti({
+                particleCount: 80,
+                spread: 70,
+                startVelocity: 35,
+                origin: { x, y },
+                scalar: 0.95
             });
 
-            function insertNodeAtCursor(node) {
-                editor.focus();
-                restoreEditSelection();
-                var sel = window.getSelection();
-                if (!sel || sel.rangeCount === 0) { editor.appendChild(node); return; }
-                var range = sel.getRangeAt(0);
-                if (!editor.contains(range.commonAncestorContainer)) {
-                    range = document.createRange();
-                    range.selectNodeContents(editor);
-                    range.collapse(false);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-                range.insertNode(node);
-                range.setStartAfter(node);
-                range.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(range);
-                saveEditSelection();
-            }
-
-            function bindFileInput(inp) {
-                inp.addEventListener('change', function () {
-                    if (!inp.files || inp.files.length === 0) { name.textContent = ''; return; }
-                    var files = Array.from(inp.files);
-                    name.textContent = files.map(function (f) { return f.name; }).join(', ');
-
-                    files.forEach(function (f) {
-                        if (!f.type || !f.type.startsWith("image/")) return;
-
-                        // base64로 변환 → boardContent에 직접 저장되므로 이미지 영구 유지
-                        var reader = new FileReader();
-                        reader.onload = function (e) {
-                            var img = document.createElement("img");
-                            img.src = e.target.result; // base64 data URL
-                            img.alt = f.name || "image";
-                            img.style.cssText = "max-width:100%; height:auto; display:block; margin:10px 0; border-radius:12px; border:1px solid #e5e7eb;";
-
-                            var wrapper = document.createElement("div");
-                            wrapper.appendChild(img);
-
-                            insertNodeAtCursor(wrapper);
-                            insertNodeAtCursor(document.createElement("br"));
-                        };
-                        reader.readAsDataURL(f);
-                    });
-
-                    // 같은 파일 재선택 UX를 위해 input 교체
-                    var newInput = inp.cloneNode(true);
-                    inp.parentNode.replaceChild(newInput, inp);
-                    input = newInput;
-                    bindFileInput(newInput);
+            setTimeout(() => {
+                confetti({
+                    particleCount: 45,
+                    spread: 100,
+                    startVelocity: 25,
+                    origin: { x, y },
+                    scalar: 0.9
                 });
-            }
+            }, 120);
+        } catch (e) {
+            // 효과 실패해도 기능은 정상 동작하도록 무시
+            console.debug(e);
+        }
+    }
 
-            bindFileInput(input);
-        })();
+    /* 변경 포인트: 3번째 파라미터로 버튼(this) 받기 */
+    function toggleLike(boardId, boardType, btnEl) {
+        const likeCountEl = document.getElementById("likeCount");
+        const before = parseInt((likeCountEl && likeCountEl.innerText) ? likeCountEl.innerText : "0", 10) || 0;
 
-        /* 실시간 인기글: 더보기 누르면 10개 (5개 추가 노출), 다시 누르면 접기 */
-        (function () {
-            const btn = document.getElementById("hotMoreBtn");
-            const listBox = document.getElementById("hotListBox");
-            if (!btn || !listBox) return;
-
-            let expanded = false;
-
-            btn.addEventListener("click", function () {
-                expanded = !expanded;
-
-                listBox.querySelectorAll(".hot-hidden").forEach(el => {
-                    el.style.display = expanded ? "flex" : "none";
-                });
-
-                btn.textContent = expanded ? "접기" : "더보기";
-            });
-        })();
-
-        /* ===== 수정폼 링크 프리뷰 ===== */
-        (function () {
-            const CTX       = "${pageContext.request.contextPath}";
-            const btn       = document.getElementById("updateLinkBtn");
-            const clearBtn  = document.getElementById("updateLinkClearBtn");
-            const input     = document.getElementById("updateLinkInput");
-            const area      = document.getElementById("updateLinkPreviewArea");
-            const hiddenUrl = document.getElementById("updateLinkUrl");
-            const editor    = document.getElementById("editor");
-
-            if (!btn) return;
-
-            // 기존 preview가 있으면 초기 렌더링
-            const existingUrl = hiddenUrl.value;
-            if (existingUrl) {
-                input.value = existingUrl;
-                clearBtn.style.display = "inline-block";
-                renderUpdatePreview({
-                    url:         "${preview.url}",
-                    title:       "${preview.title}",
-                    description: "${preview.description}",
-                    image:       "${preview.image}"
-                });
-            }
-
-            // 미리보기 버튼
-            btn.addEventListener("click", async function () {
-                let url = input.value.trim();
-                if (!url) return;
-                if (!url.startsWith("http")) url = "https://" + url;
-
-                btn.textContent = "로딩중...";
-                btn.disabled = true;
-
-                try {
-                    const res  = await fetch(CTX + "/linkPreview.do?url=" + encodeURIComponent(url));
-                    const data = await res.json();
-
-                    if (!data || !data.ok) {
-                        alert("미리보기를 불러올 수 없는 링크입니다.");
-                        return;
-                    }
-                    hiddenUrl.value = data.url;
-                    clearBtn.style.display = "inline-block";
-                    renderUpdatePreview(data);
-                } catch (e) {
-                    alert("링크 미리보기 실패");
-                } finally {
-                    btn.textContent = "미리보기";
-                    btn.disabled = false;
-                }
-            });
-
-            // 제거 버튼
-            clearBtn.addEventListener("click", function () {
-                input.value    = "";
-                hiddenUrl.value = "";
-                area.innerHTML = "";
-                clearBtn.style.display = "none";
-            });
-
-            function escapeHtml(str) {
-                if (!str) return "";
-                return (str + "")
-                    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-            }
-
-            function renderUpdatePreview(data) {
-                const thumbHtml = data.image
-                    ? '<div class="preview-thumb" style="background-image:url(\'' + escapeHtml(data.image) + '\');"></div>'
-                    : '';
-
-                // 미리보기 카드 + 우측 하단 적용 버튼
-                area.innerHTML =
-                    '<a href="' + escapeHtml(data.url) + '" target="_blank" class="link-preview">' +
-                    '<div class="preview-card">' +
-                    thumbHtml +
-                    '<div class="preview-content">' +
-                    '<div class="preview-domain">' + escapeHtml(data.url.replace("https://", "")) + '</div>' +
-                    '<div class="preview-title">'  + escapeHtml(data.title) + '</div>' +
-                    '<div class="preview-desc">'   + escapeHtml(data.description) + '</div>' +
-                    '<div class="preview-url">'    + escapeHtml(data.url) + '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</a>' +
-                    // 적용 버튼
-                    '<div style="display:flex; justify-content:flex-end; margin-top:8px;">' +
-                    '<button type="button" id="applyLinkBtn" ' +
-                    'style="padding:7px 20px; border-radius:10px; border:none; ' +
-                    'background:#6366f1; color:white; font-weight:700; cursor:pointer;">' +
-                    '✅ 에디터에 적용' +
-                    '</button>' +
-                    '</div>';
-
-                // 적용 버튼 클릭 이벤트
-                document.getElementById("applyLinkBtn").addEventListener("click", function () {
-                    if (!editor) return;
-
-                    const url = data.url || "";
-                    const thumbStyle = data.image
-                        ? 'background-image:url(\'' + data.image + '\');'
-                        : 'background:#e2e8f0;';
-
-                    // 에디터에 삽입할 HTML (URL 텍스트 + 프리뷰 카드)
-                    const insertHtml =
-                        '<p>' + escapeHtml(url) + '</p>' +
-                        '<a href="' + escapeHtml(url) + '" target="_blank" class="link-preview">' +
-                        '<div class="preview-card">' +
-                        (data.image ? '<div class="preview-thumb" style="' + thumbStyle + '"></div>' : '') +
-                        '<div class="preview-content">' +
-                        '<div class="preview-domain">' + escapeHtml(url.replace("https://", "")) + '</div>' +
-                        '<div class="preview-title">'  + escapeHtml(data.title) + '</div>' +
-                        '<div class="preview-desc">'   + escapeHtml(data.description) + '</div>' +
-                        '<div class="preview-url">'    + escapeHtml(url) + '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</a>';
-
-                    // 에디터 끝에 삽입
-                    editor.focus();
-                    const sel = window.getSelection();
-                    const range = document.createRange();
-                    range.selectNodeContents(editor);
-                    range.collapse(false); // 끝으로 이동
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                    document.execCommand("insertHTML", false, insertHtml);
-
-                    // 적용 후 버튼 상태 변경
-                    this.textContent = "✔ 적용됨";
-                    this.style.background = "#10b981";
-                    this.disabled = true;
-                    area.style.display = "none";
-                });
-            }
-        })();
-
-        /* ===== 수정폼 에디터 툴바 ===== */
-        (function () {
-            var editor      = document.getElementById("editor");
-            var fontWrapper  = document.getElementById("editFontSelectWrapper");
-            var fontDropdown = document.getElementById("editFontSelectDropdown");
-            var fontLabel    = document.getElementById("editFontSelectLabel");
-            var savedRange   = null;
-
-            if (!editor) return;
-
-            // selection 저장/복원
-            function editSaveSelection() {
-                var sel = window.getSelection();
-                if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
-                var range = sel.getRangeAt(0);
-                savedRange = editor.contains(range.commonAncestorContainer) ? range.cloneRange() : null;
-            }
-            window.editSaveSelection = editSaveSelection;
-
-            function editRestoreSelection() {
-                if (!savedRange) return false;
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(savedRange);
-                return true;
-            }
-
-            // B/I/U
-            window.editExecCmd = function (cmd) {
-                editor.focus();
-                var sel = window.getSelection();
-                if (!sel || sel.rangeCount === 0) return;
-                var r0 = sel.getRangeAt(0);
-                if (!editor.contains(r0.commonAncestorContainer)) {
-                    var r = document.createRange();
-                    r.selectNodeContents(editor);
-                    r.collapse(false);
-                    sel.removeAllRanges();
-                    sel.addRange(r);
-                }
-                document.execCommand(cmd, false, null);
-                editSaveSelection();
-            };
-
-            // 폰트 드롭다운
-            function editCloseFontDropdown() {
-                if (fontDropdown) fontDropdown.classList.remove("open");
-            }
-            function editToggleFontDropdown() {
-                editSaveSelection();
-                if (fontDropdown) fontDropdown.classList.toggle("open");
-            }
-            window.editToggleFontDropdown = editToggleFontDropdown;
-
-            function ensureEditTypingFont(fontName) {
-                editor.focus();
-                var sel = window.getSelection();
-                if (!sel || sel.rangeCount === 0) return;
-                var range = sel.getRangeAt(0);
-                if (!editor.contains(range.commonAncestorContainer)) return;
-                var span = document.createElement("span");
-                span.style.fontFamily = "'" + fontName + "', sans-serif";
-                var zwsp = document.createTextNode("\u200B");
-                span.appendChild(zwsp);
-                range.insertNode(span);
-                var r = document.createRange();
-                r.setStart(zwsp, 1);
-                r.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(r);
-                editSaveSelection();
-            }
-
-            function applyEditFont(fontName) {
-                editor.focus();
-                editRestoreSelection();
-                var sel = window.getSelection();
-                if (!sel || sel.rangeCount === 0) { editor.dataset.currentFont = fontName; return; }
-                var range = sel.getRangeAt(0);
-                if (!editor.contains(range.commonAncestorContainer)) { editor.dataset.currentFont = fontName; return; }
-
-                if (range.collapsed) {
-                    editor.dataset.currentFont = fontName;
-                    ensureEditTypingFont(fontName);
-                    editCloseFontDropdown();
+        fetch(CTX + "/boardLikeToggle.do?boardId=" + boardId + "&boardType=" + boardType)
+            .then(r => r.text())
+            .then(res => {
+                if (res === "LOGIN_REQUIRED") {
+                    alert("로그인 후 이용 가능합니다.");
+                    location.href = CTX + "/memberLogin.do";
                     return;
                 }
 
-                var span = document.createElement("span");
-                span.style.fontFamily = "'" + fontName + "', sans-serif";
-                try {
-                    range.surroundContents(span);
-                } catch (e) {
-                    var contents = range.extractContents();
-                    span.appendChild(contents);
-                    range.insertNode(span);
+                if (likeCountEl) likeCountEl.innerText = res;
+
+                const after = parseInt(res, 10);
+                if (!isNaN(after) && after > before) {
+                    likeConfettiFromButton(btnEl);
                 }
-                range.setStartAfter(span);
-                range.collapse(true);
+            });
+    }
+
+    function toggleCommentLike(commentsId, btnEl) {
+        fetch(CTX + "/commentsLike.do?commentsId=" + commentsId)
+            .then(r => r.text())
+            .then(res => {
+                if (res === "LOGIN_REQUIRED") {
+                    alert("로그인 후 이용 가능합니다.");
+                    location.href = CTX + "/memberLogin.do";
+                    return;
+                }
+                var isLiked = btnEl.classList.contains("liked");
+                var likeCount = parseInt(res);
+                var newIcon = !isLiked ? '❤️' : '🤍';
+
+                if (isLiked) {
+                    btnEl.classList.remove("liked");
+                } else {
+                    btnEl.classList.add("liked");
+                }
+
+                btnEl.innerHTML =
+                    '<span class="like-icon">' + newIcon + '</span> 좋아요 ' + likeCount;
+
+                // innerHTML 교체 후 onclick 재등록
+                btnEl.onclick = function() { toggleCommentLike(commentsId, btnEl); };
+            });
+    }
+
+    (function () {
+        const btn = document.getElementById("shareBtn");
+        if (!btn) return;
+
+        btn.addEventListener("click", async function () {
+            const url = window.location.href;
+            const title = document.title || "게시글";
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title, text: "게시글 공유", url });
+                    return;
+                } catch (e) {}
+            }
+
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(url);
+                    alert("URL이 복사되었습니다!");
+                    return;
+                }
+            } catch (e) {}
+
+            try {
+                const ta = document.createElement("textarea");
+                ta.value = url;
+                ta.style.position = "fixed";
+                ta.style.left = "-9999px";
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+                alert("URL이 복사되었습니다!");
+            } catch (e) {
+                alert("공유/복사가 차단되었습니다. 주소창 URL을 직접 복사해주세요.");
+                console.error(e);
+            }
+        });
+    })();
+
+    const updateForm = document.querySelector("form[action$='boardUpdateOk.do']");
+    if (updateForm) {
+        updateForm.addEventListener("submit", function () {
+            document.getElementById("hiddenContent").value =
+                document.getElementById("editor").innerHTML;
+        });
+    }
+
+    /* ===== 수정폼 파일 첨부 (base64 방식 - 이미지 영구 저장) ===== */
+    (function () {
+        var trigger = document.getElementById('editAttachTrigger');
+        var input   = document.getElementById('editAttachInput');
+        var name    = document.getElementById('editAttachName');
+        var editor  = document.getElementById('editor');
+        var savedRange = null;
+
+        if (!trigger || !input || !name || !editor) return;
+
+        function saveEditSelection() {
+            var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
+            var range = sel.getRangeAt(0);
+            savedRange = editor.contains(range.commonAncestorContainer) ? range.cloneRange() : null;
+        }
+
+        function restoreEditSelection() {
+            if (!savedRange) return;
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedRange);
+        }
+
+        editor.addEventListener('mouseup', saveEditSelection);
+        editor.addEventListener('keyup',   saveEditSelection);
+        editor.addEventListener('focus',   saveEditSelection);
+
+        trigger.addEventListener('click', function () {
+            saveEditSelection();
+            input.click();
+        });
+
+        function insertNodeAtCursor(node) {
+            editor.focus();
+            restoreEditSelection();
+            var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) { editor.appendChild(node); return; }
+            var range = sel.getRangeAt(0);
+            if (!editor.contains(range.commonAncestorContainer)) {
+                range = document.createRange();
+                range.selectNodeContents(editor);
+                range.collapse(false);
                 sel.removeAllRanges();
                 sel.addRange(range);
-                editor.dataset.currentFont = fontName;
-                editSaveSelection();
             }
+            range.insertNode(node);
+            range.setStartAfter(node);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            saveEditSelection();
+        }
 
-            // 폰트 옵션 이벤트
-            var fontOptions = document.querySelectorAll("#editFontSelectDropdown .font-option");
-            for (var j = 0; j < fontOptions.length; j++) {
-                (function (optionEl) {
-                    optionEl.addEventListener("pointerdown", function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        var fontName = optionEl.getAttribute("data-font");
-                        if (!fontName) return;
-                        if (fontLabel) {
-                            fontLabel.textContent = optionEl.textContent;
-                            fontLabel.style.fontFamily = optionEl.style.fontFamily;
-                        }
-                        fontOptions.forEach(function(o) { o.classList.remove("selected"); });
-                        optionEl.classList.add("selected");
-                        applyEditFont(fontName);
-                        editCloseFontDropdown();
-                    });
-                })(fontOptions[j]);
-            }
+        function bindFileInput(inp) {
+            inp.addEventListener('change', function () {
+                if (!inp.files || inp.files.length === 0) { name.textContent = ''; return; }
+                var files = Array.from(inp.files);
+                name.textContent = files.map(function (f) { return f.name; }).join(', ');
 
-            // 바깥 클릭 시 닫기
-            document.addEventListener("pointerdown", function (e) {
-                if (fontWrapper && !fontWrapper.contains(e.target)) editCloseFontDropdown();
+                files.forEach(function (f) {
+                    if (!f.type || !f.type.startsWith("image/")) return;
+
+                    // base64로 변환 → boardContent에 직접 저장되므로 이미지 영구 유지
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var img = document.createElement("img");
+                        img.src = e.target.result; // base64 data URL
+                        img.alt = f.name || "image";
+                        img.style.cssText = "max-width:100%; height:auto; display:block; margin:10px 0; border-radius:12px; border:1px solid #e5e7eb;";
+
+                        var wrapper = document.createElement("div");
+                        wrapper.appendChild(img);
+
+                        insertNodeAtCursor(wrapper);
+                        insertNodeAtCursor(document.createElement("br"));
+                    };
+                    reader.readAsDataURL(f);
+                });
+
+                // 같은 파일 재선택 UX를 위해 input 교체
+                var newInput = inp.cloneNode(true);
+                inp.parentNode.replaceChild(newInput, inp);
+                input = newInput;
+                bindFileInput(newInput);
+            });
+        }
+
+        bindFileInput(input);
+    })();
+
+    /* 실시간 인기글: 더보기 누르면 10개 (5개 추가 노출), 다시 누르면 접기 */
+    (function () {
+        const btn = document.getElementById("hotMoreBtn");
+        const listBox = document.getElementById("hotListBox");
+        if (!btn || !listBox) return;
+
+        let expanded = false;
+
+        btn.addEventListener("click", function () {
+            expanded = !expanded;
+
+            listBox.querySelectorAll(".hot-hidden").forEach(el => {
+                el.style.display = expanded ? "flex" : "none";
             });
 
-            // selection 추적
-            editor.addEventListener("mouseup", editSaveSelection);
-            editor.addEventListener("keyup",   editSaveSelection);
-            editor.addEventListener("focus",   editSaveSelection);
+            btn.textContent = expanded ? "접기" : "더보기";
+        });
+    })();
 
-            // ZWSP 제거
-            editor.addEventListener("input", function () {
-                var walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
-                var node;
-                while ((node = walker.nextNode())) {
-                    if (node.nodeValue && node.nodeValue.indexOf("\u200B") !== -1) {
-                        node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
-                    }
+    /* ===== 수정폼 링크 프리뷰 ===== */
+    (function () {
+        const CTX       = "${pageContext.request.contextPath}";
+        const btn       = document.getElementById("updateLinkBtn");
+        const clearBtn  = document.getElementById("updateLinkClearBtn");
+        const input     = document.getElementById("updateLinkInput");
+        const area      = document.getElementById("updateLinkPreviewArea");
+        const hiddenUrl = document.getElementById("updateLinkUrl");
+        const editor    = document.getElementById("editor");
+
+        if (!btn) return;
+
+        // 기존 preview가 있으면 초기 렌더링
+        const existingUrl = hiddenUrl.value;
+        if (existingUrl) {
+            input.value = existingUrl;
+            clearBtn.style.display = "inline-block";
+            renderUpdatePreview({
+                url:         "${preview.url}",
+                title:       "${preview.title}",
+                description: "${preview.description}",
+                image:       "${preview.image}"
+            });
+        }
+
+        // 미리보기 버튼
+        btn.addEventListener("click", async function () {
+            let url = input.value.trim();
+            if (!url) return;
+            if (!url.startsWith("http")) url = "https://" + url;
+
+            btn.textContent = "로딩중...";
+            btn.disabled = true;
+
+            try {
+                const res  = await fetch(CTX + "/linkPreview.do?url=" + encodeURIComponent(url));
+                const data = await res.json();
+
+                if (!data || !data.ok) {
+                    alert("미리보기를 불러올 수 없는 링크입니다.");
+                    return;
                 }
+                hiddenUrl.value = data.url;
+                clearBtn.style.display = "inline-block";
+                renderUpdatePreview(data);
+            } catch (e) {
+                alert("링크 미리보기 실패");
+            } finally {
+                btn.textContent = "미리보기";
+                btn.disabled = false;
+            }
+        });
+
+        // 제거 버튼
+        clearBtn.addEventListener("click", function () {
+            input.value    = "";
+            hiddenUrl.value = "";
+            area.innerHTML = "";
+            clearBtn.style.display = "none";
+        });
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return (str + "")
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        function renderUpdatePreview(data) {
+            const thumbHtml = data.image
+                ? '<div class="preview-thumb" style="background-image:url(\'' + escapeHtml(data.image) + '\');"></div>'
+                : '';
+
+            // 미리보기 카드 + 우측 하단 적용 버튼
+            area.innerHTML =
+                '<a href="' + escapeHtml(data.url) + '" target="_blank" class="link-preview">' +
+                '<div class="preview-card">' +
+                thumbHtml +
+                '<div class="preview-content">' +
+                '<div class="preview-domain">' + escapeHtml(data.url.replace("https://", "")) + '</div>' +
+                '<div class="preview-title">'  + escapeHtml(data.title) + '</div>' +
+                '<div class="preview-desc">'   + escapeHtml(data.description) + '</div>' +
+                '<div class="preview-url">'    + escapeHtml(data.url) + '</div>' +
+                '</div>' +
+                '</div>' +
+                '</a>' +
+                // 적용 버튼
+                '<div style="display:flex; justify-content:flex-end; margin-top:8px;">' +
+                '<button type="button" id="applyLinkBtn" ' +
+                'style="padding:7px 20px; border-radius:10px; border:none; ' +
+                'background:#6366f1; color:white; font-weight:700; cursor:pointer;">' +
+                '✅ 에디터에 적용' +
+                '</button>' +
+                '</div>';
+
+            // 적용 버튼 클릭 이벤트
+            document.getElementById("applyLinkBtn").addEventListener("click", function () {
+                if (!editor) return;
+
+                const url = data.url || "";
+                const thumbStyle = data.image
+                    ? 'background-image:url(\'' + data.image + '\');'
+                    : 'background:#e2e8f0;';
+
+                // 에디터에 삽입할 HTML (URL 텍스트 + 프리뷰 카드)
+                const insertHtml =
+                    '<p>' + escapeHtml(url) + '</p>' +
+                    '<a href="' + escapeHtml(url) + '" target="_blank" class="link-preview">' +
+                    '<div class="preview-card">' +
+                    (data.image ? '<div class="preview-thumb" style="' + thumbStyle + '"></div>' : '') +
+                    '<div class="preview-content">' +
+                    '<div class="preview-domain">' + escapeHtml(url.replace("https://", "")) + '</div>' +
+                    '<div class="preview-title">'  + escapeHtml(data.title) + '</div>' +
+                    '<div class="preview-desc">'   + escapeHtml(data.description) + '</div>' +
+                    '<div class="preview-url">'    + escapeHtml(url) + '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</a>';
+
+                // 에디터 끝에 삽입
+                editor.focus();
+                const sel = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(editor);
+                range.collapse(false); // 끝으로 이동
+                sel.removeAllRanges();
+                sel.addRange(range);
+                document.execCommand("insertHTML", false, insertHtml);
+
+                // 적용 후 버튼 상태 변경
+                this.textContent = "✔ 적용됨";
+                this.style.background = "#10b981";
+                this.disabled = true;
+                area.style.display = "none";
             });
-        })();
+        }
+    })();
+
+    /* ===== 수정폼 에디터 툴바 ===== */
+    (function () {
+        var editor      = document.getElementById("editor");
+        var fontWrapper  = document.getElementById("editFontSelectWrapper");
+        var fontDropdown = document.getElementById("editFontSelectDropdown");
+        var fontLabel    = document.getElementById("editFontSelectLabel");
+        var savedRange   = null;
+
+        if (!editor) return;
+
+        // selection 저장/복원
+        function editSaveSelection() {
+            var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) { savedRange = null; return; }
+            var range = sel.getRangeAt(0);
+            savedRange = editor.contains(range.commonAncestorContainer) ? range.cloneRange() : null;
+        }
+        window.editSaveSelection = editSaveSelection;
+
+        function editRestoreSelection() {
+            if (!savedRange) return false;
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedRange);
+            return true;
+        }
+
+        // B/I/U
+        window.editExecCmd = function (cmd) {
+            editor.focus();
+            var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) return;
+            var r0 = sel.getRangeAt(0);
+            if (!editor.contains(r0.commonAncestorContainer)) {
+                var r = document.createRange();
+                r.selectNodeContents(editor);
+                r.collapse(false);
+                sel.removeAllRanges();
+                sel.addRange(r);
+            }
+            document.execCommand(cmd, false, null);
+            editSaveSelection();
+        };
+
+        // 폰트 드롭다운
+        function editCloseFontDropdown() {
+            if (fontDropdown) fontDropdown.classList.remove("open");
+        }
+        function editToggleFontDropdown() {
+            editSaveSelection();
+            if (fontDropdown) fontDropdown.classList.toggle("open");
+        }
+        window.editToggleFontDropdown = editToggleFontDropdown;
+
+        function ensureEditTypingFont(fontName) {
+            editor.focus();
+            var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) return;
+            var range = sel.getRangeAt(0);
+            if (!editor.contains(range.commonAncestorContainer)) return;
+            var span = document.createElement("span");
+            span.style.fontFamily = "'" + fontName + "', sans-serif";
+            var zwsp = document.createTextNode("\u200B");
+            span.appendChild(zwsp);
+            range.insertNode(span);
+            var r = document.createRange();
+            r.setStart(zwsp, 1);
+            r.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(r);
+            editSaveSelection();
+        }
+
+        function applyEditFont(fontName) {
+            editor.focus();
+            editRestoreSelection();
+            var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) { editor.dataset.currentFont = fontName; return; }
+            var range = sel.getRangeAt(0);
+            if (!editor.contains(range.commonAncestorContainer)) { editor.dataset.currentFont = fontName; return; }
+
+            if (range.collapsed) {
+                editor.dataset.currentFont = fontName;
+                ensureEditTypingFont(fontName);
+                editCloseFontDropdown();
+                return;
+            }
+
+            var span = document.createElement("span");
+            span.style.fontFamily = "'" + fontName + "', sans-serif";
+            try {
+                range.surroundContents(span);
+            } catch (e) {
+                var contents = range.extractContents();
+                span.appendChild(contents);
+                range.insertNode(span);
+            }
+            range.setStartAfter(span);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            editor.dataset.currentFont = fontName;
+            editSaveSelection();
+        }
+
+        // 폰트 옵션 이벤트
+        var fontOptions = document.querySelectorAll("#editFontSelectDropdown .font-option");
+        for (var j = 0; j < fontOptions.length; j++) {
+            (function (optionEl) {
+                optionEl.addEventListener("pointerdown", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var fontName = optionEl.getAttribute("data-font");
+                    if (!fontName) return;
+                    if (fontLabel) {
+                        fontLabel.textContent = optionEl.textContent;
+                        fontLabel.style.fontFamily = optionEl.style.fontFamily;
+                    }
+                    fontOptions.forEach(function(o) { o.classList.remove("selected"); });
+                    optionEl.classList.add("selected");
+                    applyEditFont(fontName);
+                    editCloseFontDropdown();
+                });
+            })(fontOptions[j]);
+        }
+
+        // 바깥 클릭 시 닫기
+        document.addEventListener("pointerdown", function (e) {
+            if (fontWrapper && !fontWrapper.contains(e.target)) editCloseFontDropdown();
+        });
+
+        // selection 추적
+        editor.addEventListener("mouseup", editSaveSelection);
+        editor.addEventListener("keyup",   editSaveSelection);
+        editor.addEventListener("focus",   editSaveSelection);
+
+        // ZWSP 제거
+        editor.addEventListener("input", function () {
+            var walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+            var node;
+            while ((node = walker.nextNode())) {
+                if (node.nodeValue && node.nodeValue.indexOf("\u200B") !== -1) {
+                    node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
+                }
+            }
+        });
+    })();
 
         $(document).on("click", function(e) {
 		    // 클릭된 요소가 .option-item(인풋과 결과창을 감싸는 부모) 내부가 아니라면

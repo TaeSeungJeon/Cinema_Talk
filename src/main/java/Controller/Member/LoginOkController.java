@@ -81,9 +81,7 @@ public class LoginOkController implements Action {
 		session.setAttribute("memName", mdto.getMemName()); // 세션에 저장할 키이름 : memId, 저장할 값 : id
 		session.setAttribute("memRole", mdto.getMemRole());
 		session.setAttribute("memState", mdto.getMemState());
-
-		//마지막 로그인 날짜 업데이트
-		memberService.updateLastLogin(mdto.getMemId());
+		
 		String requestSessionURL = (String)session.getAttribute("requestSessionURL");
 		
 		if(requestSessionURL != null) {

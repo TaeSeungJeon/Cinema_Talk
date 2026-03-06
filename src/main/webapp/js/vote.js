@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
 									
 									let profilePhoto = (comment.profilePhoto && comment.profilePhoto.trim() !== "") 
 									        ? getContextPath() + `/profilePhoto.do?path=` + comment.profilePhoto
-									        : getContextPath() + `/images/default-avatar.png`;
+									        : getContextPath() + `/image/default-avatar.png`;
 							commentHtml += `
 							<div class="comment-item">
 								<div class="user-avatar"><img src="${profilePhoto}"/></div>

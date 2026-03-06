@@ -147,7 +147,9 @@
 <body>
 
 <div class="login-container">
-    <div class="logo-box">로고</div>
+    <img src="${pageContext.request.contextPath}/Image/Logo.png"
+         alt="Cinema Talk"
+         style="height: 60px; width: auto;"><br><br>
 
     <div class="title">로그인</div>
 
@@ -171,6 +173,13 @@
     <script>
         alert("${msg}");
     </script>
+</c:if>
+
+<!-- 회원가입 완료 메시지 -->
+<c:if test="${param.join == 'success'}">
+  <script>
+    alert("회원가입이 완료되었습니다. ✔");
+  </script>
 </c:if>
 
 <script src="<%=request.getContextPath()%>/js/member.js?v=1"></script>	<!-- javaScript 사용 -->

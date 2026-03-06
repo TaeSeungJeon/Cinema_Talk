@@ -109,6 +109,60 @@
 	word-break: break-word;
 }
 
+.nd-content-view img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 10px 0;
+	border-radius: 12px;
+	border: 1px solid #e5e7eb;
+}
+
+.nd-content-view .link-preview {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	margin-top: 14px;
+}
+
+.nd-content-view .preview-card {
+	display: flex;
+	gap: 14px;
+	background: black;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-radius: 18px;
+	padding: 14px;
+	transition: 0.2s;
+}
+
+.nd-content-view .preview-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.nd-content-view .preview-thumb {
+	width: 150px;
+	min-width: 150px;
+	height: 110px;
+	border-radius: 14px;
+	background-size: cover;
+	background-position: center;
+	background-color: #e2e8f0;
+}
+
+.nd-content-view .preview-content {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+	flex: 1;
+}
+
+.nd-content-view .preview-domain { font-size: 0.78rem; color: #94a3b8; font-weight: 700; }
+.nd-content-view .preview-title { font-size: 1rem; font-weight: 800; color: #ffffff; }
+.nd-content-view .preview-desc { font-size: 0.9rem; color: #cbd5e1; }
+.nd-content-view .preview-url { font-size: 0.8rem; color: #818cf8; font-weight: 700; }
+
 /* 정보 카드 */
 .nd-info-grid {
 	display: grid;

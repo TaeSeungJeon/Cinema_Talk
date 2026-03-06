@@ -44,6 +44,7 @@ public class BoardUpdateOkController implements Action {
 
         int movieIdInt = (movieId == null || movieId.trim().isEmpty()) ? -1 :Integer.parseInt(movieId);
         if (movieIdInt == 0) movieIdInt = -1;
+        
         String movieTitle = boardService.getMovieTitleforBoard(movieIdInt);
 
         // 기존 글 조회

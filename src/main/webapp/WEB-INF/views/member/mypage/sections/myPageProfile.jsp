@@ -18,7 +18,8 @@
         </c:choose>
     </div>
     <div class="profile-info">
-        <div class="profile-name">${myPageInfo.memId}</div>
+    	<div class="profile-name">${myPageInfo.memId}</div>
+        <div class="profile-name">${myPageInfo.memName}</div>
         <div class="profile-email">${member.memEmail}</div>
         <div class="profile-date">가입일: ${myPageInfo.memDate}</div>
         <!-- 프로필 사진 업로드/삭제 메시지 표시 -->

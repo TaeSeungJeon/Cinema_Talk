@@ -17,7 +17,7 @@ public interface AdminInquiryStatsDAO {
 
 	int selCompletedInquiryCountByDate(LocalDate targetDate);
 
-	int selProcessingInquiryCnt();
+	int selPendingInquiryCnt();
 
 	double selAvgProcessingTime();
 

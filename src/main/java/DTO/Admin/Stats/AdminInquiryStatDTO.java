@@ -11,7 +11,7 @@ public class AdminInquiryStatDTO {
 	private PeriodStatDTO totalInquiryStat;
     private PeriodStatDTO completedInquiryStat;
 
-    private int processingCnt;
+    private int pendingInquiryCnt;
     private String avgProcessingTime;  // 시간 단위
 
     private InquiryStatusStatDTO inquiryStatus;

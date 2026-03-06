@@ -289,7 +289,7 @@ body {
 
 			<!-- CONTENT -->
 			<div class="admin-content" id="admin-content">
-				<jsp:include page="/WEB-INF/views/admin/adminStats.jsp" />
+				<jsp:include page="/WEB-INF/views/admin/stats/adminStats.jsp" />
 			</div>
 		</div>
 

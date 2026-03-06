@@ -7,6 +7,5 @@ import lombok.Setter;
 @Setter
 public class InquiryStatusStatDTO {
 	private int completedCnt;
-    private int processingCnt;
     private int pendingCnt;
 }

@@ -49,17 +49,24 @@
     <!-- 신규 회원 추이 -->
     <select id="selNewMemberTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.TrendDTO">
         <![CDATA[
+        WITH date_range AS (
+            SELECT TRUNC(#{startDate}) + LEVEL - 1 AS dt
+            FROM dual
+            CONNECT BY LEVEL <= TRUNC(#{endDate}) - TRUNC(#{startDate}) + 1
+        )
         SELECT
-            TO_CHAR(memDate, 'YYYY-MM-DD') AS regDate,
-            COUNT(*) AS cnt
-        FROM MEMBER
-        WHERE memDate BETWEEN #{startDate} AND #{endDate}
-        GROUP BY TO_CHAR(memDate, 'YYYY-MM-DD')
-        ORDER BY regDate
+            TO_CHAR(d.dt, 'YYYY-MM-DD') AS regDate,
+            NVL(COUNT(m.memDate), 0) AS cnt
+        FROM date_range d
+        LEFT JOIN MEMBER m
+            ON TRUNC(m.memDate) = d.dt
+            AND m.memState != 3
+        GROUP BY d.dt
+        ORDER BY d.dt
         ]]>
     </select>
     
-    <!-- 게시글 TOP 10 회원 -->
+    <!-- TOP 10 회원 -->
     <select id="selTopBoardMembers" resultType="DTO.Admin.Stats.TopMemberDTO">
         <![CDATA[
         SELECT *
@@ -86,38 +93,6 @@
                 m.memDate,
                 m.memLastLogin
             ORDER BY boardCount DESC
-        )
-        WHERE ROWNUM <= 10
-        ]]>
-    </select>
-    
-    <!-- 댓글 TOP 10 회원 -->
-    <select id="selTopCommentMembers" resultType="DTO.Admin.Stats.TopMemberDTO">
-        <![CDATA[
-        SELECT *
-        FROM (
-            SELECT
-                m.memNo,
-                m.memId,
-                m.memName,
-                m.memEmail,
-                m.memState,
-                m.memProfilePhoto,
-                m.memDate,
-                m.memLastLogin,
-                COUNT(c.commentsId) AS commentCount
-            FROM MEMBER m
-            JOIN COMMENTS c ON m.memNo = c.memNo
-            GROUP BY
-                m.memNo,
-                m.memId,
-                m.memName,
-                m.memEmail,
-                m.memState,
-                m.memProfilePhoto,
-                m.memDate,
-                m.memLastLogin
-            ORDER BY commentCount DESC
         )
         WHERE ROWNUM <= 10
         ]]>

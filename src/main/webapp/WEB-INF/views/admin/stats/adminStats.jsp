@@ -18,7 +18,7 @@ body {
 /* ── 메인 컨테이너 ── */
 .container {
 	padding: 1.5rem 2rem;
-	height: 100%;
+	height: calc(100vh - 12rem);
 	background-color: white;
 	border-radius: 1rem;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -532,6 +532,9 @@ tbody td {
 		font-size: 13px;
 	}
 }
+.status.active { color:#22c55e; }
+.status.ready { color:#f59e0b; }
+.status.close { color:#ef4444; }
 </style>
 </head>
 <body>
@@ -573,9 +576,8 @@ tbody td {
 					<input type="date" id="startDate" value="${startDate}" /> <span>~</span>
 					<input type="date" id="endDate" value="${endDate}" />
 				</div>
-				<button
-					class="filter-btn ${empty selectedDays or (selectedDays ne '7' and selectedDays ne '30' and selectedDays ne '90' and selectedDays ne '365') ? 'active' : ''}"
-					type="button" onclick="searchByDate()">검색</button>
+				<button class="filter-btn ${selectedDays != '7' and selectedDays != '30' and selectedDays != '90' and selectedDays != '365' ? 'active' : ''}"
+					type="button" onclick="searchManual(this)">검색</button>
 			</div>
 
 			<!-- KPI 카드 -->
@@ -674,24 +676,24 @@ tbody td {
 							class="kpi-badge 
         ${memberStat.totalMemberStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${memberStat.totalMemberStat.increaseRate >= 0 ? '▲' : '▼'}
-							${memberStat.totalMemberStat.increaseRate}% </span> 이전 동일 기간 대비
+							${memberStat.totalMemberStat.increaseRate}% </span> 전주 대비
 					</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-green">👤</div>
-					<div class="kpi-label">신규 가입</div>
+					<div class="kpi-label">주간 신규 회원</div>
 					<div class="kpi-value">${memberStat.newMemberStat.currentValue}</div>
 					<div class="kpi-sub">
 						<span
 							class="kpi-badge 
         ${memberStat.newMemberStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${memberStat.newMemberStat.increaseRate >= 0 ? '▲' : '▼'}
-							${memberStat.newMemberStat.increaseRate}% </span> 이전 동일 기간 대비
+							${memberStat.newMemberStat.increaseRate}% </span> 전주 대비
 					</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-orange">⏸️</div>
-					<div class="kpi-label">휴면 회원 수</div>
+					<div class="kpi-label">정지 회원 수</div>
 					<div class="kpi-value">${memberStat.sleepMemberCnt}</div>
 				</div>
 				<div class="kpi-card">
@@ -706,7 +708,7 @@ tbody td {
 					<div class="chart-card-header">
 						<div>
 							<div class="chart-card-title">일별 신규 가입</div>
-							<div class="chart-card-sub">최근 30일</div>
+							<div class="chart-card-sub">최근 7일</div>
 						</div>
 					</div>
 					<div class="chart-wrap-2">
@@ -722,25 +724,25 @@ tbody td {
 						<thead>
 							<tr>
 								<th style="width: 50px;">순위</th>
-								<th style="width: 80px;">회원명</th>
-								<th style="width: 100px;">가입일</th>
 								<th style="width: 120px;">아이디</th>
+								<th style="width: 80px;">회원명</th>
 								<th style="width: 70px;">게시글 수</th>
 								<th style="width: 70px;">댓글 수</th>
+								<th style="width: 100px;">가입일</th>
 								<th style="width: 80px;">활성도</th>
 							</tr>
 						</thead>
 						<tbody id="memberTbody">
-							<c:forEach var="m" items="${memberStat.topBoardMembers}"
+							<c:forEach var="m" items="${memberStat.topMembers}"
 								varStatus="status">
 								<tr>
 									<td><span
 										class="rank-badge ${status.index == 0 ? 'rank-1' : status.index == 1 ? 'rank-2' : status.index == 2 ? 'rank-3' : 'rank-n'}">${status.index + 1}</span></td>
-									<td>${m.memName}</td>
-									<td>${m.memDate}</td>
 									<td>${m.memId}</td>
+									<td>${m.memName}</td>
 									<td>${m.boardCount}</td>
 									<td>${m.commentCount}</td>
+									<td>${m.memDate}</td>
 									<td><c:choose>
 											<c:when test="${m.boardCount + m.commentCount > 50}">
             🔥 활발
@@ -771,7 +773,7 @@ tbody td {
 							class="kpi-badge 
         ${boardStat.totalBoardStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${boardStat.totalBoardStat.increaseRate >= 0 ? '▲' : '▼'}
-							${boardStat.totalBoardStat.increaseRate}% </span> 이전 동일 기간 대비
+							${boardStat.totalBoardStat.increaseRate}% </span> 전주 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -783,7 +785,7 @@ tbody td {
 							class="kpi-badge 
         ${boardStat.totalCommentStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${boardStat.totalCommentStat.increaseRate >= 0 ? '▲' : '▼'}
-							${boardStat.totalCommentStat.increaseRate}% </span> 이전 동일 기간 대비
+							${boardStat.totalCommentStat.increaseRate}% </span> 전주 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -803,7 +805,7 @@ tbody td {
 					<div class="chart-card-header">
 						<div>
 							<div class="chart-card-title">일별 게시글 등록</div>
-							<div class="chart-card-sub">최근 30일</div>
+							<div class="chart-card-sub">최근 7일</div>
 						</div>
 					</div>
 					<div class="chart-wrap-2">
@@ -821,8 +823,8 @@ tbody td {
 							<tr>
 								<th style="width: 55px;">순위</th>
 								<th style="width: 90px;">게시글 번호</th>
-								<th style="width: 220px;">게시글 제목</th>
-								<th style="width: 80px;">작성자</th>
+								<th style="width: 180px;">게시글 제목</th>
+								<th style="width: 140px;">작성자</th>
 								<th style="width: 70px;">댓글 수</th>
 								<th style="width: 70px;">조회 수</th>
 								<th style="width: 70px;">추천 수</th>
@@ -866,7 +868,7 @@ tbody td {
 							class="kpi-badge 
         ${voteStat.totalVoteStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${voteStat.totalVoteStat.increaseRate >= 0 ? '▲' : '▼'}
-							${voteStat.totalVoteStat.increaseRate}% </span> 이전 동일 기간 대비
+							${voteStat.totalVoteStat.increaseRate}% </span> 전주 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -878,7 +880,7 @@ tbody td {
 							class="kpi-badge 
         ${voteStat.voteJoinStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${voteStat.voteJoinStat.increaseRate >= 0 ? '▲' : '▼'}
-							${voteStat.voteJoinStat.increaseRate}% </span> 이전 동일 기간 대비
+							${voteStat.voteJoinStat.increaseRate}% </span> 전주 대비
 					</div>
 				</div>
 				<div class="kpi-card">
@@ -897,8 +899,8 @@ tbody td {
 				<div class="chart-card">
 					<div class="chart-card-header">
 						<div>
-							<div class="chart-card-title">월별 투표 참여</div>
-							<div class="chart-card-sub">최근 30일</div>
+							<div class="chart-card-title">일별 투표 참여</div>
+							<div class="chart-card-sub">최근 7일</div>
 						</div>
 					</div>
 					<div class="chart-wrap-2">
@@ -933,7 +935,19 @@ tbody td {
 									<td title="${v.voteTitle}">${v.voteTitle}</td>
 									<td>${v.voteStartDate}</td>
 									<td>${v.voteEndDate}</td>
-									<td>${v.voteStatus}</td>
+									<td>
+										<c:choose>
+										    <c:when test="${v.voteStatus eq 'ACTIVE'}">
+										        <span class="status active">진행중</span>
+										    </c:when>
+										    <c:when test="${v.voteStatus eq 'READY'}">
+										        <span class="status ready">대기</span>
+										    </c:when>
+										    <c:when test="${v.voteStatus eq 'CLOSED'}">
+										        <span class="status close">종료</span>
+										    </c:when>
+										</c:choose>
+									</td>
 									<td>${v.voteJoinCnt}</td>
 								</tr>
 							</c:forEach>
@@ -957,25 +971,25 @@ tbody td {
 							class="kpi-badge 
         ${inquiryStat.totalInquiryStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${inquiryStat.totalInquiryStat.increaseRate >= 0 ? '▲' : '▼'}
-							${inquiryStat.totalInquiryStat.increaseRate}% </span> 이전 동일 기간 대비
+							${inquiryStat.totalInquiryStat.increaseRate}% </span> 전주 대비
 					</div>
 				</div>
 				<div class="kpi-card">
+					<div class="kpi-icon icon-orange">🔄</div>
+					<div class="kpi-label">미처리된 문의</div>
+					<div class="kpi-value">${inquiryStat.pendingInquiryCnt}</div>
+				</div>
+				<div class="kpi-card">
 					<div class="kpi-icon icon-green">✅</div>
-					<div class="kpi-label">처리 완료</div>
+					<div class="kpi-label">처리 완료된 문의</div>
 					<div class="kpi-value">${inquiryStat.totalInquiryStat.currentValue}</div>
 					<div class="kpi-sub">
 						<span
 							class="kpi-badge 
         ${inquiryStat.totalInquiryStat.increaseRate >= 0 ? 'badge-up' : 'badge-down'}">
 							${inquiryStat.totalInquiryStat.increaseRate >= 0 ? '▲' : '▼'}
-							${inquiryStat.totalInquiryStat.increaseRate}% </span> 이전 동일 기간 대비
+							${inquiryStat.totalInquiryStat.increaseRate}% </span> 전주 대비
 					</div>
-				</div>
-				<div class="kpi-card">
-					<div class="kpi-icon icon-orange">🔄</div>
-					<div class="kpi-label">처리 중</div>
-					<div class="kpi-value">${inquiryStat.processingCnt}</div>
 				</div>
 				<div class="kpi-card">
 					<div class="kpi-icon icon-blue">⏱️</div>
@@ -1039,7 +1053,7 @@ window.chartInstances = window.chartInstances || {};
 
 /* ── 필터 버튼 및 검색 로직 ── */
 function setFilter(btn, days){
-	document.querySelectorAll('.filter-btn')
+	document.querySelectorAll('.filter-bar .filter-btn')
     .forEach(b => b.classList.remove('active'));
 	
     btn.classList.add('active');
@@ -1065,12 +1079,16 @@ function formatDate(date){
     const dd = String(date.getDate()).padStart(2,'0');
     return yyyy + "-" + mm + "-" + dd;
 }
-function searchManual(){
-    document.querySelectorAll('.filter-btn')
-        .forEach(b => b.classList.remove('active'));
-
-    document.getElementById("selectedDays").value = "";
-    searchByDate();
+function searchManual(btn){
+	document.querySelectorAll('.filter-btn')
+	    .forEach(b => b.classList.remove('active'));
+	
+	if(btn){
+	    btn.classList.add('active');
+	}
+	
+	document.getElementById("selectedDays").value = "";
+	searchByDate();
 }
 function searchByDate(){
     const start = document.getElementById("startDate").value;
@@ -1203,7 +1221,7 @@ window.signUpTrendDataFromServer = {
 
 /* ── MEMBERS 탭 차트 ── */
 
-/* 가입 추이*/
+/* 일별 신규 가입 */
 window.memberTrendDataFromServer = {
     labels: [
         <c:forEach var="t" items="${memberStat.dailyNewMemberTrend}" varStatus="s">
@@ -1230,11 +1248,15 @@ window.memberTrendDataFromServer = {
 	    {
 	      type: 'line',
 	      data: {
-	        labels: labels.map(d => {
-	          if (!d) return '';
-	          const parts = d.split('-');
-	          return parts[1] + '/' + parts[2];
-	        }),
+	    	  labels: labels.map((d, i) => {
+	    		    const parts = d.split('-');
+	    		    const prev = labels[i-1]?.split('-');
+
+	    		    if(!prev || parts[1] !== prev[1]){
+	    		        return parts[1] + '/' + parts[2];
+	    		    }
+	    		    return parts[2];
+	    		}),
 	        datasets: [{
 	          label: '신규 가입자 수',
 	          data: data,
@@ -1250,7 +1272,7 @@ window.memberTrendDataFromServer = {
 	          responsive:true, maintainAspectRatio:false,
 	          plugins:{legend:{display:false}},
 	          scales:{
-	            x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, color:'#bbb'}},
+	            x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, minRotation:45, maxRotation:45, color:'#bbb'}},
 	            y:{grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb', precision:0}}
 	          }
 	       }
@@ -1285,10 +1307,14 @@ window.boardTrendDataFromServer = {
 		  {
 		    type: 'line',
 		    data: {
-		    	labels: labels.map(d => {
-		    	    if (!d) return '';
+		    	labels: labels.map((d, i) => {
 		    	    const parts = d.split('-');
-		    	    return parts[1] + '/' + parts[2];
+		    	    const prev = labels[i-1]?.split('-');
+
+		    	    if(!prev || parts[1] !== prev[1]){
+		    	        return parts[1] + '/' + parts[2];
+		    	    }
+		    	    return parts[2];
 		    	}),
 		      datasets: [{
 		    	label: '신규 게시글 수',
@@ -1305,7 +1331,7 @@ window.boardTrendDataFromServer = {
 		          responsive:true, maintainAspectRatio:false,
 		          plugins:{legend:{display:false}},
 		          scales:{
-		            x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, color:'#bbb'}},
+		            x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, minRotation:45, maxRotation:45, color:'#bbb'}},
 		            y:{grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb', precision:0}}
 		          }
 		       }
@@ -1341,10 +1367,14 @@ window.voteTrendDataFromServer = {
 		  {
 		    type: 'line',
 		    data: {
-		    	labels: labels.map(d => {
-		    	    if (!d) return '';
+		    	labels: labels.map((d, i) => {
 		    	    const parts = d.split('-');
-		    	    return parts[1] + '월';
+		    	    const prev = labels[i-1]?.split('-');
+
+		    	    if(!prev || parts[1] !== prev[1]){
+		    	        return parts[1] + '/' + parts[2];
+		    	    }
+		    	    return parts[2];
 		    	}),
 		      datasets: [{
 		    	  label: '신규 투표 참여 수',
@@ -1376,9 +1406,8 @@ window.voteTrendDataFromServer = {
 
 /* 문의 처리 현황 */
 window.inquiryStatusDataFromServer = {
-  completed: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.completedCnt : 0},
-  processing: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.processingCnt : 0},
-  pending: ${inquiryStat.inquiryStatus != null ? inquiryStat.inquiryStatus.pendingCnt : 0}
+	completed: ${empty inquiryStat.inquiryStatus ? 0 : inquiryStat.inquiryStatus.completedCnt},
+	pending: ${empty inquiryStat.inquiryStatus ? 0 : inquiryStat.inquiryStatus.pendingCnt}
 };
 		
 (function(){
@@ -1388,21 +1417,19 @@ window.inquiryStatusDataFromServer = {
 
 	  const data = window.inquiryStatusDataFromServer || {
 	      completed: 0,
-	      processing: 0,
 	      pending: 0
 	  };
 	  
   window.chartInstances.inquiryStatusChart = new Chart(document.getElementById('inquiryStatusChart'), {
     type:'doughnut',
     data:{
-        labels:['처리 완료','처리 중','미처리'],
+        labels:['처리 완료', '미처리'],
         datasets:[{
           data:[
             data.completed,
-            data.processing,
             data.pending
           ],
-          backgroundColor:['#34d399','#fbbf24','#f87171'],
+          backgroundColor:['#34d399', '#f87171'],
           borderWidth:0,
           hoverOffset:6
         }]
@@ -1414,7 +1441,9 @@ window.inquiryStatusDataFromServer = {
         legend:{position:'right', labels:{font:baseFont, color:'#666', boxWidth:12, padding:12}},
         tooltip:{
           callbacks:{
-            label: ctx => ` ${ctx.label}: ${ctx.parsed}건`
+            label: function(ctx){
+            	  return ctx.label + ": " + ctx.raw + "건";
+            }
           }
         }
       }
@@ -1448,10 +1477,14 @@ window.inquiryTrendDataFromServer = {
 		  {
 		    type: 'line',
 		    data: {
-		    	labels: labels.map(d => {
-		    	    if (!d) return '';
+		    	labels: labels.map((d, i) => {
 		    	    const parts = d.split('-');
-		    	    return parts[1] + '/' + parts[2];
+		    	    const prev = labels[i-1]?.split('-');
+
+		    	    if(!prev || parts[1] !== prev[1]){
+		    	        return parts[1] + '/' + parts[2];
+		    	    }
+		    	    return parts[2];
 		    	}),
 		      datasets: [{
 		    	label: '신규 문의 접수 수',

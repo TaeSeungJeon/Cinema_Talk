@@ -1,5 +1,7 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 /* ===== homeHeader 전용 스타일 ===== */
@@ -232,13 +234,40 @@ header {
 	background: #6366f1;
 	color: white;
 }
+
+/* 마이페이지 아이콘 */
+.header-icon{
+  width: 44px;
+  height: 44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 18px;
+  color: var(--text-main);
+}
+
+.header-icon:hover{
+  transform: scale(1.06);
+  color: #6366f1;
+}
+
+/* 회원환영문구?  */
+.welcome-msg{
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.welcome-msg strong{
+  color:#6366f1;
+}
 </style>
 
 <header>
-	<a href="${pageContext.request.contextPath}/index.do"
-		class="glass-panel"
-		style="padding: 10px 25px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">Cinema
-		Talk</a>
+	<a href="${pageContext.request.contextPath}/index.do">
+		<img src="${pageContext.request.contextPath}/Image/Logo.png"
+			 alt="Cinema Talk"
+			 style="height: 60px; width: auto;">
+	</a>
 	<div class="search-bar">
 		<form action="searchMovie.do" method="get">
 			<select id="search-option" name="search-option">
@@ -264,33 +293,39 @@ header {
 		</form>
 	</div>
 	<div style="display: flex; gap: 10px;">
-	
-	<!-- 로그인 한 상태 -->
+
+		<!-- 로그인 한 상태 -->
 		<c:if test="${not empty sessionScope.memNo}">
-		
-			<a href="memberLogout.do" class="glass-panel"
-				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
-			
+
+			<span class="welcome-msg"> <strong>${sessionScope.memId}</strong>님 <br>환영합니다 </span>
+
 			<%-- 관리자/일반회원 마이페이지 분기 --%>
 			<c:choose>
-			
+
 				<%-- 관리자 --%>
-				<c:when test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">	
-					<a href="${pageContext.request.contextPath}/adminMypage.do" class="glass-panel"
-					style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a>
+				<c:when
+					test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
+					<a href="${pageContext.request.contextPath}/adminMypage.do"
+						class="glass-panel header-icon" title="마이페이지"> <i
+						class="fa-solid fa-circle-user"></i>
+					</a>
 				</c:when>
-				
+
 				<%-- 일반회원 --%>
 				<c:otherwise>
-					<a href="${pageContext.request.contextPath}/myPage.do" class="glass-panel"
-					style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">마이페이지</a>
+					<a href="${pageContext.request.contextPath}/myPage.do"
+						class="glass-panel header-icon" title="마이페이지"> <i
+						class="fa-solid fa-circle-user"></i>
+					</a>
 				</c:otherwise>
-				
+
 			</c:choose>
-			
+
+			<a href="memberLogout.do" class="glass-panel"
+				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
 		</c:if>
-	
-	<!-- 로그인 안 한 상태 -->
+
+		<!-- 로그인 안 한 상태 -->
 		<c:if test="${empty sessionScope.memNo}">
 			<a href="memberLogin.do" class="glass-panel"
 				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그인</a>

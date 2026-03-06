@@ -27,6 +27,8 @@ public class VoteRegisterDTO {
 	
 	//참여자 수
 	private int voterCount;
+	//댓글 수
+	private int commentCount;
 	
 	//페이징 쪽 나누기 관련변수
 	private int startrow;

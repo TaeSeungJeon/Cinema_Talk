@@ -34,6 +34,19 @@
 		background: #e5e7eb;
 		flex: 0 0 96px;
 	}
+	
+	/* 인기글 박스에 마우스 오버효과 */
+	.popular-item{
+	padding: 10px 0;
+	 transition: 0.2s;
+	}
+	
+	.popular-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
 
 </style>
 
@@ -81,7 +94,7 @@
 		</c:forEach>
 
 		<section class="hero-section" id="hero-banner"
-				 style="background: linear-gradient(to right, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%), url('https://image.tmdb.org/t/p/w1280${indexTrendMovieList[0].movieBackdropPath}'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;">
+				 style="background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280${indexTrendMovieList[0].movieBackdropPath}'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;">
 			<div class="hero-content">
 				<a
 						href="${pageContext.request.contextPath}/movieDetail.do?movieId=${indexTrendMovieList[0].movieId}"
@@ -161,7 +174,7 @@
 							heroBanner
 									.setAttribute(
 											'style',
-											"background: linear-gradient(to right, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%), url('https://image.tmdb.org/t/p/w1280"
+											"background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url('https://image.tmdb.org/t/p/w1280"
 											+ movie.movieBackdropPath
 											+ "'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;");
 						}
@@ -304,8 +317,8 @@
 					<c:forEach var="b" items="${dailyPopularList}" varStatus="vs">
 						<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
 						   style="display: flex; align-items: center; gap: 10px;
-                              padding: 10px 0; border-bottom: 1px solid #f1f5f9;
-                              text-decoration: none; color: inherit;">
+                               border-bottom: 1px solid #f1f5f9;
+                              text-decoration: none; color: inherit;" class="popular-item">
                         <span style="font-size: 0.8rem; font-weight: 800; min-width: 16px; text-align: center;
 								color: ${vs.index == 0 ? '#ef4444' : vs.index == 1 || vs.index == 2 ? '#6366f1' : '#94a3b8'};">
 								${vs.index + 1}
@@ -340,8 +353,8 @@
 					<c:forEach var="b" items="${weeklyPopularList}" varStatus="vs">
 						<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
 						   style="display: flex; align-items: center; gap: 10px;
-                              padding: 10px 0; border-bottom: 1px solid #f1f5f9;
-                              text-decoration: none; color: inherit;">
+                              border-bottom: 1px solid #f1f5f9;
+                              text-decoration: none; color: inherit;" class="popular-item">
                         <span style="font-size: 0.8rem; font-weight: 800; min-width: 16px; text-align: center;
 								color: ${vs.index == 0 ? '#ef4444' : vs.index == 1 || vs.index == 2 ? '#6366f1' : '#94a3b8'};">
 								${vs.index + 1}
@@ -376,8 +389,8 @@
 					<c:forEach var="b" items="${monthlyPopularList}" varStatus="vs">
 						<a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
 						   style="display: flex; align-items: center; gap: 10px;
-                              padding: 10px 0; border-bottom: 1px solid #f1f5f9;
-                              text-decoration: none; color: inherit;">
+                               border-bottom: 1px solid #f1f5f9;
+                              text-decoration: none; color: inherit;" class="popular-item">
                         <span style="font-size: 0.8rem; font-weight: 800; min-width: 16px; text-align: center;
 								color: ${vs.index == 0 ? '#ef4444' : vs.index == 1 || vs.index == 2 ? '#6366f1' : '#94a3b8'};">
 								${vs.index + 1}

@@ -55,14 +55,20 @@
     <!-- 일별 투표 참여 추이 -->
     <select id="selMonthlyVoteTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.TrendDTO">
         <![CDATA[
-        SELECT
-            TO_CHAR(recordCreatedDate, 'YYYY-MM-DD') AS regDate,
-            COUNT(*) AS cnt
-        FROM VOTE_RECORD
-        WHERE recordCreatedDate BETWEEN #{startDate} AND #{endDate}
-        GROUP BY TO_CHAR(recordCreatedDate, 'YYYY-MM-DD')
-        ORDER BY regDate
-        ]]>
+		WITH date_range AS (
+		    SELECT TRUNC(#{startDate}) + LEVEL - 1 AS dt
+		    FROM dual
+		    CONNECT BY LEVEL <= TRUNC(#{endDate}) - TRUNC(#{startDate}) + 1
+		)
+		SELECT
+		    TO_CHAR(d.dt, 'YYYY-MM-DD') AS regDate,
+		    NVL(COUNT(v.recordCreatedDate), 0) AS cnt
+		FROM date_range d
+		LEFT JOIN VOTE_RECORD v
+		    ON TRUNC(v.recordCreatedDate) = d.dt
+		GROUP BY d.dt
+		ORDER BY d.dt
+		]]>
     </select>
     
     <!-- 인기 투표 TOP 10 -->

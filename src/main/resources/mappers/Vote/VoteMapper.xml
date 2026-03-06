@@ -194,13 +194,26 @@
 
 	<select id="vrecListVoteId" resultType="voterecord">
 		SELECT 
-	    vr.*, 
-	    m.memName,
-	    m.memProfilePhoto
-	FROM VOTE_RECORD vr
-	JOIN MEMBER m ON vr.memNo = m.memNo
-	WHERE vr.voteId = #{voteId}
-	ORDER BY vr.recordCreatedDate DESC
+		    vr.recordId,
+		    vr.recordCreatedDate,
+		    vr.memNo,
+		    vr.voteId,
+		    vr.movieId,
+		    vr.voteCommentText,
+		    vr.movieDeleted,
+		    -- 영화가 삭제되었으면 백업 제목을, 아니면 현재 제목을 출력
+		    CASE 
+		        WHEN vr.movieDeleted = 1 THEN vr.movieTitleBackup || ' (삭제된 영화)'
+		        WHEN mov.movieTitle IS NULL AND vr.movieId IS NOT NULL THEN '정보 없음'
+		        ELSE mov.movieTitle 
+		    END AS movieTitle,
+		    m.memName,
+		    m.memProfilePhoto
+		FROM VOTE_RECORD vr
+		JOIN MEMBER m ON vr.memNo = m.memNo
+		LEFT JOIN MOVIE mov ON vr.movieId = mov.movieId
+		WHERE vr.voteId = #{voteId}
+		ORDER BY vr.recordCreatedDate DESC
 	</select>
 	
 	<select id="vregFullByVoteId" resultMap="voteRegisterMap">

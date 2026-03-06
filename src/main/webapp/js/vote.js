@@ -81,13 +81,13 @@ document.addEventListener("DOMContentLoaded", function() {
 									
 									let profilePhoto = (comment.profilePhoto && comment.profilePhoto.trim() !== "") 
 									        ? getContextPath() + `/profilePhoto.do?path=` + comment.profilePhoto
-									        : getContextPath() + `/image/default-avatar.png`;
+									        : getContextPath() + `/Image/default-avatar.png`;
 							commentHtml += `
 							<div class="comment-item">
 								<div class="user-avatar"><img src="${profilePhoto}"/></div>
 								<div class="comment-content" style="flex: 1;">
 								<div style="display: flex; justify-content: space-between; align-items: center;">
-								<div class="comment-user">${comment.memName}</div>
+								<div class="comment-user">${comment.memName} <span class="movie-tag">${comment.movieTitle}</span></div>
 								</div>
 								<div  class="comment-text">${comment.commentText}</div>
 								

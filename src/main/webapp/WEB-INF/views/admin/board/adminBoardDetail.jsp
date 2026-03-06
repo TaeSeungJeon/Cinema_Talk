@@ -60,22 +60,37 @@
 }
 
 .nd-btn-edit {
-	background: var(--accent-color);
-	color: white;
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	background: #e0e7ff;
+	color: #6366f1;
+	border: none;
+	border-radius: 0.375rem;
+	cursor: pointer;
+	transition: background 0.3s;
 }
 
 .nd-btn-edit:hover {
-	background: var(--accent-hover);
+	background: #4f46e5; color: #fff; border-color: #0284c7;
 }
 
 .nd-btn-delete {
-	background: rgba(239, 68, 68, 0.15);
-	color: #f87171;
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	background: #fee2e2;
+	color: #ef4444;
+	border: none;
+	border-radius: 0.375rem;
+	cursor: pointer;
+	transition: background 0.3s;
 }
 
 .nd-btn-delete:hover {
-	background: rgba(239, 68, 68, 0.25);
+	background: #ef4444; color: #fff; border-color: #0284c7;
 }
+
 
 .nd-btn-save {
 	background: #16a34a;
@@ -88,13 +103,13 @@
 }
 
 .nd-btn-cancel {
-	background: var(--border-color);
-	color: var(--text-sub);
+	background: #f3f4f6;
+	color:  #6b7280;
 	display: none;
 }
 
 .nd-btn-cancel:hover {
-	background: rgba(255,255,255,0.06);
+	background:  #f3f4f6;
 }
 
 /* 메타 정보 */
@@ -646,16 +661,16 @@
 
 		<div class="nd-actions">
 			<button class="nd-btn nd-btn-edit" id="btnEdit" onclick="enterEditMode()">
-				<i class="fa-solid fa-pen"></i> 수정
+				수정
 			</button>
 			<button class="nd-btn nd-btn-delete" id="btnDelete" onclick="deleteBoard()">
-				<i class="fa-solid fa-trash"></i> 삭제
+				 삭제
 			</button>
 			<button class="nd-btn nd-btn-save" id="btnSave" onclick="saveBoard()">
-				<i class="fa-solid fa-check"></i> 저장
+				저장
 			</button>
 			<button class="nd-btn nd-btn-cancel" id="btnCancel" onclick="cancelEdit()">
-				<i class="fa-solid fa-xmark"></i> 취소
+				취소
 			</button>
 		</div>
 	</div>

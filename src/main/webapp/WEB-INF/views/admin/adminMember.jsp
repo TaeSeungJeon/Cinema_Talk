@@ -119,10 +119,13 @@ tbody td{
 
 /* 정지/해제 버튼 */
 .btn-change-state1{
-	background: #ef4444; 
-	color: #fff; 
-	border-color: var(--info-hover);
+	background: #fee2e2; 
+	color: #ef4444; 
+	border:none;
+	transition: 0.2s;
 }
+
+.btn-change-state1:hover { background: #ef4444; color: #fff; border-color:  #0284c7; }
 
 .btn-change-state2{
 	background: #4f46e5; 

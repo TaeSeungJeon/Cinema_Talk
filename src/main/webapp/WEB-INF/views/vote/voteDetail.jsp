@@ -815,7 +815,7 @@ pageEncoding="UTF-8"%>
 						if(c.commentText){
 							let profilePhoto = (c.profilePhoto && c.profilePhoto.trim() !== "") 
 		                    ? getContextPath() + `/profilePhoto.do?path=` + c.profilePhoto
-									        : getContextPath() + `/image/default-avatar.png`;
+									        : getContextPath() + `/Image/default-avatar.png`;
 							html += `
 							<div class="comment-item">
 							<div class="user-avatar"><img src="\${profilePhoto}"/></div>

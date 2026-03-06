@@ -207,7 +207,7 @@ header {
 }
 
 .booking-box {
-    background: var(--glass-bg);
+    background: #1a1a1b;
     border-radius: 18px;
     padding: 12px 10px;
     text-align: center;
@@ -268,8 +268,8 @@ header {
 }
 
 .post-item:hover {
-    background: rgba(40, 40, 40, 0.8);
-    transform: translateX(5px);
+    background: #f1f5f9;  /* --- 최근 게시글에 게시글 마우스 오버시 그레이 색상 효과 죽이기 --- */
+    transform: translateY(-5px);
 }
 
 .post-thumb {
@@ -334,7 +334,7 @@ header {
     height: 450px;
     background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     border-radius: var(--radius-soft);
-    color: #1f2937;
+    color: white; /* --- white으로 되돌리기 --- */
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -365,7 +365,7 @@ header {
 .nav-btn {
     background: none;
     border: none;
-    color: #1f2937;
+    color: white;
     font-size: 1.2rem;
     cursor: pointer;
 }

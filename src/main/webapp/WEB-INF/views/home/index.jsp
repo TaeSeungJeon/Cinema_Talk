@@ -5,7 +5,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>제목 입력하세요</title>
+    <title>Cinema Talk.</title>
 
     <!-- 공통스타일시트 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />

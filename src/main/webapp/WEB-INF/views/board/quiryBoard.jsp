@@ -877,19 +877,10 @@ aside {
 							<span class="post-boardtype">문의사항</span>
 						</div>
 						<div class="post-meta">
-							<span class="post-time" data-time="${board.boardDate}"></span>
-							<span class="post-meta-item">
-								<svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">
-									<path d="M1.5 12s4-7 10.5-7 10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" />
-									<circle cx="12" cy="12" r="3.5" />
-								</svg> ${board.boardViewCount}
-							</span>
-							<span class="post-meta-item">
-								<svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">
-									<path d="M7 11v8M7 11l4-7 2 1c1 .5 1.5 1.7 1.1 2.8L13 11h5.5c1.4 0 2.5 1.1 2.5 2.5 0 .3-.1.6-.2.9l-2 5.5c-.4 1.1-1.5 1.6-2.6 1.6H10c-1.7 0-3-1.3-3-3v-7" />
-								</svg>
-								<span class="like-count">${board.likeCount}</span>
-							</span>
+						<span class="post-time" data-time="${board.boardDate}"></span>
+						<span class="post-meta-item">👍좋아요 ${board.likeCount}</span>
+						<span class="post-meta-item">💬댓글 ${board.commentCount}</span>
+						<span class="post-meta-item">조회수 ${board.boardViewCount}</span>
 						</div>
 						<div class="post-content">
 							<h2>

@@ -13,7 +13,9 @@
 	rel="stylesheet">
 <style>
 /* 커스텀 폰트 드롭다운 */
-.font-select-wrapper { position: relative; }
+.font-select-wrapper {
+	position: relative;
+}
 
 .font-select-trigger {
 	padding: 4px 28px 4px 8px;
@@ -55,7 +57,9 @@
 	padding: 6px 0;
 }
 
-.font-select-dropdown.open { display: block; }
+.font-select-dropdown.open {
+	display: block;
+}
 
 .font-option {
 	padding: 9px 14px;
@@ -66,8 +70,15 @@
 	white-space: nowrap;
 }
 
-.font-option:hover { background: var(--bg-elevated); }
-.font-option.selected { background: #ede9fe; color: #6366f1; }
+.font-option:hover {
+	background: var(--bg-elevated);
+}
+
+.font-option.selected {
+	background: #ede9fe;
+	color: #6366f1;
+}
+
 :root {
 	--bg-color: #f0f2f5;
 	--glass-bg: rgba(255, 255, 255, 0.7);
@@ -834,12 +845,13 @@ aside {
 				<div>
 					<h1 style="margin: 0; font-size: 2rem; font-weight: 800;">공지사항</h1>
 					<p
-						style="color: var(--text-sub); margin-top: 5px; font-weight: 500;">커뮤니티 규칙을 준수해주세요.</p>
+						style="color: var(--text-sub); margin-top: 5px; font-weight: 500;">커뮤니티
+						규칙을 준수해주세요.</p>
 				</div>
 				<div class="board-search-bar">
 					<form action="searchBoard.do" method="get">
-						<input type="hidden" name="filter" value="${filter}" />
-						<select id="board-search-option" name="search-option">
+						<input type="hidden" name="filter" value="${filter}" /> <select
+							id="board-search-option" name="search-option">
 							<option value="0">제목+내용</option>
 							<option value="1">제목</option>
 							<option value="2">내용</option>
@@ -858,13 +870,14 @@ aside {
 							<input type="hidden" name="movieId" value="0">
 						</div>
 						<input type="text" name="search-words"
-							placeholder="찾고 싶은 게시글을 검색해보세요"> <input
-							type="submit" value="검색">
+							placeholder="찾고 싶은 게시글을 검색해보세요"> <input type="submit"
+							value="검색">
 					</form>
 				</div>
-				<c:if test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
-				<button class="btn-write-submit" onclick="openModal()">📝
-					글쓰기</button>
+				<c:if
+					test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
+					<button class="btn-write-submit" onclick="openModal()">📝
+						글쓰기</button>
 				</c:if>
 			</header>
 
@@ -884,18 +897,9 @@ aside {
 						</div>
 						<div class="post-meta">
 							<span class="post-time" data-time="${board.boardDate}"></span> <span
-								class="post-meta-item"> <svg class="meta-icon"
-									viewBox="0 0 24 24" aria-hidden="true">
-                            <path
-										d="M1.5 12s4-7 10.5-7 10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" />
-                        <circle cx="12" cy="12" r="3.5" />
-                    </svg> ${board.boardViewCount}
-							</span> <span class="post-meta-item"> <svg class="meta-icon"
-									viewBox="0 0 24 24" aria-hidden="true">
-                            <path
-										d="M7 11v8M7 11l4-7 2 1c1 .5 1.5 1.7 1.1 2.8L13 11h5.5c1.4 0 2.5 1.1 2.5 2.5 0 .3-.1.6-.2.9l-2 5.5c-.4 1.1-1.5 1.6-2.6 1.6H10c-1.7 0-3-1.3-3-3v-7" />
-                            </svg> <span class="like-count">${board.likeCount}</span>
-							</span>
+								class="post-meta-item">👍좋아요 ${board.likeCount}</span> <span
+								class="post-meta-item">💬댓글 ${board.commentCount}</span> <span
+								class="post-meta-item">조회수 ${board.boardViewCount}</span>
 						</div>
 						<div class="post-content">
 							<h2>
@@ -952,7 +956,8 @@ aside {
 				<div class="widget-title">
 					<span>📋 공지 안내</span>
 				</div>
-				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+				<div
+					style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
 					<p style="margin: 0;">• 공지글은 관리자만 작성 가능합니다.</p>
 					<p style="margin: 0;">• 사이트 사용 규칙을 위반하지 않도록 주의해주세요.</p>
 				</div>
@@ -962,7 +967,8 @@ aside {
 				<div class="widget-title">
 					<span>📞 고객센터</span>
 				</div>
-				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+				<div
+					style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
 					<p style="margin: 0;">운영시간: 평일 09:00 ~ 18:00</p>
 					<p style="margin: 0;">이메일: support@cinematalk.com</p>
 				</div>
@@ -972,9 +978,9 @@ aside {
 
 	<div class="modal-overlay" id="writeModal">
 		<div class="write-modal">
-			<h2 style="margin-top: 0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">
-				새 게시글 작성
-			</h2>
+			<h2
+				style="margin-top: 0; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">
+				새 게시글 작성</h2>
 
 			<form method="post"
 				action="${pageContext.request.contextPath}/boardOk.do"
@@ -984,9 +990,9 @@ aside {
 				<!-- 카테고리 (공지사항 고정: boardType=10) -->
 				<input type="hidden" name="boardType" value="10" />
 				<div style="display: flex; gap: 10px;">
-					<div style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f1f5f9; font-weight: 600; color: var(--text-sub); display: flex; align-items: center;">
-						📢 공지사항
-					</div>
+					<div
+						style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f1f5f9; font-weight: 600; color: var(--text-sub); display: flex; align-items: center;">
+						📢 공지사항</div>
 				</div>
 
 				<!-- 제목 -->
@@ -995,77 +1001,100 @@ aside {
 					name="boardTitle" required>
 
 				<!-- 툴바 -->
-				<div style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0;
-							border: 1px solid #e2e8f0; border-bottom: none;
-							display: flex; gap: 15px; color: #64748b; font-size: 0.9rem;
-							align-items: center; flex-wrap: wrap;">
+				<div
+					style="background: #f8fafc; padding: 8px 15px; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; gap: 15px; color: #64748b; font-size: 0.9rem; align-items: center; flex-wrap: wrap;">
 
 					<div class="font-select-wrapper" id="fontSelectWrapper">
 						<div class="font-select-trigger" id="fontSelectTrigger"
-							 onmousedown="event.preventDefault(); saveSelection(); toggleFontDropdown();">
-							<span id="fontSelectLabel" style="font-family: 'Inter', sans-serif;">Inter (기본)</span>
+							onmousedown="event.preventDefault(); saveSelection(); toggleFontDropdown();">
+							<span id="fontSelectLabel"
+								style="font-family: 'Inter', sans-serif;">Inter (기본)</span>
 						</div>
 						<div class="font-select-dropdown" id="fontSelectDropdown">
-							<div class="font-option selected" style="font-family: 'Inter', sans-serif;" data-font="Inter">Inter (기본)</div>
-							<div class="font-option" style="font-family: 'Noto Sans KR', sans-serif;" data-font="Noto Sans KR">노토 산스</div>
-							<div class="font-option" style="font-family: 'Noto Serif KR', serif;" data-font="Noto Serif KR">노토 세리프</div>
-							<div class="font-option" style="font-family: 'Gothic A1', sans-serif;" data-font="Gothic A1">고딕 A1</div>
-							<div class="font-option" style="font-family: 'Do Hyeon', sans-serif;" data-font="Do Hyeon">도현체</div>
-							<div class="font-option" style="font-family: 'Jua', sans-serif;" data-font="Jua">주아체</div>
-							<div class="font-option" style="font-family: 'Gugi', cursive;" data-font="Gugi">구기체</div>
-							<div class="font-option" style="font-family: 'Sunflower', sans-serif;" data-font="Sunflower">해바라기체</div>
-							<div class="font-option" style="font-family: 'Stylish', sans-serif;" data-font="Stylish">스타일리시</div>
-							<div class="font-option" style="font-family: 'Black Han Sans', sans-serif;" data-font="Black Han Sans">블랙 한 산스</div>
-							<div class="font-option" style="font-family: 'Cute Font', cursive;" data-font="Cute Font">귀여운 폰트</div>
-							<div class="font-option" style="font-family: 'Gaegu', cursive;" data-font="Gaegu">개구체</div>
+							<div class="font-option selected"
+								style="font-family: 'Inter', sans-serif;" data-font="Inter">Inter
+								(기본)</div>
+							<div class="font-option"
+								style="font-family: 'Noto Sans KR', sans-serif;"
+								data-font="Noto Sans KR">노토 산스</div>
+							<div class="font-option"
+								style="font-family: 'Noto Serif KR', serif;"
+								data-font="Noto Serif KR">노토 세리프</div>
+							<div class="font-option"
+								style="font-family: 'Gothic A1', sans-serif;"
+								data-font="Gothic A1">고딕 A1</div>
+							<div class="font-option"
+								style="font-family: 'Do Hyeon', sans-serif;"
+								data-font="Do Hyeon">도현체</div>
+							<div class="font-option" style="font-family: 'Jua', sans-serif;"
+								data-font="Jua">주아체</div>
+							<div class="font-option" style="font-family: 'Gugi', cursive;"
+								data-font="Gugi">구기체</div>
+							<div class="font-option"
+								style="font-family: 'Sunflower', sans-serif;"
+								data-font="Sunflower">해바라기체</div>
+							<div class="font-option"
+								style="font-family: 'Stylish', sans-serif;" data-font="Stylish">스타일리시</div>
+							<div class="font-option"
+								style="font-family: 'Black Han Sans', sans-serif;"
+								data-font="Black Han Sans">블랙 한 산스</div>
+							<div class="font-option"
+								style="font-family: 'Cute Font', cursive;" data-font="Cute Font">귀여운
+								폰트</div>
+							<div class="font-option" style="font-family: 'Gaegu', cursive;"
+								data-font="Gaegu">개구체</div>
 						</div>
 					</div>
 
-					<span style="cursor: pointer; font-weight: 800;" onmousedown="event.preventDefault(); execCmd('bold')">B</span>
-					<span style="cursor: pointer; font-style: italic;" onmousedown="event.preventDefault(); execCmd('italic')">I</span>
-					<span style="cursor: pointer; text-decoration: underline;" onmousedown="event.preventDefault(); execCmd('underline')">U</span>
+					<span style="cursor: pointer; font-weight: 800;"
+						onmousedown="event.preventDefault(); execCmd('bold')">B</span> <span
+						style="cursor: pointer; font-style: italic;"
+						onmousedown="event.preventDefault(); execCmd('italic')">I</span> <span
+						style="cursor: pointer; text-decoration: underline;"
+						onmousedown="event.preventDefault(); execCmd('underline')">U</span>
 
-					<span id="writeAttachTrigger" style="cursor:pointer;">🖼️ 사진첨부</span>
-					<input id="writeAttachInput" type="file" name="uploadFiles" accept="image/*"
-						   multiple style="display:none;" />
+					<span id="writeAttachTrigger" style="cursor: pointer;">🖼️
+						사진첨부</span> <input id="writeAttachInput" type="file" name="uploadFiles"
+						accept="image/*" multiple style="display: none;" />
 				</div>
 
 				<div id="writeAttachName"
-					 style="font-size:0.78rem; color:#94a3b8; padding:6px 4px; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;"></div>
+					style="font-size: 0.78rem; color: #94a3b8; padding: 6px 4px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;"></div>
 
 				<!-- contenteditable 에디터 -->
 				<div id="boardContentEditor" contenteditable="true"
-					 style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6; min-height: 300px;"
-					 data-placeholder="공지사항을 작성해주세요..."></div>
+					style="padding: 15px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; resize: none; line-height: 1.6; min-height: 300px;"
+					data-placeholder="공지사항을 작성해주세요..."></div>
 
 				<input type="hidden" name="boardContent" id="boardContent">
 
 				<%-- 🔗 링크 첨부 UI --%>
-				<div style="margin-top:4px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
-					<div style="font-weight:600; margin-bottom:8px; color:#374151;">🔗 링크 첨부</div>
-					<div style="display:flex; gap:8px;">
-						<input type="text" id="writeLinkInput"
-							   placeholder="https://..."
-							   style="flex:1; padding:8px 12px; border-radius:10px; border:1px solid #e2e8f0; font-size:0.9rem; outline:none;">
+				<div
+					style="margin-top: 4px; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f9fafb;">
+					<div style="font-weight: 600; margin-bottom: 8px; color: #374151;">🔗
+						링크 첨부</div>
+					<div style="display: flex; gap: 8px;">
+						<input type="text" id="writeLinkInput" placeholder="https://..."
+							style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; outline: none;">
 						<button type="button" id="writeLinkBtn"
-								style="padding:8px 16px; border-radius:10px; border:none; background:#6366f1; color:white; font-weight:600; cursor:pointer;">
-							미리보기
-						</button>
+							style="padding: 8px 16px; border-radius: 10px; border: none; background: #6366f1; color: white; font-weight: 600; cursor: pointer;">
+							미리보기</button>
 						<button type="button" id="writeLinkClearBtn"
-								style="display:none; padding:8px 16px; border-radius:10px; border:none; background:#e2e8f0; color:#374151; font-weight:600; cursor:pointer;">
-							✕ 제거
-						</button>
+							style="display: none; padding: 8px 16px; border-radius: 10px; border: none; background: #e2e8f0; color: #374151; font-weight: 600; cursor: pointer;">
+							✕ 제거</button>
 					</div>
 					<input type="hidden" name="linkUrl" id="linkUrl" value="">
-					<div id="writeLinkPreviewArea" style="margin-top:12px; position:relative;"></div>
+					<div id="writeLinkPreviewArea"
+						style="margin-top: 12px; position: relative;"></div>
 				</div>
 
-				<div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
-					📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.
-				</div>
+				<div
+					style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #64748b;">
+					📌 커뮤니티 가이드라인을 준수해 주세요. 스포일러가 포함된 경우 제목에 꼭 표시해 주세요.</div>
 
 				<!-- 버튼 -->
-				<div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
+				<div
+					style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
 					<button type="button" class="glass-panel"
 						style="padding: 12px 30px; border: none; cursor: pointer; font-weight: 600;"
 						onclick="closeModal()">취소</button>

@@ -25,6 +25,9 @@ public interface BoardService {
     // 수정
     void updateBoard(BoardDTO bdto);
 
+    // 게시글 내용(content) 직접 수정
+    void updateBoardContent(BoardDTO bdto);
+
     List<BoardDTO> boardListByType(int boardType);
 
     int getBoardCount();

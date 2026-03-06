@@ -27,8 +27,8 @@ public class MovieSearchController implements Action {
 		String searchWords = request.getParameter("search-words");
 		String encodedSearchWords = java.net.URLEncoder.encode(searchWords, "UTF-8");
 		
-		if(!(request.getParameter("request-option").equals("false")) || 
-		   request.getParameter("request-option") == null) {
+		if((request.getParameter("request-option") == null) || !(request.getParameter("request-option").equals("false")))
+		    {
 			String requestSessionURL = request.getRequestURL().toString();
 			session.setAttribute("requestSessionURL", requestSessionURL + "?search-option=" + searchOption + "&search-words=" + encodedSearchWords);
 		}

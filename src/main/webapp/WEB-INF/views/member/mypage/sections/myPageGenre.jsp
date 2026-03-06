@@ -111,7 +111,8 @@ if (genreForm) {
         }).then(function(result) {
             if (result.status === 200 && result.text && result.text.trim() === 'OK') {
                 alert('선호 장르가 저장되었습니다! 🎉');
-                // Optionally reload or update UI
+                // 장르 섹션을 유지한 채 페이지 새로고침
+                location.hash = 'genre';
                 location.reload();
             } else if (result.status === 400 && result.text && result.text.trim() === 'MAX_3_ALLOWED') {
                 alert('선호 장르는 최대 ' + MAX_GENRES + '개까지만 허용됩니다. 기존 선호 장르를 해제한 뒤 다시 시도하세요.');

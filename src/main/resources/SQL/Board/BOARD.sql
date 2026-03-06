@@ -28,9 +28,6 @@ references MEMBER (memNo);
 alter table board add constraint fk_movie_id foreign key (movieId)
 references MOVIE (movieId) ON DELETE SET NULL;
 
--- 링크 프리뷰 사용을 위한 컬럼 추가 (삭제해도될 듯)
-ALTER TABLE BOARD ADD (linkUrl VARCHAR2(500) NULL);
-
 ALTER TABLE BOARD ADD (movieTitle VARCHAR2(255) NULL);
 
 ALTER TABLE BOARD RENAME COLUMN boardViewCount TO boardViewCount;

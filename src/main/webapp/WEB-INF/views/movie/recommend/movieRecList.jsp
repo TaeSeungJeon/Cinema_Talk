@@ -118,7 +118,7 @@
     }
 
     /* ===== 화살표 ===== */
-    .arrow{
+    .arrow1{
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -136,11 +136,11 @@
       transition: transform .15s ease, opacity .15s ease;
       opacity: 0;
     }
-    .carousel-wrap:hover .arrow{ opacity: 1; }
-    .arrow:hover{ transform: translateY(-50%) scale(1.05); }
-    .arrow.left{ left: 10px; }
-    .arrow.right{ right: 10px; }
-    .arrow svg{ width: 22px; height: 22px; }
+    .carousel-wrap:hover .arrow1{ opacity: 1; }
+    .arrow1:hover{ transform: translateY(-50%) scale(1.05); }
+    .arrow1.left{ left: 10px; }
+    .arrow1.right{ right: 10px; }
+    .arrow1 svg{ width: 22px; height: 22px; }
 
     /* ===== 카드 공통 ===== */
     .movie-card{
@@ -175,7 +175,7 @@
             <span class="fade left"></span>
             <span class="fade right"></span>
 
-            <button class="arrow left" type="button" data-left aria-label="left">
+            <button class="arrow1 left" type="button" data-left aria-label="left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"/>
               </svg>
@@ -188,7 +188,7 @@
               </c:forEach>
             </div>
 
-            <button class="arrow right" type="button" data-right aria-label="right">
+            <button class="arrow1 right" type="button" data-right aria-label="right">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 18l6-6-6-6"/>
               </svg>
@@ -205,7 +205,7 @@
             <span class="fade left"></span>
             <span class="fade right"></span>
 
-            <button class="arrow left" type="button" data-left aria-label="left">
+            <button class="arrow1 left" type="button" data-left aria-label="left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"/>
               </svg>
@@ -218,7 +218,7 @@
               </c:forEach>
             </div>
 
-            <button class="arrow right" type="button" data-right aria-label="right">
+            <button class="arrow1 right" type="button" data-right aria-label="right">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 18l6-6-6-6"/>
               </svg>
@@ -236,7 +236,7 @@
             <span class="fade left"></span>
             <span class="fade right"></span>
 
-            <button class="arrow-left" type="button" data-left aria-label="left">
+            <button class="arrow1-left" type="button" data-left aria-label="left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"/>
               </svg>
@@ -249,7 +249,7 @@
               </c:forEach>
             </div>
 
-            <button class="arrow right" type="button" data-right aria-label="right">
+            <button class="arrow1 right" type="button" data-right aria-label="right">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 18l6-6-6-6"/>
               </svg>

@@ -1072,6 +1072,7 @@ function searchManual(){
     document.getElementById("selectedDays").value = "";
     searchByDate();
 }
+
 function searchByDate(){
     const start = document.getElementById("startDate").value;
     const end = document.getElementById("endDate").value;

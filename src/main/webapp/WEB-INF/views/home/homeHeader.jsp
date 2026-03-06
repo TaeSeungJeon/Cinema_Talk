@@ -320,9 +320,10 @@ header {
 				</c:otherwise>
 
 			</c:choose>
-
-			<a href="memberLogout.do" class="glass-panel"
-				style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
+			<c:if test="${canLogout == true}">
+				<a href="memberLogout.do" class="glass-panel"
+					style="padding: 10px 20px; color: var(--text-main); font-weight: 500;">로그아웃</a>
+			</c:if>
 		</c:if>
 
 		<!-- 로그인 안 한 상태 -->

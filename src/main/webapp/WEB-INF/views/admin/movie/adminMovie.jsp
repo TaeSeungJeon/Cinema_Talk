@@ -8,7 +8,7 @@
 /* 전체 컨테이너: h-[calc(100vh-4rem)] flex 적용 */
 .movie-mgmt-page {
 	display: flex;
-	height: calc(100vh - 12rem); /* 상단 헤더 높이 제외 */
+	height: 100%; /* 상단 헤더 높이 제외 */
 	background-color: white;
 	border-radius: 1rem;
 	overflow: hidden;

@@ -27,6 +27,18 @@ header {
 	align-items: center;
 	justify-content: center;
 }
+/* ===== 게시글 상세 페이지에서 glass-panel도 쓰고 있어서 게시글 상세페이지에서는 header icon 깨지는 현상이 발생해서 header icon class를 header-glass-panel로 변경  ===== */
+.header-glass-panel {
+	background: rgba(255, 255, 255, 0.7);
+	backdrop-filter: blur(10px);
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
 .search-bar {
 	background: white;
@@ -306,7 +318,7 @@ header {
 				<c:when
 					test="${sessionScope.memRole == '1' || sessionScope.memRole == 1}">
 					<a href="${pageContext.request.contextPath}/adminMypage.do"
-						class="glass-panel header-icon" title="마이페이지"> <i
+						class="header-glass-panel header-icon" title="마이페이지"> <i
 						class="fa-solid fa-circle-user"></i>
 					</a>
 				</c:when>
@@ -314,7 +326,7 @@ header {
 				<%-- 일반회원 --%>
 				<c:otherwise>
 					<a href="${pageContext.request.contextPath}/myPage.do"
-						class="glass-panel header-icon" title="마이페이지"> <i
+						class="header-glass-panel header-icon" title="마이페이지"> <i
 						class="fa-solid fa-circle-user"></i>
 					</a>
 				</c:otherwise>

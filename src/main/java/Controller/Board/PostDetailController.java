@@ -6,12 +6,15 @@ import DTO.Board.BoardDTO;
 import DTO.Board.CommentsDTO;
 import DTO.Board.LinkPreviewDTO;
 import DTO.Member.MemberDTO;
+import DTO.Vote.VoteRegisterDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
 import Service.Board.CommentsService;
 import Service.Board.CommentsServiceImpl;
 import Service.Member.MemberService;
 import Service.Member.MemberServiceImpl;
+import Service.Vote.VoteService;
+import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -33,6 +36,10 @@ public class PostDetailController implements Action {
 
         BoardDTO cont = (BoardDTO) result.get("board");
         LinkPreviewDTO preview = (LinkPreviewDTO) result.get("preview");
+        //사이드바 투표 데이터
+        VoteService voteService = new VoteServiceImpl();
+        List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
+        request.setAttribute("activeVoteRegList", activeVoteRegList);
 
         // 게시글이 존재하지 않으면 목록으로 리다이렉트
         if (cont == null) {

@@ -285,6 +285,8 @@
             line-height: 1.8;
             color: #374151;
             min-height: 250px;
+            display: flex;
+            flex-direction: column;
         }
         .post-body img {
             max-width: 100%;
@@ -292,6 +294,11 @@
             display: block;
         }
 
+        .movie-tag-container {
+            margin-top: auto; /* 위쪽 마진을 최대로 하여 바닥에 밀착 */
+        }
+
+       
         .post-actions {
             display: flex;
             justify-content: center;
@@ -512,9 +519,49 @@
             font-weight: 700;
         }
 
+        .movie-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background-color: #f1f5f9; /* 연한 블루 그레이 */
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 4px;
+        }
+
+        /* 마우스 호버 효과 (정상 데이터일 때만) */
+        .movie-tag:not(.disabled-tag):hover {
+            background-color: #6366f1; /* 메인 블루 */
+            color: white;
+            border-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* ⚠️ 삭제된 영화 태그 스타일 (disabled-tag) */
+        .movie-tag.disabled-tag {
+            background-color: #f8fafc;
+            color: #94a3b8; /* 흐릿한 회색 */
+            border: 1px solid #cbd5e1; /* 점선 테두리로 '유령' 느낌 부여 */
+            cursor: not-allowed; /* 금지 표시 커서 */
+            opacity: 0.7;
+           
+        }
+
+        /* 자동완성 결과창 */
+		.search-results { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid var(--border); border-radius: 8px; z-index: 10; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: none; max-height: 200px; overflow-y: auto; }
+		.result-item { padding: 10px 15px; cursor: pointer; transition: 0.2s; }
+		.result-item:hover { background: #f0f4ff; color: var(--primary); }
+
 
     </style>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -603,10 +650,43 @@
                         </div>
                     </a>
                 </c:if>
+                <%-- 영화태그 --%>
+                <c:if test="${not empty cont.movieTitle}">
+                <div class="movie-tag-container">
+                <c:choose>
+                <%-- 삭제된 영화 --%>
+                    <c:when test="${(empty cont.movieId or cont.movieId eq 0 ) }">
+                     <button type="button" 
+                            onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
+                            class="movie-tag disabled-tag"
+                            disabled
+                            title="정보가 삭제된 영화입니다">
+                        #${cont.movieTitle}
+                    </button>
+
+                    </c:when>
+
+                    <c:otherwise>
+                        <button type="button" 
+                                    onclick="location.href='movieDetail.do?movieId=${cont.movieId}'"
+                                    class="movie-tag"
+                                    >
+                                #${cont.movieTitle}
+                            </button>
+
+                    </c:otherwise>
+
+                </c:choose>
+                </div>
+                    
+                </c:if>
+                
+                
+                
             </div>
 
             <div id="update-form" style="display:none; margin-top:20px;">
-                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data">
+                <form action="${pageContext.request.contextPath}/boardUpdateOk.do" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <input type="hidden" name="boardId" value="${cont.boardId}">
 
                     <input type="text" name="boardTitle"
@@ -687,6 +767,22 @@
                             </div>
                         </a>
                     </c:if>
+
+                    <%-- 태그수정 --%>
+                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
+                        <div style="font-weight:600; margin-bottom:8px; color:#374151;">영화 태그</div>
+                         <div style="flex: 2; position: relative;width:100%;" class="option-item">
+                            <input type="hidden" name="movieId" class="movie-id-hidden" value="${cont.movieId}">
+                            <input class="movie-search" type="text" name="boardTag" placeholder="영화 제목을 입력해주세요." value="${cont.movieTitle}"
+                            style="padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;width:100%;box-sizing: border-box;"
+                            onkeydown="if(event.keyCode==13) event.preventDefault();"
+                            onkeyup="handleSearch(this, event)" autocomplete="off">
+                            <div class="search-results"></div>
+                            <div class="db-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;">
+                                존재하지 않은 영화입니다. 검색 결과에서 선택해주세요.
+                            </div>
+                        </div>
+                    </div>
 
                     <%-- 링크 첨부 --%>
                     <div style="margin-top:12px; padding:12px; border-radius:12px; border:1px solid #e2e8f0; background:#f9fafb;">
@@ -887,8 +983,9 @@
     </main>
 
     <aside class="side-panel">
-        <jsp:include page="/WEB-INF/views/home/homeSidebar.jsp" />
-    </aside>
+		<%@ include file="/WEB-INF/views/home/homeSidebar.jsp"%>
+
+	</aside>
 </div>
 <jsp:include page="/WEB-INF/views/home/homeFooter.jsp"/>
 
@@ -1491,6 +1588,19 @@
         });
     })();
 
-</script>
+        $(document).on("click", function(e) {
+		    // 클릭된 요소가 .option-item(인풋과 결과창을 감싸는 부모) 내부가 아니라면
+		    if (!$(e.target).closest(".option-item").length) {
+		        // 모든 검색 결과창을 비우거나 숨김
+		        $(".search-results").empty().hide();
+		       
+		    }
+		});
+
+        
+
+    </script>
+
+    <script src="${pageContext.request.contextPath}/js/board.js"></script>
 </body>
 </html>

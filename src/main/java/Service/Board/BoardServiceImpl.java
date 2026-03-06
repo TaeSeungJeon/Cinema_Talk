@@ -186,4 +186,9 @@ public class BoardServiceImpl implements BoardService {
     public BoardDTO latestNotice() {
         return bdao.latestNotice();
     }
+
+    @Override
+    public String getMovieTitleforBoard(int movieIdInt) {
+        return bdao.getMovieTitleforBoard(movieIdInt);
+    }
 }

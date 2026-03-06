@@ -3,8 +3,11 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
+import DTO.Vote.VoteRegisterDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
+import Service.Vote.VoteService;
+import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +22,10 @@ public class BoardListController implements Action {
         BoardService service = BoardServiceImpl.getInstance();
 		HttpSession session = request.getSession();
 		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
+
+        VoteService voteService = new VoteServiceImpl();
+        List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
+        request.setAttribute("activeVoteRegList", activeVoteRegList);
 		
         String filter = request.getParameter("filter");
         if (filter == null || filter.trim().isEmpty()) {

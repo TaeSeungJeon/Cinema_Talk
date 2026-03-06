@@ -411,7 +411,7 @@
 		</c:if>
 
 		<c:forEach var="b" items="${recentBoardList}">
-            <a href="${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}"
+            <div onclick="location.href='${pageContext.request.contextPath}/postDetail.do?boardId=${b.boardId}&boardType=${b.boardType}'"
 			   class="post-item">
 				<div class="post-thumb" data-thumb-scope>
 					<div class="thumb-placeholder">unfile</div>
@@ -427,7 +427,7 @@
 							<c:out value="${b.boardDate}" />
 						</span>
 					</div>
-					<div class="post-main-title">
+					<div class="post-main-title" style="cursor:pointer;">
 						<c:out value="${b.boardTitle}" />
 					</div>
 						<div class="post-preview" style="display:none;">${b.boardContent}</div>
@@ -443,7 +443,7 @@
 						<span>👍 좋아요 <c:out value="${b.likeCount}" /></span>
 					</div>
 				</div>
-			</a>
+			</div>
 		</c:forEach>
 	</div>
 

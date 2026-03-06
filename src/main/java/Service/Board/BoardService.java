@@ -46,4 +46,6 @@ public interface BoardService {
     // 최신 공지사항 1건
     BoardDTO latestNotice();
 
+    String getMovieTitleforBoard(int movieIdInt);
+
 }

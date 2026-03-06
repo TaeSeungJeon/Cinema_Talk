@@ -39,8 +39,13 @@ public class BoardUpdateOkController implements Action {
         int boardId = Integer.parseInt(request.getParameter("boardId"));
         String boardTitle = request.getParameter("boardTitle");
         String boardContent = request.getParameter("boardContent");
+        String movieId = request.getParameter("movieId");
+        
 
         BoardService boardService = BoardServiceImpl.getInstance();
+
+        int movieIdInt = (movieId == null || movieId.trim().isEmpty()) ? -1 :Integer.parseInt(movieId);
+        String movieTitle = boardService.getMovieTitleforBoard(movieIdInt);
 
         // 기존 글 조회
         BoardDTO originalBoard = boardService.getBoardCont(boardId);
@@ -104,6 +109,8 @@ public class BoardUpdateOkController implements Action {
         bdto.setBoardId(boardId);
         bdto.setBoardTitle(boardTitle);
         bdto.setBoardContent(boardContent);
+        bdto.setMovieId(movieIdInt);
+        bdto.setMovieTitle(movieTitle);
 
         // 수정 실행
         boardService.updateBoard(bdto);

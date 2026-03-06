@@ -382,5 +382,21 @@ public class BoardDAOImpl implements BoardDAO {
         return null;
     }
 
+    @Override
+    public String getMovieTitleforBoard(int movieIdInt) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = getSqlSession();
+            return sqlSession.selectOne("Board.getMovieTitleforBoard", movieIdInt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return null;
+    }
+
 
 }

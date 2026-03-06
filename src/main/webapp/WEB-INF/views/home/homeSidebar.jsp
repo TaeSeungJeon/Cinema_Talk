@@ -101,6 +101,63 @@
         border-radius:10px;
         border:1px dashed #cbd5e1;
     }
+
+     /* 사이드바 전용 투표 위젯 스타일 */
+		.hsidebar-vote-list {
+		    display: flex;
+		    flex-direction: column;
+		    gap: 10px;
+		    max-height: 200px;
+		    overflow-y: auto;
+		    scrollbar-width: none;
+		}
+		
+		.hsidebar-vote-list::-webkit-scrollbar {
+		    display: none;
+		}
+		
+		.hsidebar-active-item {
+		    padding: 12px 15px;
+		    background: rgba(255, 255, 255, 0.6);
+		    border-radius: 10px;
+		    border: 1px solid rgba(0, 0, 0, 0.05);
+		    cursor: pointer;
+		    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+		
+		.hsidebar-active-item:hover {
+		    background: #ffffff;
+		   
+		    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+		    border-color: #3b82f6; /* 포인트 컬러 (필요시 수정) */
+		}
+		
+		.hsidebar-item-title {
+		    font-size: 0.85rem;
+		    font-weight: 600;
+		    color: #1e293b;
+		    margin-bottom: 3px;
+		    /* 긴 제목 처리 */
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		}
+		
+		.hsidebar-item-date {
+		    font-size: 0.75rem;
+		    color: #3b82f6;
+		    font-weight: 500;
+		}
+		
+		.hsidebar-no-data {
+		    text-align: center;
+		    padding: 30px 10px;
+		    font-size: 0.8rem;
+		    color: #94a3b8;
+		    background: rgba(0, 0, 0, 0.02);
+		    border-radius: 10px;
+		    border: 1px dashed #cbd5e1;
+		}
 </style>
 
 <aside>

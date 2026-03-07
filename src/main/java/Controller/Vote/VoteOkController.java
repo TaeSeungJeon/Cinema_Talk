@@ -133,6 +133,7 @@ public class VoteOkController implements Action {
 					recObj.put("createdDate", record.getRecordCreatedDate());
 					recObj.put("movieId", record.getMovieId()); // 어떤 영화에 단 댓글인지 구분용
 					recObj.put("profilePhoto", record.getMemProfilePhoto());
+					recObj.put("movieTitle", record.getMovieTitle());
 					recordJsonArray.put(recObj);
 				}
 

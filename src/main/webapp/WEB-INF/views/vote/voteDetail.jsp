@@ -605,6 +605,19 @@ pageEncoding="UTF-8"%>
 			    font-weight: 500;
 			}
 			
+			.movie-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background-color: #6366f1; /* 연한 블루 그레이 */
+            color: white;
+            border: 1px solid #e2e8f0;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 4px;
+        }
 						
 	
 		</style>
@@ -648,10 +661,11 @@ pageEncoding="UTF-8"%>
 					<c:if test="${not empty res.voteCommentText}">
 					{
 						writer: "${res.memName}",
+						movieTitle: "${res.movieTitle}",
 						createdDate: "${res.recordCreatedDate}",
 						cont: `${res.voteCommentText}`, <%-- 따옴표 에러 방지 --%>
 						profilePhoto:"${(empty res.memProfilePhoto || fn:trim(res.memProfilePhoto) eq '') 
-		                    ? pageContext.request.contextPath.concat('/image/default-avatar.png')
+		                    ? pageContext.request.contextPath.concat('/Image/default-avatar.png')
 		                            : pageContext.request.contextPath.concat('/profilePhoto.do?path=').concat(res.memProfilePhoto)}"
 					},
 					</c:if>
@@ -715,7 +729,7 @@ pageEncoding="UTF-8"%>
 								<div class="user-avatar" ><img src="\${cmnt.profilePhoto}"/></div>
 								<div class="comment-content" style="flex: 1;">
 								<div style="display: flex; justify-content: space-between; align-items: center;">
-								<div class="comment-user">\${cmnt.writer}</div>
+								<div class="comment-user">\${cmnt.writer} <span class="movie-tag">\${cmnt.movieTitle}</span></div>
 								</div>
 								<div id="comment-text-${comm.commentsId}" class="comment-text">\${cmnt.cont}</div>
 								
@@ -821,7 +835,7 @@ pageEncoding="UTF-8"%>
 							<div class="user-avatar"><img src="\${profilePhoto}"/></div>
 							<div class="comment-content" style="flex: 1;">
 							<div style="display: flex; justify-content: space-between; align-items: center;">
-							<div class="comment-user">\${c.memName}</div>
+							<div class="comment-user">\${c.memName}<span class="movie-tag">\${c.movieTitle}</span></div>
 							</div>
 							<div id="comment-text-${comm.commentsId}" class="comment-text">\${c.commentText}</div>
 							

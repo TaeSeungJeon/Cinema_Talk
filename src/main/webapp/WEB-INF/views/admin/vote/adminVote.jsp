@@ -688,7 +688,7 @@ input[type="text"], input[type="date"], select, textarea {
  
     function openModal(mode,voteId) {
     	modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+       
         
         //폼 초기화
         $("#voteForm")[0].reset();

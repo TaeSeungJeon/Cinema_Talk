@@ -13,3 +13,10 @@ CREATE TABLE MOVIE (
     movieRecommendCount NUMBER DEFAULT 0, 
     CONSTRAINT PK_MOVIE PRIMARY KEY (movieId)
 );
+
+select * from MOVIE;
+
+
+INSERT INTO member_movie_recommend (MEMNO, MOVIEID, RECOMMENDCREATEDAT)
+                    VALUES (162, 1084242, sysdate);
+commit;

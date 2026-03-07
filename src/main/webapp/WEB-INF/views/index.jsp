@@ -1,4 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+    // 강제 초기화
+    application.removeAttribute("introPlayed");
+    // 서버 실행 후 최초 1회만 인트로 재생
+    Boolean introPlayed = (Boolean) application.getAttribute("introPlayed");
+    if (Boolean.TRUE.equals(introPlayed)) {
+        response.sendRedirect(request.getContextPath() + "/index.do");
+        return;
+    }
+    application.setAttribute("introPlayed", true);
+%>
+
 <!doctype html>
 <html lang="ko">
 <head>
@@ -31,6 +44,7 @@
             border: 0;
             display: none;
             z-index: 2;
+            transform: scale(1.13);
         }
 
         /* 블랙 오버레이 */
@@ -119,7 +133,7 @@
 
     const HOME_URL = "${pageContext.request.contextPath}/index.do";
 
-    const AUDIO_DURATION_MS = 4000;   // 영상1: 4초 (블랙 + 음성만)
+    const AUDIO_DURATION_MS = 4500;   // 영상1: 4초 (블랙 + 음성만)
     const VIDEO_DURATION_MS = 13000;  // 영상2: 13초 (영상 + 소리)
     const FADE_TIME_MS      = 800;    // 페이드 아웃
 

@@ -5,8 +5,11 @@ import java.util.List;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
+import DTO.Board.CommentsDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
+import Service.Board.CommentsService;
+import Service.Board.CommentsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -16,6 +19,7 @@ public class QuiryController implements Action {
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		BoardService service = BoardServiceImpl.getInstance();
+		CommentsService cService = CommentsServiceImpl.getInstance();
 		HttpSession session = request.getSession();
 		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
 		
@@ -39,11 +43,17 @@ public class QuiryController implements Action {
 
 		int totalCount;
 		List<BoardDTO> list;
-
+		List<CommentsDTO> clist;
+		
 		int type = 11; // 문의사항 타입
 		totalCount = service.getBoardCountByType(type);
 		list = service.boardListPageByType(type, startRow, endRow);
-
+		
+		for (BoardDTO board : list) {
+        	clist = cService.commentsListWithLike(board.getBoardId(), board.getMemNo());
+			board.setCommentCount(clist.size());
+		}
+		
 		int maxPage = (totalCount + limit - 1) / limit;
 
 		// 10페이지 블록

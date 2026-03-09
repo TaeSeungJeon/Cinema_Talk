@@ -1,16 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%
-    // 강제 초기화
-    application.removeAttribute("introPlayed");
-    // 서버 실행 후 최초 1회만 인트로 재생
-    Boolean introPlayed = (Boolean) application.getAttribute("introPlayed");
-    if (Boolean.TRUE.equals(introPlayed)) {
-        response.sendRedirect(request.getContextPath() + "/index.do");
-        return;
-    }
-    application.setAttribute("introPlayed", true);
-%>
 
 <!doctype html>
 <html lang="ko">
@@ -131,6 +120,8 @@
 
 <script>
 
+
+
     const HOME_URL = "${pageContext.request.contextPath}/index.do";
 
     const AUDIO_DURATION_MS = 4500;   // 영상1: 4초 (블랙 + 음성만)
@@ -175,7 +166,7 @@
 
         // 영상2 미리 로드 (블랙 유지한 채로)
         ytVideo.src =
-            "https://www.youtube.com/embed/gX0CmJa5Gdk" +
+            "https://www.youtube.com/embed/YJkKME5aEXU" +
             "?autoplay=1&mute=0&controls=0&rel=0&playsinline=1";
 
         // 1초 후 블랙 오버레이 제거 → 영상2 표시

@@ -50,3 +50,5 @@ alter table member drop column memLastLogin;
 -- member테이블 삭제
 drop table member;
 drop sequence memNoSeq;
+
+select * from member;

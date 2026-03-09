@@ -18,6 +18,9 @@ public class LogoutController implements Action {
 		if(session != null) {
 			session.invalidate(); //세션 만료 -> 로그아웃
 		}
+
+		HttpSession newSession = request.getSession(true);
+		newSession.setAttribute("intro", "done");
 	
 		ActionForward forward = new ActionForward();	
 		forward.setRedirect(true);

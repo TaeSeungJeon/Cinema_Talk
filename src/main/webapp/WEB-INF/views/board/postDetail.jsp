@@ -899,11 +899,18 @@ header {
 
 				<div class="post-footer-actions"
 					style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-					<button type="button" class="btn-list"
-						style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
-						onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
-					</button>
-
+					<c:if test="${cont.boardType != 10}">
+						<button type="button" class="btn-list"
+							style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
+							onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
+						</button>
+					</c:if>
+					<c:if test="${cont.boardType == 10}">
+						<button type="button" class="btn-list"
+							style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
+							onclick="location.href='${pageContext.request.contextPath}/notice.do'">목록으로
+						</button>
+                    </c:if>
 					<c:if
 						test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
 						<div class="right-actions" style="display: flex; gap: 10px;">
@@ -1036,7 +1043,7 @@ header {
 											좋아요 ${comm.likeCount}
 										</span>
 									</div>
-			                        </c:if>		
+		                            </c:if>		
 									<div id="reply-form-${comm.commentsId}"
 										class="reply-form-container">
 										<div class="comment-write"

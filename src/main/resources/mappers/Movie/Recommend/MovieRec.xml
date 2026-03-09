@@ -200,85 +200,97 @@
 	</select>
 
 	<!-- 인덱스 영화 추천 섹션: 선호 장르 기반 영화 7개(선호 장르 있는 회원 로그인 상태) -->
-	<select id="indexGenreMovieByMember" resultType="MovieRecResponse">
-		<![CDATA[
-		WITH userGenres AS (
-		    SELECT MG.GENREID
-		    FROM MEMBER_GENRE MG
-		    WHERE MG.MEMNO = #{memNo}
-		)
-		SELECT *
-		FROM (
-		    SELECT
-		        M.MOVIEID AS movieId,
-		        M.MOVIETITLE AS movieTitle,
-		        M.MOVIEOVERVIEW AS movieOverview,
-		        M.MOVIERUNTIME AS movieRuntime,
-		        M.MOVIERATINGAVERAGE AS movieRatingAverage,
-		        M.MOVIEPOSTERPATH AS moviePosterPath,
-		        G.GENRENAME AS genreName
-		    FROM MOVIE M
-		    JOIN MOVIE_GENRE MG ON MG.MOVIEID = M.MOVIEID
-		    JOIN GENRE G ON G.GENREID = MG.GENREID
-		    WHERE MG.GENREID IN (SELECT GENREID FROM userGenres)
-		      AND M.MOVIERATINGCOUNT >= 10
-		      AND M.MOVIERATINGAVERAGE >= 6
-		      AND M.MOVIEPOSTERPATH IS NOT NULL
-		    ORDER BY DBMS_RANDOM.VALUE
-		)
-		WHERE ROWNUM <= 7
-		]]>
-	</select>
+<!-- 	<select id="indexGenreMovieByMember" resultType="MovieRecResponse"> -->
+<!-- 		<![CDATA[ -->
+<!-- 		WITH userGenres AS ( -->
+<!-- 		    SELECT MG.GENREID -->
+<!-- 		    FROM MEMBER_GENRE MG -->
+<!-- 		    WHERE MG.MEMNO = #{memNo} -->
+<!-- 		) -->
+<!-- 		SELECT * -->
+<!-- 		FROM ( -->
+<!-- 		    SELECT -->
+<!-- 		        M.MOVIEID AS movieId, -->
+<!-- 		        M.MOVIETITLE AS movieTitle, -->
+<!-- 		        M.MOVIEOVERVIEW AS movieOverview, -->
+<!-- 		        M.MOVIERUNTIME AS movieRuntime, -->
+<!-- 		        M.MOVIERATINGAVERAGE AS movieRatingAverage, -->
+<!-- 		        M.MOVIEPOSTERPATH AS moviePosterPath, -->
+<!-- 		        G.GENRENAME AS genreName -->
+<!-- 		    FROM MOVIE M -->
+<!-- 		    JOIN MOVIE_GENRE MG ON MG.MOVIEID = M.MOVIEID -->
+<!-- 		    JOIN GENRE G ON G.GENREID = MG.GENREID -->
+<!-- 		    WHERE MG.GENREID IN (SELECT GENREID FROM userGenres) -->
+<!-- 		      AND M.MOVIERATINGCOUNT >= 10 -->
+<!-- 		      AND M.MOVIERATINGAVERAGE >= 6 -->
+<!-- 		      AND M.MOVIEPOSTERPATH IS NOT NULL -->
+<!-- 		    ORDER BY DBMS_RANDOM.VALUE -->
+<!-- 		) -->
+<!-- 		WHERE ROWNUM <= 7 -->
+<!-- 		]]> -->
+<!-- 	</select> -->
 
 	<!-- 인덱스 영화 추천 섹션: 랜덤 장르 7개 뽑고 장르당 영화 1개씩(비회원 or 선호 장르 없는 회원 로그인) -->
+<!-- 	<select id="indexGenreMovie" resultType="MovieRecResponse"> -->
+<!-- 		<![CDATA[ -->
+<!-- 		WITH candidateMovies AS ( -->
+<!-- 			SELECT -->
+<!-- 				MG.GENREID AS genreId, -->
+<!-- 				G.GENRENAME AS genreName, -->
+<!-- 				M.MOVIEID AS movieId, -->
+<!-- 				ROW_NUMBER() OVER ( -->
+<!-- 					PARTITION BY MG.GENREID -->
+<!-- 					ORDER BY CASE WHEN M.MOVIERATINGAVERAGE >= 8 THEN 1 ELSE 2 END, DBMS_RANDOM.VALUE -->
+<!-- 				) AS rn -->
+<!-- 			FROM MOVIE M -->
+<!-- 			JOIN MOVIE_GENRE MG ON MG.MOVIEID = M.MOVIEID -->
+<!-- 			JOIN GENRE G ON G.GENREID = MG.GENREID -->
+<!-- 			WHERE M.MOVIERATINGCOUNT >= 10 -->
+<!-- 			  AND M.MOVIERATINGAVERAGE >= 6 -->
+<!-- 			  AND M.MOVIEPOSTERPATH IS NOT NULL -->
+<!-- 		), -->
+<!-- 		pickedGenres AS ( -->
+<!-- 			SELECT * FROM ( -->
+<!-- 				SELECT DISTINCT genreId, genreName -->
+<!-- 				FROM candidateMovies -->
+<!-- 				ORDER BY DBMS_RANDOM.VALUE -->
+<!-- 			) WHERE ROWNUM <= 7 -->
+<!-- 		), -->
+<!-- 		deduplicated AS ( -->
+<!-- 			SELECT cm.*, ROW_NUMBER() OVER (PARTITION BY cm.movieId ORDER BY cm.rn ASC) AS movie_occurrence_rank -->
+<!-- 			FROM candidateMovies cm -->
+<!-- 			JOIN pickedGenres pg ON cm.genreId = pg.genreId -->
+<!-- 		), -->
+<!-- 		final_filter AS ( -->
+<!-- 			SELECT * FROM ( -->
+<!-- 				SELECT d.*, ROW_NUMBER() OVER (PARTITION BY d.genreId ORDER BY d.rn ASC) AS final_rank_in_genre -->
+<!-- 				FROM deduplicated d -->
+<!-- 				WHERE d.movie_occurrence_rank = 1 -->
+<!-- 			) WHERE final_rank_in_genre = 1 -->
+<!-- 		) -->
+<!-- 		SELECT -->
+<!-- 			M.MOVIEID AS movieId, -->
+<!-- 			M.MOVIETITLE AS movieTitle, -->
+<!-- 			M.MOVIEOVERVIEW AS movieOverview, -->
+<!-- 			M.MOVIERUNTIME AS movieRuntime, -->
+<!-- 			M.MOVIERATINGAVERAGE AS movieRatingAverage, -->
+<!-- 			M.MOVIEPOSTERPATH AS moviePosterPath, -->
+<!-- 			FF.genreName -->
+<!-- 		FROM final_filter FF -->
+<!-- 		JOIN MOVIE M ON FF.movieId = M.MOVIEID -->
+<!-- 		]]> -->
+<!-- 	</select> -->
+
+	<!-- 현재 상영작으로 로직 변경 -->
 	<select id="indexGenreMovie" resultType="MovieRecResponse">
 		<![CDATA[
-		WITH candidateMovies AS (
-			SELECT
-				MG.GENREID AS genreId,
-				G.GENRENAME AS genreName,
-				M.MOVIEID AS movieId,
-				ROW_NUMBER() OVER (
-					PARTITION BY MG.GENREID
-					ORDER BY CASE WHEN M.MOVIERATINGAVERAGE >= 8 THEN 1 ELSE 2 END, DBMS_RANDOM.VALUE
-				) AS rn
-			FROM MOVIE M
-			JOIN MOVIE_GENRE MG ON MG.MOVIEID = M.MOVIEID
-			JOIN GENRE G ON G.GENREID = MG.GENREID
-			WHERE M.MOVIERATINGCOUNT >= 10
-			  AND M.MOVIERATINGAVERAGE >= 6
-			  AND M.MOVIEPOSTERPATH IS NOT NULL
-		),
-		pickedGenres AS (
-			SELECT * FROM (
-				SELECT DISTINCT genreId, genreName
-				FROM candidateMovies
-				ORDER BY DBMS_RANDOM.VALUE
-			) WHERE ROWNUM <= 7
-		),
-		deduplicated AS (
-			SELECT cm.*, ROW_NUMBER() OVER (PARTITION BY cm.movieId ORDER BY cm.rn ASC) AS movie_occurrence_rank
-			FROM candidateMovies cm
-			JOIN pickedGenres pg ON cm.genreId = pg.genreId
-		),
-		final_filter AS (
-			SELECT * FROM (
-				SELECT d.*, ROW_NUMBER() OVER (PARTITION BY d.genreId ORDER BY d.rn ASC) AS final_rank_in_genre
-				FROM deduplicated d
-				WHERE d.movie_occurrence_rank = 1
-			) WHERE final_rank_in_genre = 1
-		)
-		SELECT
-			M.MOVIEID AS movieId,
-			M.MOVIETITLE AS movieTitle,
-			M.MOVIEOVERVIEW AS movieOverview,
-			M.MOVIERUNTIME AS movieRuntime,
-			M.MOVIERATINGAVERAGE AS movieRatingAverage,
-			M.MOVIEPOSTERPATH AS moviePosterPath,
-			FF.genreName
-		FROM final_filter FF
-		JOIN MOVIE M ON FF.movieId = M.MOVIEID
-		]]>
+		select movieId, moviePosterPath, movieTitle
+		from MOVIE
+		where movieReleaseDate >= TRUNC(SYSDATE) - 30
+          and moviePosterPath is not null
+        order by movieRatingAverage desc
+        fetch first 10 rows only
+        ]]>
 	</select>
 
 	<!-- 인덱스 영화 배너: 7일 내 좋아요 TOP3 영화 -->

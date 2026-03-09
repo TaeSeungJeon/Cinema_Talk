@@ -228,6 +228,7 @@
                         AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
 
                  FROM BOARD b
+                 WHERE b.BOARDTYPE NOT IN (10, 11)
                  ORDER BY b.BOARDDATE DESC NULLS LAST, b.BOARDID DESC
              )
         WHERE ROWNUM <![CDATA[<=]]> #{limit}

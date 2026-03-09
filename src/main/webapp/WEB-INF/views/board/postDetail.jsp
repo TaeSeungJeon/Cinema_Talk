@@ -546,7 +546,17 @@ header {
 	transition: all 0.2s ease;
 	margin: 4px;
 }
-
+.admin-badge {
+	display: inline-block;
+	background: var(--accent-color);
+	color: white;
+	font-size: 0.7rem;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 8px;
+	margin-left: 8px;
+	vertical-align: middle;
+}
 /* 마우스 호버 효과 (정상 데이터일 때만) */
 .movie-tag:not(.disabled-tag):hover {
 	background-color: #6366f1; /* 메인 블루 */
@@ -659,7 +669,7 @@ header {
 		<main class="main-content">
 			<article class="glass-panel">
 				<div class="post-header">
-					<span class="post-category">게시글 제목</span>
+					<span class="post-category">${cont.boardType == 1 ? '자유게시판' : (cont.boardType == 2 ? '영화 추천/후기' : (cont.boardType == 10 ? '공지사항' : '문의사항'))}</span>
 					<h1 class="post-title">${cont.boardTitle}</h1>
 				</div>
 
@@ -889,11 +899,18 @@ header {
 
 				<div class="post-footer-actions"
 					style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-					<button type="button" class="btn-list"
-						style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
-						onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
-					</button>
-
+					<c:if test="${cont.boardType != 10}">
+						<button type="button" class="btn-list"
+							style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
+							onclick="location.href='${pageContext.request.contextPath}/freeBoard.do'">목록으로
+						</button>
+					</c:if>
+					<c:if test="${cont.boardType == 10}">
+						<button type="button" class="btn-list"
+							style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: var(--glass-bg); cursor: pointer;"
+							onclick="location.href='${pageContext.request.contextPath}/notice.do'">목록으로
+						</button>
+                    </c:if>
 					<c:if
 						test="${not empty sessionScope.memNo and sessionScope.memNo eq cont.memNo}">
 						<div class="right-actions" style="display: flex; gap: 10px;">
@@ -975,6 +992,9 @@ header {
 													</c:if>
 												</c:forEach>
 											</c:if>
+											<c:if test="${comm.memRole == 1}">
+                                                <span class="admin-badge">관리자 답변</span>
+                                            </c:if>
 										</div>
 
 										<c:if
@@ -1011,7 +1031,7 @@ header {
 											</div>
 										</form>
 									</div>
-
+									<c:if test="${comm.memRole != 1}">
 									<div class="comment-utils">
 										<span>${comm.commentsDate}</span> <span class="reply-trigger"
 											style="cursor: pointer; font-weight: 600; color: var(--accent-color);"
@@ -1023,7 +1043,7 @@ header {
 											좋아요 ${comm.likeCount}
 										</span>
 									</div>
-
+		                            </c:if>		
 									<div id="reply-form-${comm.commentsId}"
 										class="reply-form-container">
 										<div class="comment-write"

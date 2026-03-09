@@ -434,7 +434,7 @@
 						<span
 								style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700;">
 
-							<c:out value="${b.boardType == 1 ? '자유게시판' : (b.boardType == 2 ? '영화 추천/후기' : '게시판')}" />
+							<c:out value="${b.boardType == 1 ? '자유게시판' : (b.boardType == 2 ? '영화 추천/후기' : (b.boardType == 10 ? '공지사항' : '문의사항'))}" />
 						</span>
 						<span style="font-size: 0.85rem; color: #94a3b8;">
 							<c:out value="${b.boardDate}" />

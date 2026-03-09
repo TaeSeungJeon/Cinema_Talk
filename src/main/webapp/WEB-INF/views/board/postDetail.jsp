@@ -546,7 +546,17 @@ header {
 	transition: all 0.2s ease;
 	margin: 4px;
 }
-
+.admin-badge {
+	display: inline-block;
+	background: var(--accent-color);
+	color: white;
+	font-size: 0.7rem;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 8px;
+	margin-left: 8px;
+	vertical-align: middle;
+}
 /* 마우스 호버 효과 (정상 데이터일 때만) */
 .movie-tag:not(.disabled-tag):hover {
 	background-color: #6366f1; /* 메인 블루 */
@@ -659,7 +669,7 @@ header {
 		<main class="main-content">
 			<article class="glass-panel">
 				<div class="post-header">
-					<span class="post-category">게시글 제목</span>
+					<span class="post-category">${cont.boardType == 1 ? '자유게시판' : (cont.boardType == 2 ? '영화 추천/후기' : (cont.boardType == 10 ? '공지사항' : '문의사항'))}</span>
 					<h1 class="post-title">${cont.boardTitle}</h1>
 				</div>
 
@@ -975,6 +985,9 @@ header {
 													</c:if>
 												</c:forEach>
 											</c:if>
+											<c:if test="${comm.memRole == 1}">
+                                                <span class="admin-badge">관리자 답변</span>
+                                            </c:if>
 										</div>
 
 										<c:if
@@ -1011,7 +1024,7 @@ header {
 											</div>
 										</form>
 									</div>
-
+									<c:if test="${comm.memRole != 1}">
 									<div class="comment-utils">
 										<span>${comm.commentsDate}</span> <span class="reply-trigger"
 											style="cursor: pointer; font-weight: 600; color: var(--accent-color);"
@@ -1023,7 +1036,7 @@ header {
 											좋아요 ${comm.likeCount}
 										</span>
 									</div>
-
+			                        </c:if>		
 									<div id="reply-form-${comm.commentsId}"
 										class="reply-form-container">
 										<div class="comment-write"

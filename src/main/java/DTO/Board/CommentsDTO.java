@@ -23,4 +23,5 @@ public class CommentsDTO {
     private String boardTitle;
 
     private String memProfilePhoto;
+    private int memRole;
 }

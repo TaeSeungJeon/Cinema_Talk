@@ -33,7 +33,7 @@ public class MemberEditController implements Action {
 		myPageInfo.setMemId(member.getMemId());
 		myPageInfo.setMemName(member.getMemName());
 		myPageInfo.setMemDate(member.getMemDate());
-
+		
 		// 뷰에 데이터 전달
 		request.setAttribute("member", member);
 		request.setAttribute("myPageInfo", myPageInfo);

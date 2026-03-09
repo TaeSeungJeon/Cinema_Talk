@@ -73,6 +73,8 @@ public class MemberEditOkController implements Action {
 		request.setAttribute("member", member);
 		request.setAttribute("myPageInfo", myPageInfo);
 		
+		request.setAttribute("allGenreList", myPageService.getAllGenres());
+		
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;

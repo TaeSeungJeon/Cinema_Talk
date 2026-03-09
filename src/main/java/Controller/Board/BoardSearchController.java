@@ -6,10 +6,13 @@ import java.util.List;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
+import DTO.Vote.VoteRegisterDTO;
 import Service.Board.BoardSearchService;
 import Service.Board.BoardSearchServiceImpl;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
+import Service.Vote.VoteService;
+import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -110,7 +113,20 @@ public class BoardSearchController implements Action {
 	        request.setAttribute("endPage", endPage);
 	        request.setAttribute("boardList", list);
 	        request.setAttribute("filter", filter);
-
+	        
+	        // 일, 주, 월간 인기글 (사이드바용)
+	        List<BoardDTO> dailyPopularList   = boardService.getPopularBoardList("daily",   10);
+	        List<BoardDTO> weeklyPopularList  = boardService.getPopularBoardList("weekly",  10);
+	        List<BoardDTO> monthlyPopularList = boardService.getPopularBoardList("monthly", 10);
+	        
+	        request.setAttribute("dailyPopularList", dailyPopularList);
+	        request.setAttribute("weeklyPopularList", weeklyPopularList);
+	        request.setAttribute("monthlyPopularList", monthlyPopularList);
+	        
+	        VoteService voteService = new VoteServiceImpl();
+	        List<VoteRegisterDTO> activeVoteRegList = voteService.getActiveVoteRegList();
+	        request.setAttribute("activeVoteRegList", activeVoteRegList);
+	        
 	        ActionForward forward = new ActionForward();
 	        forward.setPath("/WEB-INF/views/board/" + requestedURL);
 	        forward.setRedirect(false);

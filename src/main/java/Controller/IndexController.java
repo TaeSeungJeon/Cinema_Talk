@@ -52,16 +52,17 @@ public class IndexController implements Action {
 	        homeService.increaseTodayDau();
 	        session.setAttribute(todayKey, true);
 	    }
-      List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
+	    List<MovieRecResponse> indexTrendMovieList = homeService.getIndexTrendList();
 
-	    List<MovieRecResponse> indexGenreMovieList;
+	    List<MovieRecResponse> indexGenreMovieList = homeService.getIndexGenreList();
 
+	    /* 현재 상영작으로 로직 변경
 	    if (memNo != -1) {
 	        indexGenreMovieList = homeService.getIndexGenreList(memNo); // 개인 선호 장르
 	    } else {
 	        indexGenreMovieList = homeService.getIndexGenreList(); // 랜덤
 	    }
-
+		*/
 	   
 	  request.setAttribute("indexTrendMovieList", indexTrendMovieList);
 	  request.setAttribute("homeGenreMovieList", indexGenreMovieList);

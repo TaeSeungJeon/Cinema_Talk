@@ -263,7 +263,7 @@
 	<section class="movie-list-container">
 		<div
 				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-			<h3 style="margin: 0;">추천 영화 리스트</h3>
+			<h3 style="margin: 0;">현재 상영작</h3>
 			<span style="font-size: 0.8rem; color: #94a3b8;">포스터를 클릭하면 상세
 				페이지로 이동합니다.</span>
 		</div>

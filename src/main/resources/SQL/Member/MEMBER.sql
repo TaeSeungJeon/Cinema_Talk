@@ -29,7 +29,7 @@ alter table member add memLastLogin date;
 -- 기존 회원은 가입일로 초기 세팅 (새 컬럼 값이 null이라 일단 가입일을 넣어 초기값으로 씀)
 update member set memLastLogin = memDate where memLastLogin is null;
 
-select * from MEMBER;
+
 
 --mem_no컬럼 정수 숫자 레코드 값으로 활용할 mem_no_seq 시퀀스 생성
 create sequence memNoSeq

@@ -1340,7 +1340,7 @@ window.boardTrendDataFromServer = {
 })();
 
 
-/* 월별 투표 참여 추이*/
+/* 일별 투표 참여 추이*/
 window.voteTrendDataFromServer = {
     labels: [
         <c:forEach var="t" items="${voteStat.monthlyVoteTrend}" varStatus="s">
@@ -1395,7 +1395,7 @@ window.voteTrendDataFromServer = {
 		        plugins:{legend:{display:false}},
 		        scales:{
 		          x:{grid:{display:false}, ticks:{font:baseFont, maxTicksLimit:8, color:'#bbb'}},
-		          y:{grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb', precision:0}}
+		          y:{beginAtZero: true, grid:{color:'#f0f2f8'}, ticks:{font:baseFont, color:'#bbb', precision:0}}
 		        }
 		      
 		    }

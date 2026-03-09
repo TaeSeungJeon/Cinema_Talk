@@ -3,9 +3,12 @@ package Controller.Board;
 import Controller.Action;
 import Controller.ActionForward;
 import DTO.Board.BoardDTO;
+import DTO.Board.CommentsDTO;
 import DTO.Vote.VoteRegisterDTO;
 import Service.Board.BoardService;
 import Service.Board.BoardServiceImpl;
+import Service.Board.CommentsService;
+import Service.Board.CommentsServiceImpl;
 import Service.Vote.VoteService;
 import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +50,11 @@ public class BoardListController implements Action {
 
         int totalCount;
         List<BoardDTO> list;
+        
+        CommentsService cService = CommentsServiceImpl.getInstance();
 
+        List<CommentsDTO> clist;
+        
         if ("free".equals(filter)) {
             totalCount = service.getBoardCountByType(1);
             list = service.boardListPageByType(1, startRow, endRow);
@@ -58,6 +65,10 @@ public class BoardListController implements Action {
             totalCount = service.getBoardCount();
             list = service.boardListPage(startRow, endRow);
         }
+        for (BoardDTO board : list) {
+        	clist = cService.commentsListWithLike(board.getBoardId(), board.getMemNo());
+			board.setCommentCount(clist.size());
+		}
 
         int maxPage = (totalCount + limit - 1) / limit;
 

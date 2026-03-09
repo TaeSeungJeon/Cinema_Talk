@@ -945,14 +945,14 @@ header {
 									<c:choose>
 										<c:when test="${not empty comm.memProfilePhoto}">
 											<img
-												style="max-height: 30px; max-width: 30px; border-radius: 50%;"
+												style="height: 30px; width: 30px; border-radius: 50%;"
 												class="profile-photo"
 												src="${pageContext.request.contextPath}/profilePhoto.do?path=${comm.memProfilePhoto}"
 												alt="프로필 사진" />
 										</c:when>
 										<c:otherwise>
 											<img
-												style="max-height: 30px; max-width: 30px; border-radius: 50%;"
+												style="height: 30px; width: 30px; border-radius: 50%;"
 												class="profile-photo"
 												src="${pageContext.request.contextPath}/Image/default-avatar.png"
 												alt="기본 프로필" />

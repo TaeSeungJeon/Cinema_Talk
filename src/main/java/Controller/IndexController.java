@@ -37,10 +37,11 @@ public class IndexController implements Action {
 
 			ActionForward introForward = new ActionForward();
 			introForward.setRedirect(false);
-			introForward.setPath("/WEB-INF/views/index.jsp");
+			introForward.setPath("/WEB-INF/views/intro.jsp");
 			return introForward;
 		}
 		// ==================================
+
 
 		Object memNoObj = session.getAttribute("memNo");
 

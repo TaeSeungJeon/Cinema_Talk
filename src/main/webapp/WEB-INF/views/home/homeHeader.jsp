@@ -370,7 +370,7 @@ header {
 	<div class="category-bubble" onclick="toggleMenu(this)">
 		<div class="cat-title">고객센터 ▾</div>
 		<ul class="sub-menu">
-			<li><a href="notice.do">공지사항 전체보기</a></li>
+			<li><a href="notice.do">공지사항</a></li>
 			<li><a href="quiry.do">1:1 문의</a></li>
 		</ul>
 	</div>

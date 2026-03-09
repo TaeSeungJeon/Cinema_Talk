@@ -878,8 +878,7 @@ aside {
 						</div>
 						<div class="post-meta">
 						<span class="post-time" data-time="${board.boardDate}"></span>
-						<span class="post-meta-item">👍좋아요 ${board.likeCount}</span>
-						<span class="post-meta-item">💬댓글 ${board.commentCount}</span>
+						<span class="post-meta-item">💬답변 ${board.commentCount}</span>
 						<span class="post-meta-item">조회수 ${board.boardViewCount}</span>
 						</div>
 						<div class="post-content">

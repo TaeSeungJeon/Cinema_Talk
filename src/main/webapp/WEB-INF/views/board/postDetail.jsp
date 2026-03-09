@@ -591,6 +591,7 @@ header {
 	background: #f0f4ff;
 	color: var(--primary);
 }
+
 </style>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/common.css" />
@@ -611,14 +612,14 @@ header {
 						<c:choose>
 							<c:when test="${not empty member.memProfilePhoto}">
 								<img
-									style="max-height: 60px; max-width: 60px; border-radius: 50%;"
+									style="height: 60px; width: 60px; border-radius: 50%;"
 									class="profile-photo"
 									src="${pageContext.request.contextPath}/profilePhoto.do?path=${member.memProfilePhoto}"
 									alt="프로필 사진" />
 							</c:when>
 							<c:otherwise>
 								<img
-									style="max-height: 60px; max-width: 60px; border-radius: 50%;"
+									style="height: 60px; width: 60px; border-radius: 50%;"
 									class="profile-photo"
 									src="${pageContext.request.contextPath}/Image/default-avatar.png"
 									alt="기본 프로필" />

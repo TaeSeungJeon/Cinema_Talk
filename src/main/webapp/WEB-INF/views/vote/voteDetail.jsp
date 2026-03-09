@@ -359,7 +359,7 @@ pageEncoding="UTF-8"%>
 			}
 			
 			.comment-list {
-				max-height: 400px;
+				max-height: 80%;
 				overflow-y: auto;
 				display: flex;
 				flex-direction: column;
@@ -1000,11 +1000,11 @@ pageEncoding="UTF-8"%>
 								</div>
 					</section>
 
-					<section id = "comment-content-area" class="glass-panel2 tab-content" style="width: 100%;display:none">
+					<section id = "comment-content-area" class="glass-panel2 tab-content" style="width: 100%;display:none;height:950px;">
 						<c:if test="${voteInfo.voteStatus ne 'READY' }">
 
 
-										<div class="comment-section" style="display: ${(voteInfo.voted || voteInfo.voteStatus eq 'CLOSED') ? 'block' : 'none'};">
+										<div class="comment-section" style="height:100%;display: ${(voteInfo.voted || voteInfo.voteStatus eq 'CLOSED') ? 'block' : 'none'};">
 											<div class="comment-count "></div>
 											<form id="commentForm" action="voteOk.do" method="post">
 												<input type="hidden" name="voteId" value="${voteInfo.voteId}">

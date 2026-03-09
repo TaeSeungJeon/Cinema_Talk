@@ -407,13 +407,13 @@ header {
 				</div>
 			</div>
 			<div class="glass-panel">
-					<div class="side-title">📋 문의 안내</div>
-					<div
-						style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
-						<p style="margin: 0;">• 관리자가 댓글로 답변합니다.</p>
-						<p style="margin: 0;">• 추가 문의는 대댓글로 남겨주세요.</p>
-						<p style="margin: 0;">• 개인정보 노출에 주의해주세요.</p>
-					</div>
+				<div class="side-title">📋 문의 안내</div>
+				<div
+					style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+					<p style="margin: 0;">• 관리자가 댓글로 답변합니다.</p>
+					<p style="margin: 0;">• 추가 문의는 대댓글로 남겨주세요.</p>
+					<p style="margin: 0;">• 개인정보 노출에 주의해주세요.</p>
+				</div>
 			</div>
 		</aside>
 
@@ -515,6 +515,7 @@ header {
 							<input type="hidden" name="parentBoardId" value="0"> <input
 								type="hidden" name="parentBoardNo" value="0"> <input
 								type="hidden" name="commentsNo" value="1">
+							<input type="hidden" name="quiryBoard" value="quiryBoard">
 							<textarea name="commentsContent" placeholder="관리자 답변을 작성해주세요..."
 								required></textarea>
 							<div style="display: flex; justify-content: flex-end;">
@@ -580,7 +581,8 @@ header {
 				<div class="widget-title">
 					<span>📋 문의 안내</span>
 				</div>
-				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+				<div
+					style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
 					<p style="margin: 0;">• 문의글은 일반 회원만 작성 가능합니다.</p>
 					<p style="margin: 0;">• 개인정보가 포함되지 않도록 주의해주세요.</p>
 				</div>
@@ -590,7 +592,8 @@ header {
 				<div class="widget-title">
 					<span>📞 고객센터</span>
 				</div>
-				<div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
+				<div
+					style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
 					<p style="margin: 0;">운영시간: 평일 09:00 ~ 18:00</p>
 					<p style="margin: 0;">이메일: support@cinematalk.com</p>
 				</div>

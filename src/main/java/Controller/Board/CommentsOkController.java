@@ -55,9 +55,13 @@ public class CommentsOkController implements Action {
         int result = CommentsServiceImpl.getInstance().commentsIn(cdto);
 
         ActionForward forward = new ActionForward();
-        if (result > 0) {
-            forward.setPath("postDetail.do?boardId=" + boardId);
-            forward.setRedirect(true);
+        String quiryBoard = request.getParameter("quiryBoard");
+        if(quiryBoard != null && quiryBoard.equals("quiryBoard")) {
+        	forward.setPath("quiryDetail.do?boardId=" + boardId);
+        	forward.setRedirect(true);
+		} else if(result > 0){
+			forward.setPath("postDetail.do?boardId=" + boardId);
+			forward.setRedirect(true);
         }
         return forward;
     }

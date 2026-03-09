@@ -78,6 +78,7 @@ public class PostDetailController implements Action {
         for(CommentsDTO c : clist){
             MemberDTO member = memberService.getMemberInfo(c.getMemNo());
             c.setMemProfilePhoto(member.getMemProfilePhoto());
+            c.setMemRole(member.getMemRole());
         }
         // 좋아요
         int likeCount = service.getBoardLikeCount(cont.getBoardId(), cont.getBoardType());

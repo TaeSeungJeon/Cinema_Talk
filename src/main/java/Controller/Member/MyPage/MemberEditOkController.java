@@ -73,6 +73,9 @@ public class MemberEditOkController implements Action {
 		request.setAttribute("member", member);
 		request.setAttribute("myPageInfo", myPageInfo);
 		
+		request.setAttribute("allGenreList", myPageService.getAllGenres());
+		request.setAttribute("profileMsg", "회원 정보가 성공적으로 수정되었습니다.");
+		
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;

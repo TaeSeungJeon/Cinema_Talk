@@ -624,10 +624,11 @@ body.page-mypage {
 	background: var(--accent-color);
 	color: white;
 	padding: 8px 16px;
-	border-radius: 20px;
-	font-size: 0.85rem;
+	border-radius: 10px;
+	font-size: 0.8rem;
 	font-weight: 500;
 }
+
 
 .vote-end-date {
 	text-align: right;

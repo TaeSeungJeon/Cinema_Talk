@@ -85,8 +85,9 @@ public class LoginOkController implements Action {
 		String requestSessionURL = (String)session.getAttribute("requestSessionURL");
 		
 		if(requestSessionURL != null) {
-			requestSessionURL = requestSessionURL.substring(34, requestSessionURL.length());
+			requestSessionURL = requestSessionURL.substring(39, requestSessionURL.length());
 			forward.setPath(request.getContextPath() + "/" + requestSessionURL);
+			System.out.println("로그인 후 이동할 URL: " + requestSessionURL);
 		} else {
 			forward.setPath(request.getContextPath()+"/index.do");
 		}

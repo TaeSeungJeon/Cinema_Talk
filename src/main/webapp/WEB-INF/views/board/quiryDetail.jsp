@@ -410,13 +410,16 @@ header {
 				</div>
 			</div>
 			<div class="glass-panel">
-				<div class="side-title">📋 문의 안내</div>
-				<div
-					style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;">
-					<p style="margin: 0;">• 관리자가 댓글로 답변합니다.</p>
-					<p style="margin: 0;">• 추가 문의는 대댓글로 남겨주세요.</p>
-					<p style="margin: 0;">• 개인정보 노출에 주의해주세요.</p>
-				</div>
+						<div class="side-title">📋 카테고리 이동</div>
+						<a
+							href="${pageContext.request.contextPath}/freeBoard.do?filter=free"
+							class="side-item">자유게시판</a> <a
+							href="${pageContext.request.contextPath}/freeBoard.do?filter=hot"
+							class="side-item">영화 추천/후기</a> <a
+							href="${pageContext.request.contextPath}/vote.do?"
+							class="side-item">오늘의 투표</a> <a
+							href="${pageContext.request.contextPath}/voteList.do?"
+							class="side-item">투표 목록</a>
 			</div>
 		</aside>
 

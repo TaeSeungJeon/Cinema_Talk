@@ -887,7 +887,7 @@ aside {
 						style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-weight: 600; align-self: flex-start;">
 						<option value="" disabled selected>게시판 선택</option>
 						<option value="1">자유게시판</option>
-						<option value="2">영화 리뷰/토론</option>
+						<option value="2">영화 추천/후기</option>
 					</select>
 
 					<!-- 				<input type="text" name="boardTag" placeholder="영화 제목을 입력해주세요." -->

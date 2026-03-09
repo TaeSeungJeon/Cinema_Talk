@@ -196,9 +196,9 @@ header {
 }
 
 .quick-booking-aside {
-    position: absolute;
-    left: -160px;
-    top: 400px;
+    position: fixed;
+    left: 30px;
+    bottom: 30px;
     width: 130px;
     display: flex;
     flex-direction: column;

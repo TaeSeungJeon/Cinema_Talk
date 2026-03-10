@@ -81,7 +81,7 @@
 		        NVL(l.likeCount, 0) AS boardLikeCount,
 		        NVL(c.commentCount, 0) AS commentCount,
 		
-		        m.movieTitle
+		        b.movieTitle
 		
 		    FROM BOARD b
 		
@@ -98,10 +98,6 @@
 		        FROM COMMENTS
 		        GROUP BY boardId
 		    ) c ON b.boardId = c.boardId
-		
-		    -- 영화 제목
-		    LEFT JOIN MOVIE m
-		        ON b.movieId = m.movieId
 		
 		    ORDER BY (NVL(b.boardViewCount, 0) * 1)
 				  + (NVL(l.likeCount, 0) * 2)

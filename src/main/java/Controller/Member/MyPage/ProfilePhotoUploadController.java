@@ -75,7 +75,8 @@ public class ProfilePhotoUploadController implements Action {
 		request.setAttribute("member", member);
 		request.setAttribute("myPageInfo", myPageInfo);
 		request.setAttribute("allGenreList", myPageService.getAllGenres());
-
+		request.setAttribute("canLogout", true);
+		
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
 		return forward;

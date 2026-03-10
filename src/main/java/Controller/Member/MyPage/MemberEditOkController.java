@@ -75,6 +75,7 @@ public class MemberEditOkController implements Action {
 		
 		request.setAttribute("allGenreList", myPageService.getAllGenres());
 		request.setAttribute("profileMsg", "회원 정보가 성공적으로 수정되었습니다.");
+		request.setAttribute("canLogout", true);
 		
 		forward.setRedirect(false);
 		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");

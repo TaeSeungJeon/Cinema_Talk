@@ -43,7 +43,7 @@ public class ProfilePhotoController implements Action {
 		response.setContentType(contentType);
 		response.setContentLengthLong(Files.size(filePath));
 		response.setHeader("Cache-Control", "public, max-age=3600");
-
+		
 		try (OutputStream out = response.getOutputStream()) {
 			Files.copy(filePath, out);
 		}

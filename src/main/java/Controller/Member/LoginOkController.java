@@ -1,5 +1,7 @@
 package Controller.Member;
 
+import java.util.HashMap;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import Controller.Action;

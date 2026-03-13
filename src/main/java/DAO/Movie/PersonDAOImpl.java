@@ -1,6 +1,8 @@
 package DAO.Movie;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -16,10 +18,8 @@ public class PersonDAOImpl implements PersonDAO {
 	public static PersonDAOImpl getInstance() {
 		if(instance == null) {
 			instance = new PersonDAOImpl();
-			return instance;
-		} else {
-			return instance;
-		}
+		} 
+		return instance;
 	}
 	
 	private SqlSession getSqlSession() {		
@@ -95,6 +95,16 @@ public class PersonDAOImpl implements PersonDAO {
 				session.close();
 			}
 		}
+	}
+
+	@Override
+	public List<PersonDTO> searchPerson(String keyword) {
+		
+		try (SqlSession sqlSession = getSqlSession()) {
+	        return sqlSession.selectList("DAO.Movie.PersonDAO.searchPerson", keyword);
+	    } catch (RuntimeException e) {
+	        throw new RuntimeException("DB Error - searchPerson", e);
+	    }
 	}
 
 }

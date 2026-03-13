@@ -1,0 +1,315 @@
+package DAO.Member;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+
+import DTO.Member.MemberDTO;
+import mybatis.DBService;
+
+public class MemberDAOImpl implements MemberDAO {
+	
+	//정적변수
+	private static MemberDAOImpl instance = null;
+	
+	//기본생성자
+	public MemberDAOImpl() {}
+	
+	//DAOImpl 객체 생성해서 반환
+	public static MemberDAOImpl getInstance() {
+		if(instance ==  null) {
+			instance = new MemberDAOImpl();
+		}
+		return instance;
+	}//getInstance()
+	
+	//mybatis 커리문 수행 SqlSession 반환
+	private SqlSession getSqlSession() {
+		return DBService.getFactory().openSession(false); 
+		//수동 commit 모드
+	}//getSqlSession()
+
+	@Override
+	public void insertMember(MemberDTO member) {
+		SqlSession sqlSession = getSqlSession();
+		
+		try {
+			sqlSession.insert("Member.registerIn", member);
+			sqlSession.commit(); //수동 커밋
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//insertMember() -> 회원정보 저장
+
+	@Override
+	public MemberDTO idCheck(String memId) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("idCheck", memId);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//idCheck() -> 아이디 중복 검색
+
+	@Override
+	public MemberDTO loginCheck(String id) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("loginCheck", id);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//loginCheck() -> 입력한 아이디로 로그인 인증
+
+	@Override
+	public MemberDTO getMemberInfo(Integer memNo) {
+		SqlSession sqlSession = null;
+
+		try{
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("Member.getMemberInfo", memNo);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+	}//loginCheck() -> 입력한 아이디로 로그인 인증
+
+	@Override
+	public MemberDTO findId(MemberDTO mdto) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("findId", mdto);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+	}//findId() -> 입력받은 이름과 전화번호를 기준으로 아이디 찾기
+
+	@Override
+	public MemberDTO findByIdAndPhone(String memId, String memPhone) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			
+			Map<String, Object> param = new HashMap<>();
+			param.put("memId", memId);
+			param.put("memPhone", memPhone);
+			
+			return sqlSession.selectOne("findByIdAndPhone", param);
+		}finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//findByIdAndPhone() -> 입력받은 아이디와 전화번호를 기준으로 아이디 찾기
+
+	@Override
+	public int updatePwd(MemberDTO mdto) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			int a = sqlSession.update("updatePwd", mdto);
+			sqlSession.commit();
+			return a;
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//updatePwd() -> 암호화된 임시비밀번호로 업데이트
+
+	@Override
+	public MemberDTO phoneCheck(String memPhone) {
+		SqlSession sqlSession = null;
+	    try {
+	        sqlSession = getSqlSession();
+	        return sqlSession.selectOne("phoneCheck", memPhone);
+	    } finally {
+	        if (sqlSession != null) sqlSession.close();
+	    }
+	}//phoneCheck() -> 전화번호 중복 체크
+
+	@Override
+	public MemberDTO emailCheck(String memEmail) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("emailCheck", memEmail);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//emailCheck() -> 이메일 중복 체크	
+	
+	@Override
+	public int withdrawMember(int memNo){
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> param = new HashMap<>();
+			param.put("memNo", memNo);
+			param.put("memState", 3); // 3: 탈퇴 상태
+			int result = sqlSession.update("Member.updateMemberState", param);
+			sqlSession.commit();
+			return result;
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//withdrawMember() -> 회원 탈퇴 (상태값 3으로 변경)
+
+	@Override
+	public String findProfilePhotoPath(int memNo) {
+		SqlSession sqlSession = null;
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("Member.findProfilePhotoPath", memNo);
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//findProfilePhotoPath() -> 프로필 사진 상대경로 조회
+
+	@Override
+	public int updateProfilePhotoPath(int memNo, String relativePath) {
+		SqlSession sqlSession = null;
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> param = new HashMap<>();
+			param.put("memNo", memNo);
+			param.put("memProfilePhoto", relativePath);
+			int result = sqlSession.update("Member.updateProfilePhotoPath", param);
+			sqlSession.commit();
+			return result;
+		} finally {
+			if (sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//updateProfilePhotoPath() -> 프로필 사진 경로 업데이트
+
+	@Override
+	public List<MemberDTO> getMemberList(int startRow, int endRow) {
+		 SqlSession session = null;
+	        try {
+	            session = getSqlSession();
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("startRow", startRow);
+	            map.put("endRow", endRow);
+	            return session.selectList("getMemberList", map);
+	        } finally {
+	            if (session != null) session.close();
+	        }
+	}//getMemberList() -> 회원 목록 조회
+
+	@Override
+	public List<MemberDTO> getMemberListByState(String memState, int startRow, int endRow) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("memState", memState);
+			map.put("startRow", startRow);
+			map.put("endRow", endRow);
+			return sqlSession.selectList("getMemberListByState", map);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//getMemberListByState() -> 상태에 따른 회원 목록 조회
+
+	@Override
+	public int updateMemberState(int memNo, int targetState) {
+		SqlSession sqlSession = null;
+		int result = 0;
+		
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("memNo", memNo);
+			map.put("targetState", targetState);
+			
+			result = sqlSession.update("updateMemberState2", map);
+			sqlSession.commit();
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+		return result;
+	}//updateMemberState() -> 회원 상태 변경
+
+	@Override
+	public List<MemberDTO> searchMembers(String keyword, int startRow, int endRow) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			Map<String, Object> map = new HashMap<>();
+			map.put("keyword", keyword);
+			map.put("startRow", startRow);
+			map.put("endRow", endRow);
+	        return sqlSession.selectList("searchMembers", map);
+		}finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}//searchMembers() -> 검색하여 회원 목록 조회
+
+	@Override
+	public List<MemberDTO> searchMembersByState(String keyword, String memState, int startRow, int endRow) {
+		SqlSession session = null;
+        try {
+            session = getSqlSession();
+            Map<String, Object> map = new HashMap<>();
+            map.put("keyword", keyword);
+            map.put("memState", memState);
+            map.put("startRow", startRow);
+            map.put("endRow", endRow);
+            return session.selectList("searchMembersByState", map);
+        } finally {
+            if (session != null) session.close();
+        }
+	}//searchMembersByState() -> 상태+검색 후 회원목록 조회
+
+	@Override
+	public int countMembers(Map<String, Object> countParam) {
+		SqlSession sqlSession = null;
+		
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("countMembers", countParam);
+		}finally {
+			if(sqlSession != null) sqlSession.close();
+		}
+	}//countMembers() -> 전체, 상태, 검색, 상태+검색 회원 레코드 수 계산
+
+}

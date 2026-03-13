@@ -6,55 +6,55 @@
 <mapper namespace="DAO.Movie.MovieCastDAO">
 	<insert id="insertMovieCast" parameterType="moviecast">
 		INSERT INTO MOVIE_CAST (
-			person_id, movie_id, character_name, cast_order
+			personId, movieId, characterName, castOrder
 		) VALUES (
-			#{person_id}, #{movie_id}, #{character_name}, #{cast_order}
+			#{personId}, #{movieId}, #{characterName}, #{castOrder}
 		)
 	</insert>
 	
 	<!-- Oracle MERGE (UPSERT) - 중복 검사 없이 DB 레벨에서 처리 -->
 	<insert id="mergeMovieCast" parameterType="moviecast">
 		MERGE INTO MOVIE_CAST mc
-		USING (SELECT #{person_id} AS person_id, #{movie_id} AS movie_id FROM DUAL) src
-		ON (mc.person_id = src.person_id AND mc.movie_id = src.movie_id)
+		USING (SELECT #{personId} AS personId, #{movieId} AS movieId FROM DUAL) src
+		ON (mc.personId = src.personId AND mc.movieId = src.movieId)
 		WHEN MATCHED THEN
 			UPDATE SET 
-				mc.character_name = #{character_name},
-				mc.cast_order = #{cast_order}
+				mc.characterName = #{characterName},
+				mc.castOrder = #{castOrder}
 		WHEN NOT MATCHED THEN
-			INSERT (person_id, movie_id, character_name, cast_order)
-			VALUES (#{person_id}, #{movie_id}, #{character_name}, #{cast_order})
+			INSERT (personId, movieId, characterName, castOrder)
+			VALUES (#{personId}, #{movieId}, #{characterName}, #{castOrder})
 	</insert>
 	
 	<select id="countMovieCast" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM MOVIE_CAST
-		WHERE person_id = #{person_id} AND movie_id = #{movie_id}
+		WHERE personId = #{personId} AND movieId = #{movieId}
 	</select>
 	
 	<select id="getMovieCastById" parameterType="int" resultType="moviecast">
-        SELECT person_id
+        SELECT personId
         FROM MOVIE_CAST
-        WHERE movie_id = #{movie_id}
+        WHERE movieId = #{movieId}
     </select>
 
     <select id="getPersonIdsByMovieId" parameterType="int" resultType="int">
-        SELECT person_id
+        SELECT personId
         FROM MOVIE_CAST
-        WHERE movie_id = #{movie_id}
-        ORDER BY cast_order
+        WHERE movieId = #{movieId}
+        ORDER BY castOrder
     </select>
     
     <select id="getCastInfoByMovieId" parameterType="int" resultType="DTO.Movie.MovieDetailDTO$CastInfoDTO">
         SELECT 
-            p.person_id,
-            p.person_name,
-            p.profile_path,
-            mc.character_name,
-            mc.cast_order
+            p.personId,
+            p.personName,
+            p.profilePath,
+            mc.characterName,
+            mc.castOrder
         FROM MOVIE_CAST mc
-        JOIN PERSON p ON mc.person_id = p.person_id
-        WHERE mc.movie_id = #{movie_id}
-        ORDER BY mc.cast_order
+        JOIN PERSON p ON mc.personId = p.personId
+        WHERE mc.movieId = #{movieId}
+        ORDER BY mc.castOrder
     </select>
 </mapper>

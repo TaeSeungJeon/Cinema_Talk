@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="AddFile">
+
+    <insert id="insertFile" parameterType="DTO.Board.AddFileDTO">
+        INSERT INTO ADD_FILE
+        (FILENO, BOARDID, BOARDTYPE, FILENAME, FILEPATH, FILESIZE, UPLOADDATE)
+        VALUES (FILE_NO_SEQ.NEXTVAL, #{boardId}, #{boardType}, #{fileName}, #{filePath}, #{fileSize}, SYSDATE)
+    </insert>
+
+    <select id="listByBoard" parameterType="map" resultType="DTO.Board.AddFileDTO">
+        SELECT
+            FILENO      AS fileNo,
+            BOARDID     AS boardId,
+            BOARDTYPE   AS boardType,
+            FILENAME    AS fileName,
+            FILEPATH    AS filePath,
+            FILESIZE    AS fileSize,
+            UPLOADDATE  AS fileUploadDate
+        FROM ADD_FILE
+        WHERE BOARDID = #{boardId}
+          AND BOARDTYPE = #{boardType}
+        ORDER BY FILENO ASC
+    </select>
+
+</mapper>

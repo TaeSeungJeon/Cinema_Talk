@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Board">
+
+    <insert id="boardIn" parameterType="DTO.Board.BoardDTO">
+        <selectKey keyProperty="boardId" resultType="int" order="BEFORE">
+            SELECT boardIdseq.nextval FROM dual
+        </selectKey>
+
+        INSERT INTO BOARD
+        (boardId, boardType, boardTitle, boardContent, boardName, boardDate, memNo, linkUrl
+        <if test="movieId != -1">
+            , movieId, movieTitle
+        </if>)
+        VALUES (#{boardId}, #{boardType}, #{boardTitle}, #{boardContent}, #{boardName}, SYSDATE, #{memNo}, #{linkUrl}
+        <if test="movieId != -1">
+            , #{movieId}, #{movieTitle}
+        </if>
+        )
+    </insert>
+
+    <select id="boardList" resultType="DTO.Board.BoardDTO">
+        /* 좋아요 기능으로인한 수정 */
+        SELECT b.*,
+               (SELECT COUNT(*)
+                FROM BOARD_LIKE l
+                WHERE l.boardId = b.boardId
+                  AND l.boardType = b.boardType) AS likeCount
+        FROM BOARD b
+        ORDER BY b.boardId DESC
+    </select>
+
+    <select id="boardCont" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT BOARDID             as boardId,
+               BOARDTYPE           as boardType,
+               BOARDTITLE          as boardTitle,
+               BOARDCONTENT        as boardContent,
+               BOARDNAME           as boardName,
+               BOARDDATE           as boardDate,
+               MEMNO               as memNo,
+               LINKURL             as linkUrl,
+               BOARDVIEWCOUNT as boardViewCount,
+               MOVIEID,MOVIETITLE
+        FROM BOARD
+        WHERE BOARDID = #{boardId}
+    </select>
+
+    <update id="updateReadCount" parameterType="int">
+        UPDATE BOARD
+        SET BOARDVIEWCOUNT = NVL(boardViewCount, 0) + 1
+        WHERE BOARDID = #{boardId}
+    </update>
+
+    <update id="updateBoard" parameterType="DTO.Board.BoardDTO">
+        UPDATE BOARD
+       <set>
+            <if test="boardTitle != null">BOARDTITLE = #{boardTitle},</if>
+            <if test="boardContent != null">BOARDCONTENT = #{boardContent},</if>
+            
+            <choose>
+                <when test="movieId != -1">
+                    MOVIEID = #{movieId},
+                    MOVIETITLE = #{movieTitle}
+                </when>
+                <otherwise>
+                    MOVIEID = NULL,
+                    MOVIETITLE = NULL
+                </otherwise>
+            </choose>
+        </set>
+        WHERE BOARDID = #{boardId}
+    </update>
+
+    <!-- 게시글 내용(content) 직접 수정 - BoardUpdateOkController 전용 -->
+    <update id="updateBoardContent" parameterType="DTO.Board.BoardDTO">
+        UPDATE BOARD
+        SET BOARDTITLE   = #{boardTitle},
+            BOARDCONTENT = #{boardContent},
+            <choose>
+                <when test="movieId != -1">
+                    MOVIEID    = #{movieId},
+                    MOVIETITLE = #{movieTitle}
+                </when>
+                <otherwise>
+                    MOVIEID    = NULL,
+                    MOVIETITLE = NULL
+                </otherwise>
+            </choose>
+        WHERE BOARDID = #{boardId}
+    </update>
+
+    <delete id="deleteBoard" parameterType="int">
+        DELETE
+        FROM BOARD
+        WHERE BOARDID = #{boardId}
+    </delete>
+
+    <insert id="boardInsert">
+        INSERT INTO BOARD
+        (BOARDID,
+         BOARDTYPE,
+         BOARDTITLE,
+         BOARDCONTENT,
+         BOARDNAME,
+         BOARDDATE,
+         MEMNO)
+
+        VALUES (BOARD_SEQ.NEXTVAL,
+                #{boardType},
+                #{boardTitle},
+                #{boardContent},
+                #{boardName},
+                SYSDATE,
+                #{memNo})
+    </insert>
+
+    <select id="boardListByType" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT b.*,
+               (SELECT COUNT(*)
+                FROM BOARD_LIKE l
+                WHERE l.boardId = b.boardId
+                  AND l.boardType = b.boardType) AS likeCount
+        FROM BOARD b
+        WHERE b.BOARDTYPE = #{boardType}
+        ORDER BY b.boardId DESC
+    </select>
+
+    <select id="getBoardCount" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE BOARDTYPE NOT IN (10, 11)
+    </select>
+
+    <select id="boardListPage" parameterType="map" resultType="DTO.Board.BoardDTO">
+        /* 좋아요 기능으로인한 수정 */
+        SELECT *
+        FROM (SELECT ROWNUM rnum, b.*
+              FROM (SELECT b.*,
+                           (SELECT COUNT(*)
+                            FROM BOARD_LIKE l
+                            WHERE l.boardId = b.boardId
+                              AND l.boardType = b.boardType) AS likeCount
+                    FROM BOARD b
+                    WHERE b.boardType NOT IN (10, 11)
+                    ORDER BY b.boarddate DESC) b
+              WHERE ROWNUM <![CDATA[<=]]> #{endRow})
+        WHERE rnum >= #{startRow}
+    </select>
+
+    <select id="getBoardCountByType" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE BOARDTYPE = #{boardType}
+    </select>
+
+    <select id="boardListPageByType" parameterType="map" resultType="DTO.Board.BoardDTO">
+        /* 좋아요 기능으로 인한 수정 */
+        SELECT *
+        FROM (SELECT ROWNUM rnum, b.*
+              FROM (SELECT b.*,
+                           (SELECT COUNT(*)
+                            FROM BOARD_LIKE l
+                            WHERE l.boardId = b.boardId
+                              AND l.boardType = b.boardType) AS likeCount
+                    FROM BOARD b
+                    WHERE b.BOARDTYPE = #{boardType}
+                    ORDER BY b.boarddate DESC) b
+              WHERE ROWNUM <![CDATA[<=]]> #{endRow})
+        WHERE rnum >= #{startRow}
+    </select>
+
+    <!-- 좋아요 여부 -->
+    <select id="isBoardLiked" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD_LIKE
+        WHERE BOARDID = #{boardId}
+          AND BOARDTYPE = #{boardType}
+          AND MEMNO = #{memNo}
+    </select>
+
+    <!-- 좋아요 추가 -->
+    <insert id="insertBoardLike" parameterType="map">
+        INSERT INTO BOARD_LIKE (BOARDID, BOARDTYPE, MEMNO)
+        VALUES (#{boardId}, #{boardType}, #{memNo})
+    </insert>
+
+    <!-- 좋아요 취소 -->
+    <delete id="deleteBoardLike" parameterType="map">
+        DELETE
+        FROM BOARD_LIKE
+        WHERE BOARDID = #{boardId}
+          AND BOARDTYPE = #{boardType}
+          AND MEMNO = #{memNo}
+    </delete>
+
+    <!-- 좋아요 개수 -->
+    <select id="getBoardLikeCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD_LIKE
+        WHERE BOARDID = #{boardId}
+          AND BOARDTYPE = #{boardType}
+    </select>
+
+    <!-- 최근 게시글: 최신순 TOP N -->
+    <select id="recentBoardList" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (
+                 SELECT
+                     b.BOARDID AS boardId,
+                     b.BOARDTYPE AS boardType,
+                     b.BOARDTITLE AS boardTitle,
+                     b.BOARDCONTENT AS boardContent,
+                     b.BOARDNAME AS boardName,
+                     b.BOARDDATE AS boardDate,
+                     NVL(b.boardViewCount, 0) AS boardViewCount,
+
+                     (SELECT COUNT(*)
+                      FROM COMMENTS c
+                      WHERE c.BOARDID = b.BOARDID
+                        AND c.BOARDTYPE = b.BOARDTYPE) AS commentCount,
+
+                     (SELECT COUNT(*)
+                      FROM BOARD_LIKE l
+                      WHERE l.BOARDID = b.BOARDID
+                        AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
+
+                 FROM BOARD b
+                 WHERE b.BOARDTYPE NOT IN (10, 11)
+                 ORDER BY b.BOARDDATE DESC NULLS LAST, b.BOARDID DESC
+             )
+        WHERE ROWNUM <![CDATA[<=]]> #{limit}
+    </select>
+
+    <!-- 실시간 인기글: 좋아요/조회수 기반 TOP -->
+    <select id="hotBoardList" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (SELECT b.BOARDID                         AS boardId,
+                     b.BOARDTYPE                       AS boardType,
+                     b.BOARDTITLE                      AS boardTitle,
+                     b.BOARDVIEWCOUNT             AS boardViewCount,
+                     (SELECT COUNT(*)
+                      FROM BOARD_LIKE l
+                      WHERE l.BOARDID = b.BOARDID
+                        AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
+              FROM BOARD b
+              WHERE b.BOARDTYPE IN (1,2)
+              ORDER BY likeCount DESC,
+                       NVL(b.BOARDVIEWCOUNT, 0) DESC,
+                       b.BOARDID DESC)
+        WHERE ROWNUM <![CDATA[<=]]> #{limit}
+        /* 좋아요 기반, 좋아요가 같으면 조회수 순 */
+    </select>
+
+    <!-- 일, 주, 월간 인기글 -->
+    <select id="getPopularBoardList" parameterType="map" resultType="DTO.Board.BoardDTO">
+        SELECT * FROM (
+                          SELECT b.BOARDID AS boardId, b.BOARDTYPE AS boardType,
+                                 b.BOARDTITLE AS boardTitle, b.BOARDVIEWCOUNT AS boardViewCount,
+                                 b.BOARDDATE AS boardDate,
+                                 (SELECT COUNT(*) FROM BOARD_LIKE l
+                                  WHERE l.BOARDID = b.BOARDID AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount
+                          FROM BOARD b
+                          WHERE b.BOARDTYPE IN (1, 2)
+                            AND (
+                              (#{period} = 'daily'  AND b.BOARDDATE >= SYSDATE - 1) OR
+                              (#{period} = 'weekly' AND b.BOARDDATE >= SYSDATE - 7) OR
+                              (#{period} = 'monthly' AND b.BOARDDATE >= SYSDATE - 30)
+                              )
+                          ORDER BY likeCount DESC, b.BOARDVIEWCOUNT DESC
+                      ) WHERE ROWNUM <![CDATA[<=]]> 10
+    </select>
+  
+    <!-- 최신 공지사항 1건 (boardType = 10) -->
+    <select id="latestNotice" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (
+            SELECT
+                b.BOARDID       AS boardId,
+                b.BOARDTYPE     AS boardType,
+                b.BOARDTITLE    AS boardTitle,
+                b.BOARDDATE     AS boardDate
+            FROM BOARD b
+            WHERE b.BOARDTYPE = 10
+            ORDER BY b.BOARDDATE DESC NULLS LAST, b.BOARDID DESC
+        )
+        WHERE ROWNUM = 1
+    </select>
+
+    <select id="getMovieTitleforBoard" resultType="String" parameterType="int">
+        SELECT movieTitle from movie where movieId = #{movieId}
+    </select>
+
+</mapper>

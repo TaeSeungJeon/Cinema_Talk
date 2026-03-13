@@ -1,0 +1,29 @@
+[33m5c28de6[m .
+[33ma31d3b1[m wonho's merge1
+[33mbd70dba[m chore: add package structure with gitkeep
+[33mf9df3e1[m 원호의 기본 설정하기(home 화면)
+[33m608f042[m common style test
+[33mac9ce9d[m 원호의 pom.xml 및 영화 DB 저장
+[33m5e08b69[m 원호의 Develop
+[33m86f974e[m Merge remote-tracking branch 'origin/Develop' into Syahri
+[33m3e15d25[m SQL문 수정 및 Controller 조정
+[33m890fcdc[m Merge remote-tracking branch 'origin/Develop' into Syahri
+[33mec09c13[m 투표기능 공통 레이아웃
+[33m106b91a[m 0210 원호의 TMDB API 설정 완료
+[33m22f8d3d[m 영화 추천 페이지
+[33mf15a62f[m daum.properties 수정
+[33me6f9864[m Merge remote-tracking branch 'origin/JaeHoon' into Develop
+[33m0bb3eaf[m 02-11
+[33mb42d9fa[m 결합오류 수정
+[33md070578[m Merge pull request #3 from TaeSeungJeon/JaeHoon
+[33mcda0c58[m 예비
+[33md8a0c35[m vote jsp 작업
+[33m49d1c5c[m Delete src/main/webapp/WEB-INF/views/Movie directory
+[33m681b954[m Merge remote-tracking branch 'origin/Syahri' into Develop
+[33m6265a97[m 샤리님/재훈형님/임원호 합병
+[33m1845fac[m 전태승 바보
+[33m7d9ae7f[m Merge branch 'Develop' into YoonHa
+[33m365c631[m 회원가입 (아이디 중복체크 제외), 로그인
+[33m5765f74[m[33m ([m[1;31morigin/Develop[m[33m)[m 노윤하 최고
+[33mf7023a3[m 홈화면 명시적 표현 수정 및 index.jsp 활용
+[33m5e8fb40[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mJaeHoon[m[33m, [m[1;31morigin/JaeHoon[m[33m)[m 홈화면 명시적 표현 수정 및 index.jsp 활용

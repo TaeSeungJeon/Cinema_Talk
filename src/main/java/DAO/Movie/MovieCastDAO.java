@@ -9,6 +9,6 @@ public interface MovieCastDAO {
 	void insertMovieCastBatch(List<MovieCastDTO> movieCasts);
 	void mergeMovieCast(MovieCastDTO movieCast);
 	boolean existsMovieCast(int personId, int movieId);
-	List<Integer> getPersonIdByMovieId(int movie_id);
-	List<CastInfoDTO> getCastInfoByMovieId(int movie_id);
+	List<Integer> getPersonIdByMovieId(int movieId);
+	List<CastInfoDTO> getCastInfoByMovieId(int movieId);
 }

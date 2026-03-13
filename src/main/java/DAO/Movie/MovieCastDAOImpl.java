@@ -90,11 +90,11 @@ public class MovieCastDAOImpl implements MovieCastDAO {
 	}
 
 	@Override
-	public List<Integer> getPersonIdByMovieId(int movie_id) {
+	public List<Integer> getPersonIdByMovieId(int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			return session.selectList("DAO.Movie.MovieCastDAO.getPersonIdsByMovieId", movie_id);
+			return session.selectList("DAO.Movie.MovieCastDAO.getPersonIdsByMovieId", movieId);
 		} finally {
 			if(session != null) {
 				session.close();
@@ -103,11 +103,11 @@ public class MovieCastDAOImpl implements MovieCastDAO {
 	}
 
 	@Override
-	public List<CastInfoDTO> getCastInfoByMovieId(int movie_id) {
+	public List<CastInfoDTO> getCastInfoByMovieId(int movieId) {
 		SqlSession session = null;
 		try {
 			session = getSqlSession();
-			return session.selectList("DAO.Movie.MovieCastDAO.getCastInfoByMovieId", movie_id);
+			return session.selectList("DAO.Movie.MovieCastDAO.getCastInfoByMovieId", movieId);
 		} finally {
 			if(session != null) {
 				session.close();

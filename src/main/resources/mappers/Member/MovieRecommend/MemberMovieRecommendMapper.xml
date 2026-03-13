@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="MemberMovieRecommend"> <!-- 매퍼네임 스페이스명을 Member로 설정 -->
+  	  <insert id="addRecommend" parameterType="membermovierecommend">
+        INSERT INTO member_movie_recommend (memNo, movieId)
+        VALUES (#{memNo}, #{movieId})
+      </insert>
+
+      <select id="getRecommendByMemberId" parameterType="membermovierecommend" resultType="membermovierecommend">
+        SELECT * FROM member_movie_recommend
+        WHERE memNo = #{memNo}
+      </select>
+
+      <delete id="removeRecommend" parameterType="membermovierecommend">
+        DELETE FROM member_movie_recommend
+        WHERE movieId = #{movieId} and memNo = #{memNo}
+      </delete>
+      
+      <select id="isFavorite" parameterType="membermovierecommend" resultType="int">
+        SELECT COUNT(*) FROM member_movie_recommend
+        WHERE memNo = #{memNo} AND movieId = #{movieId}
+      </select>
+      
+      <select id="getFavoriteCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM member_movie_recommend
+        WHERE movieId = #{movieId}
+      </select>
+  
+  </mapper>

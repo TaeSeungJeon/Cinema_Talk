@@ -3,14 +3,28 @@ package DAO.Movie.Recommend;
 import java.util.List;
 import java.util.Map;
 
+import DTO.Movie.Recommend.GenreMovieSection;
 import DTO.Movie.Recommend.MovieRecResponse;
 
 public interface MovieRecDAO {
 
-	Map<Integer, List<MovieRecResponse>> getGenreRecList(int mem_no);
+	List<MovieRecResponse> getPopularRecList(int movieLimit);
+	
+	List<MovieRecResponse> getRandomRecList(int movieLimit);
 
-	List<MovieRecResponse> getPopularRecList();
+	List<Integer> getMemberLikeGenres(int memNo);
 
-	List<MovieRecResponse> getLikeRecList(int mem_no);
+	List<MovieRecResponse> getLikeGenreRecList(List<Integer> likeGenreIds, int movieLimit);
 
+	List<Integer> selRecGenres(List<Integer> likeGenres, int genreSelect);
+
+	List<MovieRecResponse> selGenreMovies(List<Integer> genreIds, int movieLimit);
+		
+	List<MovieRecResponse> getIndexGenreList(int memNo);
+	List<MovieRecResponse> getIndexGenreList();
+	
+	List<MovieRecResponse> getIndexTrendList();
+
+	
+	
 }

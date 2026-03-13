@@ -9,5 +9,5 @@ public interface MovieCrewDAO {
 	void insertMovieCrewBatch(List<MovieCrewDTO> movieCrews);
 	void mergeMovieCrew(MovieCrewDTO movieCrew);
 	boolean existsMovieCrew(int personId, int movieId);
-	List<CrewInfoDTO> getDirectorsByMovieId(int movie_id);
+	List<CrewInfoDTO> getDirectorsByMovieId(int movieId);
 }

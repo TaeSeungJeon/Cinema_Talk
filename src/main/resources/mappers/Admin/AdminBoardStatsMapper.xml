@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="AdminBoardStats">
+  	<!-- 총 게시글 수 -->
+    <select id="selBoardCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+    </select>
+    
+    <!-- 특정 날짜 기준 총 게시글 수 -->
+    <select id="selTotalBoardCountByDate" parameterType="java.time.LocalDate" resultType="int">
+	<![CDATA[
+        SELECT COUNT(*)
+    	FROM BOARD
+    	WHERE boardDate < #{value} + 1
+    ]]>
+    </select>
+    
+    <!-- 총 댓글 수 -->
+    <select id="selCommentCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM COMMENTS
+    </select>
+    
+    <!-- 특정 기간 내 총 댓글 수 -->
+    <select id="selTotalCommentCountByDate" parameterType="java.time.LocalDate" resultType="int">
+    	<![CDATA[
+        SELECT COUNT(*)
+        FROM COMMENTS
+        WHERE commentsDate < #{value} + 1
+        ]]>
+    </select>
+    
+    <!-- 총 좋아요 수 -->
+    <select id="selLikeCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD_LIKE
+    </select>
+    
+    <!-- 총 조회 수 -->
+    <select id="selViewCnt" resultType="int">
+        SELECT NVL(SUM(boardViewCount), 0)
+		FROM BOARD
+    </select>
+    
+    <!-- 일별 게시글 추이 -->
+    <select id="selMonthlyBoardTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.TrendDTO">
+        <![CDATA[
+		WITH date_range AS (
+		    SELECT TRUNC(#{startDate}) + LEVEL - 1 AS dt
+		    FROM dual
+		    CONNECT BY LEVEL <= TRUNC(#{endDate}) - TRUNC(#{startDate}) + 1
+		)
+		SELECT
+		    TO_CHAR(d.dt, 'YYYY-MM-DD') AS regDate,
+		    NVL(COUNT(b.boardDate), 0) AS cnt
+		FROM date_range d
+		LEFT JOIN BOARD b
+		    ON TRUNC(b.boardDate) = d.dt
+		GROUP BY d.dt
+		ORDER BY d.dt
+		]]>
+    </select>
+    
+    <!-- 인기 게시글 TOP 10 -->
+    <select id="selTopBoards" resultType="DTO.Admin.Stats.TopBoardDTO">
+        <![CDATA[
+		SELECT *
+		FROM (
+		    SELECT
+		        b.boardId,
+		        b.boardTitle,
+		        b.boardName,
+		        b.boardViewCount,
+		        b.boardDate,
+		
+		        NVL(l.likeCount, 0) AS boardLikeCount,
+		        NVL(c.commentCount, 0) AS commentCount,
+		
+		        b.movieTitle
+		
+		    FROM BOARD b
+		
+		    -- 좋아요 수 집계
+		    LEFT JOIN (
+		        SELECT boardId, COUNT(*) AS likeCount
+		        FROM BOARD_LIKE
+		        GROUP BY boardId
+		    ) l ON b.boardId = l.boardId
+		
+		    -- 댓글 수 집계
+		    LEFT JOIN (
+		        SELECT boardId, COUNT(*) AS commentCount
+		        FROM COMMENTS
+		        GROUP BY boardId
+		    ) c ON b.boardId = c.boardId
+		
+		    ORDER BY (NVL(b.boardViewCount, 0) * 1)
+				  + (NVL(l.likeCount, 0) * 2)
+				  + (NVL(c.commentCount, 0) * 2) DESC
+		)
+		WHERE ROWNUM <= 10
+		]]>
+    </select>
+    
+  </mapper>

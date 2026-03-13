@@ -5,6 +5,7 @@ import java.util.Map;
 
 import Controller.Action;
 import Controller.ActionForward;
+import DTO.Movie.Recommend.GenreMovieSection;
 import DTO.Movie.Recommend.MovieRecResponse;
 import Service.Movie.Recommend.MovieRecService;
 import Service.Movie.Recommend.MovieRecServiceImpl;
@@ -21,24 +22,20 @@ public class MovieRecController implements Action {
 	    MovieRecService movieRecService = new MovieRecServiceImpl();
 	    
 	    HttpSession session = request.getSession();
-	    Object memNoObj = session.getAttribute("mem_no");
-	    int mem_no = (memNoObj != null) ? (int)memNoObj : -1;//로그인한 상태면 회원 번호 구함
+	    Object memNoObj = session.getAttribute("memNo");
+	    int memNo = (memNoObj instanceof Integer) ? (Integer) memNoObj : -1;//로그인한 상태면 회원 번호 구함
 	    
-	    Map<Integer, List<MovieRecResponse>> genreRecMap = movieRecService.getGenreRecList(mem_no);
 	    List<MovieRecResponse> popularRecList = movieRecService.getPopularRecList();
-	    List<MovieRecResponse> likeRecList = null;
+	    List<MovieRecResponse> likeRecList = movieRecService.getLikeRecList(memNo);
+	    List<GenreMovieSection> genreSections = movieRecService.getRecGenreList(memNo);
 	    
-	    if (mem_no != -1) {
-		    likeRecList = movieRecService.getLikeRecList(mem_no);
-	    }
-	    
-	    request.setAttribute("genreRecMap", genreRecMap);
 	    request.setAttribute("likeRecList", likeRecList);
 	    request.setAttribute("popularRecList", popularRecList);
-	    
+	    request.setAttribute("genreSections", genreSections);
+
 	    ActionForward forward = new ActionForward();
 	    forward.setRedirect(false);
-	    forward.setPath("/WEB-INF/views/movie/recommend/MovieRecList.jsp");//뷰페이지 경로 설정
+	    forward.setPath("/WEB-INF/views/movie/recommend/movieRecList.jsp");//뷰페이지 경로 설정
 	    
 	    return forward;            
 	}

@@ -1,0 +1,85 @@
+package Controller.Member.MyPage;
+
+import Controller.Action;
+import Controller.ActionForward;
+import DTO.Member.MemberDTO;
+import DTO.Member.MyPage.MyPageDTO;
+import Service.Member.MemberService;
+import Service.Member.MemberServiceImpl;
+import Service.Member.MyPage.MyPageService;
+import Service.Member.MyPage.MyPageServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+public class MyPageController implements Action {
+
+	@Override
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		ActionForward forward = new ActionForward();
+		MemberService memberService = new MemberServiceImpl();
+		MyPageService myPageService = new MyPageServiceImpl();
+		HttpSession session = request.getSession(false);
+		String paramMemNo = request.getParameter("memNo");
+
+		// 세션 체크
+		if (session == null || session.getAttribute("memId") == null) {
+			forward.setRedirect(true);
+			forward.setPath("memberLogin.do");
+			return forward;
+		}
+
+		MemberDTO member;
+
+		if (paramMemNo != null && !paramMemNo.isBlank()) {
+			try {
+				int memNo = Integer.parseInt(paramMemNo);
+				member = memberService.getMemberInfo(memNo);
+			} catch (NumberFormatException e) {
+				forward.setRedirect(true);
+				forward.setPath("freeBoard.do");
+				return forward;
+			}
+		} else {
+			// 세션에서 memId 꺼내기
+			String memId = (String) session.getAttribute("memId");
+			// DB에서 사용자 정보 조회
+			member = memberService.loginCheck(memId);
+		}
+
+		if (member == null) {
+			if (paramMemNo != null && !paramMemNo.isBlank()) {
+				forward.setRedirect(true);
+				forward.setPath("freeBoard.do");
+				return forward;
+			}
+			session.invalidate();
+			forward.setRedirect(true);
+			forward.setPath("memberLogin.do");
+			return forward;
+		}
+
+		// 마이페이지 정보 조회 (게시글, 댓글, 투표 목록 및 통계)
+		MyPageDTO myPageInfo = myPageService.getMyPageInfo(member.getMemNo());
+		myPageInfo.setMemId(member.getMemId());
+		myPageInfo.setMemName(member.getMemName());
+		myPageInfo.setMemDate(member.getMemDate());
+
+		// 뷰에 데이터 전달
+		request.setAttribute("member", member);
+		request.setAttribute("myPageInfo", myPageInfo);
+		
+		// 전체 장르 목록 (선호 장르 선정 화면용)
+		request.setAttribute("allGenreList", myPageService.getAllGenres());
+		
+		//마이페이지에서만 로그아웃 가능하도록 설정
+		request.setAttribute("canLogout", true);
+		
+		forward.setRedirect(false);
+		forward.setPath("/WEB-INF/views/member/mypage/myPage.jsp");
+		return forward;
+	}
+}

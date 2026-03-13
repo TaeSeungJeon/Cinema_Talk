@@ -9,4 +9,5 @@ public interface GenreDAO {
 	void mergeGenre(GenreDTO genre);
 	boolean existsGenre(int genreId);
 	GenreDTO getGenreById(int genreId);
+	List<GenreDTO> getAllGenres();
 }

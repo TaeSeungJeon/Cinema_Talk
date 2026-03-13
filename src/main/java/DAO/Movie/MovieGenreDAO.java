@@ -8,5 +8,5 @@ public interface MovieGenreDAO {
 	void insertMovieGenreBatch(List<MovieGenreDTO> movieGenres);
 	void mergeMovieGenre(MovieGenreDTO movieGenre);
 	boolean existsMovieGenre(int genreId, int movieId);
-	List<Integer> getGenreIdsByMovieId(int movie_id);
+	List<Integer> getGenreIdsByMovieId(int movieId);
 }

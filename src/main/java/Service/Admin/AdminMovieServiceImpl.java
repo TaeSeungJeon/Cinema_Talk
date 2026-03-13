@@ -1,0 +1,112 @@
+package Service.Admin;
+
+import org.apache.ibatis.session.SqlSession;
+
+import DAO.Admin.AdminMovieDAO;
+import DAO.Admin.AdminMovieDAOImpl;
+import DTO.Admin.Movie.MovieSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CastSaveDTO;
+import DTO.Admin.Movie.MovieSaveDTO.CrewSaveDTO;
+import DTO.Movie.MovieDTO;
+import mybatis.DBService;
+
+public class AdminMovieServiceImpl implements AdminMovieService {
+
+    private static AdminMovieServiceImpl instance = null;
+    
+    private final AdminMovieDAO dao = AdminMovieDAOImpl.getInstance();
+
+    private AdminMovieServiceImpl() {}
+
+    public static AdminMovieServiceImpl getInstance() {
+		if (instance == null) {
+			instance = new AdminMovieServiceImpl();
+		}
+		return instance;
+	}
+    
+    private SqlSession getSqlSession() {		
+		return DBService.getFactory().openSession(false);
+	}
+    
+    @Override
+    public void updateMovie(MovieSaveDTO saveDTO) {
+
+        SqlSession session = getSqlSession();
+
+        try {
+
+            MovieDTO movie = saveDTO.getMovie();
+
+            if (movie.getMovieId() == 0) {
+                throw new IllegalArgumentException("수정할 movieId가 없습니다.");
+            }
+
+            boolean exists = dao.existsMovie(session, movie.getMovieId());
+            if (!exists) {
+                throw new IllegalArgumentException("존재하지 않는 영화입니다.");
+            }
+            
+            String originalDate = movie.getMovieReleaseDate();
+
+            if (originalDate != null && !originalDate.isBlank()) {
+                movie.setMovieReleaseDate(originalDate.substring(0, Math.min(10, originalDate.length())));
+            }
+            
+            dao.updateMovie(session, movie);
+
+            int movieId = movie.getMovieId();
+
+            
+            dao.deleteMovieGenres(session, movieId);
+            if (saveDTO.getGenreIds() != null) {
+                for (Integer gid : saveDTO.getGenreIds()) {
+                    dao.insertMovieGenre(session, movieId, gid);
+                }
+            }
+
+            dao.deleteMovieCasts(session, movieId);
+            if (saveDTO.getCasts() != null) {
+                for (CastSaveDTO cast : saveDTO.getCasts()) {
+                    dao.insertMovieCast(session, movieId, cast);
+                }
+            }
+
+            dao.deleteMovieCrews(session, movieId);
+            if (saveDTO.getCrews() != null) {
+                for (CrewSaveDTO crew : saveDTO.getCrews()) {
+                    dao.insertMovieCrew(session, movieId, crew);
+                }
+            }
+
+            session.commit();
+
+        } catch (Exception e) {
+            session.rollback();
+            throw new RuntimeException("AdminMovie update 실패", e);
+        } finally {
+            session.close();
+        }
+    }
+
+	@Override
+	public void deleteMovie(int movieId) {
+		SqlSession session = getSqlSession();
+
+	    try {
+	    	
+	        dao.deleteMovie(session, movieId);
+
+	        session.commit();
+
+	    } catch (Exception e) {
+
+	        session.rollback();
+	        throw new RuntimeException("AdminMovie delete 실패", e);
+
+	    } finally {
+	        session.close();
+	    }
+	}
+
+}

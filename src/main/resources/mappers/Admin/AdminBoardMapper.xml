@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AdminBoard">
+
+    <!-- 게시글 수 (검색 조건 포함, 공지·문의 제외) -->
+    <select id="getBoardCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD b
+        WHERE b.BOARDTYPE NOT IN (10, 11)
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%'
+                </when>
+                <when test="searchType == 'writer'">
+                    AND UPPER(b.BOARDNAME) LIKE '%' || UPPER(#{keyword}) || '%'
+                </when>
+                <otherwise>
+                    AND (UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                         OR UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%')
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!-- 정렬 + 검색 + 페이징 목록 -->
+    <select id="getBoardList" parameterType="map" resultType="DTO.Board.BoardDTO">
+        SELECT *
+        FROM (
+            SELECT ROWNUM rnum, sub.*
+            FROM (
+                SELECT
+                    b.BOARDID       AS boardId,
+                    b.BOARDTYPE     AS boardType,
+                    b.BOARDTITLE    AS boardTitle,
+                    b.BOARDCONTENT  AS boardContent,
+                    b.BOARDNAME     AS boardName,
+                    b.BOARDDATE     AS boardDate,
+                    b.MEMNO         AS memNo,
+                    NVL(b.BOARDVIEWCOUNT, 0) AS boardViewCount,
+                    (SELECT COUNT(*) FROM BOARD_LIKE l
+                     WHERE l.BOARDID = b.BOARDID AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount,
+                    (SELECT COUNT(*) FROM COMMENTS c
+                     WHERE c.BOARDID = b.BOARDID AND c.BOARDTYPE = b.BOARDTYPE) AS commentCount
+                FROM BOARD b
+                WHERE b.BOARDTYPE NOT IN (10, 11)
+                <if test="keyword != null and keyword != ''">
+                    <choose>
+                        <when test="searchType == 'title'">
+                            AND UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                        </when>
+                        <when test="searchType == 'content'">
+                            AND UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%'
+                        </when>
+                        <when test="searchType == 'writer'">
+                            AND UPPER(b.BOARDNAME) LIKE '%' || UPPER(#{keyword}) || '%'
+                        </when>
+                        <otherwise>
+                            AND (UPPER(b.BOARDTITLE) LIKE '%' || UPPER(#{keyword}) || '%'
+                                 OR UPPER(b.BOARDCONTENT) LIKE '%' || UPPER(#{keyword}) || '%')
+                        </otherwise>
+                    </choose>
+                </if>
+                <choose>
+                    <when test="sort == 'like'">
+                        ORDER BY likeCount DESC, b.BOARDID DESC
+                    </when>
+                    <when test="sort == 'view'">
+                        ORDER BY NVL(b.BOARDVIEWCOUNT, 0) DESC, b.BOARDID DESC
+                    </when>
+                    <when test="sort == 'comment'">
+                        ORDER BY commentCount DESC, b.BOARDID DESC
+                    </when>
+                    <otherwise>
+                        ORDER BY b.BOARDID DESC
+                    </otherwise>
+                </choose>
+            ) sub
+            WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+        )
+        WHERE rnum >= #{startRow}
+    </select>
+
+    <!-- 상세 조회 -->
+    <select id="getBoardDetail" parameterType="int" resultType="DTO.Board.BoardDTO">
+        SELECT
+            b.BOARDID       AS boardId,
+            b.BOARDTYPE     AS boardType,
+            b.BOARDTITLE    AS boardTitle,
+            b.BOARDCONTENT  AS boardContent,
+            b.BOARDNAME     AS boardName,
+            b.BOARDDATE     AS boardDate,
+            b.MEMNO         AS memNo,
+            NVL(b.BOARDVIEWCOUNT, 0) AS boardViewCount,
+            (SELECT COUNT(*) FROM BOARD_LIKE l
+             WHERE l.BOARDID = b.BOARDID AND l.BOARDTYPE = b.BOARDTYPE) AS likeCount,
+            (SELECT COUNT(*) FROM COMMENTS c
+             WHERE c.BOARDID = b.BOARDID AND c.BOARDTYPE = b.BOARDTYPE) AS commentCount
+        FROM BOARD b
+        WHERE b.BOARDID = #{boardId}
+    </select>
+
+    <!-- 댓글 목록 조회 (계층형) -->
+    <select id="getBoardComments" parameterType="int" resultType="DTO.Board.CommentsDTO">
+        SELECT
+            c.COMMENTSID      AS commentsId,
+            c.BOARDID         AS boardId,
+            c.BOARDTYPE       AS boardType,
+            c.COMMENTSCONTENT AS commentsContent,
+            c.COMMENTSNAME    AS commentsName,
+            c.COMMENTSDATE    AS commentsDate,
+            c.COMMENTSNO      AS commentsNo,
+            c.MEMNO           AS memNo,
+            c.PARENTBOARDNO   AS parentBoardNo,
+            c.PARENTBOARDID   AS parentBoardId,
+            (SELECT COUNT(*) FROM COMMENTS_LIKE cl WHERE cl.COMMENTSID = c.COMMENTSID) AS likeCount
+        FROM COMMENTS c
+        WHERE c.BOARDID = #{boardId}
+        START WITH c.PARENTBOARDID IS NULL
+        CONNECT BY PRIOR c.COMMENTSID = c.PARENTBOARDID
+        ORDER SIBLINGS BY c.COMMENTSID ASC
+    </select>
+
+    <!-- 게시글 수정 -->
+    <update id="updateBoard" parameterType="DTO.Board.BoardDTO">
+        UPDATE BOARD
+        SET BOARDTITLE   = #{boardTitle},
+            BOARDCONTENT = #{boardContent}
+        WHERE BOARDID = #{boardId}
+    </update>
+
+    <!-- 게시글의 댓글 좋아요 일괄 삭제 -->
+    <delete id="deleteBoardCommentLikes" parameterType="int">
+        DELETE FROM COMMENTS_LIKE
+        WHERE COMMENTSID IN (
+            SELECT COMMENTSID FROM COMMENTS WHERE BOARDID = #{boardId}
+        )
+    </delete>
+
+    <!-- 게시글의 댓글 일괄 삭제 -->
+    <delete id="deleteBoardComments" parameterType="int">
+        DELETE FROM COMMENTS WHERE BOARDID = #{boardId}
+    </delete>
+
+    <!-- 게시글 좋아요 삭제 -->
+    <delete id="deleteBoardLikes" parameterType="int">
+        DELETE FROM BOARD_LIKE WHERE BOARDID = #{boardId}
+    </delete>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM BOARD WHERE BOARDID = #{boardId}
+    </delete>
+
+    <!-- 댓글 수정 (관리자는 memNo 체크 없이) -->
+    <update id="updateComment" parameterType="DTO.Board.CommentsDTO">
+        UPDATE COMMENTS
+        SET COMMENTSCONTENT = #{commentsContent}
+        WHERE COMMENTSID = #{commentsId}
+    </update>
+
+    <!-- 대댓글 트리의 좋아요 삭제 -->
+    <delete id="deleteCommentTreeLikes" parameterType="int">
+        DELETE FROM COMMENTS_LIKE
+        WHERE COMMENTSID IN (
+            SELECT COMMENTSID
+            FROM COMMENTS
+            START WITH COMMENTSID = #{value}
+            CONNECT BY PRIOR COMMENTSID = PARENTBOARDID
+        )
+    </delete>
+
+    <!-- 대댓글 포함 삭제 (관리자는 memNo 체크 없이) -->
+    <delete id="deleteCommentTree" parameterType="int">
+        DELETE FROM COMMENTS
+        WHERE COMMENTSID IN (
+            SELECT COMMENTSID
+            FROM COMMENTS
+            START WITH COMMENTSID = #{value}
+            CONNECT BY PRIOR COMMENTSID = PARENTBOARDID
+        )
+    </delete>
+
+</mapper>

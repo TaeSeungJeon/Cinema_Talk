@@ -1,102 +1,210 @@
 document.addEventListener("DOMContentLoaded", function() {
-        const track = document.querySelector('.vote-track');
-        const slides = document.querySelectorAll('.vote-content');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-		const radioButtons = document.querySelectorAll('input[name^="movie-vote-"]');
-        
-        let currentIndex = 0;
-        const slideCount = slides.length;
-
-        function moveSlide(index) {
-            if (slideCount === 0) return;
-            
-            // 트랙 이동
-            track.style.transform = `translateX(-${index * 100}%)`;
-            
-            // 버튼 활성화 상태
-            prevBtn.classList.toggle('disabled', index === 0);
-            nextBtn.classList.toggle('disabled', index === slideCount - 1);
-            
-            currentIndex = index;
-        }
-
-        if (slideCount > 0) {
-            moveSlide(0);
-        } else {
-            prevBtn.style.display = 'none';
-            nextBtn.style.display = 'none';
-        }
-
-        nextBtn.addEventListener('click', () => {
-            if (currentIndex < slideCount - 1) moveSlide(currentIndex + 1);
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) moveSlide(currentIndex - 1);
-        });
+    // 1. 함수 선언 (Hoisting을 위해 function 키워드로 선언하거나 상단에 위치)
+    const submitVote = function() {
 		
-		$(".submit-vote-btn").on("click", function() {
-		        
-		        // 2. 클릭한 버튼의 data-vote-id 값을 가져옴
-		        const voteId = $(this).data("vote-id"); 
-		        
-		        // 3. 해당 투표 그룹(name="movie-vote-번호")에서 체크된 라디오 버튼 찾기
-		        const $selectedOption = $("input[name='movie-vote-" + voteId + "']:checked");
+        const $this = $(this); 
+        const voteId = $(this).closest('.submit-vote-btn').attr('data-vote-id');
 
-		        if ($selectedOption.length === 0) {
-		            alert("영화를 선택해 주세요!");
-		            return;
-		        }
+        if($this.hasClass("go-to-votecont")){
+            location.href = "voteCont.do?voteId=" + voteId + "&filter=comments";
+        } else {
+            let $selectedOption = $("input[name='movie-vote-" + voteId + "']:checked");
 
-		        const movieId = $selectedOption.val(); // 선택된 영화 ID
 
-		        // 4. AJAX 전송
-		        $.ajax({
-		            type: "POST",
-		            url: "vote_ok.do", 
-		            data: {
-		                "vote_id": voteId,
-		                "movie_id": movieId,
-						"comment": ""
-		            },
-		            success: function(response) {
-						let data = JSON.parse(response)
-						if (data.status === "LOGIN_REQUIRED") {
-							console.log("login")
-						        alert("로그인이 필요합니다.");
-						        location.href = "login.do";
-						        return;
-						    }
+            if ($selectedOption.length === 0) {
+                alert("영화를 선택해 주세요!");
+                return;
+            }
 
-						    if (data.status === "SUCCESS") {
-						        const results = data.results;
-								console.log(results)
-								results.forEach(function(item) {
-								            // 1. 해당 영화 ID를 가진 카드를 찾음
-											const $input = $(`input[data-movie-id="${item.movie_id}"]`);
-											const $label = $input.closest('.movie-option');
+            const movieId = $selectedOption.val();
 
-											if ($label.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "voteOk.do", 
+                data: { "voteId": voteId, "movieId": movieId, "comment": "" },
+                success: function(response) {
 
-											    $label.find(".m-result").fadeIn();
-											    $label.find(".res-count").text(item.count);
-											    $label.find(".res-pct").text(Math.round(item.percentage));
+                    if(response == "ERROR"){
+                        alert("문제가 발생했습니다.");
+                        return;
+                    }
 
-											    // ⭐ 왼쪽 → 오른쪽 채우기
-											    setTimeout(()=>{
-											        $label.css("background-size", `${item.percentage}% 100%`);
-											    },50);
-											}
-								        });
 
-								        alert("투표가 성공적으로 기록되었습니다!");
-						    }
+                    let data = typeof response === "string" ? JSON.parse(response) : response;
+					
+                    if (data.status === "LOGIN_REQUIRED") {
+                        alert("로그인이 필요합니다.");
+                        location.href = "memberLogin.do";
+                        return;
+                    }
+					
+					
 
-		            },	error: function(err) {
-	        console.error("Error:", err);
-	        alert("통신 중 오류가 발생했습니다.");
-	    }
-		        });
+                    if (data.status === "SUCCESS") {
+                        const results = data.results;
+						
+                        results.forEach(function(item) {
+                            const $input = $(`input[data-movie-id="${item.movieId}"][name="movie-vote-${voteId}"]`);
+                            const $label = $input.closest('.movie-option');
+
+                            if ($label.length > 0) {
+                                $label.find(".m-result").fadeIn();
+                                $label.find(".res-count").text(item.count);
+                                $label.find(".res-pct").text(Math.round(item.percentage));
+                                
+                                setTimeout(() => {
+                                    $label.css("background-size", `${item.percentage}% 100%`);
+                                }, 50);
+                            }
+                        });
+						
+						const participants = data.comments;
+						if(participants && participants.length > 0){
+							const voterCount = participants.length;
+							const commentCount = participants.filter(p => p.commentText && p.commentText.trim().length > 0).length;
+							
+							if($(".voter-count-span").length > 0) $(".voter-count-span").html(`<strong>${voterCount}</strong> 참여`);
+							if($(".voter-count-span-home").length > 0) $(".voter-count-span-home").text(`${voterCount}`);
+							if($(".comment-count-span").length > 0) $(".comment-count-span").html(`<strong>${commentCount}</strong> 댓글`);
+							
+						}
+                        $this.text("댓글 보기").addClass("go-to-votecont");
+                        alert("투표가 성공적으로 기록되었습니다!");
+						
+						const comments = data.comments;
+						console.log(comments)
+						let commentHtml = "";
+						if(comments){
+							comments.forEach(function(comment) {
+								if(comment.commentText && comment.commentText.trim() !== ""){
+									
+									
+									let profilePhoto = (comment.profilePhoto && comment.profilePhoto.trim() !== "") 
+									        ? getContextPath() + `/profilePhoto.do?path=` + comment.profilePhoto
+									        : getContextPath() + `/Image/default-avatar.png`;
+							commentHtml += `
+							<div class="comment-item">
+								<div class="user-avatar"><img src="${profilePhoto}"/></div>
+								<div class="comment-content" style="flex: 1;">
+								<div style="display: flex; justify-content: space-between; align-items: center;">
+								<div class="comment-user">${comment.memName} <span class="movie-tag">${comment.movieTitle}</span></div>
+								</div>
+								<div  class="comment-text">${comment.commentText}</div>
+								
+								<div class="comment-utils">
+								<span>${comment.createdDate}</span>
+								</div>
+								</div>
+							
+							</div>
+						            `;
+								}
+					           
+					        });
+					        
+					        $(".comment-list").html(commentHtml);
+							$(".comment-section").show();
+							$(".empty-comment-wrapper").hide();
+							
+						}
+						
+						//투표메인페이지에서 투표후 '내가 참여한투표' 에 추가되게 하기 2026/02/25
+						$(".no-record-msg").remove();
+						const currentVoteId = voteId;
+						let isAlreadyInList = false; //목록에 있는지 없는지 확인을 위한 변수
+						
+						
+						$("#my-vote-items .done-item").each(function() {
+				            if($(this).attr("onclick").includes("voteId=" + currentVoteId)) {
+				                isAlreadyInList = true;
+				            }
+				        });
+						
+						if(!isAlreadyInList) {
+				            // 사용자가 선택한 영화 제목 (라벨 등에서 텍스트 가져오기)
+				            const selectedMovieTitle = $selectedOption.closest('.movie-option').find('.movie-info').find('.m-title').text();
+				            const voteTitle = $this.closest('.vote-content').find('.vote-title').text().trim();
+							
+				            const newItemHtml = `
+				                <div class="upcoming-item" onclick="location.href='voteCont.do?voteId=${currentVoteId}'" style="display:none;">
+				                    <div style="font-weight: 600;">${voteTitle}</div>
+				                    <div style="font-size: 0.8rem; color: var(--accent-color);">나의 픽: ${selectedMovieTitle}</div>
+				                </div>
+				            `;
+				            
+				            // 맨 앞에 추가하고 부드럽게 나타나기
+				            $("#my-vote-items").prepend(newItemHtml);
+				            $("#my-vote-items .upcoming-item").first().fadeIn(500);
+							
+							//위젯 안에 3개만 노출
+							if ($("#my-vote-items .upcoming-item").length > 3) {
+							    $("#my-vote-items .upcoming-item").last().remove();
+							}
+				        }
+						
+						
+                    }// if SUCCESS 종료
+                },
+                error: function(err) {
+                    alert("통신 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    };
+	
+	function getContextPath() {
+	    const host = window.location.origin; // http://localhost:8080
+	    const context = window.location.pathname.split('/')[1]; // Cinema_Talk
+	    return host + '/' + context;
+	}
+
+    // 슬라이드 관련 로직
+    const track = document.querySelector('.vote-track');
+    const slides = document.querySelectorAll('.vote-content');
+    const prevBtn = document.getElementById('votePrevBtn');
+    const nextBtn = document.getElementById('voteNextBtn');
+    
+    let currentIndex = 0;
+    const slideCount = slides.length;
+
+    function moveSlide(index) {
+        if (slideCount === 0) return;	
+		if (track == null) return;
+        track.style.transform = `translateX(-${index * 100}%)`;
+        currentIndex = index;
+		if(slideCount == 1){
+			if(prevBtn) prevBtn.classList.add('disabled');
+			if(nextBtn) nextBtn.classList.add('disabled');
+		}
+    }
+
+    if (slideCount > 0) {
+        moveSlide(0);
+    } else {
+        if(prevBtn) prevBtn.style.display = 'none';
+        if(nextBtn) nextBtn.style.display = 'none';
+    }
+	
+	if(nextBtn){
+		nextBtn.addEventListener('click', () => {
+			currentIndex = (currentIndex >= slideCount - 1) ? 0 : currentIndex + 1;
+			moveSlide(currentIndex);
+		})
+	}
+	
+	if(prevBtn){
+		prevBtn.addEventListener('click', () => {
+		        currentIndex = (currentIndex <= 0) ? slideCount - 1 : currentIndex - 1;
+		        moveSlide(currentIndex);
 		    });
+	}
+   
+    $(".submit-vote-btn").on("click", submitVote);
+
+
+    document.querySelectorAll('.movie-option a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+        });
     });
+});

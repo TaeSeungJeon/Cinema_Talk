@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="AdminInquiryStats">
+  	<!-- 총 문의 수 -->
+    <select id="selTotalInquiryCnt" resultType="int">
+        SELECT COUNT(*)
+    	FROM BOARD
+    	WHERE boardType = 11
+    </select>
+    
+    <!-- 기간 내 총 문의 수 -->
+    <select id="selTotalInquiryCountByDate" parameterType="java.time.LocalDate" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+	    FROM BOARD
+	    WHERE boardType = 11
+	      AND boardDate <= #{targetDate} + 1
+	    ]]>
+    </select>
+    
+    <!-- 총 완료된 문의 수 -->
+    <select id="selCompletedInquiryCnt" resultType="int">
+        SELECT COUNT(DISTINCT b.boardId)
+	    FROM BOARD b
+	    JOIN COMMENTS c
+	      ON b.boardId = c.boardId
+	     AND b.boardType = c.boardType
+	    WHERE b.boardType = 11
+    </select>
+    
+    <!-- 기간 내 완료된 문의 수 -->
+    <select id="selCompletedInquiryCountByDate" parameterType="java.time.LocalDate" resultType="int">
+        <![CDATA[
+        SELECT COUNT(DISTINCT b.boardId)
+	    FROM BOARD b
+	    JOIN COMMENTS c
+	      ON b.boardId = c.boardId
+	     AND b.boardType = c.boardType
+	    WHERE b.boardType = 11
+	      AND b.boardDate <= #{targetDate} + 1
+		]]>
+    </select>
+    
+    <!-- 미처리 문의 수 -->
+    <select id="selPendingInquiryCnt" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+		    FROM BOARD b
+		    WHERE b.boardType = 11
+		      AND NOT EXISTS (
+		            SELECT 1
+		            FROM COMMENTS c
+		            WHERE c.boardId = b.boardId
+		              AND c.boardType = b.boardType
+		      )
+		]]>
+    </select>
+    
+    <!-- 평균 문의 처리 시간(처리 댓글 등록일 - 문의 등록일) -->
+    <select id="selAvgProcessingTime" resultType="double">
+        SELECT NVL(AVG((firstCommentDate - boardDate) * 24), 0)
+		FROM (
+		    SELECT b.boardId,
+		           b.boardDate,
+		           MIN(c.commentsDate) AS firstCommentDate
+		    FROM BOARD b
+		    INNER JOIN COMMENTS c
+		      ON b.boardId = c.boardId
+		     AND b.boardType = c.boardType
+		    WHERE b.boardType = 11
+		    GROUP BY b.boardId, b.boardDate
+		)
+    </select>
+    
+    <!-- 1달 내 문의 처리 현황 -->
+    <select id="selInquiryStatus" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="DTO.Admin.Stats.InquiryStatusStatDTO">
+        <![CDATA[
+		SELECT
+		    COUNT(CASE WHEN c.boardId IS NOT NULL THEN 1 END) AS completedCnt,
+		    COUNT(CASE WHEN c.boardId IS NULL THEN 1 END) AS pendingCnt
+		FROM BOARD b
+		LEFT JOIN (
+		    SELECT DISTINCT boardId, boardType
+		    FROM COMMENTS
+		) c
+		ON b.boardId = c.boardId
+		AND b.boardType = c.boardType
+		WHERE b.boardType = 11
+		  AND b.boardDate >= #{startDate}
+		  AND b.boardDate < #{endDate} + 1
+		]]>
+    </select>
+    
+    <!-- 일별 문의 접수 추이 -->
+    <select id="selDailyReceivedInquiryTrend" parameterType="DTO.Admin.Stats.DateRangeDTO" resultType="trend">
+        <![CDATA[
+		WITH date_range AS (
+		    SELECT TRUNC(#{startDate}) + LEVEL - 1 AS dt
+		    FROM dual
+		    CONNECT BY LEVEL <= TRUNC(#{endDate}) - TRUNC(#{startDate}) + 1
+		)
+		SELECT
+		    TO_CHAR(d.dt, 'YYYY-MM-DD') AS regDate,
+		    NVL(COUNT(b.boardDate), 0) AS cnt
+		FROM date_range d
+		LEFT JOIN BOARD b
+		    ON TRUNC(b.boardDate) = d.dt
+		    AND b.boardType = 11
+		GROUP BY d.dt
+		ORDER BY d.dt
+		]]>
+    </select>
+  </mapper>

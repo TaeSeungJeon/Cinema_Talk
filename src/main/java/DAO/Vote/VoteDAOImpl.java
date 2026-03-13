@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
+import DTO.Vote.VoteOptionDTO;
 import DTO.Vote.VoteRecordDTO;
 import DTO.Vote.VoteRegisterDTO;
 import DTO.Vote.VoteResultDTO;
@@ -34,7 +35,7 @@ public class VoteDAOImpl implements VoteDAO {
 
 		try {
 			sqlSession = getSqlSession();
-			sqlSession.insert("vrec_in", voteRecord);
+			sqlSession.insert("vrecIn", voteRecord);
 			sqlSession.commit();
 		} finally {
 			if(sqlSession != null) {
@@ -45,12 +46,12 @@ public class VoteDAOImpl implements VoteDAO {
 	}
 
 	@Override
-	public List<VoteResultDTO> getVoteResult(int vote_id) {
+	public List<VoteResultDTO> getVoteResult(int voteId) {
 		SqlSession sqlSession = null;
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectList("vrec_result", vote_id);
+			return sqlSession.selectList("vrecResult", voteId);
 
 
 		} finally {
@@ -61,12 +62,12 @@ public class VoteDAOImpl implements VoteDAO {
 	}
 
 	@Override
-	public List<VoteRegisterDTO> getVoteRegList() {
+	public List<VoteRegisterDTO> getVoteRegList(VoteRegisterDTO findVoteReg) {
 		SqlSession sqlSession = null;
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectList("vreg_list");
+			return sqlSession.selectList("vregList", findVoteReg);
 
 
 		} finally {
@@ -77,12 +78,12 @@ public class VoteDAOImpl implements VoteDAO {
 	}
 
 	@Override
-	public VoteRegisterDTO getVoteRegById(int vote_id) {
+	public VoteRegisterDTO getVoteRegById(int voteId) {
 		SqlSession sqlSession = null;
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectOne("vreg_one", vote_id);
+			return sqlSession.selectOne("vregOne", voteId);
 
 
 		} finally {
@@ -98,7 +99,7 @@ public class VoteDAOImpl implements VoteDAO {
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectList("vrec_record_all");
+			return sqlSession.selectList("vrecRecordAll");
 
 
 		} finally {
@@ -109,12 +110,12 @@ public class VoteDAOImpl implements VoteDAO {
 	}
 
 	@Override
-	public VoteRecordDTO getVoteRecordByMemNo(VoteRecordDTO vrdto) {
+	public VoteRecordDTO getVoteRecordByMemNoVoteId(VoteRecordDTO vrdto) {
 		SqlSession sqlSession = null;
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectOne("vrec_record_memno", vrdto);
+			return sqlSession.selectOne("vrecRecordMemno", vrdto);
 
 
 		} finally {
@@ -130,7 +131,7 @@ public class VoteDAOImpl implements VoteDAO {
 
 		try {
 			sqlSession = getSqlSession();
-			sqlSession.insert("vrec_update", voteRecord);
+			sqlSession.insert("vrecUpdate", voteRecord);
 			sqlSession.commit();
 		} finally {
 			if(sqlSession != null) {
@@ -146,9 +147,185 @@ public class VoteDAOImpl implements VoteDAO {
 
 		try {
 			sqlSession = getSqlSession();
-			return sqlSession.selectList("vreg_full_list");
+			return sqlSession.selectList("vregFullList");
 
 
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<VoteRecordDTO> getVoteRecordByVoteId(int voteId) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("vrecListVoteId", voteId);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public VoteRegisterDTO getVoteRegFullById(int voteId) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("vregFullByVoteId", voteId);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public boolean insertVoteRegister(VoteRegisterDTO vdto) {
+		SqlSession sqlSession = null;
+		boolean isSuccess = false;
+
+		try {
+			sqlSession = getSqlSession();
+			sqlSession.insert("vregIn", vdto);
+			
+			int generatedId = vdto.getVoteId();
+			for(VoteOptionDTO opt : vdto.getOptionList()) {
+	            opt.setVoteId(generatedId); // 모든 옵션에 부모 ID 세팅
+	        }
+			
+			sqlSession.insert("voptIn", vdto.getOptionList());
+			
+			sqlSession.commit();
+			isSuccess = true;
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+		return isSuccess;
+	}
+
+	@Override
+	public boolean editVoteRegister( VoteRegisterDTO vdto) {
+		SqlSession sqlSession = null;
+		boolean isSuccess = false;
+
+		try {
+			sqlSession = getSqlSession();
+			sqlSession.update("vregUpdate", vdto);
+			sqlSession.delete("voptDel", vdto);
+			for(VoteOptionDTO opt : vdto.getOptionList()) {
+	            opt.setVoteId(vdto.getVoteId()); // 모든 옵션에 부모 ID 세팅
+	        }
+			
+			sqlSession.insert("voptIn", vdto.getOptionList());
+			
+			sqlSession.commit();
+			isSuccess = true;
+		} catch (Exception e){
+			if(sqlSession != null) {
+				sqlSession.rollback();//예외 발생하면 롤백처리
+				
+			}
+			isSuccess = false;
+			e.printStackTrace();
+		}
+		
+		finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+		return isSuccess;
+	}
+
+	@Override
+	public boolean deleteVoteRegister(VoteRegisterDTO vdto) {
+		SqlSession sqlSession = null;
+		boolean isSuccess = false;
+
+		try {
+			sqlSession = getSqlSession();
+			sqlSession.delete("vregDel", vdto);
+			
+			sqlSession.commit();
+			isSuccess = true;
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+		return isSuccess;
+	}
+
+	@Override
+	public List<VoteRecordDTO> getVoteRecordByMemNo(int memNo) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("voteRecordListByMemNo", memNo);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public int getRowCount(VoteRegisterDTO findVoteReg) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("voteRegCount", findVoteReg);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public VoteRegisterDTO getVoteRegFullByIdNoNullMovie(int voteId) {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectOne("vregFullByVoteIdNotNull", voteId);
+
+
+		} finally {
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+	}
+
+	@Override
+	public List<VoteRegisterDTO> getTenRecentVotes() {
+		SqlSession sqlSession = null;
+
+		try {
+			sqlSession = getSqlSession();
+			return sqlSession.selectList("vregListRecent10");
 		} finally {
 			if(sqlSession != null) {
 				sqlSession.close();

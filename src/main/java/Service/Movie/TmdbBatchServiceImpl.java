@@ -69,30 +69,19 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			if (is != null) {
 				props.load(is);
 				
-				// API 키 로드 (환경변수 우선, 없으면 설정파일)
-				String envKey = System.getenv("TMDB_API_KEY");
-				if (envKey != null && !envKey.isEmpty()) {
-					API_KEY = envKey;
-				} else {
-					API_KEY = props.getProperty("tmdb.api.key", "YOUR_API_KEY_HERE");
-				}
+				API_KEY = props.getProperty("tmdb.api.key", "YOUR_API_KEY_HERE");
 				
 				// 배치 설정 로드
-				MOVIE_COUNT = Integer.parseInt(props.getProperty("batch.movie.count", "5"));
-				BATCH_COMMIT_SIZE = Integer.parseInt(props.getProperty("batch.commit.size", "500"));
-				THREAD_POOL_SIZE_MOVIES = Integer.parseInt(props.getProperty("batch.thread.movies", "4"));
-				THREAD_POOL_SIZE_PERSONS = Integer.parseInt(props.getProperty("batch.thread.persons", "8"));
-				MAX_RETRY_ATTEMPTS = Integer.parseInt(props.getProperty("api.max.retry", "3"));
-				RETRY_DELAY_MS = Long.parseLong(props.getProperty("api.retry.delay.ms", "1000"));
+				MOVIE_COUNT = Integer.parseInt(props.getProperty("batch.movie.count"));
+				BATCH_COMMIT_SIZE = Integer.parseInt(props.getProperty("batch.commit.size"));
+				THREAD_POOL_SIZE_MOVIES = Integer.parseInt(props.getProperty("batch.thread.movies"));
+				THREAD_POOL_SIZE_PERSONS = Integer.parseInt(props.getProperty("batch.thread.persons"));
+				MAX_RETRY_ATTEMPTS = Integer.parseInt(props.getProperty("api.max.retry"));
+				RETRY_DELAY_MS = Long.parseLong(props.getProperty("api.retry.delay.ms"));
 				
 				System.out.println("배치 설정 로드 완료 (batch.properties)");
 			} else {
-				// 설정 파일이 없으면 환경변수에서 API 키 로드
-				API_KEY = System.getenv("TMDB_API_KEY");
-				if (API_KEY == null) {
-					API_KEY = "YOUR_API_KEY_HERE";
-				}
-				System.out.println("batch.properties 파일 없음, 기본값 사용");
+				System.out.println("batch.properties 파일 없음.");
 			}
 		} catch (Exception e) {
 			System.err.println("설정 파일 로드 실패: " + e.getMessage());
@@ -203,7 +192,8 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 					
 					// 영화 상세 정보 수집
 					MovieDTO movie = fetchMovieDetails(movieId);
-					if (movie != null) {
+					if (movie != null && movie.getMovieBackdropPath() != null && !movie.getMovieBackdropPath().isEmpty()
+							&& movie.getMoviePosterPath() != null && !movie.getMoviePosterPath().isEmpty()) {
 						movies.add(movie);
 						System.out.println("  - 영화 ID " + movieId + " 정보 수집 완료");
 						
@@ -211,7 +201,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 						List<MovieCastDTO> movieCasts = fetchMovieCasts(movieId);
 						casts.addAll(movieCasts);
 						for (MovieCastDTO cast : movieCasts) {
-							personIds.add(cast.getPerson_id());
+							personIds.add(cast.getPersonId());
 						}
 						System.out.println("    - 출연진 " + movieCasts.size() + "명 수집");
 						
@@ -219,7 +209,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 						List<MovieCrewDTO> movieCrews = fetchMovieCrews(movieId);
 						crews.addAll(movieCrews);
 						for (MovieCrewDTO crew : movieCrews) {
-							personIds.add(crew.getPerson_id());
+							personIds.add(crew.getPersonId());
 						}
 						System.out.println("    - 크루 " + movieCrews.size() + "명 수집");
 						
@@ -227,9 +217,16 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 						List<MovieGenreDTO> genreList = fetchMovieGenres(movieId);
 						movieGenres.addAll(genreList);
 						System.out.println("    - 장르 " + genreList.size() + "개 수집");
+					} else if (movie != null) {
+						// BackdropPath가 null이므로 저장 건너뜀
+						System.out.println("  - 영화 ID " + movieId + " BackdropPath가 null이므로 저장 건너뜀");
+					} else {
+						// Diagnostic: null movie
+						System.err.println("{\"movieId\":" + movieId + ",\"status\":\"fetch_null\"}");
 					}
 				} catch (Exception e) {
 					System.err.println("영화 ID " + movieId + " 처리 중 오류: " + e.getMessage());
+					System.err.println("{\"movieId\":" + movieId + ",\"error\":\"" + (e.getMessage() == null ? "" : e.getMessage().replace('"', '\'')) + "\"}");
 				}
 			}));
 		}
@@ -408,8 +405,8 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		for (int i = 0; i < genreArray.length(); i++) {
 			JSONObject genreJson = genreArray.getJSONObject(i);
 			GenreDTO genre = new GenreDTO();
-			genre.setGenre_id(genreJson.getInt("id"));
-			genre.setGenre_name(genreJson.getString("name"));
+			genre.setGenreId(genreJson.getInt("id"));
+			genre.setGenreName(genreJson.getString("name"));
 			genres.add(genre);
 		}
 		
@@ -417,39 +414,132 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 	}
 	
 	/**
-	 * 무작위로 영화 ID를 선택
+	 * 무작위로 영화 ID를 선택 (Fix A: 랜덤 페이지 샘플링으로 후보 풀 확대)
 	 */
 	private List<Integer> selectRandomMovieIds(int count) throws Exception {
 		Set<Integer> randomIds = new HashSet<>();
 		Random random = new Random();
 		
-		int pageCount = Math.max(1, (count + 19) / 20);
 		List<Integer> candidateIds = new ArrayList<>();
+		int totalPages = -1;
 		
-		System.out.println("영화 ID 선택을 위해 " + pageCount + "개 페이지 요청");
+		// 1) 먼저 page=1 을 요청해서 total_pages 를 확인하고 초기 후보 수집
+		try {
+			String url = BASE_URL + "/movie/popular?language=ko-KR&page=1";
+			String jsonResponse = makeHttpRequest(url);
+			JSONObject json = new JSONObject(jsonResponse);
+			JSONArray results = json.getJSONArray("results");
+			totalPages = json.optInt("total_pages", -1);
+			System.out.println("페이지 1에서 " + results.length() + "개 영화 로드 (total_pages: " + totalPages + ")");
+			for (int i = 0; i < results.length(); i++) {
+				candidateIds.add(results.getJSONObject(i).getInt("id"));
+			}
+		} catch (Exception e) {
+			System.err.println("페이지 1 수집 중 오류: " + e.getMessage());
+		}
 		
-		for (int page = 1; page <= pageCount; page++) {
-			try {
-				String url = BASE_URL + "/movie/popular?language=ko-KR&page=" + page;
-				String jsonResponse = makeHttpRequest(url);
-				
-				JSONObject json = new JSONObject(jsonResponse);
-				JSONArray results = json.getJSONArray("results");
-				
-				System.out.println("페이지 " + page + "에서 " + results.length() + "개 영화 로드");
-				
-				for (int i = 0; i < results.length(); i++) {
-					candidateIds.add(results.getJSONObject(i).getInt("id"));
+		if (totalPages <= 0) {
+			// API가 total_pages 를 제공하지 않거나 오류가 난 경우 기존 방식으로 최소 1..pageCount 요청
+			int pageCount = Math.max(1, (count + 19) / 20);
+			for (int page = 2; page <= pageCount; page++) {
+				try {
+					String url = BASE_URL + "/movie/popular?language=ko-KR&page=" + page;
+					String jsonResponse = makeHttpRequest(url);
+					JSONObject json = new JSONObject(jsonResponse);
+					JSONArray results = json.getJSONArray("results");
+					System.out.println("페이지 " + page + "에서 " + results.length() + "개 영화 로드 (no total_pages)");
+					for (int i = 0; i < results.length(); i++) {
+						candidateIds.add(results.getJSONObject(i).getInt("id"));
+					}
+				} catch (Exception e) {
+					System.err.println("페이지 " + page + " 수집 중 오류: " + e.getMessage());
 				}
-			} catch (Exception e) {
-				System.err.println("페이지 " + page + " 수집 중 오류: " + e.getMessage());
+			}
+		} else {
+			// 2) totalPages 가 있으면 랜덤 페이지를 샘플링해서 후보 풀을 확장
+			int maxPages = Math.min(totalPages, 500); // TMDB 일반 cap
+			int desiredCandidateTarget = Math.max(count * 4, count + 20); // 목표 후보 수
+			int maxAttempts = 25; // 최대 랜덤 페이지 요청 횟수 (안전장치)
+			Set<Integer> requestedPages = new HashSet<>();
+			requestedPages.add(1);
+			
+			int attempts = 0;
+			while (candidateIds.size() < desiredCandidateTarget && attempts < maxAttempts) {
+				attempts++;
+				int page = 1 + random.nextInt(maxPages);
+				if (requestedPages.contains(page)) continue; // 이미 요청한 페이지면 스킵
+				requestedPages.add(page);
+				try {
+					String url = BASE_URL + "/movie/popular?language=ko-KR&page=" + page;
+					String jsonResponse = makeHttpRequest(url);
+					JSONObject json = new JSONObject(jsonResponse);
+					JSONArray results = json.getJSONArray("results");
+					System.out.println("랜덤 샘플 페이지 " + page + "에서 " + results.length() + "개 영화 로드");
+					for (int i = 0; i < results.length(); i++) {
+						candidateIds.add(results.getJSONObject(i).getInt("id"));
+					}
+					// 작은 대기(과도한 호출 방지)
+					try { Thread.sleep(150); } catch (InterruptedException ie) { /* ignore */ }
+				} catch (Exception e) {
+					System.err.println("랜덤 페이지 " + page + " 수집 중 오류: " + e.getMessage());
+				}
+			}
+			
+			// 보충: 목표에 못미치면 연속 페이지를 순차적으로 더 요청 (1 뒤부터)
+			int nextPage = 2;
+			while (candidateIds.size() < Math.min(count, desiredCandidateTarget) && nextPage <= maxPages && requestedPages.size() < maxAttempts + 5) {
+				if (!requestedPages.contains(nextPage)) {
+					try {
+						String url = BASE_URL + "/movie/popular?language=ko-KR&page=" + nextPage;
+						String jsonResponse = makeHttpRequest(url);
+						JSONObject json = new JSONObject(jsonResponse);
+						JSONArray results = json.getJSONArray("results");
+						System.out.println("추가 페이지 " + nextPage + "에서 " + results.length() + "개 영화 로드");
+						for (int i = 0; i < results.length(); i++) {
+							candidateIds.add(results.getJSONObject(i).getInt("id"));
+						}
+						try { Thread.sleep(150); } catch (InterruptedException ie) { /* ignore */ }
+					} catch (Exception e) {
+						System.err.println("추가 페이지 " + nextPage + " 수집 중 오류: " + e.getMessage());
+					}
+				}
+				nextPage++;
 			}
 		}
 		
-		System.out.println("총 " + candidateIds.size() + "개 후보 영화 중 " + count + "개 무작위 선택");
-		while (randomIds.size() < Math.min(count, candidateIds.size())) {
-			randomIds.add(candidateIds.get(random.nextInt(candidateIds.size())));
+		// 후보 중복 제거(순서 유지)
+		List<Integer> deduped = new ArrayList<>(new java.util.LinkedHashSet<>(candidateIds));
+		if (deduped.isEmpty()) {
+			System.out.println("후보 영화가 없습니다. 빈 리스트 반환");
+			return new ArrayList<>();
 		}
+		
+		// 3) deduped 리스트에서 무작위로 count 개 선택
+		System.out.println("총 " + deduped.size() + "개 후보 영화 중 " + count + "개 무작위 선택 (확장 샘플링)");
+		while (randomIds.size() < Math.min(count, deduped.size())) {
+			randomIds.add(deduped.get(random.nextInt(deduped.size())));
+		}
+		
+		// Diagnostic summary
+		int sampleLimit = Math.min(10, deduped.size());
+		StringBuilder candSample = new StringBuilder();
+		for (int i = 0; i < sampleLimit; i++) {
+			if (i > 0) candSample.append(",");
+			candSample.append(deduped.get(i));
+		}
+		StringBuilder selSb = new StringBuilder();
+		int idx = 0;
+		for (Integer id : randomIds) {
+			if (idx++ > 0) selSb.append(",");
+			selSb.append(id);
+		}
+		System.out.println("{" +
+			"\"candidateCount\":" + deduped.size() + "," +
+			"\"candidateSample\": [" + candSample.toString() + "]," +
+			"\"pageCountRequested\":" + (totalPages > 0 ? Math.min(totalPages, 500) : -1) + "," +
+			"\"selectedCount\":" + randomIds.size() + "," +
+			"\"selectedIds\": [" + selSb.toString() + "]" +
+			"}");
 		
 		return new ArrayList<>(randomIds);
 	}
@@ -464,16 +554,22 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		JSONObject json = new JSONObject(jsonResponse);
 		
 		MovieDTO movie = new MovieDTO();
-		movie.setMovie_id(json.getInt("id"));
-		movie.setMovie_title(json.optString("title", ""));
-		movie.setMovie_original_title(json.optString("original_title", ""));
-		movie.setMovie_overview(json.optString("overview", ""));
-		movie.setMovie_release_date(json.optString("release_date", null));
-		movie.setMovie_runtime(json.optInt("runtime", 0));
-		movie.setMovie_poster_path(json.optString("poster_path", null));
-		movie.setMovie_backdrop_path(json.optString("backdrop_path", null));
-		movie.setMovie_rating_average(json.optDouble("vote_average", 0.0));
-		movie.setMovie_rating_count(json.optInt("vote_count", 0));
+		movie.setMovieId(json.getInt("id"));
+		movie.setMovieTitle(json.optString("title", ""));
+		movie.setMovieOriginalTitle(json.optString("original_title", ""));
+		movie.setMovieOverview(json.optString("overview", ""));
+		movie.setMovieReleaseDate(json.optString("release_date", null));
+		movie.setMovieRuntime(json.optInt("runtime", 0));
+		movie.setMoviePosterPath(json.optString("poster_path", null));
+		movie.setMovieBackdropPath(json.optString("backdrop_path", null));
+		movie.setMovieRatingAverage(json.optDouble("vote_average", 0.0));
+		movie.setMovieRatingCount(json.optInt("vote_count", 0));
+		
+		// Diagnostic: log mapping of movieId -> title (escape quotes)
+		String _title = movie.getMovieTitle();
+		if (_title == null) _title = "";
+		_title = _title.replace('"', '\'');
+		System.out.println("{\"fetchedMovieId\":" + movie.getMovieId() + ",\"title\":\"" + _title + "\"}");
 		
 		return movie;
 	}
@@ -494,10 +590,10 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		for (int i = 0; i < limit; i++) {
 			JSONObject castJson = castArray.getJSONObject(i);
 			MovieCastDTO cast = new MovieCastDTO();
-			cast.setPerson_id(castJson.getInt("id"));
-			cast.setMovie_id(movieId);
-			cast.setCharacter_name(castJson.optString("character", ""));
-			cast.setCast_order(castJson.optInt("order", i));
+			cast.setPersonId(castJson.getInt("id"));
+			cast.setMovieId(movieId);
+			cast.setCharacterName(castJson.optString("character", ""));
+			cast.setCastOrder(castJson.optInt("order", i));
 			casts.add(cast);
 		}
 		
@@ -527,9 +623,9 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			
 			if (roles.contains(job)) {
 				MovieCrewDTO crew = new MovieCrewDTO();
-				crew.setPerson_id(crewJson.getInt("id"));
-				crew.setMovie_id(movieId);
-				crew.setCrew_job(job);
+				crew.setPersonId(crewJson.getInt("id"));
+				crew.setMovieId(movieId);
+				crew.setCrewJob(job);
 				crews.add(crew);
 			}
 		}
@@ -555,8 +651,8 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			for (int i = 0; i < genreArray.length(); i++) {
 				JSONObject genreJson = genreArray.getJSONObject(i);
 				MovieGenreDTO movieGenre = new MovieGenreDTO();
-				movieGenre.setGenre_id(genreJson.getInt("id"));
-				movieGenre.setMovie_id(movieId);
+				movieGenre.setGenreId(genreJson.getInt("id"));
+				movieGenre.setMovieId(movieId);
 				genres.add(movieGenre);
 			}
 		}
@@ -574,10 +670,10 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 		JSONObject json = new JSONObject(jsonResponse);
 		
 		PersonDTO person = new PersonDTO();
-		person.setPerson_id(json.getInt("id"));
-		person.setPerson_name(json.optString("name", ""));
+		person.setPersonId(json.getInt("id"));
+		person.setPersonName(json.optString("name", ""));
 		person.setBiography(json.optString("biography", ""));
-		person.setProfile_path(json.optString("profile_path", null));
+		person.setProfilePath(json.optString("profile_path", null));
 		
 		return person;
 	}
@@ -603,6 +699,11 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 					connection.setRequestProperty("Authorization", "Bearer " + API_KEY);
 					
 					int responseCode = connection.getResponseCode();
+					
+					// Diagnostic: log non-200 responses
+					if (responseCode != 200) {
+						System.err.println("{\"url\":\"" + urlString + "\",\"responseCode\":" + responseCode + "}");
+					}
 					
 					// Rate limit 재시도
 					if (responseCode == 429) {
@@ -635,6 +736,7 @@ public class TmdbBatchServiceImpl implements TmdbBatchService {
 			} catch (Exception e) {
 				lastException = e;
 				retryCount++;
+				System.err.println("API request failed for url " + urlString + ": " + e.getMessage());
 				if (retryCount < MAX_RETRY_ATTEMPTS) {
 					System.out.println("API 요청 실패 (" + retryCount + "/" + MAX_RETRY_ATTEMPTS + "). 재시도...");
 					Thread.sleep(500 * retryCount);

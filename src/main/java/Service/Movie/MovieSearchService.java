@@ -5,7 +5,10 @@ import java.util.List;
 import DTO.Movie.MovieDTO;
 
 public interface MovieSearchService {
-	List<MovieDTO> getMovieDTOList(MovieDTO search_words, int search_option);
+	List<MovieDTO> getMovieDTOList(MovieDTO searchWords, int searchOption);
 
-	int getRowCount(MovieDTO movie, int search_option);
+	int getRowCount(MovieDTO movie, int searchOption);
+
+	// 관리자 페이지 영화 검색
+	List<MovieDTO> searchAdminMovies(String keyword);
 }

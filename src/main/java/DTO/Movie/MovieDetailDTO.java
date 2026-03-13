@@ -24,20 +24,20 @@ public class MovieDetailDTO {
     @Setter
     @Getter
     public static class CastInfoDTO {
-        private int person_id;
-        private String person_name;
-        private String profile_path;
-        private String character_name;
-        private int cast_order;
+        private int personId;
+        private String personName;
+        private String profilePath;
+        private String characterName;
+        private int castOrder;
     }
     
     // 감독 정보 내부 클래스 (인물 + 직책)
     @Setter
     @Getter
     public static class CrewInfoDTO {
-        private int person_id;
-        private String person_name;
-        private String profile_path;
-        private String crew_job;
+        private int personId;
+        private String personName;
+        private String profilePath;
+        private String crewJob;
     }
 }

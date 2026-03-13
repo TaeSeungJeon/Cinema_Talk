@@ -27,15 +27,24 @@ public class MovieDetailServiceImpl implements MovieDetailService {
 	private MovieCrewDAO movieCrewDAO = MovieCrewDAOImpl.getInstance();
 	
 	@Override
-	public MovieDetailDTO getMovieDetail(int movie_id) {
-		// 1. 영화 기본 정보 조회
-		MovieDTO movie = movieDAO.getMovieById(movie_id);
+	public MovieDetailDTO getMovieDetail(int movieId) {
+		MovieDTO movie = movieDAO.getMovieById(movieId);
 		if (movie == null) {
-			return null;
+		    return null;
 		}
 		
+		String originalDate = movie.getMovieReleaseDate();
+		if (originalDate != null && originalDate.length() >= 10) {
+		    movie.setMovieReleaseDate(originalDate.substring(0, 10));
+		}
+				
 		// 2. 장르 목록 조회
-		List<Integer> genreIds = movieGenreDAO.getGenreIdsByMovieId(movie_id);
+		List<Integer> genreIds = movieGenreDAO.getGenreIdsByMovieId(movieId);
+
+		if (genreIds == null) {
+		    genreIds = new ArrayList<>();
+		}
+		
 		List<GenreDTO> genres = new ArrayList<>();
 		for (int genreId : genreIds) {
 			GenreDTO genre = genreDAO.getGenreById(genreId);
@@ -45,10 +54,16 @@ public class MovieDetailServiceImpl implements MovieDetailService {
 		}
 		
 		// 3. 배우 정보 조회 (캐릭터명 포함)
-		List<CastInfoDTO> casts = movieCastDAO.getCastInfoByMovieId(movie_id);
+		List<CastInfoDTO> casts = movieCastDAO.getCastInfoByMovieId(movieId);
+		if (casts == null) {
+		    casts = new ArrayList<>();
+		}
 		
 		// 4. 감독 정보 조회
-		List<CrewInfoDTO> directors = movieCrewDAO.getDirectorsByMovieId(movie_id);
+		List<CrewInfoDTO> directors = movieCrewDAO.getDirectorsByMovieId(movieId);
+		if (directors == null) {
+		    directors = new ArrayList<>();
+		}
 		
 		// 5. MovieDetailDTO 생성 및 반환
 		MovieDetailDTO movieDetail = new MovieDetailDTO();

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="Member"> <!-- 매퍼네임 스페이스명을 Member로 설정 -->
+  
+  <!-- 회원 정보 저장 -->
+  <insert id="registerIn" parameterType="member">
+    insert into member (memNo, memId, memPwd, memName, memPhone, memEmail, memRole, memState, memDate) 
+     values(memNoSeq.nextval, #{memId}, #{memPwd}, #{memName}, #{memPhone}, #{memEmail}, 2, 1, sysdate)
+  </insert>
+  
+  <!-- 중복 아이디 검색 -->
+  <select id="idCheck" parameterType="String" resultType="member">
+   select * from member where memId=#{memId}
+  </select>
+  
+  <!-- 입력받은 아이디로 로그인 인증 -->
+  <select id="loginCheck" parameterType="String" resultType="member">
+  	select * from member where memId = #{value}
+  </select>
+
+  <!-- 글쓰기 입력할 유저 조회 (?) -->
+  <select id="getMemberInfo" parameterType="Integer" resultType="member">
+    select * from member where memNo = #{memNo}
+  </select>
+  
+  <!-- 입력받은 이름과 전화번호로 회원검색 -->
+  <select id="findId" parameterType="member" resultType="member">
+  	select * from member where memName = #{memName} and memPhone = #{memPhone}
+  </select>
+  
+  <!-- 입력받은 아이디와 전화번호로 회원 검색 -->
+  <select id="findByIdAndPhone" parameterType="map" resultType="member" >
+  	select memNo, memId, memPhone, memEmail from member where memId = #{memId} and memPhone = #{memPhone}
+  </select>
+  
+  <!-- 암호화된 임시비밀번호 저장 -->
+  <update id="updatePwd" parameterType="member">
+  	update member set memPwd = #{memPwd} where memNo = #{memNo}
+  </update>
+  
+  <!-- 전화번호 중복체크 -->
+  <select id="phoneCheck" parameterType="String" resultType="member">
+   select * from member where memPhone = #{memPhone}
+  </select>
+  
+  <!-- 이메일 중복 체크 -->
+  <select id="emailCheck" parameterType="String" resultType="member">
+  	select * from member where memEmail = #{memEmail}
+  </select>
+  
+  <!-- 회원 탈퇴 (상태값 변경: 1 -> 3) -->
+  <update id="updateMemberState" parameterType="map">
+  	update member set memState = #{memState} where memNo = #{memNo}
+  </update>
+  
+  <!-- 프로필 사진 상대 경로 조회 -->
+  <select id="findProfilePhotoPath" parameterType="int" resultType="String">
+    SELECT memProfilePhoto FROM member WHERE memNo = #{memNo}
+  </select>
+  
+  <!-- 프로필 사진 경로 업데이트 -->
+  <update id="updateProfilePhotoPath" parameterType="map">
+    UPDATE member SET memProfilePhoto = #{memProfilePhoto} WHERE memNo = #{memNo}
+  </update>
+  
+  <!-- 회원목록 조회 -->
+  <select id="getMemberList" parameterType="map"  resultType="member">
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+  </select>
+  
+  <!-- 상태에 따른 회원목록 조회 -->
+  <select id="getMemberListByState" parameterType="map" resultType="member">
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	WHERE memState = #{memState}
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+  </select>
+  
+  <!-- 회원 상태 전환 -->
+  <update id="updateMemberState2" parameterType="map">
+  	update member set memState = #{targetState} where memNo = #{memNo}
+  </update>
+  
+  <!-- 검색 후 회원 목록 조회 -->
+  <select id="searchMembers" parameterType="map" resultType="member">
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	WHERE (memId LIKE '%' || #{keyword} || '%'
+	OR memName LIKE '%' || #{keyword} || '%')
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+  </select>
+  
+  <!-- 상태+검색 회원목록 조회 -->
+  <select id="searchMembersByState" parameterType="map" resultType="member">
+	SELECT *
+	FROM (
+	SELECT
+	memNo, memId, memName, memPhone, memEmail, memState,
+	TO_CHAR(memDate, 'YYYY-MM-DD') AS memDate,
+	ROW_NUMBER() OVER (ORDER BY memNo ASC) AS rn
+	FROM member
+	WHERE memState = #{memState}
+	AND (memId LIKE '%' || #{keyword} || '%'
+	OR memName LIKE '%' || #{keyword} || '%')
+	)
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+  </select>
+  
+  <!-- 전체, 상태, 검색, 상태+검색 회원 레코드 수 계산 -->
+  <select id="countMembers" parameterType="map" resultType="int">
+  	SELECT COUNT(*)
+    FROM member
+    WHERE 1=1
+
+    <!-- 검색 조건 -->
+    <if test="keyword != null and keyword != ''">
+        AND (memId LIKE '%' || #{keyword} || '%'
+        OR memName LIKE '%' || #{keyword} || '%')
+    </if>
+
+    <!-- 상태 조건 -->
+    <if test="memState != null and memState != ''">
+        AND memState = #{memState}
+    </if>
+  </select>
+  
+  </mapper>

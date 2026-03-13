@@ -1,14 +1,20 @@
 package Controller.Vote;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import Controller.Action;
 import Controller.ActionForward;
+import DTO.Member.MemberDTO;
 import DTO.Vote.VoteRecordDTO;
 import DTO.Vote.VoteRegisterDTO;
+import DTO.Vote.VoteResultDTO;
+import Service.Member.MemberService;
+import Service.Member.MemberServiceImpl;
 import Service.Vote.VoteService;
 import Service.Vote.VoteServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,75 +27,88 @@ public class VoteController implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
 
+
 		VoteService voteService = new VoteServiceImpl();
+		MemberService memberService = new MemberServiceImpl();
 		HttpSession session = request.getSession();
+		session.setAttribute("requestSessionURL", request.getRequestURL().toString());
 
-		List<VoteRegisterDTO> voteReglist = voteService.getVoteRegList();
-		List<VoteRecordDTO> voteReclist = voteService.getVoteRecordList();
+		//로그인 사용자 정보 가져오기
+		String memId = (String) session.getAttribute("memId"); // 값이 없으면 자동으로 null
+		MemberDTO mem = (memId != null) ? memberService.idCheck(memId) : null;
+		
+		 String requestSessionURL = request.getRequestURL().toString();
+	        
+	        session.setAttribute("requestSessionURL", requestSessionURL);
+		
+		final MemberDTO finalMem = mem;
+		
+		//사용자 투표이력 가져오기
+		if(mem != null) {
+			List<VoteRecordDTO> vrecMem = voteService.getVoteRecordByMemNo(mem.getMemNo());
+			if(vrecMem != null){
+				List<VoteRecordDTO> limitedRecords = vrecMem.stream()
+	                    .limit(3)
+	                    .collect(Collectors.toList());
+	                    
+				request.setAttribute("myVoteRecords", limitedRecords);
+			}
+		}
+		
+		
+		//DB에서  VOTE_REGISTER 레코드를 조회
 		List<VoteRegisterDTO> voteRegFullList = voteService.getVoteRegFullList();
-		List<VoteRegisterDTO> voteRegActiveForMem = voteService.getVoteRegActiveForMem();
-		List<VoteRegisterDTO> activeReg = new ArrayList<>();
-		List<VoteRegisterDTO> readyReg = new ArrayList<>();
-		List<VoteRegisterDTO> closedReg = new ArrayList<>();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date now = new Date();
-
-		for(VoteRegisterDTO v : voteRegFullList){
-
-			Date start = sdf.parse(v.getVote_start_date());
-			Date end   = sdf.parse(v.getVote_end_date());
-
-			if(now.before(start)){
-				v.setVote_status("READY");
-				readyReg.add(v);
-			}else if(now.after(end)){
-				v.setVote_status("CLOSED");
-				closedReg.add(v);
-			}else{
-				v.setVote_status("ACTIVE");
-				activeReg.add(v);
+	
+		voteRegFullList.forEach(vote -> {
+			//현재 시간 기준으로 상태(READY, ONGOING, CLOSED) 업데이트
+			voteService.updateVoteStatus(vote);
+			vote.setVoted(false);
+			VoteRecordDTO temp = new VoteRecordDTO();
+			temp.setVoteId(vote.getVoteId());
+			
+			
+			//로그인했을때만 참여기록 확인
+			if(finalMem != null) {
+				temp.setMemNo(finalMem.getMemNo());
+				VoteRecordDTO vrec = voteService.getVoteRecordByMemNoVoteId(temp);
+				if(vrec != null){
+					vote.setUserChoice(vrec.getMovieId());
+					vote.setVoted(true);
+				}
+				
 			}
-		}
-		
-		//TODO
-		//Integer mem_no = (Integer) session.getAttribute("id");
-		Integer mem_no=1;
-		if(mem_no != null) {
-			for(VoteRegisterDTO v : voteRegFullList){
-
-			    // 내가 투표했는지 확인
-				boolean voted = false;
-
-			    for(VoteRecordDTO r : voteReclist){
-			    	System.out.println(r.getVote_id());
-			    	System.out.println(v.getVote_id());
-			        if(r.getVote_id() == v.getVote_id()){
-			            voted = true;
-			            break;
-			        }
-			    }
-
-			    v.setVoted(voted);
-
-			    // 종료된 투표
-			    if("CLOSED".equals(v.getVote_status())){
-			        v.setResultList(voteService.getVoteResult(v.getVote_id()));
-			    }
-
-			    // 진행중 + 내가 투표함
-			    else if("ACTIVE".equals(v.getVote_status()) && voted){
-			        v.setResultList(voteService.getVoteResult(v.getVote_id()));
-			    }
+			
+			//결과 집계
+			if(vote.isVoted() || "CLOSED".equals(vote.getVoteStatus()) || "ACTIVE".equals(vote.getVoteStatus())){
+				List<VoteResultDTO> voteResultList = voteService.getVoteResult(vote.getVoteId());
+				vote.setResultList(voteResultList);
 			}
-		}
-		
-		
-		request.setAttribute("vote_register_all", voteRegFullList);
-		request.setAttribute("vote_register_active", activeReg);
-		request.setAttribute("vote_register_ready", readyReg);
-		request.setAttribute("vote_register_closed", closedReg);
-		request.setAttribute("vote_records", voteReclist);
+		});
+	Map<String, List<VoteRegisterDTO>> groupedVotes = voteRegFullList.stream()
+		.collect(Collectors.groupingBy(VoteRegisterDTO::getVoteStatus));
+
+	
+	List<VoteRegisterDTO> activeReg = groupedVotes.getOrDefault("ACTIVE", new ArrayList<>());
+	List<VoteRegisterDTO> readyReg = groupedVotes.getOrDefault("READY", new ArrayList<>());
+	List<VoteRegisterDTO> closedReg = groupedVotes.getOrDefault("CLOSED", new ArrayList<>());
+
+	request.setAttribute("voteRegisterActive", activeReg.stream()
+    .filter(vote -> !vote.isVoted()) 
+    .sorted(Comparator.comparing(VoteRegisterDTO::getVoteEndDate)) 
+    .collect(Collectors.toList())); 
+
+	request.setAttribute("voteRegisterReady", 
+		readyReg.stream().sorted(Comparator.comparing(VoteRegisterDTO::getVoteStartDate).reversed()) 
+		.limit(2).collect(Collectors.toList()));
+
+	request.setAttribute("voteRegisterClosed", closedReg.stream()
+    .sorted(Comparator.comparing(VoteRegisterDTO::getVoteEndDate).reversed()) 
+    .limit(2)
+    .collect(Collectors.toList()));
+
+		System.out.println("===============================================");
+
 
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);

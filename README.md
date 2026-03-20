@@ -2,17 +2,20 @@
 
 ---
 ### ⚙️ Development Environment
+
+* **Server** : Apache Tomcat 10
+* **OS** : Windows11 
+
+* **Java** : Oracle OpenJDK 21
+* **Framework** : Mybatis / AJAX
+* **Build Tool** : Maven
+
 * **IDE** : IntelliJ, Eclips
 * **Database** : Oracle DB 
 * **Version Control**: Git / GitHub
 
----
+* **API** : Chart.js / TMDB(The Movie DB) / Lombok
 
-### 💻 Backend
- * **Java** : Oracle OpenJDK 21 
- * **Framework** : Jakarta EE 10
- * **Build Tool** : Maven 
- * **Server** : Apache Tomcat 10
+* **Language** : Java / JSP / JS / CSS / HTML / jQuery 
 
----
 

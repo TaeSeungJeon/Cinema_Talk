@@ -1,46 +1,41 @@
 package DAO.Board;
 
 import DTO.Board.BoardDTO;
-import DTO.Board.CommentsDTO; // 댓글 DTO 임포트 추가
+import DTO.Board.CommentsDTO;
 
 import java.util.List;
 
+/**
+ * 게시글 관련 DB 접근 인터페이스
+ */
 public interface BoardDAO {
 
+    // 게시글 CRUD
     void boardIn(BoardDTO bdto);
-    List<BoardDTO> boardList();
-    BoardDTO boardCont(int boardId);
-    int updateReadCount(int boardId);
-    // Service에서 사용하는 getBoardCont (기존 boardCont 재사용)
     BoardDTO getBoardCont(int boardId);
-    // 게시글 수정
     void updateBoard(BoardDTO bdto);
-    // 게시글 내용(content) 직접 수정
     void updateBoardContent(BoardDTO bdto);
-    // 게시글 삭제
     void deleteBoard(int boardId);
-    int commentsIn(CommentsDTO cdto);
-    List<CommentsDTO> commentsList(int boardId);
-    List<BoardDTO> boardListByType(int boardType);
+    int updateReadCount(int boardId);
+
+    // 목록 / 페이징
     int getBoardCount();
+    int getBoardCountByType(int boardType);
     List<BoardDTO> boardListPage(int startRow, int endRow);
     List<BoardDTO> boardListPageByType(int boardType, int startRow, int endRow);
-    int getBoardCountByType(int boardType);
+    List<BoardDTO> recentBoardList(int limit);
+    List<BoardDTO> hotBoardList(int limit);
+    List<BoardDTO> getPopularBoardList(String period, int limit);
+    BoardDTO latestNotice();
+    String getMovieTitleforBoard(int movieId);
+
     // 좋아요
     int isBoardLiked(int boardId, int boardType, int memNo);
-    int insertBoardLike(int boardId, int memNo, int boardType);
-    void deleteBoardLike(int boardId, int memNo);
+    int insertBoardLike(int boardId, int boardType, int memNo);
     int deleteBoardLike(int boardId, int boardType, int memNo);
     int getBoardLikeCount(int boardId, int boardType);
-    // 실시간 인기글
-    List<BoardDTO> hotBoardList(int limit);
 
-    List<BoardDTO> recentBoardList(int limit);
-
-    List<BoardDTO> getPopularBoardList(String period, int limit);
-
-    // 최신 공지사항 1건
-    BoardDTO latestNotice();
-    String getMovieTitleforBoard(int movieIdInt);
-
+    // 댓글
+    int commentsIn(CommentsDTO cdto);
+    List<CommentsDTO> commentsList(int boardId);
 }

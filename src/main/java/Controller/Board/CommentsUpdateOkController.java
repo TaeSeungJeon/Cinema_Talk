@@ -6,25 +6,42 @@ import DTO.Board.CommentsDTO;
 import Service.Board.CommentsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
+/**
+ * 댓글 수정 처리 컨트롤러
+ * - 수정 후 상세 페이지로 리다이렉트 (흰 화면 방지)
+ */
 public class CommentsUpdateOkController implements Action {
+
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        int cId = Integer.parseInt(request.getParameter("commentsId"));
+
+        // [버그 수정] 세션 null 체크 없이 getAttribute 캐스팅 시 NPE 발생 가능
+        HttpSession session = request.getSession(false);
+        ActionForward forward = new ActionForward();
+
         int bId = Integer.parseInt(request.getParameter("boardId"));
+
+        if (session == null || session.getAttribute("memNo") == null) {
+            forward.setPath("postDetail.do?boardId=" + bId);
+            forward.setRedirect(true);
+            return forward;
+        }
+
+        int    cId     = Integer.parseInt(request.getParameter("commentsId"));
         String content = request.getParameter("commentsContent");
-        int memNo = (int) request.getSession().getAttribute("memNo");
+        int    memNo   = (int) session.getAttribute("memNo");
 
         CommentsDTO cdto = new CommentsDTO();
         cdto.setCommentsId(cId);
         cdto.setCommentsContent(content);
         cdto.setMemNo(memNo);
 
-        int result = CommentsServiceImpl.getInstance().commentsUpdate(cdto);
+        CommentsServiceImpl.getInstance().commentsUpdate(cdto);
 
-        ActionForward forward = new ActionForward();
         forward.setPath("postDetail.do?boardId=" + bId);
-        forward.setRedirect(true); // 리다이렉트로 흰 화면 방지 [cite: 2026-02-13]
+        forward.setRedirect(true);
         return forward;
     }
 }

@@ -1,21 +1,18 @@
 package DTO.Board;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * 게시글 내 URL 링크 미리보기 데이터 전달 객체 (DTO)
+ * - 게시글 본문에서 URL을 추출하고 OG 메타 태그를 파싱하여 채운다
+ */
+@Getter
+@AllArgsConstructor
 public class LinkPreviewDTO {
 
-    private String url;
-    private String title;
-    private String description;
-    private String image;
-
-    public LinkPreviewDTO(String url, String title, String description, String image) {
-        this.url = url;
-        this.title = title;
-        this.description = description;
-        this.image = image;
-    }
-
-    public String getUrl() {return url;}
-    public String getTitle() {return title;}
-    public String getDescription() {return description;}
-    public String getImage() {return image;}
+    private String url;          // 원본 URL
+    private String title;        // OG title
+    private String description;  // OG description
+    private String image;        // OG image URL
 }

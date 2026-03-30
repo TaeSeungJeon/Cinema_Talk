@@ -1,7 +1,6 @@
 package Controller;
 
 import java.util.List;
-
 import DTO.Board.BoardDTO;
 import DTO.Movie.Recommend.MovieRecResponse;
 import DTO.Vote.VoteRegisterDTO;

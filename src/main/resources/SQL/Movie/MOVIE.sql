@@ -18,5 +18,5 @@ select * from MOVIE;
 
 
 INSERT INTO member_movie_recommend (MEMNO, MOVIEID, RECOMMENDCREATEDAT)
-                    VALUES (162, 1084242, sysdate);
+                    VALUES (184, 1321179, sysdate);
 commit;

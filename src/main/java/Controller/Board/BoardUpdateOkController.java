@@ -9,15 +9,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * 게시글 수정 처리 컨트롤러
+ * - 로그인 체크 → 게시글 존재 여부 확인 → 작성자 본인 검증 → 수정 실행
+ */
 public class BoardUpdateOkController implements Action {
 
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        HttpSession session = request.getSession();
-        Integer loginMemNo = (Integer) session.getAttribute("memNo");
-
-        ActionForward forward = new ActionForward();
+        HttpSession session    = request.getSession();
+        Integer loginMemNo     = (Integer) session.getAttribute("memNo");
+        ActionForward forward  = new ActionForward();
 
         // 로그인 체크
         if (loginMemNo == null) {
@@ -26,58 +29,40 @@ public class BoardUpdateOkController implements Action {
             return forward;
         }
 
-        // 파라미터 받기
-        int boardId = Integer.parseInt(request.getParameter("boardId"));
-        String boardTitle = request.getParameter("boardTitle");
+        int    boardId      = Integer.parseInt(request.getParameter("boardId"));
+        String boardTitle   = request.getParameter("boardTitle");
         String boardContent = request.getParameter("boardContent");
-        String movieId = request.getParameter("movieId");
-
-        System.out.println("===== BoardUpdateOk 디버그 =====");
-        System.out.println("boardId: " + boardId);
-        System.out.println("boardTitle: " + boardTitle);
-        System.out.println("boardContent 길이: " + (boardContent != null ? boardContent.length() : "null"));
-        System.out.println("movieId: " + movieId);
-        System.out.println("================================");
+        String movieIdParam = request.getParameter("movieId");
 
         BoardService boardService = BoardServiceImpl.getInstance();
 
-        int movieIdInt = (movieId == null || movieId.trim().isEmpty()) ? -1 :Integer.parseInt(movieId);
+        // movieId 미입력 시 -1 처리 (영화 미연동 상태)
+        int movieIdInt = (movieIdParam == null || movieIdParam.trim().isEmpty())
+                         ? -1 : Integer.parseInt(movieIdParam);
         if (movieIdInt == 0) movieIdInt = -1;
-        
+
         String movieTitle = boardService.getMovieTitleforBoard(movieIdInt);
 
-        // 기존 글 조회
+        // 기존 글 조회 및 권한 검증
         BoardDTO originalBoard = boardService.getBoardCont(boardId);
-
-        // 글 존재 여부 체크
-        if (originalBoard == null) {
+        if (originalBoard == null || !originalBoard.getMemNo().equals(loginMemNo)) {
             forward.setPath("freeBoard.do");
             forward.setRedirect(true);
             return forward;
         }
 
-        // 작성자 검증
-        if (!originalBoard.getMemNo().equals(loginMemNo)) {
-            forward.setPath("freeBoard.do");
-            forward.setRedirect(true);
-            return forward;
-        }
-
-        // 수정 DTO 세팅
+        // 수정 실행
         BoardDTO bdto = new BoardDTO();
         bdto.setBoardId(boardId);
         bdto.setBoardTitle(boardTitle);
         bdto.setBoardContent(boardContent);
         bdto.setMovieId(movieIdInt);
         bdto.setMovieTitle(movieTitle);
-
-        // 수정 실행
         boardService.updateBoardContent(bdto);
 
-        // 상세페이지로 이동
+        // 수정 후 상세 페이지로 이동
         forward.setPath("postDetail.do?boardId=" + boardId);
         forward.setRedirect(true);
-
         return forward;
     }
 }
